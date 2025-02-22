@@ -21,6 +21,20 @@ pool.connect()
         console.log(`failded to make connection to the db: ${error}`),
     );
 
+// requests and responses
+app.get("/api/users", async (req, res) => {
+    try {
+        const response = await pool.query(`SELECT * FROM users;`);
+        res.json(response.rows);
+    } catch (error) {
+        res.status(500).json({ error: `Internal server error ${error}` });
+    }
+});
+
+app.get("/api/test", (req, res) => {
+    res.json("Hello world");
+});
+
 const PORT = 5000;
 
 app.listen(PORT, () => {

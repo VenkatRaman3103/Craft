@@ -1,10 +1,10 @@
 import "./App.css";
-import { Folder } from "./Components/Folder";
+import { Collection } from "./Pages/Collections";
 
 function App() {
     return (
         <div>
-            <Folder />
+            <Collection />
         </div>
     );
 }

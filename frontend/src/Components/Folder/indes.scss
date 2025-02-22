@@ -1,0 +1,32 @@
+@import "/src/Styles/base.scss";
+
+.folder-container {
+  width: 325px;
+  height: 225px;
+
+  border: $border;
+  border-radius: 20px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  .folder-wrapper {
+    height: 100%;
+    width: 100%;
+
+    position: relative;
+
+    .folder-info-container {
+      height: 50%;
+      width: 100%;
+
+      border: $border;
+      border-radius: 20px;
+
+      position: absolute;
+      bottom: -1px;
+      left: -1px;
+    }
+  }
+}

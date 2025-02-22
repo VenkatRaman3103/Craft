@@ -1,6 +1,7 @@
 import axios from "axios";
 import { backendUrl } from "../../config";
 import { useEffect } from "react";
+import "./indes.scss";
 
 export const Folder = () => {
     useEffect(() => {
@@ -12,5 +13,11 @@ export const Folder = () => {
         fetchUser();
     }, []);
 
-    return <div>Folder</div>;
+    return (
+        <div className="folder-container">
+            <div className="folder-wrapper">
+                <div className="folder-info-container"></div>
+            </div>
+        </div>
+    );
 };
