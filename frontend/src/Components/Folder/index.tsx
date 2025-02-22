@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { backendUrl } from "../../config";
+import "./indes.scss";
 
 export const Folder = () => {
     const [endpointValue, setEndpointValue] = useState("");

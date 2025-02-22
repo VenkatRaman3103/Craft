@@ -63,6 +63,11 @@
           border: none;
           outline: none;
 
+          border-radius: 100px;
+          padding-left: 15px;
+          padding-top: 1px;
+          padding-bottom: 4px;
+
           &:focus {
             outline: none;
           }
