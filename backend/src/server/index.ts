@@ -3,7 +3,7 @@ import cors from "cors";
 import dotenv from "dotenv";
 import { drizzle } from "drizzle-orm/node-postgres";
 import pg from "pg";
-import { users } from "./schema.ts";
+import { users } from "../schema.ts";
 import { eq } from "drizzle-orm";
 
 dotenv.config();
