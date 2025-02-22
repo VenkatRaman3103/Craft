@@ -94,16 +94,15 @@ export const Folder = () => {
         <div className="folder-container">
             <div className="folder-wrapper">
                 <div className="folder-info-container">
-                    <div className="utils-wrapper">
-                        <StatusOption />
-                        <MoreOptionsMenu />
-                    </div>
                     <div className="name-container">
-                        <input
-                            type="text"
-                            placeholder="Folder name"
-                            className="folder-name"
-                        />
+                        <div className="test-wrapper">
+                            <input
+                                type="text"
+                                placeholder="Folder name"
+                                className="folder-name"
+                            />
+                            <MoreOptionsMenu />
+                        </div>
                         <input
                             type="text"
                             className="endpoint-name"
@@ -115,6 +114,10 @@ export const Folder = () => {
                                 width: `calc(${Math.max(50, endpointValue.length * 8)}px + 8px)`,
                             }}
                         />
+                    </div>
+
+                    <div className="utils-wrapper">
+                        <StatusOption />
                     </div>
                 </div>
             </div>
