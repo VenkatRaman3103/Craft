@@ -1,7 +1,6 @@
+import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { backendUrl } from "../../config";
-import { useEffect, useState } from "react";
-import "./indes.scss";
 
 export const Folder = () => {
     const [endpointValue, setEndpointValue] = useState("");
@@ -27,16 +26,6 @@ export const Folder = () => {
             );
         }
     };
-    const formattedDate = new Date().toLocaleString("en-US", {
-        // weekday: "long",
-        year: "numeric",
-        month: "long",
-        day: "2-digit",
-        // hour: "2-digit",
-        // minute: "2-digit",
-        // second: "2-digit",
-        hour12: true,
-    });
 
     return (
         <div className="folder-container">
@@ -60,11 +49,78 @@ export const Folder = () => {
                             }}
                         />
                     </div>
-                    {/* <div className="details"> */}
-                    {/*     <div>Last edit: {formattedDate}</div> */}
-                    {/* </div> */}
+                    <StatusOption />
                 </div>
             </div>
         </div>
     );
 };
+
+type optionsType = "draft" | "publish" | "unpublish";
+
+const StatusOption = () => {
+    const [selectedStatus, setSelectedStatus] = useState<optionsType>("draft");
+    const [isExpanded, setIsExpanded] = useState(false);
+
+    const handleMouseEnter = () => {
+        setIsExpanded(true);
+    };
+
+    const handleMouseLeave = () => {
+        setIsExpanded(false);
+    };
+
+    const handleStatusClick = (status: optionsType) => {
+        setSelectedStatus(status);
+    };
+
+    const getStatusLabel = (status: optionsType) => {
+        switch (status) {
+            case "publish":
+                return "Publish";
+            case "unpublish":
+                return "UnPublish";
+            case "draft":
+                return "Draft";
+        }
+    };
+
+    return (
+        <div
+            className="status-container"
+            onMouseEnter={handleMouseEnter}
+            onMouseLeave={handleMouseLeave}
+        >
+            <div className={`status-wrapper ${selectedStatus}`}>
+                {isExpanded ? (
+                    <>
+                        <div
+                            className={`status-item publish ${selectedStatus === "publish" ? "active" : ""}`}
+                            onClick={() => handleStatusClick("publish")}
+                        >
+                            Publish
+                        </div>
+                        <div
+                            className={`status-item unpublish ${selectedStatus === "unpublish" ? "active" : ""}`}
+                            onClick={() => handleStatusClick("unpublish")}
+                        >
+                            UnPublish
+                        </div>
+                        <div
+                            className={`status-item draft ${selectedStatus === "draft" ? "active" : ""}`}
+                            onClick={() => handleStatusClick("draft")}
+                        >
+                            Draft
+                        </div>
+                    </>
+                ) : (
+                    <div className={`status-item ${selectedStatus} active`}>
+                        {getStatusLabel(selectedStatus)}
+                    </div>
+                )}
+            </div>
+        </div>
+    );
+};
+
+export default Folder;
