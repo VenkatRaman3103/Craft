@@ -3,8 +3,9 @@ import cors from "cors";
 import dotenv from "dotenv";
 import { drizzle } from "drizzle-orm/node-postgres";
 import pg from "pg";
-import { users } from "../db/schema/user.ts";
+import { users } from "../db/schema/user.js";
 import { eq } from "drizzle-orm";
+import { collections } from "../db/schema/collection.js";
 
 dotenv.config();
 
@@ -15,8 +16,8 @@ app.use(express.json());
 const { Pool } = pg;
 
 // Set up PostgreSQL connection
-const pool = new Pool({ connectionString: process.env.DATABASE_URL });
-const db = drizzle(pool);
+export const pool = new Pool({ connectionString: process.env.DATABASE_URL });
+export const db = drizzle(pool);
 
 // Connect to DB
 pool.connect()
@@ -60,9 +61,15 @@ app.post("/api/users", async (req, res) => {
     }
 });
 
-// Test Route
-app.get("/api/test", (req, res) => {
-    res.json("Hello world");
+app.use("/api/collections", async (req, res) => {
+    try {
+        const allCollections = await db.select().from(collections);
+        res.json(allCollections);
+    } catch (error) {
+        res.status(500).json({
+            error: `Internal server console.error ${error}`,
+        });
+    }
 });
 
 // Start the server

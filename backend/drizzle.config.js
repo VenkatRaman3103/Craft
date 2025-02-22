@@ -1,10 +1,13 @@
 import { defineConfig } from "drizzle-kit";
+import dotenv from "dotenv";
+
+dotenv.config();
 
 export default defineConfig({
     schema: "./src/db/schema",
     out: "./drizzle",
-    dialect: "postgresql", // ✅ Required for PostgreSQL
+    dialect: "postgresql",
     dbCredentials: {
-        connectionString: process.env.DATABASE_URL ?? "",
+        url: "postgresql://postgres:3103@localhost:5432/craft",
     },
 });
