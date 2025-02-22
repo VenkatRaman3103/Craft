@@ -3,6 +3,68 @@ import axios from "axios";
 import { backendUrl } from "../../config";
 import "./indes.scss";
 
+const ThreeDotsIcon = () => (
+    <svg
+        width="20"
+        height="20"
+        viewBox="0 0 20 20"
+        fill="none"
+        xmlns="http://www.w3.org/2000/svg"
+    >
+        <circle cx="10" cy="5" r="1.5" fill="currentColor" />
+        <circle cx="10" cy="10" r="1.5" fill="currentColor" />
+        <circle cx="10" cy="15" r="1.5" fill="currentColor" />
+    </svg>
+);
+
+const MoreOptionsMenu = () => {
+    const [isOpen, setIsOpen] = useState(false);
+
+    const toggleMenu = () => {
+        setIsOpen(!isOpen);
+    };
+
+    const handleOptionClick = (action: string) => {
+        console.log(`Selected action: ${action}`);
+        setIsOpen(false);
+    };
+
+    return (
+        <div className="more-options-container">
+            <button
+                onClick={toggleMenu}
+                className={`more-options-button ${isOpen ? "active" : ""}`}
+            >
+                <ThreeDotsIcon />
+            </button>
+            {isOpen && (
+                <div className="more-options-menu">
+                    <div className="menu-items">
+                        <button
+                            className="menu-item"
+                            onClick={() => handleOptionClick("edit")}
+                        >
+                            Edit Folder
+                        </button>
+                        <button
+                            className="menu-item"
+                            onClick={() => handleOptionClick("duplicate")}
+                        >
+                            Duplicate
+                        </button>
+                        <button
+                            className="menu-item delete"
+                            onClick={() => handleOptionClick("delete")}
+                        >
+                            Delete
+                        </button>
+                    </div>
+                </div>
+            )}
+        </div>
+    );
+};
+
 export const Folder = () => {
     const [endpointValue, setEndpointValue] = useState("");
     const CHARACTER_LIMIT = 20;
@@ -32,6 +94,10 @@ export const Folder = () => {
         <div className="folder-container">
             <div className="folder-wrapper">
                 <div className="folder-info-container">
+                    <div className="utils-wrapper">
+                        <StatusOption />
+                        <MoreOptionsMenu />
+                    </div>
                     <div className="name-container">
                         <input
                             type="text"
@@ -50,7 +116,6 @@ export const Folder = () => {
                             }}
                         />
                     </div>
-                    <StatusOption />
                 </div>
             </div>
         </div>
