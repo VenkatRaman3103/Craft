@@ -22,8 +22,10 @@ export const Folder: React.FC<folderProp> = ({
     collection_id,
     onDelete,
 }) => {
-    const [isEditable, setisEditable] = useState(false);
     const [data, setData] = useState({});
+    const [copyOfData, setcopyOfData] = useState(data);
+
+    const [isEditable, setisEditable] = useState(false);
 
     const [endpointValue, setEndpointValue] = useState(slug);
     const CHARACTER_LIMIT = 20;
@@ -36,6 +38,10 @@ export const Folder: React.FC<folderProp> = ({
             collection_id,
         });
     }, [name, status, slug, collection_id]);
+
+    useEffect(() => {
+        setcopyOfData(data);
+    }, [isEditable]);
 
     const handleEndpointChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const newValue = e.target.value.toLowerCase().replace(/\s+/g, "-");
@@ -91,6 +97,11 @@ export const Folder: React.FC<folderProp> = ({
                 error,
             );
         }
+    }
+
+    function handleCancel() {
+        setData(copyOfData);
+        setisEditable(false);
     }
 
     console.log(collection_id, name, "collection_id");
@@ -157,7 +168,7 @@ export const Folder: React.FC<folderProp> = ({
                     </button>
                     <button
                         className="cancel-btn action-btn"
-                        // onClick={onCancel}
+                        onClick={handleCancel}
                     >
                         Cancel
                     </button>
