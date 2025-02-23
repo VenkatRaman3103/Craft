@@ -6,15 +6,13 @@ import pg from "pg";
 import { users } from "../db/schema/user.js";
 import { eq } from "drizzle-orm";
 import { collections } from "../db/schema/collection.js";
-import { collectionRouter } from "./collections/collectionRoute.js";
+import { collectionRouter } from "./collections/route.js";
 
 dotenv.config();
 
 const app = express();
 app.use(cors());
 app.use(express.json());
-
-const router = express.Router();
 
 const { Pool } = pg;
 
@@ -61,17 +59,6 @@ app.post("/api/users", async (req, res) => {
         res.status(201).json(newUser[0]);
     } catch (error) {
         res.status(500).json({ error: `Internal server error ${error}` });
-    }
-});
-
-app.use("/api/collections", async (req, res) => {
-    try {
-        const allCollections = await db.select().from(collections);
-        res.json(allCollections);
-    } catch (error) {
-        res.status(500).json({
-            error: `Internal server console.error ${error}`,
-        });
     }
 });
 
