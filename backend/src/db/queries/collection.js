@@ -1,4 +1,4 @@
-import { db, pool } from "../../server/index.js";
+import { db, pool } from "../../server/server.js";
 import { collections } from "../schema/collection.js";
 
 export async function sampleCollections() {

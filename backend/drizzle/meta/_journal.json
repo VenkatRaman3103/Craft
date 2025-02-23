@@ -15,6 +15,13 @@
       "when": 1740256132754,
       "tag": "0001_tricky_madripoor",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1740291014134,
+      "tag": "0002_boring_owl",
+      "breakpoints": true
     }
   ]
 }

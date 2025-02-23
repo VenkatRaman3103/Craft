@@ -6,12 +6,15 @@ import pg from "pg";
 import { users } from "../db/schema/user.js";
 import { eq } from "drizzle-orm";
 import { collections } from "../db/schema/collection.js";
+import { collectionRouter } from "./collections/collectionRoute.js";
 
 dotenv.config();
 
 const app = express();
 app.use(cors());
 app.use(express.json());
+
+const router = express.Router();
 
 const { Pool } = pg;
 
@@ -71,6 +74,8 @@ app.use("/api/collections", async (req, res) => {
         });
     }
 });
+
+app.use("/api", collectionRouter);
 
 // Start the server
 const PORT = 5000;
