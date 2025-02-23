@@ -1,32 +1,36 @@
-import { useState, useEffect } from "react";
+import { useEffect, useState } from "react";
 import axios from "axios";
 import { backendUrl } from "../../config";
 import "./indes.scss";
 import { ThreeDotsIcon } from "@/assets/ThreeDotsIcon";
+import * as React from "react";
 
-const MoreOptionsMenu = () => {
-    const [isOpen, setIsOpen] = useState(false);
+type optionsType = "draft" | "publish" | "unpublish";
 
-    const toggleMenu = () => {
-        setIsOpen(!isOpen);
-    };
+type folderProp = {
+    name: string;
+    status: optionsType;
+    slug: string;
+};
 
-    const handleOptionClick = (action: string) => {
-        console.log(`Selected action: ${action}`);
-        setIsOpen(false);
-    };
+export const Folder: React.FC<folderProp> = ({ name, status, slug }) => {
+    const [isEditable, setisEditable] = useState(false);
 
-    useEffect(() => {
-        async function fetchCollections() {
-            try {
-                const response = await axios.get(`${backendUrl}/collections`);
-                console.log(response.data);
-            } catch (error) {
-                console.error("Error fetching collections", error);
-            }
+    const [endpointValue, setEndpointValue] = useState(slug);
+    const CHARACTER_LIMIT = 20;
+
+    const handleEndpointChange = (e) => {
+        const newValue = e.target.value.toLowerCase().replace(/\s+/g, "-");
+        if (newValue.length <= CHARACTER_LIMIT) {
+            setEndpointValue(
+                newValue.startsWith("/") ? newValue : "/" + newValue,
+            );
+        } else {
+            console.log(
+                `Character limit exceeded. Maximum ${CHARACTER_LIMIT} characters allowed.`,
+            );
         }
-        fetchCollections();
-    }, []);
+    };
 
     async function sendRepose() {
         try {
@@ -52,8 +56,71 @@ const MoreOptionsMenu = () => {
     }
 
     return (
+        <>
+            <div className="folder-container">
+                <div className="folder-wrapper">
+                    <div className="folder-info-container">
+                        <div className="name-container">
+                            <div className="test-wrapper">
+                                <input
+                                    type="text"
+                                    placeholder="Folder name"
+                                    className="folder-name"
+                                    readOnly={!isEditable}
+                                    value={name}
+                                    style={{
+                                        pointerEvents: !isEditable
+                                            ? "none"
+                                            : "auto",
+                                        opacity: !isEditable ? 1 : 1,
+                                    }}
+                                />
+                                <MoreOptionsMenu />
+                            </div>
+                            <input
+                                type="text"
+                                className="endpoint-name"
+                                value={endpointValue}
+                                onChange={handleEndpointChange}
+                                maxLength={CHARACTER_LIMIT}
+                                readOnly={!isEditable}
+                                placeholder="/slug"
+                                style={{
+                                    width: `calc(${Math.max(50, endpointValue.length * 8)}px + 8px)`,
+                                    pointerEvents: !isEditable
+                                        ? "none"
+                                        : "auto",
+                                    opacity: !isEditable ? 1 : 1,
+                                }}
+                            />
+                        </div>
+
+                        <div className="utils-wrapper">
+                            <StatusOption status={status} />
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            {/* <button onClick={sendRepose}>Send</button> */}
+        </>
+    );
+};
+
+const MoreOptionsMenu = () => {
+    const [isOpen, setIsOpen] = useState(false);
+
+    const toggleMenu = () => {
+        setIsOpen(!isOpen);
+    };
+
+    const handleOptionClick = (action: string) => {
+        console.log(`Selected action: ${action}`);
+        setIsOpen(false);
+    };
+
+    return (
         <div className="more-options-container">
-            <button onClick={sendRepose}>Send</button>
             <button
                 onClick={toggleMenu}
                 className={`more-options-button ${isOpen ? "active" : ""}`}
@@ -88,71 +155,16 @@ const MoreOptionsMenu = () => {
     );
 };
 
-export const Folder = () => {
-    const [endpointValue, setEndpointValue] = useState("");
-    const CHARACTER_LIMIT = 20;
+const StatusOption = ({ status }: { status: optionsType }) => {
+    console.log(status, "status");
+    const [selectedStatus, setSelectedStatus] = useState<optionsType | null>(
+        null,
+    );
+    const [isExpanded, setIsExpanded] = useState(false);
 
     useEffect(() => {
-        async function fetchUser() {
-            const response = await axios.get(`${backendUrl}/users`);
-            console.log(response.data);
-        }
-        fetchUser();
-    }, []);
-
-    const handleEndpointChange = (e) => {
-        const newValue = e.target.value.toLowerCase().replace(/\s+/g, "-");
-        if (newValue.length <= CHARACTER_LIMIT) {
-            setEndpointValue(
-                newValue.startsWith("/") ? newValue : "/" + newValue,
-            );
-        } else {
-            console.log(
-                `Character limit exceeded. Maximum ${CHARACTER_LIMIT} characters allowed.`,
-            );
-        }
-    };
-
-    return (
-        <div className="folder-container">
-            <div className="folder-wrapper">
-                <div className="folder-info-container">
-                    <div className="name-container">
-                        <div className="test-wrapper">
-                            <input
-                                type="text"
-                                placeholder="Folder name"
-                                className="folder-name"
-                            />
-                            <MoreOptionsMenu />
-                        </div>
-                        <input
-                            type="text"
-                            className="endpoint-name"
-                            value={endpointValue}
-                            onChange={handleEndpointChange}
-                            maxLength={CHARACTER_LIMIT}
-                            placeholder="/slug"
-                            style={{
-                                width: `calc(${Math.max(50, endpointValue.length * 8)}px + 8px)`,
-                            }}
-                        />
-                    </div>
-
-                    <div className="utils-wrapper">
-                        <StatusOption />
-                    </div>
-                </div>
-            </div>
-        </div>
-    );
-};
-
-type optionsType = "draft" | "publish" | "unpublish";
-
-const StatusOption = () => {
-    const [selectedStatus, setSelectedStatus] = useState<optionsType>("draft");
-    const [isExpanded, setIsExpanded] = useState(false);
+        setSelectedStatus(status);
+    }, [status]);
 
     const handleMouseEnter = () => {
         setIsExpanded(true);

@@ -1,10 +1,10 @@
 import "./App.css";
-import { Collection } from "./Pages/Collections";
+import { CollectionsPage } from "./Pages/Collections";
 
 function App() {
     return (
         <div>
-            <Collection />
+            <CollectionsPage />
         </div>
     );
 }
