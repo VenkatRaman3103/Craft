@@ -1,5 +1,18 @@
 :root {
     font-family: sans-serif;
+    --base-color: #f3f5f7;
+
+    --lighth-green: #e7f8ee;
+    --dark-green: #2ba46e;
+
+    --lighth-blue: #e6f4fe;
+    --dark-blue: #1c7cc3;
+
+    --lighth-yellow: #fdf9dc;
+    --dark-yellow: #e69739;
+
+    --border-color: #e9ebef;
+    --outer-radius: 20px;
 }
 
 input {
