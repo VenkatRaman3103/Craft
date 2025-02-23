@@ -4,6 +4,7 @@ import "./index.scss";
 import { useEffect, useState } from "react";
 import { backendUrl } from "@/config";
 import axios from "axios";
+import { v4 as uuidv4 } from "uuid";
 import { FolderPrompt } from "@/Components/FolderPromt";
 
 type optionsType = "draft" | "publish" | "unpublish";
@@ -53,6 +54,33 @@ export const CollectionsPage = () => {
         }
     }
 
+    async function handleDuplicating(data: folderProp) {
+        const collectionId = uuidv4();
+
+        try {
+            const newCollection = {
+                ...data,
+                collection_id: collectionId,
+                name: `${data.name} new`,
+            };
+
+            const response = await axios.post(
+                `${backendUrl}/collections`,
+                newCollection,
+                {
+                    headers: { "Content-Type": "application/json" },
+                },
+            );
+
+            setCollections((prev) => [...prev, newCollection]);
+        } catch (error) {
+            console.error(
+                "Error duplicating collection:",
+                error.response?.data || error,
+            );
+        }
+    }
+
     console.log(collections, "collections");
 
     return (
@@ -65,6 +93,7 @@ export const CollectionsPage = () => {
                     status={item.status}
                     collection_id={item.collection_id}
                     onDelete={handleDeleteCollection}
+                    handleDuplicating={handleDuplicating}
                 />
             ))}
             {newCollection && (

@@ -13,6 +13,7 @@ type folderProp = {
     slug: string;
     collection_id?: string;
     onDelete: any;
+    handleDuplicating: any;
 };
 
 export const Folder: React.FC<folderProp> = ({
@@ -21,6 +22,7 @@ export const Folder: React.FC<folderProp> = ({
     slug,
     collection_id,
     onDelete,
+    handleDuplicating,
 }) => {
     const [data, setData] = useState({});
     const [copyOfData, setcopyOfData] = useState(data);
@@ -131,6 +133,8 @@ export const Folder: React.FC<folderProp> = ({
                                 <MoreOptionsMenu
                                     onDelete={handleDelete}
                                     setisEditable={setisEditable}
+                                    handleDuplicating={handleDuplicating}
+                                    data={data}
                                 />
                             </div>
                             <input
@@ -178,7 +182,12 @@ export const Folder: React.FC<folderProp> = ({
     );
 };
 
-const MoreOptionsMenu = ({ onDelete, setisEditable }) => {
+const MoreOptionsMenu = ({
+    onDelete,
+    setisEditable,
+    handleDuplicating,
+    data,
+}) => {
     const [isOpen, setIsOpen] = useState(false);
 
     const toggleMenu = () => {
@@ -212,7 +221,10 @@ const MoreOptionsMenu = ({ onDelete, setisEditable }) => {
                         </button>
                         <button
                             className="menu-item"
-                            onClick={() => handleOptionClick("duplicate")}
+                            onClick={() => {
+                                handleDuplicating(data);
+                                handleOptionClick("duplicate");
+                            }}
                         >
                             Duplicate
                         </button>
