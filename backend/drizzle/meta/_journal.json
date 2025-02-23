@@ -5,22 +5,8 @@
     {
       "idx": 0,
       "version": "7",
-      "when": 1740252691000,
-      "tag": "0000_curvy_rockslide",
-      "breakpoints": true
-    },
-    {
-      "idx": 1,
-      "version": "7",
-      "when": 1740256132754,
-      "tag": "0001_tricky_madripoor",
-      "breakpoints": true
-    },
-    {
-      "idx": 2,
-      "version": "7",
-      "when": 1740291014134,
-      "tag": "0002_boring_owl",
+      "when": 1740321904416,
+      "tag": "0000_purple_warhawk",
       "breakpoints": true
     }
   ]

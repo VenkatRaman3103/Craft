@@ -12,6 +12,7 @@ type folderProp = {
     name: string;
     slug: string;
     status: optionsType;
+    collection_id?: string;
 };
 
 export const CollectionsPage = () => {
@@ -20,6 +21,7 @@ export const CollectionsPage = () => {
 
     const fetchCollections = async () => {
         const response = await axios.get(`${backendUrl}/collections`);
+        console.log(response.data, "response");
         setCollections(response.data);
     };
 
@@ -42,6 +44,17 @@ export const CollectionsPage = () => {
         }
     };
 
+    async function handleDeleteCollection(name) {
+        try {
+            await axios.delete(`${backendUrl}/collections/${name}`);
+            setCollections((prev) => prev.filter((item) => item.name != name));
+        } catch (error) {
+            console.log(error, "error in deleting the collection");
+        }
+    }
+
+    console.log(collections, "collections");
+
     return (
         <div className="collection-container">
             {collections.map((item, ind) => (
@@ -50,6 +63,8 @@ export const CollectionsPage = () => {
                     name={item.name}
                     slug={item.slug}
                     status={item.status}
+                    collection_id={item.collection_id}
+                    onDelete={handleDeleteCollection}
                 />
             ))}
             {newCollection && (

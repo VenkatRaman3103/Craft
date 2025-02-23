@@ -3,7 +3,7 @@ import { deleteCollections } from "./queries/deleteCollectins.js";
 
 async function seed() {
     // await sampleCollections();
-    await deleteCollections();
+    // await deleteCollections();
 }
 
 seed().catch((error) => {

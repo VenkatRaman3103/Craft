@@ -11,14 +11,16 @@ type folderProp = {
     name: string;
     status: optionsType;
     slug: string;
-    editableStatus?: boolean;
+    collection_id?: string;
+    onDelete: any;
 };
 
 export const Folder: React.FC<folderProp> = ({
     name,
     status,
     slug,
-    editableStatus = false,
+    collection_id,
+    onDelete,
 }) => {
     const [isEditable, setisEditable] = useState(false);
 
@@ -29,7 +31,9 @@ export const Folder: React.FC<folderProp> = ({
         const newValue = e.target.value.toLowerCase().replace(/\s+/g, "-");
         console.log("New Slug Value:", newValue);
         if (newValue.length <= CHARACTER_LIMIT) {
-            setSlug(newValue.startsWith("/") ? newValue : "/" + newValue);
+            setEndpointValue(
+                newValue.startsWith("/") ? newValue : "/" + newValue,
+            );
         } else {
             console.log(
                 `Character limit exceeded. Maximum ${CHARACTER_LIMIT} characters allowed.`,
@@ -37,28 +41,11 @@ export const Folder: React.FC<folderProp> = ({
         }
     };
 
-    async function sendRepose() {
-        try {
-            const bodyData = {
-                name: "TestHome",
-                status: "publish",
-                slug: "/home",
-            };
-
-            const response = await axios.post(
-                `${backendUrl}/collections`,
-                bodyData,
-                {
-                    headers: { "Content-Type": "application/json" },
-                },
-            );
-        } catch (error) {
-            console.error(
-                "Error inserting collection:",
-                error.response?.data || error,
-            );
-        }
+    function handleDelete() {
+        onDelete(name);
     }
+
+    console.log(collection_id, name, "collection_id");
 
     return (
         <>
@@ -80,7 +67,7 @@ export const Folder: React.FC<folderProp> = ({
                                         opacity: !isEditable ? 1 : 1,
                                     }}
                                 />
-                                <MoreOptionsMenu />
+                                <MoreOptionsMenu onDelete={handleDelete} />
                             </div>
                             <input
                                 type="text"
@@ -106,13 +93,11 @@ export const Folder: React.FC<folderProp> = ({
                     </div>
                 </div>
             </div>
-
-            {/* <button onClick={sendRepose}>Send</button> */}
         </>
     );
 };
 
-const MoreOptionsMenu = () => {
+const MoreOptionsMenu = ({ onDelete }) => {
     const [isOpen, setIsOpen] = useState(false);
 
     const toggleMenu = () => {
@@ -149,7 +134,10 @@ const MoreOptionsMenu = () => {
                         </button>
                         <button
                             className="menu-item delete"
-                            onClick={() => handleOptionClick("delete")}
+                            onClick={() => {
+                                onDelete();
+                                handleOptionClick("delete");
+                            }}
                         >
                             Delete
                         </button>

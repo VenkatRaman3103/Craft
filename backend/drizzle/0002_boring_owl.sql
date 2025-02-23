@@ -1,2 +1,0 @@
-ALTER TABLE "collections" ALTER COLUMN "slug" SET DATA TYPE status_enum;--> statement-breakpoint
-ALTER TABLE "collections" ADD COLUMN "collection_id" uuid PRIMARY KEY DEFAULT gen_random_uuid() NOT NULL;

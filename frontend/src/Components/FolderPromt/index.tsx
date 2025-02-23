@@ -1,11 +1,14 @@
 import { useState } from "react";
 import "./index.scss";
+import * as React from "react";
+import { v4 as uuidv4 } from "uuid";
 
 type FolderPromptProps = {
     onSave: (collection: {
         name: string;
         slug: string;
         status: "draft" | "publish" | "unpublish";
+        collection_id: string;
     }) => void;
     onCancel: () => void;
 };
@@ -31,7 +34,10 @@ export const FolderPrompt = ({ onSave, onCancel }: FolderPromptProps) => {
     };
 
     const handleSave = () => {
+        const collectionId = uuidv4();
+
         onSave({
+            collection_id: collectionId,
             name: folderName,
             slug: slug,
             status: "publish",
