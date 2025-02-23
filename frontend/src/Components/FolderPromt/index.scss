@@ -31,7 +31,7 @@
     display: flex;
     justify-content: center;
     align-items: end;
-    padding-bottom: 1px;
+    // padding-bottom: 1px;
 
     .prompt-folder-info-container {
       height: 50%;
@@ -233,7 +233,27 @@
 }
 
 .prompt-button-container {
-  button {
-    width: 100%;
+  margin-top: 15px;
+  display: flex;
+  flex-direction: row;
+  gap: 10px;
+
+  .action-btn {
+    width: 50%;
+    padding: 10px;
+
+    border-radius: 100px;
+  }
+
+  .save-btn {
+    border: 1px solid var(--border-color);
+    background-color: white;
+  }
+
+  .cancel-btn {
+    border: 1px solid var(--base-color);
+    background-color: var(--base-color);
   }
 }
+
+//}

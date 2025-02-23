@@ -69,8 +69,12 @@ export const FolderPrompt = ({ onSave, onCancel }: FolderPromptProps) => {
                 </div>
             </div>
             <div className="prompt-button-container">
-                <button onClick={handleSave}>Save</button>
-                <button onClick={onCancel}>Cancel</button>
+                <button className="save-btn action-btn" onClick={handleSave}>
+                    Save
+                </button>
+                <button className="cancel-btn action-btn" onClick={onCancel}>
+                    Cancel
+                </button>
             </div>
         </div>
     );
