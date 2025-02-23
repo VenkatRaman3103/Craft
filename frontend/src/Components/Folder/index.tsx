@@ -2,7 +2,20 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { backendUrl } from "../../config";
 import "./indes.scss";
-import { ThreeDotsIcon } from "@/assets/ThreeDotsIcon";
+
+const ThreeDotsIcon = () => (
+    <svg
+        width="20"
+        height="20"
+        viewBox="0 0 20 20"
+        fill="none"
+        xmlns="http://www.w3.org/2000/svg"
+    >
+        <circle cx="10" cy="5" r="1.5" fill="currentColor" />
+        <circle cx="10" cy="10" r="1.5" fill="currentColor" />
+        <circle cx="10" cy="15" r="1.5" fill="currentColor" />
+    </svg>
+);
 
 const MoreOptionsMenu = () => {
     const [isOpen, setIsOpen] = useState(false);
@@ -16,44 +29,8 @@ const MoreOptionsMenu = () => {
         setIsOpen(false);
     };
 
-    useEffect(() => {
-        async function fetchCollections() {
-            try {
-                const response = await axios.get(`${backendUrl}/collections`);
-                console.log(response.data);
-            } catch (error) {
-                console.error("Error fetching collections", error);
-            }
-        }
-        fetchCollections();
-    }, []);
-
-    async function sendRepose() {
-        try {
-            const bodyData = {
-                name: "TestHome",
-                status: "publish",
-                slug: "/home",
-            };
-
-            const response = await axios.post(
-                `${backendUrl}/collections`,
-                bodyData,
-                {
-                    headers: { "Content-Type": "application/json" },
-                },
-            );
-        } catch (error) {
-            console.error(
-                "Error inserting collection:",
-                error.response?.data || error,
-            );
-        }
-    }
-
     return (
         <div className="more-options-container">
-            <button onClick={sendRepose}>Send</button>
             <button
                 onClick={toggleMenu}
                 className={`more-options-button ${isOpen ? "active" : ""}`}

@@ -15,13 +15,16 @@ app.use(express.json());
 
 const { Pool } = pg;
 
+// Set up PostgreSQL connection
 export const pool = new Pool({ connectionString: process.env.DATABASE_URL });
 export const db = drizzle(pool);
 
+// Connect to DB
 pool.connect()
     .then(() => console.log("✓ Connected to the db"))
     .catch((error) => console.log(`Failed to connect: ${error}`));
 
+// 🟢 Get all users
 app.get("/api/users", async (req, res) => {
     try {
         const allUsers = await db.select().from(users);
@@ -31,6 +34,7 @@ app.get("/api/users", async (req, res) => {
     }
 });
 
+// 🟢 Get user by email
 app.get("/api/user/:email", async (req, res) => {
     try {
         const user = await db
@@ -43,6 +47,7 @@ app.get("/api/user/:email", async (req, res) => {
     }
 });
 
+// 🟢 Create user
 app.post("/api/users", async (req, res) => {
     const { name, email } = req.body;
     try {
@@ -56,30 +61,14 @@ app.post("/api/users", async (req, res) => {
     }
 });
 
-app.get("/api/collections", async (req, res) => {
+app.use("/api/collections", async (req, res) => {
     try {
         const allCollections = await db.select().from(collections);
         res.json(allCollections);
     } catch (error) {
-        console.error("Error fetching collections:", error);
-        res.status(500).json({ error: "Internal server error" });
-    }
-});
-
-app.post("/api/collections", async (req, res) => {
-    try {
-        const { name, status, slug } = req.body;
-
-        const response = await db
-            .insert(collections)
-            .values({ name, status, slug })
-            .returning();
-
-        console.log("Inserted Data:", response);
-        res.status(201).json(response[0]);
-    } catch (error) {
-        console.error("Database insert error:", error);
-        res.status(500).json({ error: "Internal server error" });
+        res.status(500).json({
+            error: `Internal server console.error ${error}`,
+        });
     }
 });
 
