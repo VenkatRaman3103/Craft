@@ -34,7 +34,7 @@
     // padding-bottom: 1px;
 
     .prompt-folder-info-container {
-      height: 50%;
+      height: 65%;
       width: calc(100% - 2px);
       border-radius: 19px;
       background-color: white;
@@ -159,7 +159,7 @@
 .prompt-utils-wrapper {
   width: 100%;
   display: flex;
-  justify-content: end;
+  justify-content: start;
   align-items: center;
   gap: 8px;
 }

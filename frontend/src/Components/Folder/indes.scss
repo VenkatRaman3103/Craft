@@ -33,7 +33,7 @@
     // padding-bottom: 1px;
 
     .folder-info-container {
-      height: 50%;
+      height: 65%;
       width: calc(100% - 2px);
       border-radius: 19px;
       background-color: white;
@@ -96,7 +96,7 @@
     justify-content: space-between;
     gap: 8px;
 
-    font-size: 12px;
+    font-size: 14px;
     border-radius: 100px;
 
     transition: all 0.2s linear;
@@ -168,7 +168,7 @@
 
   display: flex;
   // justify-content: space-between;
-  justify-content: end;
+  justify-content: start;
   align-items: center;
   gap: 8px;
 }
