@@ -4,6 +4,7 @@ import "./index.scss";
 import { useEffect, useState } from "react";
 import { backendUrl } from "@/config";
 import axios from "axios";
+import { FolderPrompt } from "@/Components/FolderPromt";
 
 type optionsType = "draft" | "publish" | "unpublish";
 
@@ -14,22 +15,36 @@ type folderProp = {
 };
 
 export const CollectionsPage = () => {
-    const [collections, setcollections] = useState([]);
+    const [collections, setCollections] = useState<folderProp[]>([]);
+    const [newCollection, setNewCollection] = useState(false);
+
+    const fetchCollections = async () => {
+        const response = await axios.get(`${backendUrl}/collections`);
+        setCollections(response.data);
+    };
 
     useEffect(() => {
-        async function getCollections() {
-            const response = await axios.get(`${backendUrl}/collections`);
-
-            console.log("collections", response.data);
-            setcollections(response.data);
-        }
-
-        getCollections();
+        fetchCollections();
     }, []);
+
+    const handleSaveCollection = async (collection: folderProp) => {
+        try {
+            await axios.post(`${backendUrl}/collections`, collection, {
+                headers: { "Content-Type": "application/json" },
+            });
+            setCollections((prev) => [...prev, collection]);
+            setNewCollection(false);
+        } catch (error) {
+            console.error(
+                "Error inserting collection:",
+                error.response?.data || error,
+            );
+        }
+    };
 
     return (
         <div className="collection-container">
-            {collections.map((item: folderProp, ind) => (
+            {collections.map((item, ind) => (
                 <Folder
                     key={ind}
                     name={item.name}
@@ -37,7 +52,13 @@ export const CollectionsPage = () => {
                     status={item.status}
                 />
             ))}
-            <AddCollectionBtn />
+            {newCollection && (
+                <FolderPrompt
+                    onSave={handleSaveCollection}
+                    onCancel={() => setNewCollection(false)}
+                />
+            )}
+            <AddCollectionBtn setNewCollection={setNewCollection} />
         </div>
     );
 };

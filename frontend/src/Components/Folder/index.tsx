@@ -11,20 +11,25 @@ type folderProp = {
     name: string;
     status: optionsType;
     slug: string;
+    editableStatus?: boolean;
 };
 
-export const Folder: React.FC<folderProp> = ({ name, status, slug }) => {
+export const Folder: React.FC<folderProp> = ({
+    name,
+    status,
+    slug,
+    editableStatus = false,
+}) => {
     const [isEditable, setisEditable] = useState(false);
 
     const [endpointValue, setEndpointValue] = useState(slug);
     const CHARACTER_LIMIT = 20;
 
-    const handleEndpointChange = (e) => {
+    const handleEndpointChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const newValue = e.target.value.toLowerCase().replace(/\s+/g, "-");
+        console.log("New Slug Value:", newValue);
         if (newValue.length <= CHARACTER_LIMIT) {
-            setEndpointValue(
-                newValue.startsWith("/") ? newValue : "/" + newValue,
-            );
+            setSlug(newValue.startsWith("/") ? newValue : "/" + newValue);
         } else {
             console.log(
                 `Character limit exceeded. Maximum ${CHARACTER_LIMIT} characters allowed.`,
@@ -86,7 +91,7 @@ export const Folder: React.FC<folderProp> = ({ name, status, slug }) => {
                                 readOnly={!isEditable}
                                 placeholder="/slug"
                                 style={{
-                                    width: `calc(${Math.max(50, endpointValue.length * 8)}px + 8px)`,
+                                    width: `calc(${Math.max(50, endpointValue?.length * 8)}px + 8px)`,
                                     pointerEvents: !isEditable
                                         ? "none"
                                         : "auto",
