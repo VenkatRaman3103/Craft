@@ -23,21 +23,43 @@ export const Folder: React.FC<folderProp> = ({
     onDelete,
 }) => {
     const [isEditable, setisEditable] = useState(false);
+    const [data, setData] = useState({});
 
     const [endpointValue, setEndpointValue] = useState(slug);
     const CHARACTER_LIMIT = 20;
 
+    useEffect(() => {
+        setData({
+            name,
+            status,
+            slug,
+            collection_id,
+        });
+    }, [name, status, slug, collection_id]);
+
     const handleEndpointChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const newValue = e.target.value.toLowerCase().replace(/\s+/g, "-");
-        console.log("New Slug Value:", newValue);
+
         if (newValue.length <= CHARACTER_LIMIT) {
             setEndpointValue(
                 newValue.startsWith("/") ? newValue : "/" + newValue,
             );
-        } else {
-            console.log(
-                `Character limit exceeded. Maximum ${CHARACTER_LIMIT} characters allowed.`,
-            );
+
+            if (isEditable) {
+                setData((prevData) => ({
+                    ...prevData,
+                    slug: newValue.startsWith("/") ? newValue : "/" + newValue,
+                }));
+            }
+        }
+    };
+
+    const handleNameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        if (isEditable) {
+            setData((prevData) => ({
+                ...prevData,
+                name: e.target.value,
+            }));
         }
     };
 
@@ -45,10 +67,37 @@ export const Folder: React.FC<folderProp> = ({
         onDelete(name);
     }
 
+    async function handleSave() {
+        if (!data.collection_id) {
+            console.error("Error: collection_id is missing");
+            return;
+        }
+
+        try {
+            const response = await axios.put(
+                `${backendUrl}/collections/${data.collection_id}`,
+                {
+                    name: data.name,
+                    slug: data.slug,
+                    status: data.status,
+                },
+            );
+
+            console.log("(frontend) updated collection: ", response.data);
+            setisEditable(false);
+        } catch (error) {
+            console.error(
+                `(frontend) error in updating the collection ${data.name}:`,
+                error,
+            );
+        }
+    }
+
     console.log(collection_id, name, "collection_id");
+    console.log(data, "dataCollection");
 
     return (
-        <>
+        <div className="main-container">
             <div className="folder-container">
                 <div className="folder-wrapper">
                     <div className="folder-info-container">
@@ -59,7 +108,8 @@ export const Folder: React.FC<folderProp> = ({
                                     placeholder="Folder name"
                                     className="folder-name"
                                     readOnly={!isEditable}
-                                    value={name}
+                                    value={data.name}
+                                    onChange={(e) => handleNameChange(e)}
                                     style={{
                                         pointerEvents: !isEditable
                                             ? "none"
@@ -67,12 +117,15 @@ export const Folder: React.FC<folderProp> = ({
                                         opacity: !isEditable ? 1 : 1,
                                     }}
                                 />
-                                <MoreOptionsMenu onDelete={handleDelete} />
+                                <MoreOptionsMenu
+                                    onDelete={handleDelete}
+                                    setisEditable={setisEditable}
+                                />
                             </div>
                             <input
                                 type="text"
                                 className="endpoint-name"
-                                value={endpointValue}
+                                value={data.slug}
                                 onChange={handleEndpointChange}
                                 maxLength={CHARACTER_LIMIT}
                                 readOnly={!isEditable}
@@ -93,11 +146,28 @@ export const Folder: React.FC<folderProp> = ({
                     </div>
                 </div>
             </div>
-        </>
+
+            {isEditable && (
+                <div className="prompt-button-container">
+                    <button
+                        className="save-btn action-btn"
+                        onClick={handleSave}
+                    >
+                        Save
+                    </button>
+                    <button
+                        className="cancel-btn action-btn"
+                        // onClick={onCancel}
+                    >
+                        Cancel
+                    </button>
+                </div>
+            )}
+        </div>
     );
 };
 
-const MoreOptionsMenu = ({ onDelete }) => {
+const MoreOptionsMenu = ({ onDelete, setisEditable }) => {
     const [isOpen, setIsOpen] = useState(false);
 
     const toggleMenu = () => {
@@ -122,7 +192,10 @@ const MoreOptionsMenu = ({ onDelete }) => {
                     <div className="menu-items">
                         <button
                             className="menu-item"
-                            onClick={() => handleOptionClick("edit")}
+                            onClick={() => {
+                                setisEditable(true);
+                                handleOptionClick("edit");
+                            }}
                         >
                             Edit Folder
                         </button>
