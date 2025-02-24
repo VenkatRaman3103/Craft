@@ -14,7 +14,7 @@ type folderProp = {
     name: string;
     slug: string;
     status: optionsType;
-    collection_id?: string;
+    collection_id: string;
     reference_id?: null | string;
 };
 
@@ -53,10 +53,12 @@ export const CollectionsPage = () => {
         }
     };
 
-    async function handleDeleteCollection(name: string) {
+    async function handleDeleteCollection(collection_id: string) {
         try {
-            await axios.delete(`${backendUrl}/collections/${name}`);
-            setCollections((prev) => prev.filter((item) => item.name != name));
+            await axios.delete(`${backendUrl}/collections/${collection_id}`);
+            setCollections((prev) =>
+                prev.filter((item) => item.collection_id != collection_id),
+            );
         } catch (error) {
             console.log(error, "error in deleting the collection");
         }

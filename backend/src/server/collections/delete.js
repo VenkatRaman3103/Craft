@@ -3,12 +3,12 @@ import { collections } from "../../db/schema/collections.js";
 import { db } from "../server.js";
 
 export async function deleteCollection(req, res) {
-    const { name } = req.params;
+    const { collection_id } = req.params;
 
     try {
         const deletedRows = await db
             .delete(collections)
-            .where(eq(collections.name, name))
+            .where(eq(collections.collection_id, collection_id))
             .returning();
 
         if (deletedRows.length === 0) {
@@ -16,14 +16,14 @@ export async function deleteCollection(req, res) {
         }
 
         res.status(200).json({
-            message: `Collection with ID: ${name} has been deleted`,
+            message: `Collection with ID: ${collection_id} has been deleted`,
             deleted: deletedRows,
         });
     } catch (error) {
-        console.error(`Error deleting collection ${name}:`, error);
+        console.error(`Error deleting collection ${collection_id}:`, error);
         res.status(500).json({
             error: "Error deleting the collection",
-            name,
+            collection_id,
         });
     }
 }

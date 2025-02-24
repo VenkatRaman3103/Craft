@@ -16,4 +16,4 @@ collectionRouter.get("/collections", readCollection);
 collectionRouter.put("/collections/:collection_id", updateCollection);
 
 // delete: delete
-collectionRouter.delete("/collections/:name", deleteCollection);
+collectionRouter.delete("/collections/:collection_id", deleteCollection);

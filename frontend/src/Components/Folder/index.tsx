@@ -11,13 +11,13 @@ type collectionType = {
     name: string;
     status: optionsType;
     slug: string;
-    collection_id?: string;
+    collection_id: string;
 };
 
 type folderProp = collectionType & actionsType;
 
 type actionsType = {
-    onDelete: (name: string) => void;
+    onDelete: (collection_id: string) => void;
     handleDuplicating: (data: collectionType) => Promise<void>;
 };
 
@@ -82,7 +82,7 @@ export const Folder: React.FC<folderProp> = ({
     };
 
     function handleDelete() {
-        onDelete(name);
+        onDelete(collection_id);
     }
 
     async function handleSave() {
@@ -251,7 +251,7 @@ const MoreOptionsMenu: React.FC<MoreOptionsMenuProp> = ({
                         <button
                             className="menu-item delete"
                             onClick={() => {
-                                onDelete(data.name);
+                                onDelete(data.collection_id);
                                 handleOptionClick("delete");
                             }}
                         >
