@@ -1,8 +1,8 @@
-import { sampleCollections } from "./queries/collection.js";
+import { sampleCollections } from "./queries/collections.js";
 import { deleteCollections } from "./queries/deleteCollectins.js";
 
 async function seed() {
-    // await sampleCollections();
+    await sampleCollections();
     // await deleteCollections();
 }
 

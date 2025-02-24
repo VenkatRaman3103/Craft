@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
-import { backendUrl } from "../../config";
+import { backendUrl, baseUrl } from "../../config";
 import "./indes.scss";
 import { ThreeDotsIcon } from "@/assets/ThreeDotsIcon";
 import * as React from "react";
@@ -119,8 +119,12 @@ export const Folder: React.FC<folderProp> = ({
     console.log(collection_id, name, "collection_id");
     console.log(data, "dataCollection");
 
+    function handleNavigation() {
+        window.location.href = `${baseUrl}/collections/${data.collection_id}`;
+    }
+
     return (
-        <div className="main-container">
+        <div className="main-container" onClick={handleNavigation}>
             <div className="folder-container">
                 <div className="folder-wrapper">
                     <div className="folder-info-container">
@@ -296,6 +300,7 @@ const StatusOption = ({ status }: { status: optionsType }) => {
             className="status-container"
             onMouseEnter={handleMouseEnter}
             onMouseLeave={handleMouseLeave}
+            // onClick={() => setIsExpanded(!isExpanded)}
         >
             <div className={`status-wrapper ${selectedStatus}`}>
                 {isExpanded ? (

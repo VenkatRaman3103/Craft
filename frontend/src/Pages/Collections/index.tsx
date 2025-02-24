@@ -6,6 +6,7 @@ import { backendUrl } from "@/config";
 import axios from "axios";
 import { v4 as uuidv4 } from "uuid";
 import { FolderPrompt } from "@/Components/FolderPromt";
+import { useParams } from "react-router";
 
 type optionsType = "draft" | "publish" | "unpublish";
 
@@ -14,9 +15,11 @@ type folderProp = {
     slug: string;
     status: optionsType;
     collection_id?: string;
+    reference_id?: null | string;
 };
 
 export const CollectionsPage = () => {
+    const referenceId = useParams();
     const [collections, setCollections] = useState<folderProp[]>([]);
     const [newCollection, setNewCollection] = useState(false);
 
@@ -93,20 +96,27 @@ export const CollectionsPage = () => {
     }
 
     console.log(collections, "collections");
+    console.log(referenceId, "referenceId");
 
     return (
         <div className="collection-container">
-            {collections.map((item, ind) => (
-                <Folder
-                    key={ind}
-                    name={item.name}
-                    slug={item.slug}
-                    status={item.status}
-                    collection_id={item.collection_id}
-                    onDelete={handleDeleteCollection}
-                    handleDuplicating={handleDuplicating}
-                />
-            ))}
+            {collections
+                .filter((item) =>
+                    referenceId.collection_id
+                        ? item.reference_id === referenceId.collection_id
+                        : item.reference_id === null,
+                )
+                .map((item, ind) => (
+                    <Folder
+                        key={ind}
+                        name={item.name}
+                        slug={item.slug}
+                        status={item.status}
+                        collection_id={item.collection_id}
+                        onDelete={handleDeleteCollection}
+                        handleDuplicating={handleDuplicating}
+                    />
+                ))}
             {newCollection && (
                 <FolderPrompt
                     onSave={handleSaveCollection}

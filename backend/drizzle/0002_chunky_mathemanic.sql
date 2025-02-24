@@ -1,0 +1,1 @@
+ALTER TABLE "collections" ALTER COLUMN "status" SET DATA TYPE status_enum;

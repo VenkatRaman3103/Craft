@@ -1,9 +1,10 @@
 CREATE TABLE "collections" (
 	"collection_id" uuid PRIMARY KEY DEFAULT gen_random_uuid() NOT NULL,
 	"name" text NOT NULL,
-	"status" "status_enum" NOT NULL,
+	"status" "status_enum" DEFAULT 'draft' NOT NULL,
 	"slug" text NOT NULL,
-	"created_at" timestamp DEFAULT now()
+	"created_at" timestamp DEFAULT now(),
+	"reference_id" text
 );
 --> statement-breakpoint
 CREATE TABLE "users" (

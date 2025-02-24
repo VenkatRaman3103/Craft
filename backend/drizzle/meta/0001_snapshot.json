@@ -1,6 +1,6 @@
 {
-  "id": "e5ab19d0-a08a-490a-9a17-2040774fd785",
-  "prevId": "00000000-0000-0000-0000-000000000000",
+  "id": "4ab08909-3d59-4419-ab3f-1a7390fb4072",
+  "prevId": "e5ab19d0-a08a-490a-9a17-2040774fd785",
   "version": "7",
   "dialect": "postgresql",
   "tables": {
@@ -23,8 +23,7 @@
         },
         "status": {
           "name": "status",
-          "type": "status_enum",
-          "typeSchema": "public",
+          "type": "text",
           "primaryKey": false,
           "notNull": true,
           "default": "'draft'"
