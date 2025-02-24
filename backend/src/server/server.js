@@ -5,7 +5,7 @@ import { drizzle } from "drizzle-orm/node-postgres";
 import pg from "pg";
 import { users } from "../db/schema/user.js";
 import { eq } from "drizzle-orm";
-import { collections } from "../db/schema/collection.js";
+import { collections } from "../db/schema/collections.js";
 import { collectionRouter } from "./collections/route.js";
 
 dotenv.config();

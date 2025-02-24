@@ -1,4 +1,4 @@
-import { collections } from "../../db/schema/collection.js";
+import { collections } from "../../db/schema/collections.js";
 import { db } from "../server.js";
 
 export async function createCollection(req, res) {

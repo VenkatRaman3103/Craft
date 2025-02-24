@@ -7,13 +7,18 @@ import * as React from "react";
 
 type optionsType = "draft" | "publish" | "unpublish";
 
-type folderProp = {
+type collectionType = {
     name: string;
     status: optionsType;
     slug: string;
     collection_id?: string;
-    onDelete: any;
-    handleDuplicating: any;
+};
+
+type folderProp = collectionType & actionsType;
+
+type actionsType = {
+    onDelete: (name: string) => void;
+    handleDuplicating: (data: collectionType) => Promise<void>;
 };
 
 export const Folder: React.FC<folderProp> = ({
@@ -24,7 +29,12 @@ export const Folder: React.FC<folderProp> = ({
     onDelete,
     handleDuplicating,
 }) => {
-    const [data, setData] = useState({});
+    const [data, setData] = useState<collectionType>({
+        name: "",
+        slug: "",
+        status: "draft",
+        collection_id: "",
+    });
     const [copyOfData, setcopyOfData] = useState(data);
 
     const [isEditable, setisEditable] = useState(false);
@@ -43,7 +53,7 @@ export const Folder: React.FC<folderProp> = ({
 
     useEffect(() => {
         setcopyOfData(data);
-    }, [isEditable]);
+    }, [isEditable, data]);
 
     const handleEndpointChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const newValue = e.target.value.toLowerCase().replace(/\s+/g, "-");
@@ -182,7 +192,12 @@ export const Folder: React.FC<folderProp> = ({
     );
 };
 
-const MoreOptionsMenu = ({
+type MoreOptionsMenuProp = actionsType & {
+    data: collectionType;
+    setisEditable: React.Dispatch<React.SetStateAction<boolean>>;
+};
+
+const MoreOptionsMenu: React.FC<MoreOptionsMenuProp> = ({
     onDelete,
     setisEditable,
     handleDuplicating,
@@ -231,7 +246,7 @@ const MoreOptionsMenu = ({
                         <button
                             className="menu-item delete"
                             onClick={() => {
-                                onDelete();
+                                onDelete(data.name);
                                 handleOptionClick("delete");
                             }}
                         >
@@ -246,9 +261,7 @@ const MoreOptionsMenu = ({
 
 const StatusOption = ({ status }: { status: optionsType }) => {
     console.log(status, "status");
-    const [selectedStatus, setSelectedStatus] = useState<optionsType | null>(
-        null,
-    );
+    const [selectedStatus, setSelectedStatus] = useState<optionsType>("draft");
     const [isExpanded, setIsExpanded] = useState(false);
 
     useEffect(() => {

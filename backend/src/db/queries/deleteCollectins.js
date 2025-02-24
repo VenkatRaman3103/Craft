@@ -1,5 +1,5 @@
 import { db } from "../../server/server.js";
-import { collections } from "../schema/collection.js";
+import { collections } from "../schema/collections.js";
 
 export async function deleteCollections() {
     try {

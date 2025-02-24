@@ -37,15 +37,19 @@ export const CollectionsPage = () => {
             });
             setCollections((prev) => [...prev, collection]);
             setNewCollection(false);
-        } catch (error) {
-            console.error(
-                "Error inserting collection:",
-                error.response?.data || error,
-            );
+        } catch (error: unknown) {
+            if (axios.isAxiosError(error)) {
+                console.error(
+                    "Error inserting collection:",
+                    error.response?.data || error.message,
+                );
+            } else {
+                console.error("Unexpected error:", error);
+            }
         }
     };
 
-    async function handleDeleteCollection(name) {
+    async function handleDeleteCollection(name: string) {
         try {
             await axios.delete(`${backendUrl}/collections/${name}`);
             setCollections((prev) => prev.filter((item) => item.name != name));
@@ -54,7 +58,14 @@ export const CollectionsPage = () => {
         }
     }
 
-    async function handleDuplicating(data: folderProp) {
+    type collectionType = {
+        name: string;
+        status: optionsType;
+        slug: string;
+        collection_id?: string;
+    };
+
+    async function handleDuplicating(data: collectionType) {
         const collectionId = uuidv4();
 
         try {
@@ -64,20 +75,20 @@ export const CollectionsPage = () => {
                 name: `${data.name} new`,
             };
 
-            const response = await axios.post(
-                `${backendUrl}/collections`,
-                newCollection,
-                {
-                    headers: { "Content-Type": "application/json" },
-                },
-            );
+            await axios.post(`${backendUrl}/collections`, newCollection, {
+                headers: { "Content-Type": "application/json" },
+            });
 
             setCollections((prev) => [...prev, newCollection]);
-        } catch (error) {
-            console.error(
-                "Error duplicating collection:",
-                error.response?.data || error,
-            );
+        } catch (error: unknown) {
+            if (axios.isAxiosError(error)) {
+                console.log(
+                    "Error in Duplicating the collection: ",
+                    error.response?.data || error.message,
+                );
+            } else {
+                console.error("Unknown Error");
+            }
         }
     }
 

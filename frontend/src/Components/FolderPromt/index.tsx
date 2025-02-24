@@ -40,7 +40,7 @@ export const FolderPrompt = ({ onSave, onCancel }: FolderPromptProps) => {
             collection_id: collectionId,
             name: folderName,
             slug: slug,
-            status: "publish",
+            status: "draft",
         });
     };
 

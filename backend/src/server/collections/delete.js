@@ -1,5 +1,5 @@
 import { eq } from "drizzle-orm";
-import { collections } from "../../db/schema/collection.js";
+import { collections } from "../../db/schema/collections.js";
 import { db } from "../server.js";
 
 export async function deleteCollection(req, res) {
