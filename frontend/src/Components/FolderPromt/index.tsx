@@ -9,11 +9,17 @@ type FolderPromptProps = {
         slug: string;
         status: "draft" | "publish" | "unpublish";
         collection_id: string;
+        reference_id: string | null;
     }) => void;
     onCancel: () => void;
+    referenceId: string | null;
 };
 
-export const FolderPrompt = ({ onSave, onCancel }: FolderPromptProps) => {
+export const FolderPrompt = ({
+    onSave,
+    onCancel,
+    referenceId,
+}: FolderPromptProps) => {
     const [folderName, setFolderName] = useState("");
     const [slug, setSlug] = useState("");
     const CHARACTER_LIMIT = 20;
@@ -36,11 +42,14 @@ export const FolderPrompt = ({ onSave, onCancel }: FolderPromptProps) => {
     const handleSave = () => {
         const collectionId = uuidv4();
 
+        console.log(referenceId, "referenceIdCreating");
+
         onSave({
             collection_id: collectionId,
             name: folderName,
             slug: slug,
             status: "draft",
+            reference_id: referenceId,
         });
     };
 

@@ -34,6 +34,7 @@ export const CollectionsPage = () => {
     }, []);
 
     const handleSaveCollection = async (collection: folderProp) => {
+        console.log(collection, "collectionResponse");
         try {
             await axios.post(`${backendUrl}/collections`, collection, {
                 headers: { "Content-Type": "application/json" },
@@ -121,6 +122,11 @@ export const CollectionsPage = () => {
                 <FolderPrompt
                     onSave={handleSaveCollection}
                     onCancel={() => setNewCollection(false)}
+                    referenceId={
+                        referenceId.collection_id
+                            ? referenceId.collection_id
+                            : null
+                    }
                 />
             )}
             <AddCollectionBtn setNewCollection={setNewCollection} />

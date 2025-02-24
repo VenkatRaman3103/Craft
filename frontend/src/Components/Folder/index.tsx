@@ -124,7 +124,7 @@ export const Folder: React.FC<folderProp> = ({
     }
 
     return (
-        <div className="main-container" onClick={handleNavigation}>
+        <div className="main-container">
             <div className="folder-container">
                 <div className="folder-wrapper">
                     <div className="folder-info-container">
@@ -171,6 +171,7 @@ export const Folder: React.FC<folderProp> = ({
 
                         <div className="utils-wrapper">
                             <StatusOption status={status} />
+                            <button onClick={handleNavigation}>Open</button>
                         </div>
                     </div>
                 </div>
