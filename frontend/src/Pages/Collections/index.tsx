@@ -7,6 +7,7 @@ import axios from "axios";
 import { v4 as uuidv4 } from "uuid";
 import { FolderPrompt } from "@/Components/FolderPromt";
 import { useParams } from "react-router";
+import * as React from "react";
 
 type optionsType = "draft" | "publish" | "unpublish";
 
@@ -22,6 +23,9 @@ export const Collections = () => {
     const referenceId = useParams();
     const [collections, setCollections] = useState<folderProp[]>([]);
     const [newCollection, setNewCollection] = useState(false);
+
+    const [parentCollection, setParentCollection] = useState<any>();
+    const [showTypeSelect, setShowTypeSelect] = useState(false);
 
     const fetchCollections = async () => {
         const response = await axios.get(`${backendUrl}/collections`);
@@ -142,26 +146,63 @@ export const Collections = () => {
         async function getParentCollection() {
             if (referenceId.collection_id) {
                 const response = await axios.get(
-                    `${backendUrl}/collections/${referenceId.collection_id}`,
+                    `${backendUrl}/collections/collection/${referenceId.collection_id}`,
                 );
-                console.log(response.data, "responseDataParent");
+                setParentCollection(response.data[0]);
             }
         }
 
         getParentCollection();
     }, [referenceId]);
 
+    useEffect(() => {
+        setShowTypeSelect(
+            parentCollection?.type == null ||
+                parentCollection?.type == undefined
+                ? true
+                : false,
+        );
+    }, [parentCollection]);
+
     return (
         <div className="collection-container">
             <div className="parent-collection-container">
                 <div className="parent-collection-wrapper">
                     <div className="">
-                        <p>
+                        <div>
                             {referenceId.collection_id
                                 ? referenceId.collection_id
                                 : "Root Folder"}
-                        </p>
+                        </div>
                     </div>
+                    {showTypeSelect && (
+                        <div className="select-type-wrapper">
+                            <TypeSelectBtn
+                                icon={"icon"}
+                                heading={"Static Page"}
+                                description={"description"}
+                                type={"static-page"}
+                            />
+                            <TypeSelectBtn
+                                icon={"icon"}
+                                heading={"Dynamic Page"}
+                                description={"description"}
+                                type={"dynamic-page"}
+                            />
+                            <TypeSelectBtn
+                                icon={"icon"}
+                                heading={"Content"}
+                                description={"description"}
+                                type={"content"}
+                            />
+                            <TypeSelectBtn
+                                icon={"icon"}
+                                heading={"Media"}
+                                description={"description"}
+                                type={"media"}
+                            />
+                        </div>
+                    )}
                 </div>
             </div>
             <div className="divider"></div>
@@ -195,6 +236,37 @@ export const Collections = () => {
                     />
                 )}
                 <AddCollectionBtn setNewCollection={setNewCollection} />
+            </div>
+        </div>
+    );
+};
+
+type collectionType =
+    | "static-page"
+    | "dynamic-page"
+    | "content"
+    | "media"
+    | null;
+
+type TypeSelectBtnProp = {
+    icon: string;
+    heading: string;
+    description: string;
+    type: collectionType;
+};
+
+const TypeSelectBtn: React.FC<TypeSelectBtnProp> = ({
+    icon,
+    heading,
+    description,
+    type,
+}) => {
+    return (
+        <div className="type-option-container">
+            <div className="type-option-wrapper">
+                <div className="icon">{icon}</div>
+                <div className="heading">{heading}</div>
+                <div className="description">{description}</div>
             </div>
         </div>
     );

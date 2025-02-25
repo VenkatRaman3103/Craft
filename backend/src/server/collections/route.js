@@ -1,5 +1,9 @@
 import express from "express";
-import { readCollection, getCollectionsByReference } from "./read.js";
+import {
+    readCollection,
+    getCollectionsByReference,
+    getCollectionByCollectionId,
+} from "./read.js";
 import { createCollection } from "./creat.js";
 import { deleteCollection } from "./delete.js";
 import { updateCollection, updateCollectionReference } from "./update.js";
@@ -11,10 +15,13 @@ collectionRouter.post("/collections", createCollection);
 
 // Read: GET
 collectionRouter.get("/collections", readCollection);
-// collectionRouter.get("/collections/:collection_id", readCollection);
 collectionRouter.get(
     "/collections/references/:reference_id",
     getCollectionsByReference,
+);
+collectionRouter.get(
+    "/collections/collection/:collection_id",
+    getCollectionByCollectionId,
 );
 
 // Update: PUT/PATCH

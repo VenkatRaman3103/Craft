@@ -27,3 +27,18 @@ export async function getCollectionsByReference(req, res) {
         res.status(500).json({ error: "Internal Server Error" });
     }
 }
+
+export async function getCollectionByCollectionId(req, res) {
+    const { collection_id } = req.params;
+
+    try {
+        const collection = await db
+            .select()
+            .from(collections)
+            .where(eq(collections.collection_id, collection_id));
+        res.status(200).json(collection);
+    } catch (error) {
+        console.log(`Error in fetching the collection by Id: ${collection_id}`);
+        res.status(500).json({ error: error });
+    }
+}
