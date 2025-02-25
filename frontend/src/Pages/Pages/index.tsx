@@ -1,6 +1,6 @@
 import { useParams } from "react-router";
 
-export const Collection = () => {
+export const Pages = () => {
     const params = useParams();
     const collectionName = params["collection_id"];
 

@@ -18,7 +18,7 @@ type folderProp = {
     reference_id?: null | string;
 };
 
-export const CollectionsPage = () => {
+export const Collections = () => {
     const referenceId = useParams();
     const [collections, setCollections] = useState<folderProp[]>([]);
     const [newCollection, setNewCollection] = useState(false);
@@ -55,12 +55,49 @@ export const CollectionsPage = () => {
 
     async function handleDeleteCollection(collection_id: string) {
         try {
-            await axios.delete(`${backendUrl}/collections/${collection_id}`);
-            setCollections((prev) =>
-                prev.filter((item) => item.collection_id != collection_id),
+            const collectionToDelete = collections.find(
+                (item) => item.collection_id === collection_id,
             );
+
+            if (!collectionToDelete) {
+                console.error("Collection not found.");
+                return;
+            }
+
+            const childResponse = await axios.get(
+                `${backendUrl}/collections/references/${collection_id}`,
+            );
+
+            const childCollections = childResponse.data;
+            console.log("Child collections to update:", childCollections);
+
+            const parentReferenceId = collectionToDelete.reference_id;
+
+            for (const childCollection of childCollections) {
+                await axios.patch(
+                    `${backendUrl}/collections/${childCollection.collection_id}`,
+                    {
+                        reference_id: parentReferenceId,
+                    },
+                );
+            }
+
+            await axios.delete(`${backendUrl}/collections/${collection_id}`);
+
+            setCollections((prev) => {
+                const filtered = prev.filter(
+                    (item) => item.collection_id !== collection_id,
+                );
+
+                return filtered.map((item) => {
+                    if (item.reference_id === collection_id) {
+                        return { ...item, reference_id: parentReferenceId };
+                    }
+                    return item;
+                });
+            });
         } catch (error) {
-            console.log(error, "error in deleting the collection");
+            console.error("Error in handling collection deletion:", error);
         }
     }
 
@@ -78,6 +115,9 @@ export const CollectionsPage = () => {
             const newCollection = {
                 ...data,
                 collection_id: collectionId,
+                reference_id: referenceId.collection_id
+                    ? referenceId.collection_id
+                    : null,
                 name: `${data.name} new`,
             };
 
@@ -98,40 +138,64 @@ export const CollectionsPage = () => {
         }
     }
 
-    console.log(collections, "collections");
-    console.log(referenceId, "referenceId");
+    useEffect(() => {
+        async function getParentCollection() {
+            if (referenceId.collection_id) {
+                const response = await axios.get(
+                    `${backendUrl}/collections/${referenceId.collection_id}`,
+                );
+                console.log(response.data, "responseDataParent");
+            }
+        }
+
+        getParentCollection();
+    }, [referenceId]);
 
     return (
         <div className="collection-container">
-            {collections
-                .filter((item) =>
-                    referenceId.collection_id
-                        ? item.reference_id === referenceId.collection_id
-                        : item.reference_id === null,
-                )
-                .map((item, ind) => (
-                    <Folder
-                        key={ind}
-                        name={item.name}
-                        slug={item.slug}
-                        status={item.status}
-                        collection_id={item.collection_id}
-                        onDelete={handleDeleteCollection}
-                        handleDuplicating={handleDuplicating}
-                    />
-                ))}
-            {newCollection && (
-                <FolderPrompt
-                    onSave={handleSaveCollection}
-                    onCancel={() => setNewCollection(false)}
-                    referenceId={
+            <div className="parent-collection-container">
+                <div className="parent-collection-wrapper">
+                    <div className="">
+                        <p>
+                            {referenceId.collection_id
+                                ? referenceId.collection_id
+                                : "Root Folder"}
+                        </p>
+                    </div>
+                </div>
+            </div>
+            <div className="divider"></div>
+            <div className="collection-wrapper">
+                {collections
+                    .filter((item) =>
                         referenceId.collection_id
-                            ? referenceId.collection_id
-                            : null
-                    }
-                />
-            )}
-            <AddCollectionBtn setNewCollection={setNewCollection} />
+                            ? item.reference_id === referenceId.collection_id
+                            : item.reference_id === null,
+                    )
+                    .map((item, ind) => (
+                        <Folder
+                            key={ind}
+                            name={item.name}
+                            slug={item.slug}
+                            status={item.status}
+                            collection_id={item.collection_id}
+                            onDelete={handleDeleteCollection}
+                            handleDuplicating={handleDuplicating}
+                        />
+                    ))}
+                {newCollection && (
+                    <FolderPrompt
+                        onSave={handleSaveCollection}
+                        onCancel={() => setNewCollection(false)}
+                        referenceId={
+                            referenceId.collection_id
+                                ? referenceId.collection_id
+                                : null
+                        }
+                    />
+                )}
+                <AddCollectionBtn setNewCollection={setNewCollection} />
+            </div>
         </div>
     );
 };

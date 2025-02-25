@@ -273,13 +273,13 @@ const StatusOption = ({ status }: { status: optionsType }) => {
         setSelectedStatus(status);
     }, [status]);
 
-    const handleMouseEnter = () => {
-        setIsExpanded(true);
-    };
-
-    const handleMouseLeave = () => {
-        setIsExpanded(false);
-    };
+    // const handleMouseEnter = () => {
+    //     setIsExpanded(true);
+    // };
+    //
+    // const handleMouseLeave = () => {
+    //     setIsExpanded(false);
+    // };
 
     const handleStatusClick = (status: optionsType) => {
         setSelectedStatus(status);
@@ -299,9 +299,9 @@ const StatusOption = ({ status }: { status: optionsType }) => {
     return (
         <div
             className="status-container"
-            onMouseEnter={handleMouseEnter}
-            onMouseLeave={handleMouseLeave}
-            // onClick={() => setIsExpanded(!isExpanded)}
+            // onMouseEnter={handleMouseEnter}
+            // onMouseLeave={handleMouseLeave}
+            onClick={() => setIsExpanded(!isExpanded)}
         >
             <div className={`status-wrapper ${selectedStatus}`}>
                 {isExpanded ? (

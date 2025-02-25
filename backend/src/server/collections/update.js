@@ -30,3 +30,28 @@ export async function updateCollection(req, res) {
         });
     }
 }
+
+export async function updateCollectionReference(req, res) {
+    const { collection_id } = req.params;
+    const { reference_id } = req.body;
+
+    try {
+        const updatedCollection = await db
+            .update(collections)
+            .set({ reference_id })
+            .where(eq(collections.collection_id, collection_id))
+            .returning();
+
+        if (updatedCollection.length === 0) {
+            return res.status(404).json({ error: "Collection not found" });
+        }
+
+        res.status(200).json({
+            message: "Collection reference updated successfully",
+            data: updatedCollection[0],
+        });
+    } catch (error) {
+        console.error("Error updating collection reference:", error);
+        res.status(500).json({ error: "Internal Server Error" });
+    }
+}

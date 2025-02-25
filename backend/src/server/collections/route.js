@@ -1,19 +1,28 @@
 import express from "express";
-import { readCollection } from "./read.js";
+import { readCollection, getCollectionsByReference } from "./read.js";
 import { createCollection } from "./creat.js";
 import { deleteCollection } from "./delete.js";
-import { updateCollection } from "./update.js";
+import { updateCollection, updateCollectionReference } from "./update.js";
 
 export const collectionRouter = express.Router();
 
-// creat : post
+// Create: POST
 collectionRouter.post("/collections", createCollection);
 
-// read: get
+// Read: GET
 collectionRouter.get("/collections", readCollection);
+// collectionRouter.get("/collections/:collection_id", readCollection);
+collectionRouter.get(
+    "/collections/references/:reference_id",
+    getCollectionsByReference,
+);
 
-// update: put
+// Update: PUT/PATCH
 collectionRouter.put("/collections/:collection_id", updateCollection);
+collectionRouter.patch(
+    "/collections/:collection_id",
+    updateCollectionReference,
+);
 
-// delete: delete
+// Delete: DELETE
 collectionRouter.delete("/collections/:collection_id", deleteCollection);

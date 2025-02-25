@@ -2,9 +2,32 @@
   width: 100%;
   height: auto;
 
+  padding: 30px;
+
   display: flex;
-  align-items: start;
-  flex-wrap: wrap;
-  justify-content: start;
+  flex-direction: column;
+  align-items: center;
   gap: 30px;
+
+  .parent-collection-container {
+    width: 100%;
+  }
+
+  .divider {
+    height: 1px;
+    width: 100%;
+
+    background-color: var(--border-color);
+  }
+
+  .collection-wrapper {
+    width: 100%;
+    height: 100%;
+
+    display: flex;
+    align-items: start;
+    flex-wrap: wrap;
+    justify-content: start;
+    gap: 30px;
+  }
 }

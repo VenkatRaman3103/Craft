@@ -1,5 +1,5 @@
 {
-  "id": "e5ab19d0-a08a-490a-9a17-2040774fd785",
+  "id": "83ae6ba4-ae1e-4c56-b214-5237d38d9ccb",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "version": "7",
   "dialect": "postgresql",
@@ -23,8 +23,7 @@
         },
         "status": {
           "name": "status",
-          "type": "status_enum",
-          "typeSchema": "public",
+          "type": "text",
           "primaryKey": false,
           "notNull": true,
           "default": "'draft'"
@@ -35,18 +34,24 @@
           "primaryKey": false,
           "notNull": true
         },
-        "created_at": {
-          "name": "created_at",
-          "type": "timestamp",
+        "type": {
+          "name": "type",
+          "type": "text",
           "primaryKey": false,
-          "notNull": false,
-          "default": "now()"
+          "notNull": false
         },
         "reference_id": {
           "name": "reference_id",
           "type": "text",
           "primaryKey": false,
           "notNull": false
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": false,
+          "default": "now()"
         }
       },
       "indexes": {},

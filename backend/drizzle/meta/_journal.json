@@ -5,22 +5,8 @@
     {
       "idx": 0,
       "version": "7",
-      "when": 1740412991323,
-      "tag": "0000_icy_dark_phoenix",
-      "breakpoints": true
-    },
-    {
-      "idx": 1,
-      "version": "7",
-      "when": 1740413072150,
-      "tag": "0001_tiresome_veda",
-      "breakpoints": true
-    },
-    {
-      "idx": 2,
-      "version": "7",
-      "when": 1740413180505,
-      "tag": "0002_chunky_mathemanic",
+      "when": 1740494334107,
+      "tag": "0000_new_mimic",
       "breakpoints": true
     }
   ]
