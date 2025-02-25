@@ -6,7 +6,11 @@ import {
 } from "./read.js";
 import { createCollection } from "./creat.js";
 import { deleteCollection } from "./delete.js";
-import { updateCollection, updateCollectionReference } from "./update.js";
+import {
+    updateCollection,
+    updateCollectionReference,
+    updateCollectionType,
+} from "./update.js";
 
 export const collectionRouter = express.Router();
 
@@ -27,9 +31,10 @@ collectionRouter.get(
 // Update: PUT/PATCH
 collectionRouter.put("/collections/:collection_id", updateCollection);
 collectionRouter.patch(
-    "/collections/:collection_id",
+    "/collections/reference/:collection_id",
     updateCollectionReference,
 );
+collectionRouter.patch("/collection/type/:collection_id", updateCollectionType);
 
 // Delete: DELETE
 collectionRouter.delete("/collections/:collection_id", deleteCollection);

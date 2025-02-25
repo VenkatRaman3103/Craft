@@ -14,6 +14,7 @@
     .parent-collection-wrapper {
       width: 100%;
       display: flex;
+      // flex-direction: row;
       flex-direction: column;
 
       .select-type-wrapper {
@@ -23,12 +24,14 @@
         display: flex;
         flex-direction: row;
         align-items: center;
+        // flex-wrap: wrap;
         justify-content: space-between;
         // gap: 30px;
 
         .type-option-container {
           height: 180px;
           width: 250px;
+          cursor: pointer;
 
           border: 1.5px solid var(--border-color);
           border-radius: 20px;
@@ -37,6 +40,10 @@
           align-items: center;
           justify-content: center;
 
+          &:hover {
+            border: 1.5px solid var(--dark-green);
+          }
+
           .type-option-wrapper {
             width: 80%;
             height: 80%;
@@ -44,6 +51,7 @@
             display: flex;
             flex-direction: column;
             justify-content: end;
+            gap: 20px;
           }
         }
       }
@@ -51,7 +59,7 @@
   }
 
   .divider {
-    height: 1px;
+    height: 1.5px;
     width: 100%;
 
     background-color: var(--border-color);
@@ -66,5 +74,39 @@
     flex-wrap: wrap;
     justify-content: space-between;
     gap: 30px;
+  }
+}
+
+.intro-wrapper {
+  height: 100%;
+  width: 100%;
+
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+
+  margin-bottom: 20px;
+
+  .heading-wrapper {
+    .heading {
+      font-size: 32px;
+    }
+
+    .info-wrapper {
+      display: flex;
+      gap: 20px;
+    }
+  }
+
+  .collection-id {
+    font-size: 14px;
+  }
+
+  .description {
+    font-size: 16px;
+  }
+
+  .edited-date {
+    font-size: 14px;
   }
 }

@@ -8,6 +8,7 @@ import { v4 as uuidv4 } from "uuid";
 import { FolderPrompt } from "@/Components/FolderPromt";
 import { useParams } from "react-router";
 import * as React from "react";
+import { StatusOption } from "@/Components/Status";
 
 type optionsType = "draft" | "publish" | "unpublish";
 
@@ -26,6 +27,7 @@ export const Collections = () => {
 
     const [parentCollection, setParentCollection] = useState<any>();
     const [showTypeSelect, setShowTypeSelect] = useState(false);
+    const [type, setType] = useState(null);
 
     const fetchCollections = async () => {
         const response = await axios.get(`${backendUrl}/collections`);
@@ -79,7 +81,7 @@ export const Collections = () => {
 
             for (const childCollection of childCollections) {
                 await axios.patch(
-                    `${backendUrl}/collections/${childCollection.collection_id}`,
+                    `${backendUrl}/collections/reference/${childCollection.collection_id}`,
                     {
                         reference_id: parentReferenceId,
                     },
@@ -105,14 +107,14 @@ export const Collections = () => {
         }
     }
 
-    type collectionType = {
+    type collectionsType = {
         name: string;
         status: optionsType;
         slug: string;
         collection_id?: string;
     };
 
-    async function handleDuplicating(data: collectionType) {
+    async function handleDuplicating(data: collectionsType) {
         const collectionId = uuidv4();
 
         try {
@@ -153,7 +155,7 @@ export const Collections = () => {
         }
 
         getParentCollection();
-    }, [referenceId]);
+    }, [referenceId, type]);
 
     useEffect(() => {
         setShowTypeSelect(
@@ -164,15 +166,76 @@ export const Collections = () => {
         );
     }, [parentCollection]);
 
+    async function updateTypeOfColleciton(type: collectionType) {
+        await axios.patch(
+            `${backendUrl}/collection/type/${referenceId.collection_id}`,
+            { type: type },
+        );
+        setType(type);
+    }
+
+    function btnDescription(type: collectionType) {
+        switch (type) {
+            case "static-page":
+                return "Go to Static Page";
+            case "dynamic-page":
+                return "Go to Dynamic Page";
+            case "content":
+                return "Go to Conents";
+            case "media":
+                return "Open Medias";
+        }
+    }
+
     return (
         <div className="collection-container">
             <div className="parent-collection-container">
                 <div className="parent-collection-wrapper">
-                    <div className="">
-                        <div>
-                            {referenceId.collection_id
-                                ? referenceId.collection_id
-                                : "Root Folder"}
+                    <div className="intro-wrapper">
+                        <div className="heading-wrapper">
+                            <div className="heading">
+                                {parentCollection?.name
+                                    ? parentCollection?.name
+                                    : "Root Folder"}
+                            </div>
+
+                            <div className="info-wrapper">
+                                {referenceId.collection_id && (
+                                    <div className="collection-id">
+                                        {referenceId.collection_id}
+                                    </div>
+                                )}
+                                <div className="edited-date">
+                                    <span className="label">Edited On:</span>
+                                    <span className="date">
+                                        {new Date(
+                                            parentCollection?.createdAt,
+                                        ).toLocaleString(undefined, {
+                                            year: "numeric",
+                                            month: "long",
+                                            day: "numeric",
+                                            hour: "2-digit",
+                                            minute: "2-digit",
+                                            // second: "2-digit",
+                                        })}
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                        <StatusOption status="publish" />
+                        <div className="description">
+                            Lorem ipsum dolor sit amet consectetur, adipisicing
+                            elit. Eum, nisi sit non beatae, voluptates quisquam
+                            ex ad repudiandae ducimus error in consequatur
+                            numquam dignissimos quidem! Harum soluta voluptatum
+                            molestias ipsa.
+                        </div>
+                        <div className="action-buttons-wrapper">
+                            <button className="go-to-btn">
+                                {parentCollection?.type
+                                    ? btnDescription(parentCollection?.type)
+                                    : "Go to Collection"}
+                            </button>
                         </div>
                     </div>
                     {showTypeSelect && (
@@ -182,24 +245,28 @@ export const Collections = () => {
                                 heading={"Static Page"}
                                 description={"description"}
                                 type={"static-page"}
+                                updateTypeOfColleciton={updateTypeOfColleciton}
                             />
                             <TypeSelectBtn
                                 icon={"icon"}
                                 heading={"Dynamic Page"}
                                 description={"description"}
                                 type={"dynamic-page"}
+                                updateTypeOfColleciton={updateTypeOfColleciton}
                             />
                             <TypeSelectBtn
                                 icon={"icon"}
                                 heading={"Content"}
                                 description={"description"}
                                 type={"content"}
+                                updateTypeOfColleciton={updateTypeOfColleciton}
                             />
                             <TypeSelectBtn
                                 icon={"icon"}
                                 heading={"Media"}
                                 description={"description"}
                                 type={"media"}
+                                updateTypeOfColleciton={updateTypeOfColleciton}
                             />
                         </div>
                     )}
@@ -253,6 +320,7 @@ type TypeSelectBtnProp = {
     heading: string;
     description: string;
     type: collectionType;
+    updateTypeOfColleciton: any;
 };
 
 const TypeSelectBtn: React.FC<TypeSelectBtnProp> = ({
@@ -260,9 +328,13 @@ const TypeSelectBtn: React.FC<TypeSelectBtnProp> = ({
     heading,
     description,
     type,
+    updateTypeOfColleciton,
 }) => {
     return (
-        <div className="type-option-container">
+        <div
+            className="type-option-container"
+            onClick={() => updateTypeOfColleciton(type)}
+        >
             <div className="type-option-wrapper">
                 <div className="icon">{icon}</div>
                 <div className="heading">{heading}</div>
