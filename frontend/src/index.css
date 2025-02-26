@@ -13,6 +13,8 @@
 
     --border-color: #e9ebef;
     --outer-radius: 20px;
+    /* background-color: var(--base-color); */
+    background-color: #f9fafc;
 }
 
 body {

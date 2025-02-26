@@ -26,8 +26,8 @@ export const Collection = () => {
     console.log(pagesList, "pagesList");
 
     return (
-        <div className="collection-container">
-            <div className="collection-wrapper">
+        <div className="collection-pages-container">
+            <div className="collection-pages-wrapper">
                 {pagesList && (
                     <CollectionIntro
                         collection={pagesList[0].collections}
@@ -49,11 +49,22 @@ export const Collection = () => {
                     ))}
                     {/* </div> */}
                 </div>
+                {/* TODO: filters */}
+                {/* TODO: pages */}
+                {/* TODO: components */}
+                {/* TODO: fields */}
+                {selectedOption == "Pages" && (
+                    <div className="pages-list-container">
+                        <div className="pages-list-wrapper">
+                            {pagesList?.map((item, ind) => (
+                                <div key={ind} className="page-container">
+                                    <div>{item.pages.title}</div>
+                                </div>
+                            ))}
+                        </div>
+                    </div>
+                )}
             </div>
-            {/* TODO: filters */}
-            {/* TODO: pages */}
-            {/* TODO: components */}
-            {/* TODO: fields */}
         </div>
     );
 };
