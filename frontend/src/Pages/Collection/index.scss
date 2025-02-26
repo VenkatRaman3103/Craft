@@ -50,11 +50,35 @@
 }
 
 .page-container {
-  height: 200px;
+  height: 230px;
   width: 100%;
 
   border: 1px solid var(--border-color);
   background-color: white;
 
   border-radius: 30px;
+
+  .page-wrapper {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: row;
+
+    .page-image-wrapper {
+      height: 100%;
+      width: 20%;
+      border-right: 1px solid var(--border-color);
+
+      display: flex;
+      align-items: center;
+      justify-content: center;
+
+      .page-image {
+        height: 180px;
+        width: 180px;
+        border: 1px solid var(--border-color);
+        border-radius: 15px;
+      }
+    }
+  }
 }

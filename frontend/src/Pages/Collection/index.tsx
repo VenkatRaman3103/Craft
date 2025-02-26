@@ -58,7 +58,12 @@ export const Collection = () => {
                         <div className="pages-list-wrapper">
                             {pagesList?.map((item, ind) => (
                                 <div key={ind} className="page-container">
-                                    <div>{item.pages.title}</div>
+                                    <div className="page-wrapper">
+                                        <div className="page-image-wrapper">
+                                            <div className="page-image"></div>
+                                        </div>
+                                        <div>{item.pages.title}</div>
+                                    </div>
                                 </div>
                             ))}
                         </div>
