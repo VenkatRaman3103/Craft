@@ -1,3 +1,4 @@
+import { CollectionIntro } from "@/Components/CollectionIntro";
 import { backendUrl } from "@/config";
 import axios from "axios";
 import { useEffect, useState } from "react";
@@ -22,7 +23,13 @@ export const Collection = () => {
 
     return (
         <div>
-            <div>Collection id: {collection_id}</div>
+            {pagesList && (
+                <CollectionIntro
+                    collection={pagesList[0].collections}
+                    collection_id={pagesList[0].collections.collection_id}
+                    showNavBtn={false}
+                />
+            )}
         </div>
     );
 };

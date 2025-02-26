@@ -29,7 +29,7 @@ export async function getPagesForCollection(req, res) {
         console.error(
             `Error in fetching the pages for the collection: ${collection_id}`,
         );
-        res.statu(500).json({
+        res.status(500).json({
             message: `Error in fetching the pages for the collection: ${collection_id}`,
             error: error,
         });

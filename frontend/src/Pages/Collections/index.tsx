@@ -9,8 +9,16 @@ import { FolderPrompt } from "@/Components/FolderPromt";
 import { useParams } from "react-router";
 import * as React from "react";
 import { StatusOption } from "@/Components/Status";
+import { CollectionIntro } from "@/Components/CollectionIntro";
 
 type optionsType = "draft" | "publish" | "unpublish";
+
+type collectionType =
+    | "static-page"
+    | "dynamic-page"
+    | "content"
+    | "media"
+    | null;
 
 type folderProp = {
     name: string;
@@ -28,7 +36,7 @@ export const Collections = () => {
     const [parentCollection, setParentCollection] = useState<any>();
     const [showTypeSelect, setShowTypeSelect] = useState(false);
     const [isLoading, setIsLoading] = useState(true);
-    const [type, setType] = useState(null);
+    const [type, setType] = useState<collectionType>(null);
 
     const fetchCollections = async () => {
         try {
@@ -160,14 +168,13 @@ export const Collections = () => {
                     const parentData = response.data[0];
                     setParentCollection(parentData);
 
-                    // Set showTypeSelect based on parent collection type
                     setShowTypeSelect(!parentData?.type);
                 } catch (error) {
                     console.error("Error fetching parent collection:", error);
-                    setShowTypeSelect(true); // Default to showing type select if error
+                    setShowTypeSelect(true);
                 }
             } else {
-                setShowTypeSelect(true); // Show type select for root folder
+                setShowTypeSelect(true);
             }
             setIsLoading(false);
         }
@@ -182,88 +189,21 @@ export const Collections = () => {
                 { type: type },
             );
             setType(type);
-            setShowTypeSelect(false); // Hide type select immediately after selection
+            setShowTypeSelect(false);
         } catch (error) {
             console.error("Error updating collection type:", error);
         }
     }
 
-    function btnDescription(type: collectionType) {
-        switch (type) {
-            case "static-page":
-                return "Go to Static Page";
-            case "dynamic-page":
-                return "Go to Dynamic Page";
-            case "content":
-                return "Go to Contents";
-            case "media":
-                return "Open Medias";
-            default:
-                return "Go to Collection";
-        }
-    }
-
-    function goToCollectionPage() {
-        window.location.href = `${baseUrl}/collection/${referenceId.collection_id}`;
-    }
-
     return (
         <div className="collection-container">
-            {/* TODO: make the parent-collection-container into seperate component */}
             <div className="parent-collection-container">
                 <div className="parent-collection-wrapper">
-                    <div className="intro-wrapper">
-                        <div className="heading-wrapper">
-                            <div className="heading">
-                                {parentCollection?.name
-                                    ? parentCollection?.name
-                                    : "Root Folder"}
-                            </div>
-
-                            <div className="info-wrapper">
-                                {referenceId.collection_id && (
-                                    <div className="collection-id">
-                                        {referenceId.collection_id}
-                                    </div>
-                                )}
-                                <div className="edited-date">
-                                    <span className="label">Edited On:</span>
-                                    <span className="date">
-                                        {parentCollection?.createdAt
-                                            ? new Date(
-                                                  parentCollection.createdAt,
-                                              ).toLocaleString(undefined, {
-                                                  year: "numeric",
-                                                  month: "long",
-                                                  day: "numeric",
-                                                  hour: "2-digit",
-                                                  minute: "2-digit",
-                                              })
-                                            : "Loading..."}
-                                    </span>
-                                </div>
-                            </div>
-                        </div>
-                        <StatusOption status="publish" />
-                        <div className="description">
-                            Lorem ipsum dolor sit amet consectetur, adipisicing
-                            elit. Eum, nisi sit non beatae, voluptates quisquam
-                            ex ad repudiandae ducimus error in consequatur
-                            numquam dignissimos quidem! Harum soluta voluptatum
-                            molestias ipsa.
-                        </div>
-                        <div className="action-buttons-wrapper">
-                            <button
-                                className="go-to-btn"
-                                onClick={goToCollectionPage}
-                            >
-                                {parentCollection?.type
-                                    ? btnDescription(parentCollection?.type)
-                                    : "Go to Collection"}
-                            </button>
-                        </div>
-                    </div>
-                    {/* Only show the type select if explicitly required and loading is complete */}
+                    <CollectionIntro
+                        collection={parentCollection}
+                        collection_id={referenceId.collection_id}
+                        showNavBtn={true}
+                    />
                     {!isLoading && showTypeSelect && (
                         <div className="select-type-wrapper">
                             <TypeSelectBtn
@@ -333,13 +273,6 @@ export const Collections = () => {
         </div>
     );
 };
-
-type collectionType =
-    | "static-page"
-    | "dynamic-page"
-    | "content"
-    | "media"
-    | null;
 
 type TypeSelectBtnProp = {
     icon: string;
