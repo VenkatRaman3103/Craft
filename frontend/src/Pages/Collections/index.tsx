@@ -27,12 +27,17 @@ export const Collections = () => {
 
     const [parentCollection, setParentCollection] = useState<any>();
     const [showTypeSelect, setShowTypeSelect] = useState(false);
+    const [isLoading, setIsLoading] = useState(true);
     const [type, setType] = useState(null);
 
     const fetchCollections = async () => {
-        const response = await axios.get(`${backendUrl}/collections`);
-        console.log(response.data, "response");
-        setCollections(response.data);
+        try {
+            const response = await axios.get(`${backendUrl}/collections`);
+            console.log(response.data, "response");
+            setCollections(response.data);
+        } catch (error) {
+            console.error("Error fetching collections:", error);
+        }
     };
 
     useEffect(() => {
@@ -146,32 +151,41 @@ export const Collections = () => {
 
     useEffect(() => {
         async function getParentCollection() {
+            setIsLoading(true);
             if (referenceId.collection_id) {
-                const response = await axios.get(
-                    `${backendUrl}/collections/collection/${referenceId.collection_id}`,
-                );
-                setParentCollection(response.data[0]);
+                try {
+                    const response = await axios.get(
+                        `${backendUrl}/collections/collection/${referenceId.collection_id}`,
+                    );
+                    const parentData = response.data[0];
+                    setParentCollection(parentData);
+
+                    // Set showTypeSelect based on parent collection type
+                    setShowTypeSelect(!parentData?.type);
+                } catch (error) {
+                    console.error("Error fetching parent collection:", error);
+                    setShowTypeSelect(true); // Default to showing type select if error
+                }
+            } else {
+                setShowTypeSelect(true); // Show type select for root folder
             }
+            setIsLoading(false);
         }
 
         getParentCollection();
-    }, [referenceId, type]);
-
-    useEffect(() => {
-        setShowTypeSelect(
-            parentCollection?.type == null ||
-                parentCollection?.type == undefined
-                ? true
-                : false,
-        );
-    }, [parentCollection]);
+    }, [referenceId.collection_id, type]);
 
     async function updateTypeOfColleciton(type: collectionType) {
-        await axios.patch(
-            `${backendUrl}/collection/type/${referenceId.collection_id}`,
-            { type: type },
-        );
-        setType(type);
+        try {
+            await axios.patch(
+                `${backendUrl}/collection/type/${referenceId.collection_id}`,
+                { type: type },
+            );
+            setType(type);
+            setShowTypeSelect(false); // Hide type select immediately after selection
+        } catch (error) {
+            console.error("Error updating collection type:", error);
+        }
     }
 
     function btnDescription(type: collectionType) {
@@ -181,9 +195,11 @@ export const Collections = () => {
             case "dynamic-page":
                 return "Go to Dynamic Page";
             case "content":
-                return "Go to Conents";
+                return "Go to Contents";
             case "media":
                 return "Open Medias";
+            default:
+                return "Go to Collection";
         }
     }
 
@@ -208,16 +224,17 @@ export const Collections = () => {
                                 <div className="edited-date">
                                     <span className="label">Edited On:</span>
                                     <span className="date">
-                                        {new Date(
-                                            parentCollection?.createdAt,
-                                        ).toLocaleString(undefined, {
-                                            year: "numeric",
-                                            month: "long",
-                                            day: "numeric",
-                                            hour: "2-digit",
-                                            minute: "2-digit",
-                                            // second: "2-digit",
-                                        })}
+                                        {parentCollection?.createdAt
+                                            ? new Date(
+                                                  parentCollection.createdAt,
+                                              ).toLocaleString(undefined, {
+                                                  year: "numeric",
+                                                  month: "long",
+                                                  day: "numeric",
+                                                  hour: "2-digit",
+                                                  minute: "2-digit",
+                                              })
+                                            : "Loading..."}
                                     </span>
                                 </div>
                             </div>
@@ -238,7 +255,8 @@ export const Collections = () => {
                             </button>
                         </div>
                     </div>
-                    {showTypeSelect && (
+                    {/* Only show the type select if explicitly required and loading is complete */}
+                    {!isLoading && showTypeSelect && (
                         <div className="select-type-wrapper">
                             <TypeSelectBtn
                                 icon={"icon"}

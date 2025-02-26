@@ -1,9 +1,69 @@
 {
-  "id": "83ae6ba4-ae1e-4c56-b214-5237d38d9ccb",
+  "id": "05621062-f1e9-4a01-8e12-ab08ffb0309d",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "version": "7",
   "dialect": "postgresql",
   "tables": {
+    "public.collection_pages": {
+      "name": "collection_pages",
+      "schema": "",
+      "columns": {
+        "collection_ref_id": {
+          "name": "collection_ref_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "page_ref_id": {
+          "name": "page_ref_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": true
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "collection_pages_collection_ref_id_collections_collection_id_fk": {
+          "name": "collection_pages_collection_ref_id_collections_collection_id_fk",
+          "tableFrom": "collection_pages",
+          "tableTo": "collections",
+          "columnsFrom": [
+            "collection_ref_id"
+          ],
+          "columnsTo": [
+            "collection_id"
+          ],
+          "onDelete": "restrict",
+          "onUpdate": "no action"
+        },
+        "collection_pages_page_ref_id_pages_page_id_fk": {
+          "name": "collection_pages_page_ref_id_pages_page_id_fk",
+          "tableFrom": "collection_pages",
+          "tableTo": "pages",
+          "columnsFrom": [
+            "page_ref_id"
+          ],
+          "columnsTo": [
+            "page_id"
+          ],
+          "onDelete": "restrict",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {
+        "collection_pages_collection_ref_id_page_ref_id_pk": {
+          "name": "collection_pages_collection_ref_id_page_ref_id_pk",
+          "columns": [
+            "collection_ref_id",
+            "page_ref_id"
+          ]
+        }
+      },
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
     "public.collections": {
       "name": "collections",
       "schema": "",
@@ -52,6 +112,32 @@
           "primaryKey": false,
           "notNull": false,
           "default": "now()"
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {},
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "public.pages": {
+      "name": "pages",
+      "schema": "",
+      "columns": {
+        "page_id": {
+          "name": "page_id",
+          "type": "uuid",
+          "primaryKey": true,
+          "notNull": true,
+          "default": "gen_random_uuid()"
+        },
+        "title": {
+          "name": "title",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
         }
       },
       "indexes": {},
