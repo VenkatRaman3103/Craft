@@ -2,7 +2,7 @@ import { AddCollectionBtn } from "@/Components/AddCollectionBtn";
 import { Folder } from "../../Components/Folder";
 import "./index.scss";
 import { useEffect, useState } from "react";
-import { backendUrl } from "@/config";
+import { backendUrl, baseUrl } from "@/config";
 import axios from "axios";
 import { v4 as uuidv4 } from "uuid";
 import { FolderPrompt } from "@/Components/FolderPromt";
@@ -203,8 +203,13 @@ export const Collections = () => {
         }
     }
 
+    function goToCollectionPage() {
+        window.location.href = `${baseUrl}/collection/${referenceId.collection_id}`;
+    }
+
     return (
         <div className="collection-container">
+            {/* TODO: make the parent-collection-container into seperate component */}
             <div className="parent-collection-container">
                 <div className="parent-collection-wrapper">
                     <div className="intro-wrapper">
@@ -248,7 +253,10 @@ export const Collections = () => {
                             molestias ipsa.
                         </div>
                         <div className="action-buttons-wrapper">
-                            <button className="go-to-btn">
+                            <button
+                                className="go-to-btn"
+                                onClick={goToCollectionPage}
+                            >
                                 {parentCollection?.type
                                     ? btnDescription(parentCollection?.type)
                                     : "Go to Collection"}

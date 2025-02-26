@@ -6,7 +6,8 @@ import pg from "pg";
 import { users } from "../db/schema/user.js";
 import { eq } from "drizzle-orm";
 import { collections } from "../db/schema/collections.js";
-import { collectionRouter } from "./collections/route.js";
+import { collectionsRouter } from "./collections/route.js";
+import { collectionRouter } from "./collection/route.js";
 
 dotenv.config();
 
@@ -62,6 +63,7 @@ app.post("/api/users", async (req, res) => {
     }
 });
 
+app.use("/api", collectionsRouter);
 app.use("/api", collectionRouter);
 
 // Start the server

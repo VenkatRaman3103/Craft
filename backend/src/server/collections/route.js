@@ -12,29 +12,32 @@ import {
     updateCollectionType,
 } from "./update.js";
 
-export const collectionRouter = express.Router();
+export const collectionsRouter = express.Router();
 
 // Create: POST
-collectionRouter.post("/collections", createCollection);
+collectionsRouter.post("/collections", createCollection);
 
 // Read: GET
-collectionRouter.get("/collections", readCollection);
-collectionRouter.get(
+collectionsRouter.get("/collections", readCollection);
+collectionsRouter.get(
     "/collections/references/:reference_id",
     getCollectionsByReference,
 );
-collectionRouter.get(
+collectionsRouter.get(
     "/collections/collection/:collection_id",
     getCollectionByCollectionId,
 );
 
 // Update: PUT/PATCH
-collectionRouter.put("/collections/:collection_id", updateCollection);
-collectionRouter.patch(
+collectionsRouter.put("/collections/:collection_id", updateCollection);
+collectionsRouter.patch(
     "/collections/reference/:collection_id",
     updateCollectionReference,
 );
-collectionRouter.patch("/collection/type/:collection_id", updateCollectionType);
+collectionsRouter.patch(
+    "/collection/type/:collection_id",
+    updateCollectionType,
+);
 
 // Delete: DELETE
-collectionRouter.delete("/collections/:collection_id", deleteCollection);
+collectionsRouter.delete("/collections/:collection_id", deleteCollection);
