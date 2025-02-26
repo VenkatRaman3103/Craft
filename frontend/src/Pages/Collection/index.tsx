@@ -3,10 +3,14 @@ import { backendUrl } from "@/config";
 import axios from "axios";
 import { useEffect, useState } from "react";
 import { useParams } from "react-router";
+import "./index.scss";
 
 export const Collection = () => {
     const { collection_id } = useParams();
     const [pagesList, setPagesList] = useState();
+
+    const options = ["Pages", "Components", "Fields"];
+    const [selectedOption, setSelectedOption] = useState(options[0]);
 
     useEffect(() => {
         async function getPages() {
@@ -22,14 +26,34 @@ export const Collection = () => {
     console.log(pagesList, "pagesList");
 
     return (
-        <div>
-            {pagesList && (
-                <CollectionIntro
-                    collection={pagesList[0].collections}
-                    collection_id={pagesList[0].collections.collection_id}
-                    showNavBtn={false}
-                />
-            )}
+        <div className="collection-container">
+            <div className="collection-wrapper">
+                {pagesList && (
+                    <CollectionIntro
+                        collection={pagesList[0].collections}
+                        collection_id={pagesList[0].collections.collection_id}
+                        showNavBtn={false}
+                    />
+                )}
+
+                <div className="view-options-container">
+                    {/* <div className="view-options-wrapper"> */}
+                    {options.map((item, ind) => (
+                        <div
+                            key={ind}
+                            className={`options ${selectedOption == item ? "active" : ""}`}
+                            onClick={() => setSelectedOption(item)}
+                        >
+                            {item}
+                        </div>
+                    ))}
+                    {/* </div> */}
+                </div>
+            </div>
+            {/* TODO: filters */}
+            {/* TODO: pages */}
+            {/* TODO: components */}
+            {/* TODO: fields */}
         </div>
     );
 };

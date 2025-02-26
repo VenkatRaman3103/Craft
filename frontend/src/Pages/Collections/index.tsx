@@ -204,6 +204,7 @@ export const Collections = () => {
                         collection_id={referenceId.collection_id}
                         showNavBtn={true}
                     />
+                    {/* TODO: information component static, dynamic, content and media  */}
                     {!isLoading && showTypeSelect && (
                         <div className="select-type-wrapper">
                             <TypeSelectBtn
@@ -270,6 +271,10 @@ export const Collections = () => {
                 )}
                 <AddCollectionBtn setNewCollection={setNewCollection} />
             </div>
+            {/* TODO: global collection */}
+            {/* TODO: redirects collection */}
+            {/* TODO: templates collection */}
+            {/* TODO: forms collection */}
         </div>
     );
 };

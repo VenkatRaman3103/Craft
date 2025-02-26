@@ -1,5 +1,6 @@
 import { baseUrl } from "@/config";
 import { StatusOption } from "../Status";
+import "./index.scss";
 
 type collectionType =
     | "static-page"
@@ -10,7 +11,7 @@ type collectionType =
 
 type collectionIntroType = {
     collection: any;
-    collection_id: string;
+    collection_id: string | null;
     showNavBtn: boolean;
 };
 
