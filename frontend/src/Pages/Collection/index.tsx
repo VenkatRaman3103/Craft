@@ -1,5 +1,5 @@
 import { CollectionIntro } from "@/Components/CollectionIntro";
-import { backendUrl } from "@/config";
+import { backendUrl, baseUrl } from "@/config";
 import axios from "axios";
 import { useEffect, useState } from "react";
 import { useParams } from "react-router";
@@ -25,13 +25,17 @@ export const Collection = () => {
 
     console.log(pagesList, "pagesList");
 
+    function handleOpenPage(page_id: string) {
+        window.location.href = `${baseUrl}/pages/${page_id}`;
+    }
+
     return (
         <div className="collection-pages-container">
             <div className="collection-pages-wrapper">
                 {pagesList && (
                     <CollectionIntro
-                        collection={pagesList[0].collections}
-                        collection_id={pagesList[0].collections.collection_id}
+                        collection={pagesList[0]?.collections}
+                        collection_id={pagesList[0]?.collections.collection_id}
                         showNavBtn={false}
                     />
                 )}
@@ -62,7 +66,23 @@ export const Collection = () => {
                                         <div className="page-image-wrapper">
                                             <div className="page-image"></div>
                                         </div>
-                                        <div>{item.pages.title}</div>
+                                        <div className="content-container">
+                                            <div className="content-wrapper">
+                                                <div className="heading">
+                                                    {item.pages.title}
+                                                </div>
+                                                <button
+                                                    className=""
+                                                    onClick={() =>
+                                                        handleOpenPage(
+                                                            item.pages.page_id,
+                                                        )
+                                                    }
+                                                >
+                                                    Open Page
+                                                </button>
+                                            </div>
+                                        </div>
                                     </div>
                                 </div>
                             ))}

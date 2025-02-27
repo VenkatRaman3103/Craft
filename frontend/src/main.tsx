@@ -4,6 +4,7 @@ import App from "./App.tsx";
 import { BrowserRouter, Route, Routes } from "react-router";
 import { Collections } from "./Pages/Collections/index.tsx";
 import { Collection } from "./Pages/Collection/index.tsx";
+import { Page } from "./Pages/Page/index.tsx";
 
 const rootElement = document.getElementById("root");
 
@@ -22,6 +23,7 @@ createRoot(rootElement).render(
                 element={<Collections />}
             />
             <Route path="/collection/:collection_id" element={<Collection />} />
+            <Route path="/pages/:page_id" element={<Page />} />
         </Routes>
     </BrowserRouter>,
 );
