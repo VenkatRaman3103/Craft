@@ -275,6 +275,9 @@ export const Collections = () => {
             {/* TODO: redirects collection */}
             {/* TODO: templates collection */}
             {/* TODO: forms collection */}
+            {/* TODO: pages */}
+            {/* TODO: blocks */}
+            {/* TODO: field */}
         </div>
     );
 };
