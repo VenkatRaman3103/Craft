@@ -2,13 +2,12 @@ import { AddCollectionBtn } from "@/Components/AddCollectionBtn";
 import { Folder } from "../../Components/Folder";
 import "./index.scss";
 import { useEffect, useState } from "react";
-import { backendUrl, baseUrl } from "@/config";
+import { backendUrl } from "@/config";
 import axios from "axios";
 import { v4 as uuidv4 } from "uuid";
 import { FolderPrompt } from "@/Components/FolderPromt";
 import { useParams } from "react-router";
 import * as React from "react";
-import { StatusOption } from "@/Components/Status";
 import { CollectionIntro } from "@/Components/CollectionIntro";
 
 type optionsType = "draft" | "publish" | "unpublish";
@@ -33,7 +32,7 @@ export const Collections = () => {
     const [collections, setCollections] = useState<folderProp[]>([]);
     const [newCollection, setNewCollection] = useState(false);
 
-    const [parentCollection, setParentCollection] = useState<any>();
+    const [parentCollection, setParentCollection] = useState();
     const [showTypeSelect, setShowTypeSelect] = useState(false);
     const [isLoading, setIsLoading] = useState(true);
     const [type, setType] = useState<collectionType>(null);
@@ -287,7 +286,7 @@ type TypeSelectBtnProp = {
     heading: string;
     description: string;
     type: collectionType;
-    updateTypeOfColleciton: any;
+    updateTypeOfColleciton: (type: collectionType) => void;
 };
 
 const TypeSelectBtn: React.FC<TypeSelectBtnProp> = ({

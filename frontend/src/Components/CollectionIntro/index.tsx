@@ -11,7 +11,7 @@ type collectionType =
 
 type collectionIntroType = {
     collection: any;
-    collection_id: string | null;
+    collection_id: string | null | undefined;
     showNavBtn: boolean;
 };
 
