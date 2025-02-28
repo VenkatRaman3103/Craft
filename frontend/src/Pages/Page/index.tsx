@@ -6,6 +6,7 @@ import axios from "axios";
 import { useEffect, useState } from "react";
 import { useParams } from "react-router";
 import "./index.scss";
+import { Explorer } from "@/Components/Explorer";
 
 export const Page = () => {
     const { page_id } = useParams();
@@ -22,9 +23,9 @@ export const Page = () => {
     console.log(pageData, "pageData");
 
     return (
-        <div>
-            <PageIntro data={pageData} />
+        <Explorer>
             <div className="page-content-container">
+                <PageIntro data={pageData} />
                 <div className="blocks-list-container">
                     {pageData && (
                         <div>
@@ -36,6 +37,6 @@ export const Page = () => {
                 {/*     <div className="sidebar-wrapper"></div> */}
                 {/* </div> */}
             </div>
-        </div>
+        </Explorer>
     );
 };

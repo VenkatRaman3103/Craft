@@ -9,6 +9,7 @@ import { FolderPrompt } from "@/Components/FolderPromt";
 import { useParams } from "react-router";
 import * as React from "react";
 import { CollectionIntro } from "@/Components/CollectionIntro";
+import { Explorer } from "@/Components/Explorer";
 
 type optionsType = "draft" | "publish" | "unpublish";
 
@@ -195,89 +196,100 @@ export const Collections = () => {
     }
 
     return (
-        <div className="collection-container">
-            <div className="parent-collection-container">
-                <div className="parent-collection-wrapper">
-                    <CollectionIntro
-                        collection={parentCollection}
-                        collection_id={referenceId.collection_id}
-                        showNavBtn={true}
-                    />
-                    {/* TODO: information component static, dynamic, content and media  */}
-                    {!isLoading && showTypeSelect && (
-                        <div className="select-type-wrapper">
-                            <TypeSelectBtn
-                                icon={"icon"}
-                                heading={"Static Page"}
-                                description={"description"}
-                                type={"static-page"}
-                                updateTypeOfColleciton={updateTypeOfColleciton}
-                            />
-                            <TypeSelectBtn
-                                icon={"icon"}
-                                heading={"Dynamic Page"}
-                                description={"description"}
-                                type={"dynamic-page"}
-                                updateTypeOfColleciton={updateTypeOfColleciton}
-                            />
-                            <TypeSelectBtn
-                                icon={"icon"}
-                                heading={"Content"}
-                                description={"description"}
-                                type={"content"}
-                                updateTypeOfColleciton={updateTypeOfColleciton}
-                            />
-                            <TypeSelectBtn
-                                icon={"icon"}
-                                heading={"Media"}
-                                description={"description"}
-                                type={"media"}
-                                updateTypeOfColleciton={updateTypeOfColleciton}
-                            />
-                        </div>
-                    )}
-                </div>
-            </div>
-            <div className="divider"></div>
-            <div className="collection-wrapper">
-                {collections
-                    .filter((item) =>
-                        referenceId.collection_id
-                            ? item.reference_id === referenceId.collection_id
-                            : item.reference_id === null,
-                    )
-                    .map((item, ind) => (
-                        <Folder
-                            key={ind}
-                            name={item.name}
-                            slug={item.slug}
-                            status={item.status}
-                            collection_id={item.collection_id}
-                            onDelete={handleDeleteCollection}
-                            handleDuplicating={handleDuplicating}
+        <Explorer>
+            <div className="collection-container">
+                <div className="parent-collection-container">
+                    <div className="parent-collection-wrapper">
+                        <CollectionIntro
+                            collection={parentCollection}
+                            collection_id={referenceId.collection_id}
+                            showNavBtn={true}
                         />
-                    ))}
-                {newCollection && (
-                    <FolderPrompt
-                        onSave={handleSaveCollection}
-                        onCancel={() => setNewCollection(false)}
-                        referenceId={
+                        {/* TODO: information component static, dynamic, content and media  */}
+                        {!isLoading && showTypeSelect && (
+                            <div className="select-type-wrapper">
+                                <TypeSelectBtn
+                                    icon={"icon"}
+                                    heading={"Static Page"}
+                                    description={"description"}
+                                    type={"static-page"}
+                                    updateTypeOfColleciton={
+                                        updateTypeOfColleciton
+                                    }
+                                />
+                                <TypeSelectBtn
+                                    icon={"icon"}
+                                    heading={"Dynamic Page"}
+                                    description={"description"}
+                                    type={"dynamic-page"}
+                                    updateTypeOfColleciton={
+                                        updateTypeOfColleciton
+                                    }
+                                />
+                                <TypeSelectBtn
+                                    icon={"icon"}
+                                    heading={"Content"}
+                                    description={"description"}
+                                    type={"content"}
+                                    updateTypeOfColleciton={
+                                        updateTypeOfColleciton
+                                    }
+                                />
+                                <TypeSelectBtn
+                                    icon={"icon"}
+                                    heading={"Media"}
+                                    description={"description"}
+                                    type={"media"}
+                                    updateTypeOfColleciton={
+                                        updateTypeOfColleciton
+                                    }
+                                />
+                            </div>
+                        )}
+                    </div>
+                </div>
+                <div className="divider"></div>
+                <div className="collection-wrapper">
+                    {collections
+                        .filter((item) =>
                             referenceId.collection_id
-                                ? referenceId.collection_id
-                                : null
-                        }
-                    />
-                )}
-                <AddCollectionBtn setNewCollection={setNewCollection} />
+                                ? item.reference_id ===
+                                  referenceId.collection_id
+                                : item.reference_id === null,
+                        )
+                        .map((item, ind) => (
+                            <Folder
+                                key={ind}
+                                name={item.name}
+                                slug={item.slug}
+                                status={item.status}
+                                collection_id={item.collection_id}
+                                onDelete={handleDeleteCollection}
+                                handleDuplicating={handleDuplicating}
+                            />
+                        ))}
+                    {newCollection && (
+                        <FolderPrompt
+                            onSave={handleSaveCollection}
+                            onCancel={() => setNewCollection(false)}
+                            referenceId={
+                                referenceId.collection_id
+                                    ? referenceId.collection_id
+                                    : null
+                            }
+                        />
+                    )}
+                    <AddCollectionBtn setNewCollection={setNewCollection} />
+                </div>
+                {/* TODO: global collection */}
+                {/* TODO: redirects collection */}
+                {/* TODO: templates collection */}
+                {/* TODO: forms collection */}
+                {/* TODO: pages */}
+                {/* TODO: blocks */}
+                {/* TODO: field */}
             </div>
-            {/* TODO: global collection */}
-            {/* TODO: redirects collection */}
-            {/* TODO: templates collection */}
-            {/* TODO: forms collection */}
-            {/* TODO: pages */}
-            {/* TODO: blocks */}
-            {/* TODO: field */}
-        </div>
+        </Explorer>
     );
 };
 
