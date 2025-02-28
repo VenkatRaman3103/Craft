@@ -5,7 +5,6 @@ import { drizzle } from "drizzle-orm/node-postgres";
 import pg from "pg";
 import { users } from "../db/schema/user.js";
 import { eq } from "drizzle-orm";
-import { collections } from "../db/schema/collections.js";
 import { collectionsRouter } from "./collections/route.js";
 import { collectionRouter } from "./collection/route.js";
 import {

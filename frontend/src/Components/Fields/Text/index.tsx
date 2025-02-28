@@ -1,6 +1,6 @@
 import { field } from "@/Types/fields";
 import "./index.scss";
-import { FieldWrapper } from "../FilesWrapper";
+import { FieldWrapper } from "../FieldWrapper";
 
 export const Text = ({ data }: { data: field }) => {
     console.log(data, "dataText");

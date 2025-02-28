@@ -13,6 +13,7 @@ export async function samplePages() {
         await db.insert(pages).values({
             page_id: "5112c791-4778-49c3-bffe-9d35f0904784",
             title: "page title 1",
+            slug: "test-slug",
         });
     } catch (error) {
         console.log(error);
@@ -105,7 +106,6 @@ export async function insertDummyData() {
                 label: "Title",
                 type: "text",
                 required: true,
-                default_value: null,
                 options: null,
                 order: 1,
             },
@@ -116,7 +116,6 @@ export async function insertDummyData() {
                 label: "Content",
                 type: "text",
                 required: true,
-                default_value: null,
                 options: null,
                 order: 2,
             },
@@ -135,7 +134,6 @@ export async function insertDummyData() {
                 label: "Form Title",
                 type: "text",
                 required: true,
-                default_value: "Contact Us",
                 options: null,
                 order: 1,
             },
@@ -146,7 +144,6 @@ export async function insertDummyData() {
                 label: "Form Fields",
                 type: "multi-select",
                 required: true,
-                default_value: ["name", "email"],
                 options: [
                     "name",
                     "email",
@@ -164,7 +161,6 @@ export async function insertDummyData() {
                 label: "Submit Button Text",
                 type: "text",
                 required: true,
-                default_value: "Submit",
                 options: null,
                 order: 3,
             },
@@ -183,7 +179,6 @@ export async function insertDummyData() {
                 label: "Gallery Title",
                 type: "text",
                 required: false,
-                default_value: null,
                 options: null,
                 order: 1,
             },
@@ -194,7 +189,6 @@ export async function insertDummyData() {
                 label: "Gallery Images",
                 type: "multi-select",
                 required: true,
-                default_value: null,
                 options: null, // In a real app, this might be populated dynamically
                 order: 2,
             },
@@ -205,8 +199,24 @@ export async function insertDummyData() {
                 label: "Number of Columns",
                 type: "select",
                 required: true,
-                default_value: "3",
-                options: ["1", "2", "3", "4"],
+                options: [
+                    {
+                        value: "Value 12",
+                        checked: true,
+                    },
+                    {
+                        value: "Value 21",
+                        checked: true,
+                    },
+                    {
+                        value: "Value 33",
+                        checked: true,
+                    },
+                    {
+                        value: "Value 44",
+                        checked: true,
+                    },
+                ],
                 order: 3,
             },
         ]);
@@ -239,7 +249,24 @@ export async function insertDummyData() {
                 field_value_id: uuidv4(),
                 block_id: formBlockId,
                 field_def_id: formFieldsFieldDefId,
-                value: ["name", "email", "message", "subscribe"],
+                value: [
+                    {
+                        value: "Value 12",
+                        checked: true,
+                    },
+                    {
+                        value: "Value 21",
+                        checked: true,
+                    },
+                    {
+                        value: "Value 33",
+                        checked: true,
+                    },
+                    {
+                        value: "Value 44",
+                        checked: true,
+                    },
+                ],
             },
             {
                 field_value_id: uuidv4(),
@@ -263,34 +290,20 @@ export async function insertDummyData() {
                 field_def_id: imagesFieldDefId,
                 value: [
                     {
-                        id: "img1",
-                        src: "/images/portfolio1.jpg",
-                        alt: "Project 1",
+                        value: "Value 1",
+                        checked: true,
                     },
                     {
-                        id: "img2",
-                        src: "/images/portfolio2.jpg",
-                        alt: "Project 2",
+                        value: "Value 2",
+                        checked: true,
                     },
                     {
-                        id: "img3",
-                        src: "/images/portfolio3.jpg",
-                        alt: "Project 3",
+                        value: "Value 3",
+                        checked: true,
                     },
                     {
-                        id: "img4",
-                        src: "/images/portfolio4.jpg",
-                        alt: "Project 4",
-                    },
-                    {
-                        id: "img5",
-                        src: "/images/portfolio5.jpg",
-                        alt: "Project 5",
-                    },
-                    {
-                        id: "img6",
-                        src: "/images/portfolio6.jpg",
-                        alt: "Project 6",
+                        value: "Value 4",
+                        checked: true,
                     },
                 ],
             },
