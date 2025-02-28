@@ -1,3 +1,4 @@
+import { Blocks } from "@/Components/Blocks";
 import { backendUrl } from "@/config";
 import axios from "axios";
 import { useEffect, useState } from "react";
@@ -20,6 +21,12 @@ export const Page = () => {
     return (
         <div>
             <div>{page_id}</div>
+            {pageData && (
+                <div>
+                    <div>{pageData.title}</div>
+                    <Blocks blocks={pageData.blocks} />
+                </div>
+            )}
         </div>
     );
 };
