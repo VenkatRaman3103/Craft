@@ -1,5 +1,7 @@
 import { field } from "@/Types/fields";
 import "./index.scss";
+import { EllipsisVertical, PencilLine } from "lucide-react";
+import { darkFont, lightFont } from "@/Styles/base";
 
 export const Text = ({ data }: { data: field }) => {
     console.log(data, "dataText");
@@ -12,8 +14,12 @@ export const Text = ({ data }: { data: field }) => {
                         <div className="text-field-type">/ {data.type}</div>
                     </div>
                     <div className="text-field-actions">
-                        <div className="text-field-edit">edit</div>
-                        <div className="text-field-more">more</div>
+                        <div className="text-field-edit">
+                            <PencilLine size={16} color={lightFont} />
+                        </div>
+                        <div className="text-field-more">
+                            <EllipsisVertical size={16} color={lightFont} />
+                        </div>
                     </div>
                 </div>
             </div>
