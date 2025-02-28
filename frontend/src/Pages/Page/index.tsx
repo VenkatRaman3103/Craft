@@ -1,4 +1,5 @@
 import { Blocks } from "@/Components/Blocks";
+import { PageIntro } from "@/Components/PageIntro";
 import { backendUrl } from "@/config";
 import axios from "axios";
 import { useEffect, useState } from "react";
@@ -20,10 +21,9 @@ export const Page = () => {
 
     return (
         <div>
-            <div>{page_id}</div>
+            <PageIntro data={pageData} />
             {pageData && (
                 <div>
-                    <div>{pageData.title}</div>
                     <Blocks blocks={pageData.blocks} />
                 </div>
             )}

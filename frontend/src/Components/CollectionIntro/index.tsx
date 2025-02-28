@@ -1,6 +1,7 @@
 import { baseUrl } from "@/config";
 import { StatusOption } from "../Status";
 import "./index.scss";
+import { formatDate } from "@/Utils/formateData";
 
 type collectionType =
     | "static-page"
@@ -55,16 +56,7 @@ export const CollectionIntro = ({
                         <span className="label">Edited On:</span>
                         <span className="date">
                             {collection?.createdAt
-                                ? new Date(collection.createdAt).toLocaleString(
-                                      undefined,
-                                      {
-                                          year: "numeric",
-                                          month: "long",
-                                          day: "numeric",
-                                          hour: "2-digit",
-                                          minute: "2-digit",
-                                      },
-                                  )
+                                ? formatDate(collection.createdAt)
                                 : "Loading..."}
                         </span>
                     </div>
