@@ -1,12 +1,12 @@
 import { lightFont } from "@/Styles/base";
 import { FileJson2 } from "lucide-react";
 import "./index.scss";
+import { ButtonWrapper } from "../ButtonWrapper";
 
-export const Json = () => {
+export const Json = ({ iconColor = lightFont }: { iconColor?: string }) => {
     return (
-        <div className="json-object-btn">
-            <FileJson2 size={18} color={lightFont} />
-            <div className="json-object-btn-text">JSON</div>
-        </div>
+        <ButtonWrapper label="JSON">
+            <FileJson2 size={18} color={iconColor} />
+        </ButtonWrapper>
     );
 };

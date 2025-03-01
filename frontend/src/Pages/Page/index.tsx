@@ -27,15 +27,11 @@ export const Page = () => {
             <div className="page-content-container">
                 <PageIntro data={pageData} />
                 <div className="blocks-list-container">
-                    {pageData && (
-                        <div>
-                            <Blocks blocks={pageData.blocks} />
-                        </div>
-                    )}
+                    {pageData && <Blocks blocks={pageData.blocks} />}
+                    <div className="sidebar-container">
+                        <div className="sidebar-wrapper"></div>
+                    </div>
                 </div>
-                {/* <div className="sidebar-container"> */}
-                {/*     <div className="sidebar-wrapper"></div> */}
-                {/* </div> */}
             </div>
         </Explorer>
     );

@@ -1,12 +1,12 @@
 import { lightFont } from "@/Styles/base";
 import { ArrowDownToLine } from "lucide-react";
 import "./index.scss";
+import { ButtonWrapper } from "../ButtonWrapper";
 
-export const Save = () => {
+export const Save = ({ iconColor = lightFont }: { iconColor?: string }) => {
     return (
-        <div className="save-btn">
-            <ArrowDownToLine size={18} color={lightFont} />
-            <div className="save-btn-text">Save</div>
-        </div>
+        <ButtonWrapper label="Save">
+            <ArrowDownToLine size={18} color={iconColor} />
+        </ButtonWrapper>
     );
 };

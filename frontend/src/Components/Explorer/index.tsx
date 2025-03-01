@@ -56,7 +56,7 @@ const ExplorerSection = ({
                         >
                             <Icon
                                 size={18}
-                                strokeWidth={1.75}
+                                strokeWidth={2}
                                 color={
                                     isHovered
                                         ? darkFont

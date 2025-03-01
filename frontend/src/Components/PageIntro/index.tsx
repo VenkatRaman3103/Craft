@@ -2,6 +2,8 @@ import { formatDate } from "@/Utils/formateData";
 import "./index.scss";
 import { Json } from "../Buttons/Json";
 import { Save } from "../Buttons/Save";
+import { SideBarBtn } from "../Buttons/SideBarBtn";
+import { SimpleTableBtn } from "../Buttons/SimpleTableBtn";
 
 export const PageIntro = ({ data }: { data: any }) => {
     return (
@@ -29,6 +31,8 @@ export const PageIntro = ({ data }: { data: any }) => {
                     <div className="utils-actions-btns">
                         <Json />
                         <Save />
+                        <SideBarBtn />
+                        <SimpleTableBtn />
                     </div>
                 </div>
             </div>
