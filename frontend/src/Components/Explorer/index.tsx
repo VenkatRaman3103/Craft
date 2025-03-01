@@ -44,7 +44,13 @@ const ExplorerSection = ({
                 const isSelected = selectedAction === actionKey;
 
                 return (
-                    <div key={actionKey} className="section-wrapper">
+                    <div
+                        key={actionKey}
+                        className={`section-wrapper ${isSelected ? "selected" : ""}`}
+                        onMouseEnter={() => setHoveredAction(actionKey)}
+                        onMouseLeave={() => setHoveredAction(null)}
+                        onClick={() => onSelect(actionKey)}
+                    >
                         <div
                             className={`icon-item ${isSelected ? "selected" : ""}`}
                         >
@@ -58,12 +64,13 @@ const ExplorerSection = ({
                                           ? darkFont
                                           : lightFont
                                 }
-                                onMouseEnter={() => setHoveredAction(actionKey)}
-                                onMouseLeave={() => setHoveredAction(null)}
-                                onClick={() => onSelect(actionKey)}
                             />
                             {expanded && (
-                                <span className="icon-label">{label}</span>
+                                <span
+                                    className={`icon-label ${isSelected || isHovered ? "selected" : ""}`}
+                                >
+                                    {label}
+                                </span>
                             )}
                         </div>
                         {expanded && isSelected && (
