@@ -2,8 +2,18 @@ import { useState, useRef, useEffect } from "react";
 import { Fields } from "../Fields/RenderFields";
 import { blockType } from "@/Types/blocks";
 import "./index.scss";
-import { EllipsisVertical, Globe, Box, Trash2, Check } from "lucide-react";
-import { lightFont } from "@/Styles/base";
+import {
+    EllipsisVertical,
+    Globe,
+    Box,
+    Trash2,
+    Check,
+    Circle,
+    File,
+    FileText,
+    X,
+} from "lucide-react";
+import { darkGreen, darkRed, lightFont } from "@/Styles/base";
 
 export const Blocks = ({
     blocks,
@@ -144,13 +154,37 @@ export const Block = ({
                 </div>
 
                 {showOptions && (
-                    <div className="menu-container">
+                    <div ref={nameInputRef} className="menu-container">
                         {activeScopeOption && (
-                            <div ref={nameInputRef} className="name-input-menu">
+                            <div className="name-input-menu">
                                 <div className="name-input-header">
-                                    {activeScopeOption === "local"
-                                        ? "Create Local Block"
-                                        : "Add to Component Library"}
+                                    <div className="name-input-actions">
+                                        <div className="actions-title">
+                                            {activeScopeOption === "local"
+                                                ? "Create Local Block"
+                                                : "Add to Component Library"}
+                                        </div>
+                                        <div className="actions">
+                                            <button
+                                                className={`save-button ${!blockName.trim() ? "disabled" : ""}`}
+                                                onClick={handleNameSubmit}
+                                                disabled={!blockName.trim()}
+                                            >
+                                                <Check
+                                                    color={darkGreen}
+                                                    size={16}
+                                                />
+                                            </button>
+                                            <button
+                                                className="cancel-button"
+                                                onClick={() =>
+                                                    setActiveScopeOption(null)
+                                                }
+                                            >
+                                                <X color={darkRed} size={16} />
+                                            </button>
+                                        </div>
+                                    </div>
                                 </div>
                                 <div className="name-input-field">
                                     <input
@@ -168,33 +202,16 @@ export const Block = ({
                                         className={`option-toggle ${withContent ? "active" : ""}`}
                                         onClick={() => setWithContent(true)}
                                     >
-                                        {withContent && <Check size={14} />}
+                                        <FileText color={lightFont} size={16} />
                                         <span>With content</span>
                                     </div>
                                     <div
                                         className={`option-toggle ${!withContent ? "active" : ""}`}
                                         onClick={() => setWithContent(false)}
                                     >
-                                        {!withContent && <Check size={14} />}
+                                        <File color={lightFont} size={16} />
                                         <span>Structure only</span>
                                     </div>
-                                </div>
-                                <div className="name-input-actions">
-                                    <button
-                                        className="cancel-button"
-                                        onClick={() =>
-                                            setActiveScopeOption(null)
-                                        }
-                                    >
-                                        Cancel
-                                    </button>
-                                    <button
-                                        className={`save-button ${!blockName.trim() ? "disabled" : ""}`}
-                                        onClick={handleNameSubmit}
-                                        disabled={!blockName.trim()}
-                                    >
-                                        Save
-                                    </button>
                                 </div>
                             </div>
                         )}

@@ -134,6 +134,12 @@
     width: 220px;
     overflow: hidden;
     border: 1px solid var(--border-color);
+    padding: 8px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+
+    color: var(--light-font);
 
     .option-item {
       padding: 12px 15px;
@@ -142,14 +148,15 @@
       gap: 10px;
       cursor: pointer;
       transition: background-color 0.2s ease;
+      border-radius: 5px;
 
       &:hover {
-        background-color: rgba(0, 0, 0, 0.05);
+        background-color: var(--base-color);
       }
 
       &.active {
-        background-color: rgba(0, 100, 200, 0.1);
-        color: var(--dark-blue);
+        background-color: var(--base-color);
+        color: var(--dark-font);
       }
 
       &.delete {
@@ -177,15 +184,15 @@
     /* Space between the menus */
 
     .name-input-header {
-      padding: 15px;
+      padding: 10px 15px;
       font-size: 15px;
       font-weight: 500;
-      border-bottom: 1px solid var(--border-color);
+      // border-bottom: 1px solid var(--border-color);
       color: var(--dark-font);
     }
 
     .name-input-field {
-      padding: 15px;
+      padding: 0px 15px 15px 15px;
 
       input {
         width: 90%;
@@ -193,10 +200,11 @@
         border: 1px solid var(--border-color);
         border-radius: 6px;
         font-size: 14px;
+        color: var(--dark-font);
 
         &:focus {
           outline: none;
-          border-color: var(--dark-blue);
+          border-color: var(--border-color);
         }
       }
     }
@@ -209,7 +217,7 @@
       .option-toggle {
         flex: 1;
         padding: 8px 10px;
-        border: 1px solid var(--border-color);
+        border: 1px solid transparent;
         border-radius: 6px;
         display: flex;
         align-items: center;
@@ -220,55 +228,69 @@
         transition: all 0.2s ease;
 
         &.active {
-          border-color: var(--dark-blue);
-          background-color: rgba(0, 100, 200, 0.05);
-          color: var(--dark-blue);
+          border-color: var(--border-color);
+          background-color: var(--base-color);
+          // color: var(--dark-blue);
         }
 
-        &:hover:not(.active) {
-          background-color: rgba(0, 0, 0, 0.03);
-        }
+        // &:hover:not(.active) {
+        //   background-color: rgba(0, 0, 0, 0.03);
+        // }
       }
     }
 
-    .name-input-actions {
-      padding: 15px;
-      display: flex;
-      justify-content: flex-end;
-      gap: 10px;
-      border-top: 1px solid var(--border-color);
+  }
+}
 
-      button {
-        padding: 8px 16px;
-        border-radius: 6px;
-        font-size: 14px;
-        cursor: pointer;
-        transition: background-color 0.2s ease;
+.name-input-actions {
+  // padding: 15px;
+  display: flex;
+  justify-content: space-between;
+  gap: 10px;
+  // border-top: 1px solid var(--border-color);
 
-        &.cancel-button {
-          background-color: transparent;
-          border: 1px solid var(--border-color);
-          color: var(--light-font);
+  .actions-title {
+    display: flex;
+    align-items: center;
+  }
 
-          &:hover {
-            background-color: rgba(0, 0, 0, 0.05);
-          }
-        }
+  .actions {
+    display: flex;
+  }
 
-        &.save-button {
-          background-color: var(--dark-blue);
-          color: white;
-          border: none;
+  button {
+    padding: 4px 8px;
+    border-radius: 6px;
+    font-size: 14px;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+    border: none;
 
-          &:hover:not(.disabled) {
-            background-color: var(--dark-blue-hover, #0056b3);
-          }
+    display: flex;
+    align-items: center;
+    justify-content: center;
 
-          &.disabled {
-            background-color: var(--light-font, #cccccc);
-            cursor: not-allowed;
-          }
-        }
+    &.cancel-button {
+      background-color: transparent;
+      color: var(--light-font);
+
+      &:hover {
+        background-color: var(--ligth-red);
+      }
+    }
+
+    &.save-button {
+      background-color: white;
+      color: white;
+      border: none;
+
+      &:hover:not(.disabled) {
+        background-color: var(--lighth-green);
+      }
+
+      &.disabled {
+        // background-color: var(--light-font, #cccccc);
+        cursor: not-allowed;
       }
     }
   }
