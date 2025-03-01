@@ -1,7 +1,7 @@
 import { formatDate } from "@/Utils/formateData";
 import "./index.scss";
-import { FileJson2 } from "lucide-react";
-import { lightFont } from "@/Styles/base";
+import { Json } from "../Buttons/Json";
+import { Save } from "../Buttons/Save";
 
 export const PageIntro = ({ data }: { data: any }) => {
     return (
@@ -26,9 +26,9 @@ export const PageIntro = ({ data }: { data: any }) => {
                         </div>
                     </div>
 
-                    <div className="json-object-btn">
-                        <FileJson2 size={18} color={lightFont} />
-                        <div className="json-object-btn-text">JSON</div>
+                    <div className="utils-actions-btns">
+                        <Json />
+                        <Save />
                     </div>
                 </div>
             </div>

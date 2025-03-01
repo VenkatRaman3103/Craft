@@ -81,33 +81,12 @@
         }
       }
 
-      .json-object-btn {
+      .utils-actions-btns {
         display: flex;
         flex-direction: row;
         align-items: center;
-        gap: 5px;
 
-        border-radius: 10px;
-        cursor: pointer;
-        border: 1px solid transparent;
-
-        padding: 8px 12px;
-        background-color: var(--base-color);
-        border: 1x solid transparent;
-
-        &:hover {
-          background-color: var(--base-color);
-          border: 1px solid var(--border-color);
-        }
-
-        .json-icon {
-          color: var(--light-font);
-        }
-
-        .json-object-btn-text {
-          font-size: 14px;
-          color: var(--light-font);
-        }
+        gap: 10px;
       }
     }
   }
