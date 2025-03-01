@@ -18,9 +18,9 @@ export const Explorer = ({ children }: { children: React.ReactNode }) => {
                     <div className="content-wrapper">{children}</div>
                 </div>
             </div>
-            <button className="isometric-toggle" onClick={toggleIsometric}>
-                {isIsometric ? "Normal View" : "Isometric View"}
-            </button>
+            {/* <button className="isometric-toggle" onClick={toggleIsometric}> */}
+            {/*     {isIsometric ? "Normal View" : "Isometric View"} */}
+            {/* </button> */}
         </div>
     );
 };

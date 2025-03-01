@@ -81,7 +81,7 @@
       }
     }
 
-    .content-container {
+    .collection-content-container {
       width: 80%;
       height: 100%;
 
@@ -89,12 +89,21 @@
       align-items: center;
       justify-content: center;
 
-      .content-wrapper {
+      .collection-content-wrapper {
         height: 80%;
         width: 95%;
 
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+
         .heading {
           font-size: 22px;
+        }
+
+        .go-to-page-btn {
+          width: fit-content;
+          padding: 10px 30px;
         }
       }
 
