@@ -3,7 +3,7 @@ import "./index.scss";
 import { FileJson2 } from "lucide-react";
 import { lightFont } from "@/Styles/base";
 
-export const PageIntro = ({ data }) => {
+export const PageIntro = ({ data }: { data: any }) => {
     return (
         <div className="page-intro-container">
             <div className="page-heading-slug-wrapper">
@@ -13,17 +13,23 @@ export const PageIntro = ({ data }) => {
                     <div className="page-slug-text"> {data?.slug}</div>
                 </div>
             </div>
-            <div className="time-stamps-container">
-                <div className="time-stamps-wrapper">
-                    <div className="created-at">
-                        <span>Created At:</span> {formatDate(data?.created_at)}
-                    </div>
-                    <div className="edited-at">
-                        <span>Last Edited At: </span>
-                        {formatDate(data?.edited_at)}
+            <div className="utils-section-container">
+                <div className="utils-section-wrapper">
+                    <div className="time-stamp-container">
+                        <div className="created-at">
+                            <span>Created At:</span>{" "}
+                            {formatDate(data?.created_at)}
+                        </div>
+                        <div className="edited-at">
+                            <span>Last Edited At: </span>
+                            {formatDate(data?.edited_at)}
+                        </div>
                     </div>
 
-                    <FileJson2 size={18} color={lightFont} />
+                    <div className="json-object-btn">
+                        <FileJson2 size={18} color={lightFont} />
+                        <div className="json-object-btn-text">JSON</div>
+                    </div>
                 </div>
             </div>
         </div>
