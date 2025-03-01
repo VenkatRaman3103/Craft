@@ -4,8 +4,18 @@ import { Json } from "../Buttons/Json";
 import { Save } from "../Buttons/Save";
 import { SideBarBtn } from "../Buttons/SideBarBtn";
 import { SimpleTableBtn } from "../Buttons/SimpleTableBtn";
+import { ComponentsBtn } from "../Buttons/ComponentsBtn";
+import * as React from "react";
 
-export const PageIntro = ({ data }: { data: any }) => {
+export const PageIntro = ({
+    data,
+    openSideBar,
+    setOpenSideBar,
+}: {
+    data: any;
+    openSideBar: boolean;
+    setOpenSideBar: React.Dispatch<React.SetStateAction<boolean>>;
+}) => {
     return (
         <div className="page-intro-container">
             <div className="page-heading-slug-wrapper">
@@ -27,12 +37,14 @@ export const PageIntro = ({ data }: { data: any }) => {
                             {formatDate(data?.edited_at)}
                         </div>
                     </div>
-
                     <div className="utils-actions-btns">
+                        <ComponentsBtn />
                         <Json />
-                        <Save />
-                        <SideBarBtn />
                         <SimpleTableBtn />
+                        <Save />
+                        <div onClick={() => setOpenSideBar(!openSideBar)}>
+                            <SideBarBtn isActive={openSideBar} />
+                        </div>
                     </div>
                 </div>
             </div>

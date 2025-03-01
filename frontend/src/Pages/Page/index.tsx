@@ -11,6 +11,7 @@ import { Explorer } from "@/Components/Explorer";
 export const Page = () => {
     const { page_id } = useParams();
     const [pageData, setPageData] = useState<pageType>();
+    const [openSideBar, setOpenSideBar] = useState(false);
 
     useEffect(() => {
         async function getPageData() {
@@ -25,12 +26,19 @@ export const Page = () => {
     return (
         <Explorer>
             <div className="page-content-container">
-                <PageIntro data={pageData} />
+                <PageIntro
+                    data={pageData}
+                    openSideBar={openSideBar}
+                    setOpenSideBar={setOpenSideBar}
+                />
                 <div className="blocks-list-container">
                     {pageData && <Blocks blocks={pageData.blocks} />}
-                    <div className="sidebar-container">
-                        <div className="sidebar-wrapper"></div>
-                    </div>
+
+                    {openSideBar && (
+                        <div className="sidebar-container">
+                            <div className="sidebar-wrapper"></div>
+                        </div>
+                    )}
                 </div>
             </div>
         </Explorer>
