@@ -22,10 +22,10 @@ export const FieldWrapper = ({
                     </div>
                     <div className="text-field-actions">
                         <div className="text-field-edit">
-                            <PencilLine size={16} color={lightFont} />
+                            <PencilLine size={18} color={lightFont} />
                         </div>
                         <div className="text-field-more">
-                            <EllipsisVertical size={16} color={lightFont} />
+                            <EllipsisVertical size={18} color={lightFont} />
                         </div>
                     </div>
                 </div>

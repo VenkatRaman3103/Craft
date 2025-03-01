@@ -1,5 +1,7 @@
 import { formatDate } from "@/Utils/formateData";
 import "./index.scss";
+import { FileJson2 } from "lucide-react";
+import { lightFont } from "@/Styles/base";
 
 export const PageIntro = ({ data }) => {
     return (
@@ -20,6 +22,8 @@ export const PageIntro = ({ data }) => {
                         <span>Last Edited At: </span>
                         {formatDate(data?.edited_at)}
                     </div>
+
+                    <FileJson2 size={18} color={lightFont} />
                 </div>
             </div>
         </div>
