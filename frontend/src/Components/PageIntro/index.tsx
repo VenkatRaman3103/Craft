@@ -6,6 +6,7 @@ import { SideBarBtn } from "../Buttons/SideBarBtn";
 import { SimpleTableBtn } from "../Buttons/SimpleTableBtn";
 import { ComponentsBtn } from "../Buttons/ComponentsBtn";
 import * as React from "react";
+import { darkFont, lightFont } from "@/Styles/base";
 
 export const PageIntro = ({
     data,
@@ -43,7 +44,11 @@ export const PageIntro = ({
                         <SimpleTableBtn />
                         <Save />
                         <div onClick={() => setOpenSideBar(!openSideBar)}>
-                            <SideBarBtn isActive={openSideBar} />
+                            <SideBarBtn
+                                isActive={openSideBar}
+                                iconColor={openSideBar ? darkFont : lightFont}
+                                labelColor={openSideBar ? darkFont : lightFont}
+                            />
                         </div>
                     </div>
                 </div>
