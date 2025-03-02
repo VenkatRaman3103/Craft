@@ -24,23 +24,21 @@ export const Page = () => {
     console.log(pageData, "pageData");
 
     return (
-        <Explorer>
-            <div className="page-content-container">
-                <PageIntro
-                    data={pageData}
-                    openSideBar={openSideBar}
-                    setOpenSideBar={setOpenSideBar}
-                />
-                <div className="blocks-list-container">
-                    {pageData && <Blocks blocks={pageData.blocks} />}
+        <div className="page-content-container">
+            <PageIntro
+                data={pageData}
+                openSideBar={openSideBar}
+                setOpenSideBar={setOpenSideBar}
+            />
+            <div className="blocks-list-container">
+                {pageData && <Blocks blocks={pageData.blocks} />}
 
-                    {openSideBar && (
-                        <div className="sidebar-container">
-                            <div className="sidebar-wrapper"></div>
-                        </div>
-                    )}
-                </div>
+                {openSideBar && (
+                    <div className="sidebar-container">
+                        <div className="sidebar-wrapper"></div>
+                    </div>
+                )}
             </div>
-        </Explorer>
+        </div>
     );
 };

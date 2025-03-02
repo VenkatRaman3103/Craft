@@ -5,6 +5,7 @@ import "./indes.scss";
 import { ThreeDotsIcon } from "@/assets/ThreeDotsIcon";
 import * as React from "react";
 import { StatusOption } from "../Status";
+import { useNavigate } from "react-router";
 
 type optionsType = "draft" | "publish" | "unpublish";
 
@@ -42,6 +43,8 @@ export const Folder: React.FC<folderProp> = ({
 
     const [endpointValue, setEndpointValue] = useState(slug);
     const CHARACTER_LIMIT = 20;
+
+    const navigate = useNavigate();
 
     useEffect(() => {
         setData({
@@ -121,7 +124,7 @@ export const Folder: React.FC<folderProp> = ({
     console.log(data, "dataCollection");
 
     function handleNavigation() {
-        window.location.href = `${baseUrl}/collections/${data.collection_id}`;
+        navigate(`/collections/${data.collection_id}`);
     }
 
     return (

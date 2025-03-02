@@ -2,6 +2,7 @@ import { baseUrl } from "@/config";
 import { StatusOption } from "../Status";
 import "./index.scss";
 import { formatDate } from "@/Utils/formateData";
+import { useNavigate } from "react-router";
 
 type collectionType =
     | "static-page"
@@ -21,8 +22,10 @@ export const CollectionIntro = ({
     collection_id,
     showNavBtn,
 }: collectionIntroType) => {
+    const navigate = useNavigate();
+
     function goToCollectionPage() {
-        window.location.href = `${baseUrl}/collection/${collection_id}`;
+        navigate(`/collection/${collection_id}`);
     }
 
     function btnDescription(type: collectionType) {

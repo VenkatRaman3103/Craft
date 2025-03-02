@@ -1,4 +1,5 @@
 import "./App.css";
+import { Explorer } from "./Components/Explorer";
 import { CollectionsPage } from "./Pages/Collections";
 
 function App() {
