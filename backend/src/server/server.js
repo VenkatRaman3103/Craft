@@ -14,6 +14,7 @@ import {
     fieldValues,
     pages,
 } from "../db/schema/pages.js";
+import collectionJoinPageRouter from "./collectionJoinPageRouter/route.js";
 
 dotenv.config();
 
@@ -71,6 +72,7 @@ app.post("/api/users", async (req, res) => {
 
 app.use("/api", collectionsRouter);
 app.use("/api", collectionRouter);
+app.use("/api", collectionJoinPageRouter);
 // Assuming you're using Express.js
 
 // Get all pages
@@ -168,7 +170,7 @@ app.get("/api/pages/:id", async (req, res) => {
 // Create a new page
 app.post("/api/pages", async (req, res) => {
     try {
-        const { title, slug } = req.body;
+        const { title, slug, page_id } = req.body;
 
         if (!title || !slug) {
             return res
@@ -182,6 +184,7 @@ app.post("/api/pages", async (req, res) => {
             .values({
                 title,
                 slug,
+                page_id,
             })
             .returning();
 

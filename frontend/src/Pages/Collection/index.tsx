@@ -5,10 +5,13 @@ import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router";
 import "./index.scss";
 import { pageType } from "@/Types/blocks";
+import { v4 as uuidv4 } from "uuid";
+import * as React from "react";
 
 export const Collection = () => {
     const { collection_id } = useParams();
-    const [pagesList, setPagesList] = useState<any>();
+    const [pagesList, setPagesList] = useState<pageType[]>();
+    const [showAddPage, setShowAddPage] = useState(false);
 
     const options = ["Pages", "Components", "Fields"];
     const [selectedOption, setSelectedOption] = useState(options[0]);
@@ -57,12 +60,83 @@ export const Collection = () => {
                 {selectedOption == "Pages" && (
                     <div className="pages-list-container">
                         <div className="pages-list-wrapper">
-                            {pagesList?.map((item: any, ind: number) => (
+                            {pagesList?.map((item: pageType, ind: number) => (
                                 <PagePreview key={ind} page={item.pages} />
                             ))}
                         </div>
                     </div>
                 )}
+
+                {showAddPage && (
+                    <AddPage
+                        slug={pagesList[0]?.collections.slug}
+                        collection_id={pagesList[0]?.collections.collection_id}
+                        setPagesList={setPagesList}
+                        setShowAddPage={setShowAddPage}
+                    />
+                )}
+                <button
+                    className="add-page-btn"
+                    onClick={() => setShowAddPage(true)}
+                >
+                    Add Page
+                </button>
+            </div>
+        </div>
+    );
+};
+
+export const AddPage = ({
+    slug,
+    collection_id,
+    setPagesList,
+    setShowAddPage,
+}: {
+    slug: string;
+    collection_id: string;
+    setPagesList: React.Dispatch<React.SetStateAction<pageType[]>>;
+    setShowAddPage: React.Dispatch<React.SetStateAction<boolean>>;
+}) => {
+    const [pageTitle, setPageTitle] = useState<string>();
+    const page_id = uuidv4();
+
+    async function handleSave() {
+        const newPage = {
+            title: pageTitle,
+            slug: slug,
+            page_id,
+        };
+
+        await axios.post(`${backendUrl}/pages`, newPage);
+        await axios.post(`${backendUrl}/create/collection-page`, {
+            collection_id,
+            page_id,
+        });
+
+        setPagesList((prev: pageType) => [...(prev || []), { pages: newPage }]);
+        setShowAddPage(false);
+    }
+
+    return (
+        <div className="page-container">
+            <div className="page-wrapper">
+                <div className="page-image-wrapper">
+                    <div className="page-image"></div>
+                </div>
+                <div className="collection-content-container">
+                    <div className="collection-content-wrapper">
+                        <input
+                            type="text"
+                            value={pageTitle}
+                            placeholder="Page Title"
+                            onChange={(e) => setPageTitle(e.target.value)}
+                            className="heading"
+                        />
+                        <button className="go-to-page-btn" onClick={handleSave}>
+                            Save
+                        </button>
+                    </div>
+                </div>
             </div>
         </div>
     );
@@ -83,7 +157,7 @@ export const PagePreview = ({ page }: { page: pageType }) => {
                 </div>
                 <div className="collection-content-container">
                     <div className="collection-content-wrapper">
-                        <div className="heading">{page.title}</div>
+                        <div className="heading">{page?.title}</div>
                         <button
                             className="go-to-page-btn"
                             onClick={() => handleOpenPage(page.page_id)}
