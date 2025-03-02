@@ -1,0 +1,160 @@
+import { useState, useRef, useEffect } from "react";
+import { X, Plus, Check, FileText } from "lucide-react";
+import { darkFont, lightFont } from "@/Styles/base";
+import "./index.scss";
+import * as React from "react";
+import { FieldsIcons } from "../Blocks";
+
+type FieldOption = {
+    id: string;
+    name: string;
+    type: string;
+    description?: string;
+};
+
+interface FieldSelectionPopupProps {
+    isOpen: boolean;
+    onClose: () => void;
+    onAddFields: (selectedFields: string[]) => void;
+    availableFields: FieldOption[];
+}
+
+export const FieldSelectionPopup: React.FC<FieldSelectionPopupProps> = ({
+    isOpen,
+    onClose,
+    onAddFields,
+    availableFields,
+}) => {
+    const [selectedFields, setSelectedFields] = useState<string[]>([]);
+    const popupRef = useRef<HTMLDivElement>(null);
+
+    // Close popup when clicking outside
+    useEffect(() => {
+        const handleClickOutside = (event: MouseEvent) => {
+            if (
+                popupRef.current &&
+                !popupRef.current.contains(event.target as Node)
+            ) {
+                onClose();
+            }
+        };
+
+        if (isOpen) {
+            document.addEventListener("mousedown", handleClickOutside);
+        }
+
+        return () => {
+            document.removeEventListener("mousedown", handleClickOutside);
+        };
+    }, [isOpen, onClose]);
+
+    const toggleFieldSelection = (fieldId: string) => {
+        setSelectedFields((prev) =>
+            prev.includes(fieldId)
+                ? prev.filter((id) => id !== fieldId)
+                : [...prev, fieldId],
+        );
+    };
+
+    const handleAddSelected = () => {
+        onAddFields(selectedFields);
+        setSelectedFields([]);
+        onClose();
+    };
+
+    if (!isOpen) return null;
+
+    return (
+        <div className="field-selection-overlay">
+            <div ref={popupRef} className="field-selection-popup">
+                <div className="field-selection-header">
+                    <div className="field-selection-heading-wrapper">
+                        <div className="fields-icon">
+                            <FileText size={22} color={darkFont} />
+                        </div>
+                        <h2>Add Fields</h2>
+                    </div>
+                    <button
+                        className="close-button"
+                        onClick={onClose}
+                        aria-label="Close"
+                    >
+                        <X size={22} color={lightFont} />
+                    </button>
+                </div>
+
+                <div className="field-types">
+                    <div className="field-types-wrapper">
+                        <div className="type-btn selected">All Fields</div>
+                        <div className="type-btn selected">Private Fields</div>
+                        <div className="type-btn selected">Global Fields</div>
+                    </div>
+                </div>
+
+                <div className="search-container">
+                    <input
+                        type="text"
+                        placeholder="Search fields..."
+                        className="search-input"
+                    />
+                </div>
+
+                <div className="fields-list">
+                    {availableFields.map((field) => (
+                        <div
+                            key={field.id}
+                            className={`field-option ${selectedFields.includes(field.id) ? "selected" : ""}`}
+                            onClick={() => toggleFieldSelection(field.id)}
+                        >
+                            {/* {field?.icon && ( */}
+                            <div className="field-icon">
+                                {FieldsIcons[field.type]}
+                            </div>
+                            {/* )} */}
+
+                            <div className="field-info">
+                                <div className="field-name">{field.name}</div>
+                                <div className="field-type">{field.type}</div>
+                                {field.description && (
+                                    <div className="field-description">
+                                        {field.description}
+                                    </div>
+                                )}
+                            </div>
+
+                            <div className="field-checkbox">
+                                {selectedFields.includes(field.id) ? (
+                                    <div className="checkbox-selected">
+                                        <Check size={14} />
+                                    </div>
+                                ) : (
+                                    <div className="checkbox-empty"></div>
+                                )}
+                            </div>
+                        </div>
+                    ))}
+                </div>
+
+                <div className="field-selection-footer">
+                    <div className="selection-count">
+                        {selectedFields.length} field
+                        {selectedFields.length !== 1 ? "s" : ""} selected
+                    </div>
+                    <div className="action-buttons">
+                        <button className="cancel-button" onClick={onClose}>
+                            Cancel
+                        </button>
+                        <button
+                            className="add-button"
+                            onClick={handleAddSelected}
+                            disabled={selectedFields.length === 0}
+                        >
+                            <Plus size={16} />
+                            Add Fields
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    );
+};
