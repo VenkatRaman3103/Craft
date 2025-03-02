@@ -21,9 +21,9 @@ export const FieldWrapper = ({
                         <div className="text-field-type">/ {data.type}</div>
                     </div>
                     <div className="text-field-actions">
-                        <div className="text-field-edit">
-                            <PencilLine size={18} color={lightFont} />
-                        </div>
+                        {/* <div className="text-field-edit"> */}
+                        {/*     <PencilLine size={18} color={lightFont} /> */}
+                        {/* </div> */}
                         <div className="text-field-more">
                             <EllipsisVertical size={18} color={lightFont} />
                         </div>

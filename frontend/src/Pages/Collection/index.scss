@@ -50,7 +50,7 @@
 }
 
 .page-container {
-  height: 230px;
+  height: 150px;
   width: 100%;
 
   border: 1px solid var(--border-color);
@@ -66,18 +66,22 @@
 
     .page-image-wrapper {
       height: 100%;
-      width: 20%;
+      width: 17%;
       border-right: 1px solid var(--border-color);
 
       display: flex;
       align-items: center;
       justify-content: center;
 
+      overflow: hidden;
+
       .page-image {
-        height: 180px;
-        width: 180px;
+        height: 170px;
+        width: 150px;
         border: 1px solid var(--border-color);
         border-radius: 15px;
+
+        transform: translateY(35px);
       }
     }
 

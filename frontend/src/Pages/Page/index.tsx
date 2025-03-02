@@ -6,7 +6,6 @@ import axios from "axios";
 import { useEffect, useState } from "react";
 import { useParams } from "react-router";
 import "./index.scss";
-import { Explorer } from "@/Components/Explorer";
 
 export const Page = () => {
     const { page_id } = useParams();
