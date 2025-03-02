@@ -11,7 +11,7 @@ export const collectionJoinPages = pgTable(
             })
             .notNull(),
         page_ref_id: uuid("page_ref_id")
-            .references(() => pages.page_id, { onDelete: "restrict" })
+            .references(() => pages.page_id, { onDelete: "cascade" })
             .notNull(),
     },
     (table) => ({

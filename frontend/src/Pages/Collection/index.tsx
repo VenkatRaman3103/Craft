@@ -29,6 +29,19 @@ export const Collection = () => {
 
     console.log(pagesList, "pagesList");
 
+    function handleDeletePage(page_id: string) {
+        try {
+            const response = axios.delete(`${backendUrl}/pages/${page_id}`);
+            console.log(response, `successfully deleted the page ${page_id}`);
+        } catch (error) {
+            console.log("frontend - error in deleting the page:", error);
+        }
+
+        setPagesList((prev) =>
+            prev?.filter((item) => item.pages.page_id !== page_id),
+        );
+    }
+
     return (
         <div className="collection-pages-container">
             <div className="collection-pages-wrapper">
@@ -61,7 +74,11 @@ export const Collection = () => {
                     <div className="pages-list-container">
                         <div className="pages-list-wrapper">
                             {pagesList?.map((item: pageType, ind: number) => (
-                                <PagePreview key={ind} page={item.pages} />
+                                <PagePreview
+                                    key={ind}
+                                    page={item.pages}
+                                    deletePage={handleDeletePage}
+                                />
                             ))}
                         </div>
                     </div>
@@ -108,7 +125,7 @@ export const AddPage = ({
         };
 
         await axios.post(`${backendUrl}/pages`, newPage);
-        await axios.post(`${backendUrl}/create/collection-page`, {
+        await axios.post(`${backendUrl}/collection-page`, {
             collection_id,
             page_id,
         });
@@ -142,7 +159,7 @@ export const AddPage = ({
     );
 };
 
-export const PagePreview = ({ page }: { page: pageType }) => {
+export const PagePreview = ({ page, deletePage }: { page: pageType }) => {
     const navigate = useNavigate();
 
     function handleOpenPage(page_id: string) {
@@ -163,6 +180,12 @@ export const PagePreview = ({ page }: { page: pageType }) => {
                             onClick={() => handleOpenPage(page.page_id)}
                         >
                             Open Page
+                        </button>
+                        <button
+                            className="go-to-page-btn"
+                            onClick={() => deletePage(page.page_id)}
+                        >
+                            Delete
                         </button>
                     </div>
                 </div>
