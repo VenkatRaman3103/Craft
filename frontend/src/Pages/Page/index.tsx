@@ -6,11 +6,13 @@ import axios from "axios";
 import { useEffect, useState } from "react";
 import { useParams } from "react-router";
 import "./index.scss";
+import { AddBtn } from "@/Components/Buttons/AddBtn";
 
 export const Page = () => {
     const { page_id } = useParams();
     const [pageData, setPageData] = useState<pageType>();
     const [openSideBar, setOpenSideBar] = useState(false);
+    const [blocks, setBlocks] = useState();
 
     useEffect(() => {
         async function getPageData() {
@@ -19,6 +21,12 @@ export const Page = () => {
         }
         getPageData();
     }, [page_id]);
+
+    useEffect(() => {
+        if (pageData) {
+            setBlocks(pageData.blocks);
+        }
+    }, [pageData]);
 
     console.log(pageData, "pageData");
 
@@ -30,7 +38,15 @@ export const Page = () => {
                 setOpenSideBar={setOpenSideBar}
             />
             <div className="blocks-list-container">
-                {pageData && <Blocks blocks={pageData.blocks} />}
+                <div className="blocks-list-wrapper">
+                    {blocks && <Blocks blocks={blocks} />}
+                    <div
+                        className="add-blocks-btn-wrapper"
+                        onClick={() => setBlocks([...blocks, {}])}
+                    >
+                        <AddBtn iconLable="Add Block" />
+                    </div>
+                </div>
 
                 {openSideBar && (
                     <div className="sidebar-container">

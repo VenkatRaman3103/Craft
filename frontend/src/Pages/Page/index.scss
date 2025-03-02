@@ -5,12 +5,25 @@
 
   .blocks-list-container {
     width: 100%;
-    height: auto;
+    // min-height: 100vh;
     display: flex;
+
+    .blocks-list-wrapper {
+      width: 100%;
+    // min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+
+      margin-top: 30px;
+      margin-left: 20px;
+      margin-right: 20px;
+    }
 
     .sidebar-container {
       width: 40vw;
-      height: auto;
+      height: 100vh;
       display: flex;
       flex-direction: column;
       align-items: center;
@@ -20,6 +33,14 @@
       border-left: 1px solid var(--border-color);
     }
   }
+}
+
+.add-blocks-btn-wrapper {
+  width: 100%;
+  height: auto;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 //}//}
