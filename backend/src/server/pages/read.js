@@ -9,16 +9,17 @@ export async function getAllPages(req, res) {
 
         const result = [];
 
+        const allBlocks = await db.select().from(blocks);
+
         // TODO: get blocks for every page
         for (let page of allPages) {
             const page_id = page.page_id;
 
-            const blocksList = await db
-                .select()
-                .from(blocks)
-                .where(eq(blocks.reference_id, page_id));
+            const pageBlocks = allBlocks.filter(
+                (block) => block.reference_id === page_id,
+            );
 
-            page.blocks = blocksList;
+            page.blocks = pageBlocks;
 
             result.push(page);
         }
