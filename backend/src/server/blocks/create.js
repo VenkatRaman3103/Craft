@@ -3,7 +3,7 @@ import { db } from "../server.js";
 
 export async function createBlock(req, res) {
     const { reference_id } = req.params;
-    const { name, description = "" } = req.body;
+    const { name, description = "", scope } = req.body;
 
     if (!name) {
         return res.status(400).json({
@@ -17,7 +17,8 @@ export async function createBlock(req, res) {
             .values({
                 reference_id,
                 name,
-                description: description || "",
+                description,
+                scope,
             })
             .returning();
 

@@ -49,6 +49,7 @@ export const Page = () => {
                 {
                     name: newBlockName,
                     description: "",
+                    scope: "page",
                 },
             );
             console.log(response.data, "Created");
