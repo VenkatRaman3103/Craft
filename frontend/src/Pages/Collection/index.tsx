@@ -12,6 +12,7 @@ export const Collection = () => {
     const { collection_id } = useParams();
     const [pagesList, setPagesList] = useState<pageType[]>();
     const [showAddPage, setShowAddPage] = useState(false);
+    const [collection, setCollection] = useState<any>();
 
     const options = ["Pages", "Components", "Fields"];
     const [selectedOption, setSelectedOption] = useState(options[0]);
@@ -25,9 +26,19 @@ export const Collection = () => {
             setPagesList(response.data);
         }
         getPages();
+
+        async function getCollection() {
+            const response = await axios.get(
+                `${backendUrl}/collections/collection/${collection_id}`,
+            );
+
+            setCollection(response.data[0]);
+        }
+        getCollection();
     }, [collection_id]);
 
     console.log(pagesList, "pagesList");
+    console.log(collection, "collectionsCurrent");
 
     function handleDeletePage(page_id: string) {
         try {
@@ -42,17 +53,18 @@ export const Collection = () => {
         );
     }
 
+    if (!collection) {
+        return <div>Collection Loading...</div>;
+    }
+
     return (
         <div className="collection-pages-container">
             <div className="collection-pages-wrapper">
-                {pagesList && (
-                    <CollectionIntro
-                        collection={pagesList[0]?.collections}
-                        collection_id={pagesList[0]?.collections.collection_id}
-                        showNavBtn={false}
-                    />
-                )}
-
+                <CollectionIntro
+                    collection={collection}
+                    collection_id={collection.collection_id}
+                    showNavBtn={false}
+                />
                 <div className="view-options-container">
                     {/* <div className="view-options-wrapper"> */}
                     {options.map((item, ind) => (
@@ -86,8 +98,8 @@ export const Collection = () => {
 
                 {showAddPage && (
                     <AddPage
-                        slug={pagesList[0]?.collections.slug}
-                        collection_id={pagesList[0]?.collections.collection_id}
+                        slug={collection?.slug}
+                        collection_id={collection.collection_id}
                         setPagesList={setPagesList}
                         setShowAddPage={setShowAddPage}
                     />
