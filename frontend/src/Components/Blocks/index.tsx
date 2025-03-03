@@ -94,7 +94,7 @@ export const Blocks = ({
     isSidebarOpen,
     onScopeChange,
     onDelete,
-    onAddFields, // Add this prop to pass from parent
+    onAddFields,
 }: {
     blocks: blockType[];
     isSidebarOpen?: boolean;
@@ -105,7 +105,7 @@ export const Blocks = ({
         withContent: boolean,
     ) => void;
     onDelete?: (blockId: string) => void;
-    onAddFields?: (blockId: string) => void; // Add this prop type
+    onAddFields?: (blockId: string) => void;
 }) => {
     return (
         <div className="blocks-container">
@@ -243,6 +243,8 @@ export const Block = ({
         setFields(block.fields);
     }, [block]);
 
+    console.log(block, "blockForPage");
+
     return (
         <div className="block-container">
             <div className="block-wrapper">
@@ -251,7 +253,7 @@ export const Block = ({
                     onClick={toggleCollapse}
                 >
                     <div className="block-header-wrapper">
-                        <div className="block-type">{block.type}</div>
+                        <div className="block-type">{block.name}</div>
                         <div
                             ref={ellipsisRef}
                             className="ellipsis-container"
