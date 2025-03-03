@@ -16,7 +16,7 @@ export const Page = () => {
 
     useEffect(() => {
         async function getPageData() {
-            const response = await axios.get(`${backendUrl}/pages/${page_id}`);
+            const response = await axios.get(`${backendUrl}/page/${page_id}`);
             setPageData(response.data);
         }
         getPageData();

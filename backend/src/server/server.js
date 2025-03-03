@@ -85,26 +85,26 @@ app.use("/api", pagesRoute);
 // });
 
 // Get a specific page with all its content
-app.get("/api/pages/:id", async (req, res) => {
-    try {
-        const pageId = req.params.id;
-
-        // Get the page
-        const page = await db
-            .select()
-            .from(pages)
-            .where(eq(pages.page_id, pageId))
-            .limit(1);
-
-        if (page.length === 0) {
-            return res.status(404).json({ error: "Page not found" });
-        }
-
-        res.json(page[0]);
-    } catch (error) {
-        res.status(500).json({ error: `Internal server error: ${error}` });
-    }
-});
+// app.get("/api/pages/:id", async (req, res) => {
+//     try {
+//         const pageId = req.params.id;
+//
+//         // Get the page
+//         const page = await db
+//             .select()
+//             .from(pages)
+//             .where(eq(pages.page_id, pageId))
+//             .limit(1);
+//
+//         if (page.length === 0) {
+//             return res.status(404).json({ error: "Page not found" });
+//         }
+//
+//         res.json(page[0]);
+//     } catch (error) {
+//         res.status(500).json({ error: `Internal server error: ${error}` });
+//     }
+// });
 
 // Create a new page
 app.post("/api/pages", async (req, res) => {
