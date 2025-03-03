@@ -29,7 +29,7 @@
         border: 3px solid var(--base-color);
 
         &.active {
-          background-color: white;
+          background-color: var(--white-color);
           border: 3px solid var(--base-color);
         }
       }
@@ -65,7 +65,7 @@
   width: 100%;
 
   border: 1px solid var(--border-color);
-  background-color: white;
+  background-color: var(--white-color);
 
   border-radius: 30px;
 

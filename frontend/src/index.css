@@ -1,7 +1,7 @@
 :root {
     font-family: sans-serif;
-    /* --base-color: #f3f5f7; */
     --base-color: #f8f9fa;
+    --white-color: #ffffff;
 
     --lighth-green: #e7f8ee;
     --dark-green: #2ba46e;
@@ -21,11 +21,10 @@
     --light-font: #84878a;
 
     background-color: var(--base-color);
-    /* background-color: #f9fafc; */
 }
 
 body {
-    margin: 0px;
+    margin: 0;
 }
 
 input {
@@ -37,3 +36,31 @@ input:focus-visible {
     outline: none;
     border: none;
 }
+
+/* Dark Mode */
+/* @media (prefers-color-scheme: dark) { */
+/*     :root { */
+/*         --base-color: #0e0e0e; */
+/*         --white-color: #121212; */
+/**/
+/*         --lighth-green: #183d2a; */
+/*         --dark-green: #2ba46e; */
+/**/
+/*         --lighth-blue: #102a43; */
+/*         --dark-blue: #1c7cc3; */
+/**/
+/*         --lighth-yellow: #3d2c02; */
+/*         --dark-yellow: #e69739; */
+/**/
+/*         --ligth-red: #41272a; */
+/**/
+/*         --border-color: #2a2d32; */
+/*         --dark-font: #e0e0e0; */
+/*         --light-font: #a0a0a0; */
+/*     } */
+/**/
+/*     body { */
+/*         background-color: var(--base-color); */
+/*         color: var(--dark-font); */
+/*     } */
+/* } */

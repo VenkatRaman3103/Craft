@@ -12,7 +12,7 @@
 }
 
 .field-selection-popup {
-  background-color: white;
+  background-color: var(--white-color);
   border-radius: 20px;
   // box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
   width: 90%;
@@ -100,7 +100,7 @@
       border: 1px solid transparent;
 
       &:hover {
-        background-color: white;
+        background-color: var(--white-color);
         border: 1px solid var(--border-color);
       }
     }
