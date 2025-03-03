@@ -1,5 +1,5 @@
 {
-  "id": "569fb2a6-145f-4587-9caf-54d542be955f",
+  "id": "3011a11a-d378-450c-aaec-462985da6401",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "version": "7",
   "dialect": "postgresql",
@@ -29,10 +29,11 @@
         },
         "scope": {
           "name": "scope",
-          "type": "text",
+          "type": "scope_enum",
+          "typeSchema": "public",
           "primaryKey": false,
           "notNull": false,
-          "default": null
+          "default": "'global'"
         },
         "reference_id": {
           "name": "reference_id",
@@ -275,7 +276,17 @@
       "isRLSEnabled": false
     }
   },
-  "enums": {},
+  "enums": {
+    "public.scope_enum": {
+      "name": "scope_enum",
+      "schema": "public",
+      "values": [
+        "global",
+        "page",
+        "collection"
+      ]
+    }
+  },
   "schemas": {},
   "sequences": {},
   "roles": {},

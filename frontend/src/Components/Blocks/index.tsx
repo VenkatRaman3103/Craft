@@ -21,6 +21,8 @@ import * as React from "react";
 import { BlockMenuOptions } from "../BlockMenuOptions";
 import { AddBtn } from "../Buttons/AddBtn";
 import { FieldSelectionPopup } from "../FieldSelectionPopup";
+import { backendUrl } from "@/config";
+import axios from "axios";
 
 export const FieldsIcons = {
     text: <Type size={20} color={lightFont} />,
@@ -93,7 +95,6 @@ export const Blocks = ({
     blocks,
     isSidebarOpen,
     onScopeChange,
-    onDelete,
     onAddFields,
 }: {
     blocks: blockType[];
@@ -104,12 +105,33 @@ export const Blocks = ({
         isGlobal: boolean,
         withContent: boolean,
     ) => void;
-    onDelete?: (blockId: string) => void;
     onAddFields?: (blockId: string) => void;
 }) => {
+    const [blocksList, setBlocksList] = useState<blockType[]>(blocks);
+
+    async function onDelete(block_id: string) {
+        try {
+            const response = await axios.delete(
+                `${backendUrl}/block/${block_id}`,
+            );
+            console.log(response.data, "Deleted");
+        } catch (error) {
+            const errorMessage = {
+                error,
+                message: `Failed to delete block: ${block_id}`,
+            };
+            console.log(errorMessage);
+        }
+        const response = await axios.delete(`${backendUrl}/block/${block_id}`);
+
+        setBlocksList((prevBlocks) =>
+            prevBlocks.filter((block) => block.block_id !== block_id),
+        );
+    }
+
     return (
         <div className="blocks-container">
-            {blocks.map((item, index) => (
+            {blocksList.map((item, index) => (
                 <Block
                     key={index}
                     block={item}
@@ -138,7 +160,7 @@ export const Block = ({
         isGlobal: boolean,
         withContent: boolean,
     ) => void;
-    onDelete?: (blockId: string) => void;
+    onDelete?: (block_id: string) => void;
     onAddFields?: (blockId: string) => void;
 }) => {
     const [isCollapsed, setIsCollapsed] = useState(false);
@@ -187,7 +209,7 @@ export const Block = ({
 
     const handleDelete = () => {
         if (onDelete) {
-            onDelete(block.id);
+            onDelete(block.block_id);
         }
         setShowOptions(false);
     };

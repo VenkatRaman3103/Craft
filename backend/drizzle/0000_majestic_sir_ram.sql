@@ -1,8 +1,9 @@
+CREATE TYPE "public"."scope_enum" AS ENUM('global', 'page', 'collection');--> statement-breakpoint
 CREATE TABLE "blocks" (
 	"block_id" uuid PRIMARY KEY DEFAULT gen_random_uuid() NOT NULL,
 	"name" text NOT NULL,
 	"content" text NOT NULL,
-	"scope" text DEFAULT null,
+	"scope" "scope_enum" DEFAULT 'global',
 	"reference_id" text DEFAULT null,
 	"created_at" timestamp DEFAULT now(),
 	"edited_at" timestamp DEFAULT now()

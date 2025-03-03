@@ -1,7 +1,7 @@
 import { sampleBlocks } from "./queries/blocks.js";
 
 async function seed() {
-    await sampleBlocks();
+    // await sampleBlocks();
     // await samplePages();
     // await sampleCollectionJoinPages();
     // await sampleCollections();
