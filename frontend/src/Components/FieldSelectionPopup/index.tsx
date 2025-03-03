@@ -27,6 +27,7 @@ export const FieldSelectionPopup: React.FC<FieldSelectionPopupProps> = ({
 }) => {
     const [selectedFields, setSelectedFields] = useState<string[]>([]);
     const popupRef = useRef<HTMLDivElement>(null);
+    const [selectedFieldsType, setSelectedFieldsType] = useState("all-fields");
 
     // Close popup when clicking outside
     useEffect(() => {
@@ -62,6 +63,12 @@ export const FieldSelectionPopup: React.FC<FieldSelectionPopupProps> = ({
         onClose();
     };
 
+    const typeOfFields = [
+        { label: "All Fields", value: "all-fields" },
+        { label: "Private Fields", value: "private-fields" },
+        { label: "Global Fields", value: "global-fields" },
+    ];
+
     if (!isOpen) return null;
 
     return (
@@ -85,9 +92,17 @@ export const FieldSelectionPopup: React.FC<FieldSelectionPopupProps> = ({
 
                 <div className="field-types">
                     <div className="field-types-wrapper">
-                        <div className="type-btn selected">All Fields</div>
-                        <div className="type-btn selected">Private Fields</div>
-                        <div className="type-btn selected">Global Fields</div>
+                        {typeOfFields.map((type, ind) => (
+                            <div
+                                key={ind}
+                                className={`type-btn ${selectedFieldsType === type.value ? "selected" : ""}`}
+                                onClick={() =>
+                                    setSelectedFieldsType(type.value)
+                                }
+                            >
+                                {type.label}
+                            </div>
+                        ))}
                     </div>
                 </div>
 

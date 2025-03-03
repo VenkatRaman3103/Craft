@@ -1,17 +1,7 @@
-import { db } from "../server/server.js";
-import { sampleCollectionJoinPages } from "./queries/collectionJoinPages.js";
-import { sampleCollections } from "./queries/collections.js";
-import { deleteCollections } from "./queries/deleteCollectins.js";
-import { insertDummyData, samplePages } from "./queries/pages.js";
-import {
-    blocks,
-    blockTypes,
-    fieldDefinitions,
-    fieldValues,
-    pages,
-} from "./schema/pages.js";
+import { sampleBlocks } from "./queries/blocks.js";
 
 async function seed() {
+    await sampleBlocks();
     // await samplePages();
     // await sampleCollectionJoinPages();
     // await sampleCollections();
