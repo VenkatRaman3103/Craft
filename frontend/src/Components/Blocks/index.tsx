@@ -122,7 +122,6 @@ export const Blocks = ({
             };
             console.log(errorMessage);
         }
-        const response = await axios.delete(`${backendUrl}/block/${block_id}`);
 
         setBlocksList((prevBlocks) =>
             prevBlocks.filter((block) => block.block_id !== block_id),

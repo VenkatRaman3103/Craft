@@ -42,7 +42,7 @@ export const Collection = () => {
 
     function handleDeletePage(page_id: string) {
         try {
-            const response = axios.delete(`${backendUrl}/pages/${page_id}`);
+            const response = axios.delete(`${backendUrl}/page/${page_id}`);
             console.log(response, `successfully deleted the page ${page_id}`);
         } catch (error) {
             console.log("frontend - error in deleting the page:", error);
@@ -136,7 +136,7 @@ export const AddPage = ({
             page_id,
         };
 
-        await axios.post(`${backendUrl}/pages`, newPage);
+        await axios.post(`${backendUrl}/page`, newPage);
         await axios.post(`${backendUrl}/collection-page`, {
             collection_id,
             page_id,
