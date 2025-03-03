@@ -97,7 +97,7 @@ export const Collection = () => {
                 )}
 
                 {showAddPage && (
-                    <AddPage
+                    <PagePrompt
                         slug={collection?.slug}
                         collection_id={collection.collection_id}
                         setPagesList={setPagesList}
@@ -115,7 +115,7 @@ export const Collection = () => {
     );
 };
 
-export const AddPage = ({
+export const PagePrompt = ({
     slug,
     collection_id,
     setPagesList,

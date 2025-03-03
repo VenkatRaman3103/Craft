@@ -1,6 +1,7 @@
 import express from "express";
 import { getAllBlocks, getBlockById, getBlockByReference } from "./read.js";
 import { deleteBlockById } from "./delete.js";
+import { createBlock } from "./create.js";
 
 export const blocksRouter = express.Router();
 
@@ -16,4 +17,5 @@ blocksRouter.get("/block/reference/:reference_id", getBlockByReference);
 // TODO: blocks delete
 blocksRouter.delete("/block/:block_id", deleteBlockById);
 
-// TODO: blocks read
+// CREATE: block based on reference
+blocksRouter.post("/block/reference/:reference_id", createBlock);

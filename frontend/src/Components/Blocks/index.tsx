@@ -109,6 +109,10 @@ export const Blocks = ({
 }) => {
     const [blocksList, setBlocksList] = useState<blockType[]>(blocks);
 
+    useEffect(() => {
+        setBlocksList(blocks);
+    }, [blocks]);
+
     async function onDelete(block_id: string) {
         try {
             const response = await axios.delete(
