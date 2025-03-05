@@ -2,6 +2,7 @@ import express from "express";
 import { getAllPages, getPageById } from "./read.js";
 import { createPage } from "./create.js";
 import { deletePage } from "./delete.js";
+import { createPageItem } from "./page_items/create.js";
 
 export const pagesRoute = express.Router();
 
@@ -17,4 +18,6 @@ pagesRoute.post("/page", createPage);
 pagesRoute.delete("/page/:id", deletePage);
 
 // TODO: pages update
-// TODO: pages delete
+
+// TODO: pages_items create
+pagesRoute.post("/page/:page_id/page_items", createPageItem);

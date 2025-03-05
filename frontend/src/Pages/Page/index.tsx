@@ -33,20 +33,26 @@ export const Page = () => {
         getPageData();
     }, [page_id]);
 
+    // useEffect(() => {
+    //     if (pageData) {
+    //         setPageItems(pageData.page_items);
+    //     }
+    // }, [pageData]);
+
     useEffect(() => {
         if (pageData) {
             setPageItems(pageData.page_items);
         }
     }, [pageData]);
 
-    async function createNewBlock() {
+    async function createPageItem() {
         if (!newBlockName) {
             console.error("Block name is required");
             return;
         }
 
         try {
-            const response = await axios.post(
+            const blocksResponse = await axios.post(
                 `${backendUrl}/block/reference/${page_id}`,
                 {
                     name: newBlockName,
@@ -54,13 +60,33 @@ export const Page = () => {
                     scope: "page",
                 },
             );
-            console.log(response.data, "Created");
+            // TODO: create fields
+            console.log(
+                blocksResponse.data,
+                "blocksResponse responseItemBlock",
+            );
 
-            // bookmark: Update the blocks list
-            const updatedBlocks = pageData?.blocks
-                ? [...pageData.blocks, response.data]
-                : [response.data];
-            setBlocks(updatedBlocks);
+            const pageItemsResponse = await axios.post(
+                `${backendUrl}/page/${page_id}/page_items`,
+                {
+                    page_id: page_id,
+                    block_id: blocksResponse.data.block_id,
+                },
+            );
+
+            console.log(
+                pageItemsResponse.data,
+                "pageItemsResponse responseItemBlock",
+            );
+
+            // Add the new page item to the state
+            const newPageItem = pageItemsResponse.data.page_items;
+            const updatedPageItems = [
+                ...pageItems,
+                newPageItem[newPageItem.length - 1],
+            ];
+
+            setPageItems(updatedPageItems);
 
             setShowBlockPrompt(false);
             setNewBlockName("");
@@ -91,7 +117,7 @@ export const Page = () => {
                                 handleInputChange={handleInputChange}
                                 newBlockTitle={newBlockName}
                             />
-                            <button onClick={createNewBlock}>
+                            <button onClick={createPageItem}>
                                 Create Block
                             </button>
                         </div>
