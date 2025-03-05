@@ -1,5 +1,5 @@
 {
-  "id": "8a2c5576-73ed-491e-8acd-8175cbe91202",
+  "id": "78e8947e-ce4f-4713-a857-2a68920d86db",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "version": "7",
   "dialect": "postgresql",
@@ -87,6 +87,13 @@
           "type": "uuid",
           "primaryKey": false,
           "notNull": false
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": false,
+          "default": "now()"
         }
       },
       "indexes": {},
@@ -229,6 +236,111 @@
       "checkConstraints": {},
       "isRLSEnabled": false
     },
+    "public.text_fields": {
+      "name": "text_fields",
+      "schema": "",
+      "columns": {
+        "field_id": {
+          "name": "field_id",
+          "type": "uuid",
+          "primaryKey": true,
+          "notNull": true,
+          "default": "gen_random_uuid()"
+        },
+        "name": {
+          "name": "name",
+          "type": "varchar",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "label": {
+          "name": "label",
+          "type": "varchar",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "value": {
+          "name": "value",
+          "type": "varchar",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": false,
+          "default": "now()"
+        },
+        "edited_at": {
+          "name": "edited_at",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": false,
+          "default": "now()"
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {},
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "public.page_items": {
+      "name": "page_items",
+      "schema": "",
+      "columns": {
+        "item_id": {
+          "name": "item_id",
+          "type": "uuid",
+          "primaryKey": true,
+          "notNull": true,
+          "default": "gen_random_uuid()"
+        },
+        "page_ref_id": {
+          "name": "page_ref_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "item_type": {
+          "name": "item_type",
+          "type": "page_item_type",
+          "typeSchema": "public",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "reference_id": {
+          "name": "reference_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": true
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "page_items_page_ref_id_pages_page_id_fk": {
+          "name": "page_items_page_ref_id_pages_page_id_fk",
+          "tableFrom": "page_items",
+          "tableTo": "pages",
+          "columnsFrom": [
+            "page_ref_id"
+          ],
+          "columnsTo": [
+            "page_id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
     "public.pages": {
       "name": "pages",
       "schema": "",
@@ -296,7 +408,8 @@
           "name": "created_at",
           "type": "timestamp",
           "primaryKey": false,
-          "notNull": true
+          "notNull": false,
+          "default": "now()"
         }
       },
       "indexes": {},
@@ -362,6 +475,14 @@
         "global",
         "page",
         "collection"
+      ]
+    },
+    "public.page_item_type": {
+      "name": "page_item_type",
+      "schema": "public",
+      "values": [
+        "block",
+        "field"
       ]
     }
   },

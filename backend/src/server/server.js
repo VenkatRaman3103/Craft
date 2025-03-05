@@ -7,10 +7,10 @@ import { users } from "../db/schema/user.js";
 import { eq } from "drizzle-orm";
 import { collectionsRouter } from "./collections/route.js";
 import { collectionRouter } from "./collection/route.js";
-import { pages } from "../db/schema/pages.js";
 import collectionJoinPageRouter from "./collectionJoinPageRouter/route.js";
 import { blocksRouter } from "./blocks/route.js";
 import { pagesRoute } from "./pages/route.js";
+import * as schema from "../db/schema/index.js";
 
 dotenv.config();
 
@@ -22,7 +22,9 @@ const { Pool } = pg;
 
 // Set up PostgreSQL connection
 export const pool = new Pool({ connectionString: process.env.DATABASE_URL });
-export const db = drizzle(pool);
+export const db = drizzle(pool, {
+    schema: schema,
+});
 
 // Connect to DB
 pool.connect()
@@ -123,6 +125,27 @@ app.put("/api/pages/:id", async (req, res) => {
 // });
 
 app.use("/api", blocksRouter);
+
+app.get("/api/get/pages", async (req, res) => {
+    try {
+        const result = await db.query.pages.findMany({
+            with: {
+                page_items: {
+                    with: {
+                        field: true,
+                        block: true,
+                    },
+                },
+            },
+        });
+        res.json(result);
+    } catch (error) {
+        console.error("Query error:", error);
+        res.status(500).json({
+            error: `Internal server error: ${error.message}`,
+        });
+    }
+});
 
 // Start the server
 const PORT = 5000;

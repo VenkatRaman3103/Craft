@@ -1,4 +1,5 @@
 CREATE TYPE "public"."scope_enum" AS ENUM('global', 'page', 'collection');--> statement-breakpoint
+CREATE TYPE "public"."page_item_type" AS ENUM('block', 'field');--> statement-breakpoint
 CREATE TABLE "blocks" (
 	"block_id" uuid PRIMARY KEY DEFAULT gen_random_uuid() NOT NULL,
 	"name" text NOT NULL,
@@ -12,7 +13,8 @@ CREATE TABLE "blocks" (
 CREATE TABLE "child" (
 	"child_id" uuid PRIMARY KEY DEFAULT gen_random_uuid() NOT NULL,
 	"name" varchar NOT NULL,
-	"parent_ref_id" uuid
+	"parent_ref_id" uuid,
+	"created_at" timestamp DEFAULT now()
 );
 --> statement-breakpoint
 CREATE TABLE "collection_pages" (
@@ -31,6 +33,22 @@ CREATE TABLE "collections" (
 	"created_at" timestamp DEFAULT now()
 );
 --> statement-breakpoint
+CREATE TABLE "text_fields" (
+	"field_id" uuid PRIMARY KEY DEFAULT gen_random_uuid() NOT NULL,
+	"name" varchar NOT NULL,
+	"label" varchar NOT NULL,
+	"value" varchar NOT NULL,
+	"created_at" timestamp DEFAULT now(),
+	"edited_at" timestamp DEFAULT now()
+);
+--> statement-breakpoint
+CREATE TABLE "page_items" (
+	"item_id" uuid PRIMARY KEY DEFAULT gen_random_uuid() NOT NULL,
+	"page_ref_id" uuid,
+	"item_type" "page_item_type" NOT NULL,
+	"reference_id" uuid NOT NULL
+);
+--> statement-breakpoint
 CREATE TABLE "pages" (
 	"page_id" uuid PRIMARY KEY DEFAULT gen_random_uuid() NOT NULL,
 	"title" text NOT NULL,
@@ -42,7 +60,7 @@ CREATE TABLE "pages" (
 CREATE TABLE "parent" (
 	"parent_id" uuid PRIMARY KEY DEFAULT gen_random_uuid() NOT NULL,
 	"name" varchar NOT NULL,
-	"created_at" timestamp NOT NULL
+	"created_at" timestamp DEFAULT now()
 );
 --> statement-breakpoint
 CREATE TABLE "users" (
@@ -55,4 +73,5 @@ CREATE TABLE "users" (
 --> statement-breakpoint
 ALTER TABLE "child" ADD CONSTRAINT "child_parent_ref_id_parent_parent_id_fk" FOREIGN KEY ("parent_ref_id") REFERENCES "public"."parent"("parent_id") ON DELETE no action ON UPDATE no action;--> statement-breakpoint
 ALTER TABLE "collection_pages" ADD CONSTRAINT "collection_pages_collection_ref_id_collections_collection_id_fk" FOREIGN KEY ("collection_ref_id") REFERENCES "public"."collections"("collection_id") ON DELETE restrict ON UPDATE no action;--> statement-breakpoint
-ALTER TABLE "collection_pages" ADD CONSTRAINT "collection_pages_page_ref_id_pages_page_id_fk" FOREIGN KEY ("page_ref_id") REFERENCES "public"."pages"("page_id") ON DELETE cascade ON UPDATE no action;
+ALTER TABLE "collection_pages" ADD CONSTRAINT "collection_pages_page_ref_id_pages_page_id_fk" FOREIGN KEY ("page_ref_id") REFERENCES "public"."pages"("page_id") ON DELETE cascade ON UPDATE no action;--> statement-breakpoint
+ALTER TABLE "page_items" ADD CONSTRAINT "page_items_page_ref_id_pages_page_id_fk" FOREIGN KEY ("page_ref_id") REFERENCES "public"."pages"("page_id") ON DELETE cascade ON UPDATE no action;

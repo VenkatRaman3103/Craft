@@ -1,5 +1,5 @@
 import { db } from "../../../server/server.js";
-import { parent } from "../../schema/test/parent.js";
+import { parent } from "../../schema/parent.js";
 
 export async function sampleParent() {
     await db.insert(parent).values([
