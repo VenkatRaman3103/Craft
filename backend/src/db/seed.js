@@ -12,54 +12,54 @@ async function seed() {
     async function insertDummyData() {
         // Create page IDs
         const homePageId = "c2937bda-026d-46e3-b9ca-c2cbe43fc67d";
-        const aboutPageId = uuidv4();
+        // const aboutPageId = uuidv4();
 
         // Insert pages
-        await db.insert(pages).values([
-            {
-                page_id: homePageId,
-                title: "Page Title",
-                slug: "home",
-                created_at: new Date(),
-                edited_at: new Date(),
-            },
-            {
-                page_id: aboutPageId,
-                title: "About Us",
-                slug: "about",
-                created_at: new Date(),
-                edited_at: new Date(),
-            },
-        ]);
+        // await db.insert(pages).values([
+        // {
+        //     page_id: homePageId,
+        //     title: "Page Title",
+        //     slug: "home",
+        //     created_at: new Date(),
+        //     edited_at: new Date(),
+        // },
+        // {
+        //     page_id: aboutPageId,
+        //     title: "About Us",
+        //     slug: "about",
+        //     created_at: new Date(),
+        //     edited_at: new Date(),
+        // },
+        // ]);
 
         // Insert text fields
-        const fieldIds = [uuidv4(), uuidv4(), uuidv4()];
-        await db.insert(textFields).values([
-            {
-                field_id: fieldIds[0],
-                name: "headline",
-                label: "Headline",
-                value: "Welcome to Our Website!",
-                created_at: new Date(),
-                edited_at: new Date(),
-            },
-            {
-                field_id: fieldIds[1],
-                name: "subheadline",
-                label: "Subheadline",
-                value: "Discover amazing things with us",
-                created_at: new Date(),
-                edited_at: new Date(),
-            },
-            {
-                field_id: fieldIds[2],
-                name: "contact_email",
-                label: "Contact Email",
-                value: "info@example.com",
-                created_at: new Date(),
-                edited_at: new Date(),
-            },
-        ]);
+        // const fieldIds = [uuidv4(), uuidv4(), uuidv4()];
+        // await db.insert(textFields).values([
+        //     {
+        //         field_id: fieldIds[0],
+        //         name: "headline",
+        //         label: "Headline",
+        //         value: "Welcome to Our Website!",
+        //         created_at: new Date(),
+        //         edited_at: new Date(),
+        //     },
+        //     {
+        //         field_id: fieldIds[1],
+        //         name: "subheadline",
+        //         label: "Subheadline",
+        //         value: "Discover amazing things with us",
+        //         created_at: new Date(),
+        //         edited_at: new Date(),
+        //     },
+        //     {
+        //         field_id: fieldIds[2],
+        //         name: "contact_email",
+        //         label: "Contact Email",
+        //         value: "info@example.com",
+        //         created_at: new Date(),
+        //         edited_at: new Date(),
+        //     },
+        // ]);
 
         // Insert blocks
         const blockIds = [uuidv4(), uuidv4(), uuidv4()];
@@ -82,32 +82,32 @@ async function seed() {
                 createdAt: new Date(),
                 editedAt: new Date(),
             },
-            {
-                block_id: blockIds[2],
-                name: "Team Section",
-                description: "Our awesome team members",
-                scope: "page",
-                reference_id: aboutPageId,
-                createdAt: new Date(),
-                editedAt: new Date(),
-            },
+            // {
+            //     block_id: blockIds[2],
+            //     name: "Team Section",
+            //     description: "Our awesome team members",
+            //     scope: "page",
+            //     reference_id: aboutPageId,
+            //     createdAt: new Date(),
+            //     editedAt: new Date(),
+            // },
         ]);
 
         // Insert page items (mixing fields and blocks)
         await db.insert(page_items).values([
             // Home Page items
-            {
-                item_id: uuidv4(),
-                page_ref_id: homePageId,
-                item_type: "field",
-                reference_id: fieldIds[0],
-            },
-            {
-                item_id: uuidv4(),
-                page_ref_id: homePageId,
-                item_type: "field",
-                reference_id: fieldIds[1],
-            },
+            // {
+            //     item_id: uuidv4(),
+            //     page_ref_id: homePageId,
+            //     item_type: "field",
+            //     reference_id: fieldIds[0],
+            // },
+            // {
+            //     item_id: uuidv4(),
+            //     page_ref_id: homePageId,
+            //     item_type: "field",
+            //     reference_id: fieldIds[1],
+            // },
             {
                 item_id: uuidv4(),
                 page_ref_id: homePageId,
@@ -122,18 +122,18 @@ async function seed() {
             },
 
             // About Us page items
-            {
-                item_id: uuidv4(),
-                page_ref_id: aboutPageId,
-                item_type: "field",
-                reference_id: fieldIds[2],
-            },
-            {
-                item_id: uuidv4(),
-                page_ref_id: aboutPageId,
-                item_type: "block",
-                reference_id: blockIds[2],
-            },
+            // {
+            //     item_id: uuidv4(),
+            //     page_ref_id: aboutPageId,
+            //     item_type: "field",
+            //     reference_id: fieldIds[2],
+            // },
+            // {
+            //     item_id: uuidv4(),
+            //     page_ref_id: aboutPageId,
+            //     item_type: "block",
+            //     reference_id: blockIds[2],
+            // },
         ]);
     }
 

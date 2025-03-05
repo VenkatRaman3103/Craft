@@ -114,7 +114,7 @@ export const PageItems = ({
         setPageItemsList(pageItems);
     }, [pageItems]);
 
-    async function onDelete(block_id: string) {
+    async function onDelete(block_id: string, item_id: string) {
         try {
             const response = await axios.delete(
                 `${backendUrl}/block/${block_id}`,
@@ -128,8 +128,9 @@ export const PageItems = ({
             console.log(errorMessage);
         }
 
-        setPageItemsList((prevBlocks) =>
-            prevBlocks.filter((block) => block.block_id !== block_id),
+        // update the page items
+        setPageItemsList((prevItems) =>
+            prevItems.filter((item) => item.item_id !== item_id),
         );
     }
 
@@ -138,18 +139,21 @@ export const PageItems = ({
     return (
         <div className="blocks-container">
             {pageItemsList.map((item, index) => {
-                if (item.item_type === "block") {
-                    return (
-                        <Block
-                            key={index}
-                            block={item.block}
-                            isSidebarOpen={isSidebarOpen}
-                            onScopeChange={onScopeChange}
-                            onDelete={onDelete}
-                            onAddFields={onAddFields}
-                        />
-                    );
-                } else if (item.item_type === "field") {
+                if (item?.item_type === "block") {
+                    if (item.block) {
+                        return (
+                            <Block
+                                key={index}
+                                block={item.block}
+                                isSidebarOpen={isSidebarOpen}
+                                onScopeChange={onScopeChange}
+                                onDelete={onDelete}
+                                onAddFields={onAddFields}
+                                item_id={item.item_id}
+                            />
+                        );
+                    }
+                } else if (item?.item_type === "field") {
                     const Field = FieldsList[item.field.type];
                     return <Field key={index} data={item.field} />;
                 }
@@ -164,6 +168,7 @@ export const Block = ({
     onScopeChange,
     onDelete,
     onAddFields,
+    item_id,
 }: {
     block: blockType;
     isSidebarOpen?: boolean;
@@ -173,6 +178,7 @@ export const Block = ({
         isGlobal: boolean,
         withContent: boolean,
     ) => void;
+    item_id?: string;
     onDelete?: (block_id: string) => void;
     onAddFields?: (blockId: string) => void;
 }) => {
@@ -222,7 +228,7 @@ export const Block = ({
 
     const handleDelete = () => {
         if (onDelete) {
-            onDelete(block.block_id);
+            onDelete(block.block_id, item_id);
         }
         setShowOptions(false);
     };
@@ -288,7 +294,7 @@ export const Block = ({
                     onClick={toggleCollapse}
                 >
                     <div className="block-header-wrapper">
-                        <div className="block-type">{block.name}</div>
+                        <div className="block-type">{block?.name}</div>
                         <div
                             ref={ellipsisRef}
                             className="ellipsis-container"
