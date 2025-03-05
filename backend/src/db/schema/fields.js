@@ -7,6 +7,7 @@ export const textFields = pgTable("text_fields", {
     name: varchar("name").notNull(),
     label: varchar("label").notNull(),
     value: varchar("value").notNull(),
+    type: varchar("type").default("text").notNull(),
     created_at: timestamp("created_at").defaultNow(),
     edited_at: timestamp("edited_at").defaultNow(),
 });

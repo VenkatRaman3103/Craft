@@ -23,6 +23,7 @@ import { AddBtn } from "../Buttons/AddBtn";
 import { FieldSelectionPopup } from "../FieldSelectionPopup";
 import { backendUrl } from "@/config";
 import axios from "axios";
+import { FieldsList } from "../Fields/FieldsList";
 
 export const FieldsIcons = {
     text: <Type size={20} color={lightFont} />,
@@ -91,13 +92,13 @@ const sampleFields = [
     },
 ];
 
-export const Blocks = ({
-    blocks,
+export const PageItems = ({
+    pageItems,
     isSidebarOpen,
     onScopeChange,
     onAddFields,
 }: {
-    blocks: blockType[];
+    pageItems: blockType[];
     isSidebarOpen?: boolean;
     onScopeChange?: (
         blockId: string,
@@ -107,11 +108,11 @@ export const Blocks = ({
     ) => void;
     onAddFields?: (blockId: string) => void;
 }) => {
-    const [blocksList, setBlocksList] = useState<blockType[]>(blocks);
+    const [pageItemsList, setPageItemsList] = useState<blockType[]>(pageItems);
 
     useEffect(() => {
-        setBlocksList(blocks);
-    }, [blocks]);
+        setPageItemsList(pageItems);
+    }, [pageItems]);
 
     async function onDelete(block_id: string) {
         try {
@@ -127,23 +128,32 @@ export const Blocks = ({
             console.log(errorMessage);
         }
 
-        setBlocksList((prevBlocks) =>
+        setPageItemsList((prevBlocks) =>
             prevBlocks.filter((block) => block.block_id !== block_id),
         );
     }
 
+    console.log(pageItemsList, "pageItems");
+
     return (
         <div className="blocks-container">
-            {blocksList.map((item, index) => (
-                <Block
-                    key={index}
-                    block={item}
-                    isSidebarOpen={isSidebarOpen}
-                    onScopeChange={onScopeChange}
-                    onDelete={onDelete}
-                    onAddFields={onAddFields}
-                />
-            ))}
+            {pageItemsList.map((item, index) => {
+                if (item.item_type === "block") {
+                    return (
+                        <Block
+                            key={index}
+                            block={item.block}
+                            isSidebarOpen={isSidebarOpen}
+                            onScopeChange={onScopeChange}
+                            onDelete={onDelete}
+                            onAddFields={onAddFields}
+                        />
+                    );
+                } else if (item.item_type === "field") {
+                    const Field = FieldsList[item.field.type];
+                    return <Field key={index} data={item.field} />;
+                }
+            })}
         </div>
     );
 };

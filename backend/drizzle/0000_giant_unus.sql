@@ -38,6 +38,7 @@ CREATE TABLE "text_fields" (
 	"name" varchar NOT NULL,
 	"label" varchar NOT NULL,
 	"value" varchar NOT NULL,
+	"type" varchar DEFAULT 'text' NOT NULL,
 	"created_at" timestamp DEFAULT now(),
 	"edited_at" timestamp DEFAULT now()
 );
@@ -57,18 +58,18 @@ CREATE TABLE "pages" (
 	"edited_at" timestamp DEFAULT now()
 );
 --> statement-breakpoint
-CREATE TABLE "parent" (
-	"parent_id" uuid PRIMARY KEY DEFAULT gen_random_uuid() NOT NULL,
-	"name" varchar NOT NULL,
-	"created_at" timestamp DEFAULT now()
-);
---> statement-breakpoint
 CREATE TABLE "users" (
 	"id" serial PRIMARY KEY NOT NULL,
 	"name" text NOT NULL,
 	"email" text NOT NULL,
 	"created_at" timestamp DEFAULT now(),
 	CONSTRAINT "users_email_unique" UNIQUE("email")
+);
+--> statement-breakpoint
+CREATE TABLE "parent" (
+	"parent_id" uuid PRIMARY KEY DEFAULT gen_random_uuid() NOT NULL,
+	"name" varchar NOT NULL,
+	"created_at" timestamp DEFAULT now()
 );
 --> statement-breakpoint
 ALTER TABLE "child" ADD CONSTRAINT "child_parent_ref_id_parent_parent_id_fk" FOREIGN KEY ("parent_ref_id") REFERENCES "public"."parent"("parent_id") ON DELETE no action ON UPDATE no action;--> statement-breakpoint

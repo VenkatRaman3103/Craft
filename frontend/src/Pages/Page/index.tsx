@@ -1,4 +1,4 @@
-import { Blocks } from "@/Components/Blocks";
+import { PageItems } from "@/Components/Blocks";
 import { PageIntro } from "@/Components/PageIntro";
 import { backendUrl } from "@/config";
 import { pageType } from "@/Types/blocks";
@@ -18,6 +18,8 @@ export const Page = () => {
     const [showBlockPrompt, setShowBlockPrompt] = useState(false);
     const [newBlockName, setNewBlockName] = useState<string>("");
 
+    const [pageItems, setPageItems] = useState([]);
+
     function handleInputChange(e: React.ChangeEvent<HTMLInputElement>) {
         e.preventDefault();
         setNewBlockName(e.target.value);
@@ -33,7 +35,7 @@ export const Page = () => {
 
     useEffect(() => {
         if (pageData) {
-            setBlocks(pageData.blocks);
+            setPageItems(pageData.page_items);
         }
     }, [pageData]);
 
@@ -71,6 +73,8 @@ export const Page = () => {
         }
     }
 
+    console.log(pageData, "pageData");
+
     return (
         <div className="page-content-container">
             <PageIntro
@@ -80,7 +84,7 @@ export const Page = () => {
             />
             <div className="blocks-list-container">
                 <div className="blocks-list-wrapper">
-                    {blocks && <Blocks blocks={blocks} />}
+                    <PageItems pageItems={pageItems} />
                     {showBlockPrompt && (
                         <div>
                             <BlockPrompt
