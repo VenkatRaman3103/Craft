@@ -11,14 +11,14 @@ import { v4 as uuidv4 } from "uuid";
 async function seed() {
     async function insertDummyData() {
         // Create page IDs
-        const homePageId = uuidv4();
+        const homePageId = "c2937bda-026d-46e3-b9ca-c2cbe43fc67d";
         const aboutPageId = uuidv4();
 
         // Insert pages
         await db.insert(pages).values([
             {
                 page_id: homePageId,
-                title: "Home Page",
+                title: "Page Title",
                 slug: "home",
                 created_at: new Date(),
                 edited_at: new Date(),

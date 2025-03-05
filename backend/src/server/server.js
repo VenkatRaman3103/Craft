@@ -77,38 +77,38 @@ app.use("/api", collectionJoinPageRouter);
 app.use("/api", pagesRoute);
 
 // Update an existing page
-app.put("/api/pages/:id", async (req, res) => {
-    try {
-        const pageId = req.params.id;
-        const { title, slug } = req.body;
-
-        // Check if page exists
-        const existingPage = await db
-            .select()
-            .from(pages)
-            .where(eq(pages.page_id, pageId))
-            .limit(1);
-
-        if (existingPage.length === 0) {
-            return res.status(404).json({ error: "Page not found" });
-        }
-
-        // Update the page
-        const updatedPage = await db
-            .update(pages)
-            .set({
-                title: title || existingPage[0].title,
-                slug: slug || existingPage[0].slug,
-                updated_at: new Date(),
-            })
-            .where(eq(pages.page_id, pageId))
-            .returning();
-
-        res.json(updatedPage[0]);
-    } catch (error) {
-        res.status(500).json({ error: `Internal server error: ${error}` });
-    }
-});
+// app.put("/api/pages/:id", async (req, res) => {
+//     try {
+//         const pageId = req.params.id;
+//         const { title, slug } = req.body;
+//
+//         // Check if page exists
+//         const existingPage = await db
+//             .select()
+//             .from(pages)
+//             .where(eq(pages.page_id, pageId))
+//             .limit(1);
+//
+//         if (existingPage.length === 0) {
+//             return res.status(404).json({ error: "Page not found" });
+//         }
+//
+//         // Update the page
+//         const updatedPage = await db
+//             .update(pages)
+//             .set({
+//                 title: title || existingPage[0].title,
+//                 slug: slug || existingPage[0].slug,
+//                 updated_at: new Date(),
+//             })
+//             .where(eq(pages.page_id, pageId))
+//             .returning();
+//
+//         res.json(updatedPage[0]);
+//     } catch (error) {
+//         res.status(500).json({ error: `Internal server error: ${error}` });
+//     }
+// });
 
 // Delete a page
 // app.delete("/api/pages/:id", async (req, res) => {

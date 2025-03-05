@@ -8,22 +8,22 @@ export async function getAllPages(req, res) {
     try {
         const allPages = await db.select().from(pages);
 
-        const result = [];
+        // const result = [];
 
-        const allBlocks = await db.select().from(blocks);
+        // const allBlocks = await db.select().from(blocks);
 
         // TODO: get blocks for every page
-        for (let page of allPages) {
-            const page_id = page.page_id;
-
-            const pageBlocks = allBlocks.filter(
-                (block) => block.reference_id === page_id,
-            );
-
-            page.blocks = pageBlocks;
-
-            result.push(page);
-        }
+        // for (let page of allPages) {
+        //     const page_id = page.page_id;
+        //
+        //     const pageBlocks = allBlocks.filter(
+        //         (block) => block.reference_id === page_id,
+        //     );
+        //
+        //     page.blocks = pageBlocks;
+        //
+        //     result.push(page);
+        // }
 
         res.status(200).json(allPages);
     } catch (error) {
@@ -42,20 +42,19 @@ export async function getPageById(req, res) {
     const { page_id } = req.params;
 
     try {
-        const page = await db
-            .select()
-            .from(pages)
-            .where(eq(pages.page_id, page_id))
-            .limit(1);
+        const page = await db.query.pages.findFirst({
+            where: (page, { eq }) => eq(page.page_id, page_id),
+            with: {
+                page_items: {
+                    with: {
+                        field: true,
+                        block: true,
+                    },
+                },
+            },
+        });
 
-        const pageBlocks = await db
-            .select()
-            .from(blocks)
-            .where(eq(blocks.reference_id, page_id));
-
-        const pageWithBlocks = { ...page[0], blocks: pageBlocks };
-
-        res.status(200).json(pageWithBlocks);
+        res.status(200).json(page);
     } catch (error) {
         const errorMessage = {
             error,
