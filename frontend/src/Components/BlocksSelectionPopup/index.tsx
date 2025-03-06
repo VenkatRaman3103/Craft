@@ -95,11 +95,12 @@ export const BlockSelectionPopup: React.FC<BlockSelectionPopupProps> = ({
 
     const toggleBlockSelection = (block) => {
         console.log(block, "blockType");
-        setSelectedBlocks((prev) =>
-            prev.includes(block)
+        setSelectedBlocks((prev) => {
+            console.log(prev, "prevToggle");
+            return prev.includes(block)
                 ? prev.filter((id) => id !== block.id)
-                : [...prev, block.id],
-        );
+                : [...prev, block];
+        });
     };
 
     const handleAddSelected = () => {
@@ -170,7 +171,7 @@ export const BlockSelectionPopup: React.FC<BlockSelectionPopupProps> = ({
                             className={`block-option ${
                                 selectedBlocks.some((item) => {
                                     console.log(item, "itemBlock");
-                                    return item === block.id;
+                                    return item.id === block.id;
                                 })
                                     ? "selected"
                                     : ""

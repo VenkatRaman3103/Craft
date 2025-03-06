@@ -228,23 +228,23 @@ export const Page = () => {
         },
     });
 
-    const handleCreateBlock = (blockId) => {
-        console.log(blockId, blockInputs, "blockIdCreate");
-        const blockName = blockInputs[blockId];
+    const handleCreateBlock = (block) => {
+        console.log(block, "blockIdCreate");
+        const blockName = blockInputs[block.id];
         if (!blockName) return;
 
         createBlockMutation.mutate(blockName);
 
         setBlockInputs((prev) => {
             const updated = { ...prev };
-            console.log(prev, updated, updated[blockId], "blockName");
-            delete updated[blockId];
+            console.log(prev, updated, updated[block.id], "blockName");
+            delete updated[block.id];
             return updated;
         });
 
         setSelectedBlocks((prev) => {
-            console.log(prev, "prev");
-            return prev.filter((block) => block !== blockId);
+            console.log(prev, block, "prev");
+            return prev.filter((item) => item.id !== block.id);
         });
 
         if (selectedBlocks.length <= 1) {
@@ -273,15 +273,18 @@ export const Page = () => {
                     <PageItems pageItems={pageData?.page_items || []} />
                     {showBlockPrompt && (
                         <div className="blocks-prompt-container">
-                            {selectedBlocks.map((block) => (
-                                <BlockPrompt
-                                    key={block.id}
-                                    blockInputs={blockInputs}
-                                    blockId={block}
-                                    handleCreateBlock={handleCreateBlock}
-                                    handleInputChange={handleInputChange}
-                                />
-                            ))}
+                            {selectedBlocks.map((block) => {
+                                console.log(block, "blockMap");
+                                return (
+                                    <BlockPrompt
+                                        key={block.id}
+                                        blockInputs={blockInputs}
+                                        block={block}
+                                        handleCreateBlock={handleCreateBlock}
+                                        handleInputChange={handleInputChange}
+                                    />
+                                );
+                            })}
                         </div>
                     )}
 

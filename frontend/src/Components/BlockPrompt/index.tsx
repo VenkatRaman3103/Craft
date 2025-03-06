@@ -3,7 +3,7 @@ import "./index.scss";
 
 export const BlockPrompt = ({
     blockInputs,
-    blockId,
+    block,
     handleCreateBlock,
     handleInputChange,
 }) => {
@@ -16,9 +16,9 @@ export const BlockPrompt = ({
                         <div className="block-promt-header-wrapper">
                             <input
                                 className="block-promt-type"
-                                value={blockInputs[blockId] || ""}
+                                value={blockInputs[block.id] || ""}
                                 onChange={(e) =>
-                                    handleInputChange(blockId, e.target.value)
+                                    handleInputChange(block.id, e.target.value)
                                 }
                                 placeholder="Enter block name"
                             />
@@ -27,7 +27,7 @@ export const BlockPrompt = ({
                     </div>
                     <button
                         className="create-block-button"
-                        onClick={() => handleCreateBlock(blockId)}
+                        onClick={() => handleCreateBlock(block)}
                     >
                         Create Block
                     </button>
