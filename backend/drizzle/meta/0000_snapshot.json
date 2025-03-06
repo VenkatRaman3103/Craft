@@ -1,5 +1,5 @@
 {
-  "id": "ecb50fbb-5011-48a3-9141-27eb27a14a35",
+  "id": "94105bfb-15cc-485c-b126-6654e671b62b",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "version": "7",
   "dialect": "postgresql",
@@ -34,6 +34,13 @@
           "primaryKey": false,
           "notNull": false,
           "default": "'global'"
+        },
+        "block_type": {
+          "name": "block_type",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "'normal'"
         },
         "reference_id": {
           "name": "reference_id",

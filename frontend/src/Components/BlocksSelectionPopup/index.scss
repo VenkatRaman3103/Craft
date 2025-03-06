@@ -1,4 +1,4 @@
-.field-selection-overlay {
+.block-selection-overlay {
   position: fixed;
   top: 0;
   left: 0;
@@ -11,70 +11,69 @@
   z-index: 1000;
 }
 
-.field-selection-popup {
+.block-selection-popup {
   background-color: var(--white-color);
   border-radius: 20px;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
   width: 90%;
-  max-width: 500px;
+  max-width: 650px; // Slightly wider than field popup to accommodate grid
+  // max-height: 85vh;
   height: 690px;
   display: flex;
   flex-direction: column;
   overflow: hidden;
-
   border: 1px solid var(--border-color);
 }
 
-.field-selection-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 15px 25px 15px 15px;
-  // border-bottom: 1px solid #eaeaea;
+.block-selection-content {
+  height: auto;
 
-  .field-selection-heading-wrapper {
+  .block-selection-header {
     display: flex;
+    justify-content: space-between;
     align-items: center;
-    gap: 15px;
+    padding: 15px 25px 15px 15px;
 
-    .fields-icon {
-      height: 50px;
-      width: 50px;
+    .block-selection-heading-wrapper {
+      display: flex;
+      align-items: center;
+      gap: 15px;
+
+      .blocks-icon {
+        height: 50px;
+        width: 50px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 100px;
+        background-color: var(--primary-color);
+      }
+    }
+
+    h2 {
+      margin: 0;
+      font-size: 18px;
+      color: var(--dark-font);
+      font-weight: 600;
+    }
+
+    .close-button {
+      background: none;
+      border: none;
+      cursor: pointer;
+      padding: 4px;
       display: flex;
       align-items: center;
       justify-content: center;
-      border-radius: 100px;
-      background-color: var(--primary-color);
+      border-radius: 4px;
+
+      &:hover {
+        background-color: #f5f5f5;
+      }
     }
   }
 
-  h2 {
-    margin: 0;
-    font-size: 18px;
-    color: var(--dark-font);
-    font-weight: 600;
-  }
-
-  .close-button {
-    background: none;
-    border: none;
-    cursor: pointer;
-    padding: 4px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    border-radius: 4px;
-
-    &:hover {
-      background-color: #f5f5f5;
-    }
-  }
-}
-
-.field-selection-content {
-  height: auto;
-
-  .field-types {
+  .block-types {
     width: 100%;
     height: 42px;
     display: flex;
@@ -82,7 +81,7 @@
     align-items: center;
     justify-content: center;
 
-    .field-types-wrapper {
+    .block-types-wrapper {
       width: 90%;
       height: 100%;
       display: flex;
@@ -92,9 +91,6 @@
       background-color: var(--base-color);
       border-radius: 10px;
       border: 4px solid transparent;
-
-      background-color: var(--base-color);
-      border-radius: 10px;
 
       .type-btn {
         height: 100%;
@@ -112,7 +108,6 @@
           background-color: var(--primary-color);
           // border: 4px solid var(--base-color);
         }
-
       }
     }
   }
@@ -143,102 +138,95 @@
   }
 }
 
-.fields-list {
+
+
+.blocks-grid {
   padding: 15px 20px;
   overflow-y: auto;
   flex: 1;
-  max-height: 400px;
-
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 5px;
-
+  // max-height: 400px;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+  gap: 12px;
   background-color: var(--base-color);
 
-  .field-option {
-    width: 96%;
-
+  .block-option {
     display: flex;
-    align-items: flex-start;
-    gap: 10px;
-    // padding: 12px;
-    padding: 7px;
+    flex-direction: column;
     border-radius: 15px;
     cursor: pointer;
-    margin-bottom: 4px;
     border: 1px solid var(--border-color);
     background-color: var(--primary-color);
-
-    &:hover {
-      // background-color: #f5f7f9;
-    }
+    overflow: hidden;
+    position: relative;
+    height: 190px;
 
     &.selected {
-      // background-color: #edf5ff;
+      border: 1px solid white;
     }
 
-    .field-icon {
-      height: 50px;
-      width: 50px;
+    .block-thumbnail {
+      position: relative;
+      height: 100px;
+      width: 100%;
       display: flex;
       align-items: center;
       justify-content: center;
       background-color: var(--secondary-color);
-      border-radius: 10px;
-    }
 
-    .field-checkbox {
-      margin-right: 12px;
-      margin-top: 2px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      height: 48px;
-
-      .checkbox-empty {
-        width: 16px;
-        height: 16px;
-        border: 1.5px solid #aaa;
-        border-radius: 3px;
+      .thumbnail-image {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
       }
 
-      .checkbox-selected {
-        width: 16px;
-        height: 16px;
-        background-color: #0066cc;
-        color: white;
-        border-radius: 3px;
+      .thumbnail-placeholder {
         display: flex;
         align-items: center;
         justify-content: center;
+        width: 100%;
+        height: 100%;
+      }
+
+      .selection-indicator {
+        position: absolute;
+        top: 8px;
+        right: 8px;
+
+        .checkbox-selected {
+          width: 16px;
+          height: 16px;
+          background-color: #0066cc;
+          color: white;
+          border-radius: 3px;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+        }
       }
     }
 
-    .field-info {
-      flex: 1;
+    .block-details {
+      padding: 12px;
 
-      .field-name {
+      .block-name {
         font-weight: 500;
-        margin-bottom: 2px;
+        font-size: 14px;
+        margin-bottom: 4px;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
       }
 
-      .field-type {
+      .block-type {
         font-size: 12px;
         color: #666;
-        margin-bottom: 4px;
-      }
-
-      .field-description {
-        font-size: 13px;
-        color: #555;
-        line-height: 1.4;
       }
     }
   }
 }
 
-.field-selection-footer {
+.block-selection-footer {
   padding: 16px 20px;
   border-top: 1px solid var(--border-color);
   display: flex;
@@ -271,8 +259,9 @@
 
     .add-button {
       padding: 8px 16px;
-      background-color: #0066cc;
-      color: white;
+      // background-color: #0066cc;
+      background-color: white;
+      color: black;
       border: none;
       border-radius: 6px;
       cursor: pointer;
@@ -282,12 +271,15 @@
       gap: 6px;
 
       &:disabled {
-        background-color: #99c4e9;
+        background-color: var(--primary-color);
         cursor: not-allowed;
+        color: white;
+        border: 1px solid var(--border-color);
       }
 
       &:not(:disabled):hover {
-        background-color: #0055aa;
+        background-color: white;
+        color: black;
       }
     }
   }

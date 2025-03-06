@@ -39,58 +39,6 @@ export const FieldsIcons = {
 };
 
 // Sample field options (replace with your actual data source)
-const sampleFields = [
-    {
-        id: "field1",
-        name: "Text Field",
-        type: "text",
-    },
-    {
-        id: "field2",
-        name: "Number Field",
-        type: "number",
-    },
-    {
-        id: "field3",
-        name: "Json Field",
-        type: "json",
-    },
-    {
-        id: "field4",
-        name: "Multi Select Field",
-        type: "multi-select",
-    },
-    {
-        id: "field5",
-        name: "Select Field",
-        type: "select",
-    },
-    {
-        id: "field6",
-        name: "Rich Text Field",
-        type: "rich-text",
-    },
-    {
-        id: "field7",
-        name: "Date Field",
-        type: "date",
-    },
-    {
-        id: "field8",
-        name: "Emain Field",
-        type: "email",
-    },
-    {
-        id: "field9",
-        name: "Upload Field",
-        type: "upload",
-    },
-    {
-        id: "field10",
-        name: "Relation Field",
-        type: "relation",
-    },
-];
 
 export const PageItems = ({
     pageItems,
@@ -187,7 +135,6 @@ export const Block = ({
     const [activeScopeOption, setActiveScopeOption] = useState();
     const [blockName, setBlockName] = useState("");
     const [withContent, setWithContent] = useState(true);
-    const [isFieldPopupOpen, setIsFieldPopupOpen] = useState(false);
 
     const optionsRef = useRef<HTMLDivElement>(null);
     const nameInputRef = useRef<HTMLDivElement>(null);
@@ -247,32 +194,6 @@ export const Block = ({
         }
     };
 
-    // Method to open the field selection popup
-    const openFieldPopup = () => {
-        setIsFieldPopupOpen(true);
-    };
-
-    // Method to close the field selection popup
-    const closeFieldPopup = () => {
-        setIsFieldPopupOpen(false);
-    };
-
-    // Method to handle adding fields to this specific block
-    const handleAddSelectedFields = (selectedFieldIds: string[]) => {
-        // Get the selected field objects
-        const fieldsToAdd = sampleFields
-            .filter((field) => selectedFieldIds.includes(field.id))
-            .map((field) => ({
-                id: `${field.id}-${Date.now()}`,
-                name: field.name,
-                type: field.type,
-                // Add any other properties needed for your fields
-            }));
-
-        // Update the local fields state
-        setFields([...fields, ...fieldsToAdd]);
-    };
-
     useEffect(() => {
         document.addEventListener("mousedown", handleClickOutside);
         return () => {
@@ -327,18 +248,7 @@ export const Block = ({
                 >
                     <Fields fields={block.fields} />
                 </div>
-                <div onClick={openFieldPopup}>
-                    <AddBtn iconLable="Add Field" />
-                </div>
             </div>
-
-            {/* Field Selection Popup */}
-            <FieldSelectionPopup
-                isOpen={isFieldPopupOpen}
-                onClose={closeFieldPopup}
-                onAddFields={handleAddSelectedFields}
-                availableFields={sampleFields}
-            />
         </div>
     );
 };

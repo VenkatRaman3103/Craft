@@ -27,7 +27,7 @@ export const FieldSelectionPopup: React.FC<FieldSelectionPopupProps> = ({
 }) => {
     const [selectedFields, setSelectedFields] = useState<string[]>([]);
     const popupRef = useRef<HTMLDivElement>(null);
-    const [selectedFieldsType, setSelectedFieldsType] = useState("all-fields");
+    const [selectedFieldsType, setSelectedFieldsType] = useState("all");
 
     // Close popup when clicking outside
     useEffect(() => {
@@ -63,10 +63,58 @@ export const FieldSelectionPopup: React.FC<FieldSelectionPopupProps> = ({
         onClose();
     };
 
+    function renderFieldsList(fieldsType: string): JSX.Element {
+        switch (fieldsType) {
+            case "all":
+                return (
+                    <>
+                        {availableFields.map((field) => (
+                            <div
+                                key={field.id}
+                                className={`field-option ${selectedFields.includes(field.id) ? "selected" : ""}`}
+                                onClick={() => toggleFieldSelection(field.id)}
+                            >
+                                <div className="field-icon">
+                                    {FieldsIcons[field.type]}
+                                </div>
+
+                                <div className="field-info">
+                                    <div className="field-name">
+                                        {field.name}
+                                    </div>
+                                    <div className="field-type">
+                                        {field.type}
+                                    </div>
+                                    {field.description && (
+                                        <div className="field-description">
+                                            {field.description}
+                                        </div>
+                                    )}
+                                </div>
+
+                                <div className="field-checkbox">
+                                    {selectedFields.includes(field.id) ? (
+                                        <div className="checkbox-selected">
+                                            <Check size={14} />
+                                        </div>
+                                    ) : (
+                                        <div className="checkbox-empty"></div>
+                                    )}
+                                </div>
+                            </div>
+                        ))}
+                    </>
+                );
+
+            default:
+                break;
+        }
+    }
+
     const typeOfFields = [
-        { label: "All Fields", value: "all-fields" },
-        { label: "Private Fields", value: "private-fields" },
-        { label: "Global Fields", value: "global-fields" },
+        { label: "All Fields", value: "all" },
+        { label: "Local Fields", value: "local" },
+        { label: "Global Fields", value: "global" },
     ];
 
     if (!isOpen) return null;
@@ -74,80 +122,50 @@ export const FieldSelectionPopup: React.FC<FieldSelectionPopupProps> = ({
     return (
         <div className="field-selection-overlay">
             <div ref={popupRef} className="field-selection-popup">
-                <div className="field-selection-header">
-                    <div className="field-selection-heading-wrapper">
-                        <div className="fields-icon">
-                            <FileText size={22} color={darkFont} />
-                        </div>
-                        <h2>Add Fields</h2>
-                    </div>
-                    <button
-                        className="close-button"
-                        onClick={onClose}
-                        aria-label="Close"
-                    >
-                        <X size={22} color={lightFont} />
-                    </button>
-                </div>
-
-                <div className="field-types">
-                    <div className="field-types-wrapper">
-                        {typeOfFields.map((type, ind) => (
-                            <div
-                                key={ind}
-                                className={`type-btn ${selectedFieldsType === type.value ? "selected" : ""}`}
-                                onClick={() =>
-                                    setSelectedFieldsType(type.value)
-                                }
-                            >
-                                {type.label}
+                <div className="field-selection-content">
+                    <div className="field-selection-header">
+                        <div className="field-selection-heading-wrapper">
+                            <div className="fields-icon">
+                                <FileText size={22} color={darkFont} />
                             </div>
-                        ))}
+                            <h2>Add Fields</h2>
+                        </div>
+                        <button
+                            className="close-button"
+                            onClick={onClose}
+                            aria-label="Close"
+                        >
+                            <X size={22} color={lightFont} />
+                        </button>
                     </div>
-                </div>
 
-                <div className="search-container">
-                    <input
-                        type="text"
-                        placeholder="Search fields..."
-                        className="search-input"
-                    />
+                    <div className="field-types">
+                        <div className="field-types-wrapper">
+                            {typeOfFields.map((type, ind) => (
+                                <div
+                                    key={ind}
+                                    className={`type-btn ${selectedFieldsType === type.value ? "selected" : ""}`}
+                                    onClick={() =>
+                                        setSelectedFieldsType(type.value)
+                                    }
+                                >
+                                    {type.label}
+                                </div>
+                            ))}
+                        </div>
+                    </div>
+
+                    <div className="search-container">
+                        <input
+                            type="text"
+                            placeholder="Search fields..."
+                            className="search-input"
+                        />
+                    </div>
                 </div>
 
                 <div className="fields-list">
-                    {availableFields.map((field) => (
-                        <div
-                            key={field.id}
-                            className={`field-option ${selectedFields.includes(field.id) ? "selected" : ""}`}
-                            onClick={() => toggleFieldSelection(field.id)}
-                        >
-                            {/* {field?.icon && ( */}
-                            <div className="field-icon">
-                                {FieldsIcons[field.type]}
-                            </div>
-                            {/* )} */}
-
-                            <div className="field-info">
-                                <div className="field-name">{field.name}</div>
-                                <div className="field-type">{field.type}</div>
-                                {field.description && (
-                                    <div className="field-description">
-                                        {field.description}
-                                    </div>
-                                )}
-                            </div>
-
-                            <div className="field-checkbox">
-                                {selectedFields.includes(field.id) ? (
-                                    <div className="checkbox-selected">
-                                        <Check size={14} />
-                                    </div>
-                                ) : (
-                                    <div className="checkbox-empty"></div>
-                                )}
-                            </div>
-                        </div>
-                    ))}
+                    {renderFieldsList(selectedFieldsType)}
                 </div>
 
                 <div className="field-selection-footer">

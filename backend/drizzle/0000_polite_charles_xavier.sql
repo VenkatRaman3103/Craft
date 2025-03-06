@@ -5,6 +5,7 @@ CREATE TABLE "blocks" (
 	"name" text NOT NULL,
 	"content" text NOT NULL,
 	"scope" "scope_enum" DEFAULT 'global',
+	"block_type" text DEFAULT 'normal' NOT NULL,
 	"reference_id" text DEFAULT null,
 	"created_at" timestamp DEFAULT now(),
 	"edited_at" timestamp DEFAULT now()

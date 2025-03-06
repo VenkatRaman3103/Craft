@@ -1,105 +1,265 @@
 import { PageItems } from "@/Components/Blocks";
 import { PageIntro } from "@/Components/PageIntro";
-import { backendUrl } from "@/config";
 import { pageType } from "@/Types/blocks";
-import axios from "axios";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { useParams } from "react-router";
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import "./index.scss";
 import { AddBtn } from "@/Components/Buttons/AddBtn";
 import { BlockPrompt } from "@/Components/BlockPrompt";
 import * as React from "react";
+import { fetchPageData, createBlock } from "./api";
+import { FieldSelectionPopup } from "@/Components/FieldSelectionPopup";
+import { BlockSelectionPopup } from "@/Components/BlocksSelectionPopup";
+
+const sampleBlocks = [
+    {
+        id: "block1",
+        name: "Normal Block",
+        type: "normal",
+        description: "Add fields",
+    },
+    {
+        id: "block2",
+        name: "Array Bloc",
+        type: "array",
+        description:
+            "Repeatable group of fields or a block that can be reordered",
+    },
+    {
+        id: "block3",
+        name: "Nested Block",
+        type: "nested",
+        description: "Parent block that can hold and organize other blocks",
+    },
+    {
+        id: "block4",
+        name: "Reference Block",
+        type: "reference",
+        description: "Link to existing content from elsewhere in the CMS",
+    },
+    {
+        id: "block5",
+        name: "Conditional Block",
+        type: "conditional",
+        description:
+            "Content that displays based on specific conditions or rules",
+    },
+    {
+        id: "block6",
+        name: "Dynamic Block",
+        type: "dynamic",
+        description: "Content that updates automatically based on external API",
+    },
+    {
+        id: "block7",
+        name: "HTML Block",
+        type: "html",
+        description:
+            "Direct HTML input for custom markup and advanced formatting",
+    },
+    {
+        id: "block8",
+        name: "Code Block",
+        type: "code",
+        description: "Formatted code blocks with syntax highlighting",
+    },
+    {
+        id: "block9",
+        name: "Icon Block",
+        type: "icon",
+        description:
+            "Choose from a library of vector icons with customization options",
+    },
+    {
+        id: "block10",
+        name: "Data Block",
+        type: "table",
+        description: "Structured data with customizable rows and columns",
+    },
+    {
+        id: "block11",
+        name: "List Block",
+        type: "list",
+        description:
+            "Ordered or unordered list with customizable items and formatting",
+    },
+    {
+        id: "block12",
+        name: "Link Block",
+        type: "link",
+        description: "Hyperlink with customizable text, target and action type",
+    },
+    {
+        id: "block13",
+        name: "Upload Block",
+        type: "upload",
+        description: "Upload and manage documents, images, or other file types",
+    },
+    {
+        id: "block14",
+        name: "Rich Block",
+        type: "richtext",
+        description:
+            "Advanced Rich text editor with formatting tools and inline elements",
+    },
+    {
+        id: "block15",
+        name: "User Block",
+        type: "user",
+        description: "Associate content with specific users or user roles",
+    },
+];
+
+const sampleFields = [
+    {
+        id: "field1",
+        name: "Text Field",
+        type: "text",
+    },
+    {
+        id: "field2",
+        name: "Number Field",
+        type: "number",
+    },
+    {
+        id: "field3",
+        name: "Json Field",
+        type: "json",
+    },
+    {
+        id: "field4",
+        name: "Multi Select Field",
+        type: "multi-select",
+    },
+    {
+        id: "field5",
+        name: "Select Field",
+        type: "select",
+    },
+    {
+        id: "field6",
+        name: "Rich Text Field",
+        type: "rich-text",
+    },
+    {
+        id: "field7",
+        name: "Date Field",
+        type: "date",
+    },
+    {
+        id: "field8",
+        name: "Emain Field",
+        type: "email",
+    },
+    {
+        id: "field9",
+        name: "Upload Field",
+        type: "upload",
+    },
+    {
+        id: "field10",
+        name: "Relation Field",
+        type: "relation",
+    },
+];
 
 export const Page = () => {
     const { page_id } = useParams();
-    const [pageData, setPageData] = useState<pageType>();
+    const queryClient = useQueryClient();
     const [openSideBar, setOpenSideBar] = useState(false);
-    const [blocks, setBlocks] = useState();
     const [showBlockPrompt, setShowBlockPrompt] = useState(false);
-    const [newBlockName, setNewBlockName] = useState<string>("");
+    const [blockInputs, setBlockInputs] = useState({});
+    const [fields, setFields] = useState([]);
 
-    const [pageItems, setPageItems] = useState([]);
+    const [isFieldPopupOpen, setIsFieldPopupOpen] = useState(false);
+    const [isBlockPopupOpen, setIsBlockPopupOpen] = useState(false);
 
-    function handleInputChange(e: React.ChangeEvent<HTMLInputElement>) {
-        e.preventDefault();
-        setNewBlockName(e.target.value);
-    }
+    const [selectedBlocks, setSelectedBlocks] = useState<
+        { blockId: string; blockType: string }[]
+    >([]);
 
-    useEffect(() => {
-        async function getPageData() {
-            const response = await axios.get(`${backendUrl}/page/${page_id}`);
-            setPageData(response.data);
-        }
-        getPageData();
-    }, [page_id]);
+    const { data: pageData } = useQuery({
+        queryKey: ["pageData", page_id],
+        queryFn: () => fetchPageData(page_id),
+        enabled: !!page_id,
+    });
 
-    // useEffect(() => {
-    //     if (pageData) {
-    //         setPageItems(pageData.page_items);
-    //     }
-    // }, [pageData]);
+    const handleAddSelectedFields = (selectedFieldIds: string[]) => {
+        const fieldsToAdd = sampleFields
+            .filter((field) => selectedFieldIds.includes(field.id))
+            .map((field) => ({
+                id: `${field.id}-${Date.now()}`,
+                name: field.name,
+                type: field.type,
+            }));
 
-    useEffect(() => {
-        if (pageData) {
-            setPageItems(pageData.page_items);
-        }
-    }, [pageData]);
+        setFields([...fields, ...fieldsToAdd]);
+    };
 
-    async function createPageItem() {
-        if (!newBlockName) {
-            console.error("Block name is required");
-            return;
-        }
+    const closeFieldPopup = () => {
+        setIsFieldPopupOpen(false);
+    };
 
-        try {
-            const blocksResponse = await axios.post(
-                `${backendUrl}/block/reference/${page_id}`,
-                {
-                    name: newBlockName,
-                    description: "",
-                    scope: "page",
-                },
-            );
-            // TODO: create fields
-            console.log(
-                blocksResponse.data,
-                "blocksResponse responseItemBlock",
-            );
+    const openFieldPopup = () => {
+        setIsFieldPopupOpen(true);
+    };
 
-            const pageItemsResponse = await axios.post(
-                `${backendUrl}/page/${page_id}/page_items`,
-                {
-                    page_id: page_id,
-                    block_id: blocksResponse.data.block_id,
-                },
-            );
+    const closeBlockPopup = () => {
+        setIsBlockPopupOpen(false);
+    };
 
-            console.log(
-                pageItemsResponse.data,
-                "pageItemsResponse responseItemBlock",
-            );
+    const openBlockPopup = () => {
+        setIsBlockPopupOpen(true);
+    };
 
-            // Add the new page item to the state
-            const newPageItem = pageItemsResponse.data.page_items;
-            const updatedPageItems = [
-                ...pageItems,
-                newPageItem[newPageItem.length - 1],
-            ];
+    const createBlockMutation = useMutation({
+        mutationFn: (blockName) =>
+            createBlock(page_id, {
+                name: blockName,
+                description: "",
+                scope: "page",
+            }),
+        onSuccess: () => {
+            queryClient.invalidateQueries({ queryKey: ["pageData", page_id] });
+        },
+        onError: (error) => {
+            console.error("Failed to create block:", error);
+        },
+    });
 
-            setPageItems(updatedPageItems);
+    const handleCreateBlock = (blockId) => {
+        console.log(blockId, blockInputs, "blockIdCreate");
+        const blockName = blockInputs[blockId];
+        if (!blockName) return;
 
+        createBlockMutation.mutate(blockName);
+
+        setBlockInputs((prev) => {
+            const updated = { ...prev };
+            console.log(prev, updated, updated[blockId], "blockName");
+            delete updated[blockId];
+            return updated;
+        });
+
+        setSelectedBlocks((prev) => {
+            console.log(prev, "prev");
+            return prev.filter((block) => block !== blockId);
+        });
+
+        if (selectedBlocks.length <= 1) {
             setShowBlockPrompt(false);
-            setNewBlockName("");
-        } catch (error) {
-            const errorMessage = {
-                error,
-                message: `Failed to create block: ${page_id}`,
-            };
-            console.log(errorMessage);
         }
-    }
+    };
 
-    console.log(pageData, "pageData");
+    const handleInputChange = (blockId: string, value: string) => {
+        setBlockInputs((prev) => ({
+            ...prev,
+            [blockId]: value,
+        }));
+    };
+
+    console.log(selectedBlocks, "selectedBlocks");
 
     return (
         <div className="page-content-container">
@@ -110,26 +270,46 @@ export const Page = () => {
             />
             <div className="blocks-list-container">
                 <div className="blocks-list-wrapper">
-                    <PageItems pageItems={pageItems} />
+                    <PageItems pageItems={pageData?.page_items || []} />
                     {showBlockPrompt && (
-                        <div>
-                            <BlockPrompt
-                                handleInputChange={handleInputChange}
-                                newBlockTitle={newBlockName}
-                            />
-                            <button onClick={createPageItem}>
-                                Create Block
-                            </button>
+                        <div className="blocks-prompt-container">
+                            {selectedBlocks.map((block) => (
+                                <BlockPrompt
+                                    key={block.id}
+                                    blockInputs={blockInputs}
+                                    blockId={block}
+                                    handleCreateBlock={handleCreateBlock}
+                                    handleInputChange={handleInputChange}
+                                />
+                            ))}
                         </div>
                     )}
-                    <div
-                        className="add-blocks-btn-wrapper"
-                        onClick={() => {
-                            setShowBlockPrompt(true);
-                        }}
-                    >
-                        <AddBtn iconLable="Add Block" />
+
+                    <div className="add-button-wrapper">
+                        <div onClick={openFieldPopup} className="btn">
+                            <AddBtn iconLable="Add Field" />
+                        </div>
+
+                        <div onClick={openBlockPopup} className="btn">
+                            <AddBtn iconLable="Add Blocks" />
+                        </div>
                     </div>
+
+                    <FieldSelectionPopup
+                        isOpen={isFieldPopupOpen}
+                        onClose={closeFieldPopup}
+                        onAddFields={handleAddSelectedFields}
+                        availableFields={sampleFields}
+                    />
+
+                    <BlockSelectionPopup
+                        selectedBlocks={selectedBlocks}
+                        setSelectedBlocks={setSelectedBlocks}
+                        isOpen={isBlockPopupOpen}
+                        onClose={closeBlockPopup}
+                        availableBlocks={sampleBlocks}
+                        setShowBlockPrompt={setShowBlockPrompt}
+                    />
                 </div>
                 {openSideBar && (
                     <div className="sidebar-container">

@@ -1,28 +1,28 @@
 @import "/src/Styles/base.scss";
 
 .folder-container {
-  --base-color: #f3f5f7;
-
-  --lighth-green: #e7f8ee;
-  --dark-green: #2ba46e;
-
-  --lighth-blue: #e6f4fe;
-  --dark-blue: #1c7cc3;
-
-
-  --lighth-yellow: #fdf9dc;
-  --dark-yellow: #e69739;
+  // --base-color: #f3f5f7;
+  //
+  // --lighth-green: #e7f8ee;
+  // --dark-green: #2ba46e;
+  //
+  // --lighth-blue: #e6f4fe;
+  // --dark-blue: #1c7cc3;
+  //
+  //
+  // --lighth-yellow: #fdf9dc;
+  // --dark-yellow: #e69739;
 
   width: 350px;
   height: 225px;
-  border: $border;
+  border: 1px solid var(--border-color);
   border-radius: 20px;
 
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  background-color: $lightGray;
+  background-color: var(--base-color);
 
   .folder-wrapper {
     height: 100%;
@@ -52,6 +52,8 @@
         gap: 10px;
 
         .folder-name {
+          color: var(--dark-color);
+          background-color: var(--white-color);
           font-size: 20px;
         }
 
@@ -59,7 +61,8 @@
           min-width: 50px;
           max-width: 100%;
           font-size: 16px;
-          background-color: var(--base-color);
+          background-color: var(--primary-color);
+          color: var(--light-font);
           padding: 2px 4px;
           border: none;
           outline: none;
@@ -203,8 +206,8 @@
     top: 100%;
     margin-top: 4px;
     width: 200px;
-    background-color: var(--white-color);
-    border: $border;
+    background-color: var(--base-color-2);
+    border: 1px solid var(--border-color);
     border-radius: 12px;
     // box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
     z-index: 50;
