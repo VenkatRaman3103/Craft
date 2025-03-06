@@ -94,13 +94,12 @@ export const BlockSelectionPopup: React.FC<BlockSelectionPopupProps> = ({
     }, [isOpen, onClose]);
 
     const toggleBlockSelection = (block) => {
-        console.log(block, "blockType");
         setSelectedBlocks((prev) => {
-            console.log(prev, "prevToggle");
             return prev.includes(block)
                 ? prev.filter((id) => id !== block.id)
                 : [...prev, block];
         });
+        setShowBlockPrompt(false);
     };
 
     const handleAddSelected = () => {

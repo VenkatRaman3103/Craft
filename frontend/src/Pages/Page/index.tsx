@@ -279,7 +279,6 @@ export const Page = () => {
                     {showBlockPrompt && (
                         <div className="blocks-prompt-container">
                             {selectedBlocks.map((block) => {
-                                console.log(block, "blockMap");
                                 return (
                                     <BlockPrompt
                                         key={block.id}
