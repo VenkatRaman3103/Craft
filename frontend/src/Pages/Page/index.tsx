@@ -259,6 +259,11 @@ export const Page = () => {
         }));
     };
 
+    function handleBlockPromptCancel(block) {
+        console.log(block, "blockCancel");
+        setSelectedBlocks((prev) => prev.filter((b) => b.id !== block.id));
+    }
+
     console.log(selectedBlocks, "selectedBlocks");
 
     return (
@@ -282,6 +287,9 @@ export const Page = () => {
                                         block={block}
                                         handleCreateBlock={handleCreateBlock}
                                         handleInputChange={handleInputChange}
+                                        handleBlockPromptCancel={
+                                            handleBlockPromptCancel
+                                        }
                                     />
                                 );
                             })}
