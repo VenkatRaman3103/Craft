@@ -29,14 +29,31 @@ export const createBlock = async (page_id, blockData) => {
 
 // create a new feild
 export const createField = async (field, page_id) => {
-    const response = await axios.post(`${backendUrl}/fields/text`, field);
+    let response;
 
-    await axios.post(`${backendUrl}/page/${page_id}/page_items`, {
-        page_id,
-        reference_id: response.data[0].field_id,
-        type: "text_field",
-    });
+    if (field.type === "multi_select_field") {
+        response = await axios.post(`${backendUrl}/fields/mutli_select`, {
+            name: field.name,
+            label: field.label,
+            options: field.options,
+            is_selected: field["hello world"],
+        });
 
-    console.log(response.data[0].field_id, "Field creat response");
+        await axios.post(`${backendUrl}/page/${page_id}/page_items`, {
+            page_id,
+            reference_id: response.data[0].field_id,
+            type: "multi_select_field",
+        });
+    } else {
+        response = await axios.post(`${backendUrl}/fields/text`, field);
+
+        await axios.post(`${backendUrl}/page/${page_id}/page_items`, {
+            page_id,
+            reference_id: response.data[0].field_id,
+            type: "text_field",
+        });
+    }
+
+    console.log(response.data[0].field_id, "Field create response");
     return response.data;
 };

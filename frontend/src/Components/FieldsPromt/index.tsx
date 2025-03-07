@@ -13,8 +13,9 @@ export const FieldsPromt = ({
     handleFieldsCancel,
 }: any) => {
     const [fieldName, setFieldName] = useState("");
-
     const [text, setText] = useState<string>("");
+    const [options, setOptions] = useState<any>([]);
+    const [checkedItems, setCheckedItems] = useState<any>({});
 
     // TODO: move to render fields list
     function renderFieldsPromt(fieldType: string): React.JSX.Element {
@@ -22,23 +23,49 @@ export const FieldsPromt = ({
             case "text_field":
                 return <TextFieldPromt text={text} setText={setText} />;
             case "multi_select_field":
-                return <MultiSelectPrompt />;
+                return (
+                    <MultiSelectPrompt
+                        options={options}
+                        setOptions={setOptions}
+                        checkedItems={checkedItems}
+                        setCheckedItems={setCheckedItems}
+                    />
+                );
             default:
                 return <p>Yet to be done</p>;
         }
     }
 
     const fieldMutation = useMutation(
-        () =>
-            createField(
-                {
+        () => {
+            // Create different payload based on field type
+            let payload;
+
+            if (field.type === "multi_select_field") {
+                // For multi_select_field, prepare payload with checked options
+                const selectedOptions = options
+                    .filter((opt) => checkedItems[opt.id])
+                    .map((opt) => opt.value);
+
+                payload = {
+                    name: fieldName.split(" ").join("-").toLowerCase(),
+                    label: fieldName,
+                    type: "multi_select_field",
+                    options: options.map((opt) => opt.value),
+                    "hello world": selectedOptions,
+                };
+            } else {
+                // For other field types (like text_field)
+                payload = {
                     name: fieldName.split(" ").join("-").toLowerCase(),
                     label: fieldName,
                     type: "text_field",
                     value: text,
-                },
-                page_id,
-            ),
+                };
+            }
+
+            return createField(payload, page_id);
+        },
         {
             onSuccess: () => {
                 queryClient.invalidateQueries({
@@ -61,7 +88,6 @@ export const FieldsPromt = ({
         >
             <div className="fields-promt-wrapper">
                 {renderFieldsPromt(field.type)}
-
                 <div className="action-btn-wrapper">
                     <button
                         className="create-block-button"
@@ -72,6 +98,12 @@ export const FieldsPromt = ({
                     <button
                         className="create-block-button"
                         onClick={handleCreteField}
+                        disabled={
+                            !fieldName ||
+                            (field.type === "multi_select_field" &&
+                                options.length === 0) ||
+                            (field.type === "text_field" && !text)
+                        }
                     >
                         Create Block
                     </button>

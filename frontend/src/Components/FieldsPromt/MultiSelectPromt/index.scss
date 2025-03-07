@@ -1,5 +1,5 @@
 .multi-select-field-container {
-  width: 96%;
+  width: 100%;
   height: auto;
 
   display: flex;
@@ -7,14 +7,16 @@
   justify-content: center;
   align-items: center;
 
-  padding-top: 20px;
+  padding-top: 1px;
   padding-bottom: 20px;
 
   .multi-select-field-wrapper {
-    width: 100%;
+    width: 97%;
     border-radius: 10px;
-    border: 1px solid var(--border-color);
+    border: 1px solid var(--white-color);
     overflow: hidden;
+
+    background-color: var(--primary-color);
 
     .multi-select-field {
       height: 45px;
@@ -27,20 +29,20 @@
       display: flex;
       align-items: center;
 
-      border-bottom: 1px solid var(--border-color);
+      border-bottom: 1.5px solid var(--white-color);
+      // border-bottom: 1px solid var(--border-color);
 
       &:hover {
-        background-color: var(--base-color);
+        background-color: var(--primary-color);
       }
 
       &.last {
         border: none;
       }
 
-      input {
-        margin-right: 15px;
-        cursor: pointer;
-
+      .multi-select-field-input {
+        background-color: transparent;
+        color: white;
       }
     }
   }
@@ -51,6 +53,7 @@
     font-size: 14px;
     font-weight: 400;
     color: var(--dark-font);
+    background-color: var(--primary-color);
     // padding-left: 10px;
 
     display: flex;
@@ -58,13 +61,13 @@
     justify-content: center;
     cursor: pointer;
 
-    border: 1px solid var(--border-color);
+    // border: 1px solid var(--border-color);
     border-radius: 10px;
 
     margin-top: 20px;
 
     &:hover {
-      background-color: var(--base-color);
+      // background-color: var(--white-color);
     }
   }
 }
