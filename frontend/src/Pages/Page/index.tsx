@@ -11,6 +11,7 @@ import * as React from "react";
 import { fetchPageData, createBlock } from "./api";
 import { FieldSelectionPopup } from "@/Components/FieldSelectionPopup";
 import { BlockSelectionPopup } from "@/Components/BlocksSelectionPopup";
+import { FieldsPromt } from "@/Components/FieldsPromt";
 
 const sampleBlocks = [
     {
@@ -168,16 +169,13 @@ export const Page = () => {
     const { page_id } = useParams();
     const queryClient = useQueryClient();
     const [openSideBar, setOpenSideBar] = useState(false);
+    const [showFieldPromt, setShowFieldPromt] = useState(false);
     const [showBlockPrompt, setShowBlockPrompt] = useState(false);
-    const [blockInputs, setBlockInputs] = useState({});
-    const [fields, setFields] = useState([]);
+    const [selectedBlocks, setSelectedBlocks] = useState([]);
 
     const [isFieldPopupOpen, setIsFieldPopupOpen] = useState(false);
     const [isBlockPopupOpen, setIsBlockPopupOpen] = useState(false);
-
-    const [selectedBlocks, setSelectedBlocks] = useState<
-        { blockId: string; blockType: string }[]
-    >([]);
+    const [promtFields, setPromtFields] = useState([]);
 
     const { data: pageData } = useQuery({
         queryKey: ["pageData", page_id],
@@ -185,7 +183,7 @@ export const Page = () => {
         enabled: !!page_id,
     });
 
-    const handleAddSelectedFields = (selectedFieldIds: string[]) => {
+    const handleAddSelectedFields = (selectedFieldIds) => {
         const fieldsToAdd = sampleFields
             .filter((field) => selectedFieldIds.includes(field.id))
             .map((field) => ({
@@ -194,7 +192,11 @@ export const Page = () => {
                 type: field.type,
             }));
 
-        setFields([...fields, ...fieldsToAdd]);
+        setPromtFields([...promtFields, ...fieldsToAdd]);
+
+        if (selectedFieldIds.length > 0) {
+            setShowFieldPromt(true);
+        }
     };
 
     const closeFieldPopup = () => {
@@ -213,6 +215,115 @@ export const Page = () => {
         setIsBlockPopupOpen(true);
     };
 
+    const handleBlocksSelected = (newSelectedBlocks) => {
+        setSelectedBlocks((prev) => [...prev, ...newSelectedBlocks]);
+
+        if (newSelectedBlocks.length > 0) {
+            setShowBlockPrompt(true);
+        }
+    };
+
+    const handleBlockPromptCancel = (block) => {
+        setSelectedBlocks((prev) =>
+            prev.filter(
+                (b) =>
+                    (b.instanceId || b.blockId) !==
+                    (block.instanceId || block.blockId),
+            ),
+        );
+
+        if (selectedBlocks.length <= 1) {
+            setShowBlockPrompt(false);
+        }
+    };
+
+    function handleFieldsCancel(promtField) {
+        setPromtFields((prev) =>
+            prev.filter((field) => field.id !== promtField.id),
+        );
+
+        if (promtFields.length <= 1) {
+            setShowFieldPromt(false);
+        }
+    }
+
+    console.log(selectedBlocks, "selectedBlocks");
+    console.log(promtFields, "fields");
+
+    return (
+        <div className="page-content-container">
+            <PageIntro
+                data={pageData}
+                openSideBar={openSideBar}
+                setOpenSideBar={setOpenSideBar}
+            />
+            <div className="blocks-list-container">
+                <div className="blocks-list-wrapper">
+                    <PageItems pageItems={pageData?.page_items || []} />
+
+                    {showFieldPromt && (
+                        <div className="fields-prompt-container">
+                            {promtFields.map((field) => (
+                                <div key={field.id}>
+                                    <FieldsPromt
+                                        field={field}
+                                        queryClient={queryClient}
+                                        page_id={page_id}
+                                        handleFieldsCancel={handleFieldsCancel}
+                                    />
+                                </div>
+                            ))}
+                        </div>
+                    )}
+
+                    {showBlockPrompt && (
+                        <div className="blocks-prompt-container">
+                            {selectedBlocks.map((block) => (
+                                <BlocksPropmts
+                                    key={block.instanceId || block.blockId}
+                                    block={block}
+                                    page_id={page_id}
+                                    queryClient={queryClient}
+                                    onCancel={() =>
+                                        handleBlockPromptCancel(block)
+                                    }
+                                />
+                            ))}
+                        </div>
+                    )}
+
+                    <AddPageItemsBtn
+                        openFieldPopup={openFieldPopup}
+                        openBlockPopup={openBlockPopup}
+                    />
+
+                    <FieldSelectionPopup
+                        isOpen={isFieldPopupOpen}
+                        onClose={closeFieldPopup}
+                        onAddFields={handleAddSelectedFields}
+                        availableFields={sampleFields}
+                    />
+
+                    <BlockSelectionPopup
+                        isOpen={isBlockPopupOpen}
+                        onClose={closeBlockPopup}
+                        availableBlocks={sampleBlocks}
+                        onBlocksSelected={handleBlocksSelected}
+                    />
+                </div>
+                {openSideBar && (
+                    <div className="sidebar-container">
+                        <div className="sidebar-wrapper"></div>
+                    </div>
+                )}
+            </div>
+        </div>
+    );
+};
+
+export const BlocksPropmts = ({ block, page_id, queryClient, onCancel }) => {
+    const [blockInput, setBlockInput] = useState("");
+
     const createBlockMutation = useMutation({
         mutationFn: (blockName) =>
             createBlock(page_id, {
@@ -228,104 +339,45 @@ export const Page = () => {
         },
     });
 
-    const handleCreateBlock = (block) => {
-        console.log(block, "blockIdCreate");
-        const blockName = blockInputs[block.id];
-        if (!blockName) return;
+    const handleCreateBlock = () => {
+        if (!blockInput) return;
 
-        createBlockMutation.mutate(blockName);
-
-        setBlockInputs((prev) => {
-            const updated = { ...prev };
-            console.log(prev, updated, updated[block.id], "blockName");
-            delete updated[block.id];
-            return updated;
-        });
-
-        setSelectedBlocks((prev) => {
-            console.log(prev, block, "prev");
-            return prev.filter((item) => item.id !== block.id);
-        });
-
-        if (selectedBlocks.length <= 1) {
-            setShowBlockPrompt(false);
-        }
+        createBlockMutation.mutate(blockInput);
+        onCancel();
     };
 
-    const handleInputChange = (blockId: string, value: string) => {
-        setBlockInputs((prev) => ({
-            ...prev,
-            [blockId]: value,
-        }));
+    const handleInputChange = (value) => {
+        setBlockInput(value);
     };
 
-    function handleBlockPromptCancel(block) {
-        console.log(block, "blockCancel");
-        setSelectedBlocks((prev) => prev.filter((b) => b.id !== block.id));
-    }
-
-    console.log(selectedBlocks, "selectedBlocks");
+    const blockDetails = sampleBlocks.find((b) => b.id === block.blockId);
+    if (!blockDetails) return null;
 
     return (
-        <div className="page-content-container">
-            <PageIntro
-                data={pageData}
-                openSideBar={openSideBar}
-                setOpenSideBar={setOpenSideBar}
-            />
-            <div className="blocks-list-container">
-                <div className="blocks-list-wrapper">
-                    <PageItems pageItems={pageData?.page_items || []} />
-                    {showBlockPrompt && (
-                        <div className="blocks-prompt-container">
-                            {selectedBlocks.map((block) => {
-                                return (
-                                    <BlockPrompt
-                                        key={block.id}
-                                        blockInputs={blockInputs}
-                                        block={block}
-                                        handleCreateBlock={handleCreateBlock}
-                                        handleInputChange={handleInputChange}
-                                        handleBlockPromptCancel={
-                                            handleBlockPromptCancel
-                                        }
-                                    />
-                                );
-                            })}
-                        </div>
-                    )}
+        <BlockPrompt
+            blockInputs={{ [block.instanceId || block.blockId]: blockInput }}
+            blockData={block}
+            block={{
+                id: block.instanceId || block.blockId,
+                name: blockDetails.name,
+                type: block.blockType,
+            }}
+            handleCreateBlock={handleCreateBlock}
+            handleInputChange={(_, value) => handleInputChange(value)}
+            handleBlockPromptCancel={onCancel}
+        />
+    );
+};
 
-                    <div className="add-button-wrapper">
-                        <div onClick={openFieldPopup} className="btn">
-                            <AddBtn iconLable="Add Field" />
-                        </div>
+export const AddPageItemsBtn = ({ openFieldPopup, openBlockPopup }) => {
+    return (
+        <div className="add-button-wrapper">
+            <div onClick={openFieldPopup} className="btn">
+                <AddBtn iconLable="Add Field" />
+            </div>
 
-                        <div onClick={openBlockPopup} className="btn">
-                            <AddBtn iconLable="Add Blocks" />
-                        </div>
-                    </div>
-
-                    <FieldSelectionPopup
-                        isOpen={isFieldPopupOpen}
-                        onClose={closeFieldPopup}
-                        onAddFields={handleAddSelectedFields}
-                        availableFields={sampleFields}
-                    />
-
-                    <BlockSelectionPopup
-                        selectedBlocks={selectedBlocks}
-                        setSelectedBlocks={setSelectedBlocks}
-                        isOpen={isBlockPopupOpen}
-                        onClose={closeBlockPopup}
-                        availableBlocks={sampleBlocks}
-                        setShowBlockPrompt={setShowBlockPrompt}
-                    />
-                </div>
-                {openSideBar && (
-                    <div className="sidebar-container">
-                        <div className="sidebar-wrapper"></div>
-                    </div>
-                )}
+            <div onClick={openBlockPopup} className="btn">
+                <AddBtn iconLable="Add Blocks" />
             </div>
         </div>
     );

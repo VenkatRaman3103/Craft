@@ -11,6 +11,7 @@ import collectionJoinPageRouter from "./collectionJoinPageRouter/route.js";
 import { blocksRouter } from "./blocks/route.js";
 import { pagesRoute } from "./pages/route.js";
 import * as schema from "../db/schema/index.js";
+import { fieldRoute } from "./fields/route.js";
 
 dotenv.config();
 
@@ -76,55 +77,11 @@ app.use("/api", collectionJoinPageRouter);
 // pages
 app.use("/api", pagesRoute);
 
-// Update an existing page
-// app.put("/api/pages/:id", async (req, res) => {
-//     try {
-//         const pageId = req.params.id;
-//         const { title, slug } = req.body;
-//
-//         // Check if page exists
-//         const existingPage = await db
-//             .select()
-//             .from(pages)
-//             .where(eq(pages.page_id, pageId))
-//             .limit(1);
-//
-//         if (existingPage.length === 0) {
-//             return res.status(404).json({ error: "Page not found" });
-//         }
-//
-//         // Update the page
-//         const updatedPage = await db
-//             .update(pages)
-//             .set({
-//                 title: title || existingPage[0].title,
-//                 slug: slug || existingPage[0].slug,
-//                 updated_at: new Date(),
-//             })
-//             .where(eq(pages.page_id, pageId))
-//             .returning();
-//
-//         res.json(updatedPage[0]);
-//     } catch (error) {
-//         res.status(500).json({ error: `Internal server error: ${error}` });
-//     }
-// });
-
-// Delete a page
-// app.delete("/api/pages/:id", async (req, res) => {
-//     try {
-//         const pageId = req.params.id;
-//
-//         // Delete the page (cascade will delete blocks and field values)
-//         await db.delete(pages).where(eq(pages.page_id, pageId));
-//
-//         res.status(204).send();
-//     } catch (error) {
-//         res.status(500).json({ error: `Internal server error: ${error}` });
-//     }
-// });
-
+// blocks
 app.use("/api", blocksRouter);
+
+// field
+app.use("/api", fieldRoute);
 
 app.get("/api/get/pages", async (req, res) => {
     try {

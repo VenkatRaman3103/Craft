@@ -20,8 +20,23 @@ export const createBlock = async (page_id, blockData) => {
     // Associate the block with the page
     await axios.post(`${backendUrl}/page/${page_id}/page_items`, {
         page_id,
-        block_id: blocksResponse.data.block_id,
+        reference_id: blocksResponse.data.block_id,
+        type: "block",
     });
 
     return blocksResponse.data;
+};
+
+// create a new feild
+export const createField = async (field, page_id) => {
+    const response = await axios.post(`${backendUrl}/fields/text`, field);
+
+    await axios.post(`${backendUrl}/page/${page_id}/page_items`, {
+        page_id,
+        reference_id: response.data[0].field_id,
+        type: "field",
+    });
+
+    console.log(response.data[0].field_id, "Field creat response");
+    return response.data;
 };

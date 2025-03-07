@@ -1,13 +1,18 @@
 import { useState, useRef, useEffect } from "react";
 import "./index.scss";
+import { AddPageItemsBtn } from "@/Pages/Page";
+import { ArrayBlockPrompt } from "../BlocksPromts/ArrayBlockPrompt";
 
 export const BlockPrompt = ({
     blockInputs,
     block,
+    blockData,
     handleCreateBlock,
     handleInputChange,
     handleBlockPromptCancel,
-}) => {
+    openFieldPopup,
+    openBlockPopup,
+}: any) => {
     const [inputWidth, setInputWidth] = useState("auto");
     const inputRef = useRef(null);
 
@@ -28,6 +33,18 @@ export const BlockPrompt = ({
             setInputWidth(`${width + 10}px`);
         }
     }, [blockInputs, block.id]);
+
+    function renderPrompt(block) {
+        console.log(block, "backType");
+        switch (block.type) {
+            case "block":
+                return "block";
+            case "array":
+                return <ArrayBlockPrompt block={blockData} />;
+            default:
+                return "block";
+        }
+    }
 
     return (
         <div className="block-promt-item">
@@ -50,6 +67,7 @@ export const BlockPrompt = ({
                             </div>
                         </div>
                     </div>
+                    {renderPrompt(block)}
                     <div className="action-btn-wrapper">
                         <button
                             className="create-block-button"

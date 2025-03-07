@@ -5,7 +5,7 @@ import { Text } from "./Text";
 import { fieldTypes } from "@/Types/fields";
 
 export const FieldsList: Record<fieldTypes, React.ComponentType<any>> = {
-    text: Text,
+    text_field: Text,
     select: Select,
     "multi-select": MultiSelect,
 };

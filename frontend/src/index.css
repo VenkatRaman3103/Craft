@@ -20,7 +20,8 @@
 
     --ligth-red: #41272a;
 
-    --border-color: #23252a;
+    /* --border-color: #23252a; */
+    --border-color: var(--primary-color);
     --dark-font: #e3e4e7;
     --light-font: #595a5c;
 
@@ -68,6 +69,7 @@ input:focus-visible {
         --ligth-red: #41272a;
 
         --border-color: #23252a;
+        /* --border-color: var(--primary-color); */
         --dark-font: #e3e4e7;
         --light-font: #595a5c;
 

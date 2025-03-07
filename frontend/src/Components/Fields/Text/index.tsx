@@ -11,9 +11,12 @@ export const Text = ({ data }: { data: field }) => {
         setText(event.target.value);
     }
 
+    console.log(data.value, "dataText");
+
     return (
         <FieldWrapper data={data}>
             <div className="text-input-field-container">
+                {/* <div>{data.name}</div> */}
                 <input
                     className="text-input-field"
                     type="text"

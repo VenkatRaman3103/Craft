@@ -2,7 +2,6 @@ import { useState, useRef, useEffect } from "react";
 import {
     X,
     Plus,
-    Check,
     Layers,
     Cuboid,
     Parentheses,
@@ -53,27 +52,41 @@ type BlockOption = {
     thumbnail?: string;
 };
 
+type SelectedBlock = {
+    blockId: string;
+    blockType: string;
+    instanceId?: string;
+};
+
 interface BlockSelectionPopupProps {
     isOpen: boolean;
     onClose: () => void;
     availableBlocks: BlockOption[];
-    setShowBlockPrompt: React.Dispatch<React.SetStateAction<boolean>>;
-    selectedBlocks: string[];
-    setSelectedBlocks: React.Dispatch<React.SetStateAction<string[]>>;
+    onBlocksSelected: (selectedBlocks: SelectedBlock[]) => void;
 }
 
 export const BlockSelectionPopup: React.FC<BlockSelectionPopupProps> = ({
     isOpen,
     onClose,
     availableBlocks,
-    setShowBlockPrompt,
-    selectedBlocks,
-    setSelectedBlocks,
+    onBlocksSelected,
 }) => {
     const popupRef = useRef<HTMLDivElement>(null);
     const [selectedBlocksType, setSelectedBlocksType] = useState("all-blocks");
+    const [localSelectedBlocks, setLocalSelectedBlocks] = useState<
+        SelectedBlock[]
+    >([]);
+    const [searchTerm, setSearchTerm] = useState("");
 
-    // Close popup when clicking outside
+    // Reset state completely when popup opens
+    // useEffect(() => {
+    //     if (isOpen) {
+    //         setLocalSelectedBlocks([]);
+    //         setSearchTerm("");
+    //     }
+    // }, [isOpen]);
+
+    // Handle outside clicks to close the popup
     useEffect(() => {
         const handleClickOutside = (event: MouseEvent) => {
             if (
@@ -93,20 +106,46 @@ export const BlockSelectionPopup: React.FC<BlockSelectionPopupProps> = ({
         };
     }, [isOpen, onClose]);
 
-    const toggleBlockSelection = (block) => {
-        setSelectedBlocks((prev) => {
-            return prev.includes(block)
-                ? prev.filter((id) => id !== block.id)
-                : [...prev, block];
+    const toggleBlockSelection = (block: BlockOption) => {
+        setLocalSelectedBlocks((prev) => {
+            const isSelected = prev.some((item) => item.blockId === block.id);
+
+            if (isSelected) {
+                return prev.filter((item) => item.blockId !== block.id);
+            } else {
+                return [
+                    ...prev,
+                    {
+                        blockId: block.id,
+                        blockType: block.type,
+                        instanceId: `${block.id}-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`,
+                    },
+                ];
+            }
         });
-        setShowBlockPrompt(false);
     };
 
     const handleAddSelected = () => {
-        setShowBlockPrompt(true);
-        setSelectedBlocks(selectedBlocks);
+        onBlocksSelected(localSelectedBlocks);
         onClose();
     };
+
+    const handleCancel = () => {
+        onClose();
+    };
+
+    const filteredBlocks = availableBlocks.filter((block) => {
+        if (searchTerm) {
+            return (
+                block.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                (block.description &&
+                    block.description
+                        .toLowerCase()
+                        .includes(searchTerm.toLowerCase()))
+            );
+        }
+        return true;
+    });
 
     const typeOfBlocks = [
         { label: "All Blocks", value: "all-blocks" },
@@ -115,8 +154,6 @@ export const BlockSelectionPopup: React.FC<BlockSelectionPopupProps> = ({
     ];
 
     if (!isOpen) return null;
-
-    console.log(selectedBlocks, "selectedBlocks");
 
     return (
         <div className="block-selection-overlay">
@@ -131,7 +168,7 @@ export const BlockSelectionPopup: React.FC<BlockSelectionPopupProps> = ({
                         </div>
                         <button
                             className="close-button"
-                            onClick={onClose}
+                            onClick={handleCancel}
                             aria-label="Close"
                         >
                             <X size={22} color={lightFont} />
@@ -159,25 +196,24 @@ export const BlockSelectionPopup: React.FC<BlockSelectionPopupProps> = ({
                             type="text"
                             placeholder="Search blocks..."
                             className="search-input"
+                            value={searchTerm}
+                            onChange={(e) => setSearchTerm(e.target.value)}
                         />
                     </div>
                 </div>
 
                 <div className="blocks-grid">
-                    {availableBlocks.map((block) => (
+                    {filteredBlocks.map((block) => (
                         <div
                             key={block.id}
                             className={`block-option ${
-                                selectedBlocks.some((item) => {
-                                    console.log(item, "itemBlock");
-                                    return item.id === block.id;
-                                })
+                                localSelectedBlocks.some(
+                                    (item) => item.blockId === block.id,
+                                )
                                     ? "selected"
                                     : ""
                             }`}
-                            onClick={() => {
-                                toggleBlockSelection(block);
-                            }}
+                            onClick={() => toggleBlockSelection(block)}
                         >
                             <div className="block-thumbnail">
                                 {block.thumbnail ? (
@@ -204,17 +240,20 @@ export const BlockSelectionPopup: React.FC<BlockSelectionPopupProps> = ({
 
                 <div className="block-selection-footer">
                     <div className="selection-count">
-                        {selectedBlocks.length} block
-                        {selectedBlocks.length !== 1 ? "s" : ""} selected
+                        {localSelectedBlocks.length} block
+                        {localSelectedBlocks.length !== 1 ? "s" : ""} selected
                     </div>
                     <div className="action-buttons">
-                        <button className="cancel-button" onClick={onClose}>
+                        <button
+                            className="cancel-button"
+                            onClick={handleCancel}
+                        >
                             Cancel
                         </button>
                         <button
                             className="add-button"
                             onClick={handleAddSelected}
-                            disabled={selectedBlocks.length === 0}
+                            disabled={localSelectedBlocks.length === 0}
                         >
                             <Plus size={16} />
                             Add Blocks

@@ -86,7 +86,7 @@ export const PageItems = ({
 
     return (
         <div className="blocks-container">
-            {pageItemsList.map((item, index) => {
+            {pageItemsList.map((item: any, index) => {
                 if (item?.item_type === "block") {
                     if (item.block) {
                         return (
@@ -101,9 +101,16 @@ export const PageItems = ({
                             />
                         );
                     }
-                } else if (item?.item_type === "field") {
-                    const Field = FieldsList[item.field.type];
-                    return <Field key={index} data={item.field} />;
+                } else {
+                    // if (item?.item_type === "field") {
+                    const Field = FieldsList[item.item_type];
+
+                    return Field ? (
+                        <Field key={index} data={item[item.item_type]} />
+                    ) : (
+                        <p key={index}>Yet to be done</p>
+                    );
+                    // }
                 }
             })}
         </div>

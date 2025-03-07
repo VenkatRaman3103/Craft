@@ -29,6 +29,12 @@ export const FieldSelectionPopup: React.FC<FieldSelectionPopupProps> = ({
     const popupRef = useRef<HTMLDivElement>(null);
     const [selectedFieldsType, setSelectedFieldsType] = useState("all");
 
+    // useEffect(() => {
+    //     if (isOpen) {
+    //         setSelectedFields([]);
+    //     }
+    // }, [isOpen]);
+
     // Close popup when clicking outside
     useEffect(() => {
         const handleClickOutside = (event: MouseEvent) => {
@@ -89,16 +95,6 @@ export const FieldSelectionPopup: React.FC<FieldSelectionPopupProps> = ({
                                         <div className="field-description">
                                             {field.description}
                                         </div>
-                                    )}
-                                </div>
-
-                                <div className="field-checkbox">
-                                    {selectedFields.includes(field.id) ? (
-                                        <div className="checkbox-selected">
-                                            <Check size={14} />
-                                        </div>
-                                    ) : (
-                                        <div className="checkbox-empty"></div>
                                     )}
                                 </div>
                             </div>

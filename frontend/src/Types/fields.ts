@@ -10,4 +10,4 @@ export type multiSelect = {
     checked: boolean;
 };
 
-export type fieldTypes = "text" | "select" | "multi-select";
+export type fieldTypes = "text_field" | "select" | "multi-select";

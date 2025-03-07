@@ -3,14 +3,13 @@ import { db } from "../../server.js";
 
 export async function createPageItem(req, res) {
     const { page_id } = req.params;
-    const { block_id } = req.body;
+    const { reference_id, type } = req.body;
     try {
         // Insert new page_item
         await db.insert(page_items).values({
             page_ref_id: page_id,
-            // TODO: add field_id
-            reference_id: block_id,
-            item_type: "block",
+            reference_id: reference_id,
+            item_type: type,
         });
 
         // Fetch updated page data

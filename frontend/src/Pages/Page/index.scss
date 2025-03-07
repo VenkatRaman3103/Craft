@@ -20,6 +20,14 @@
       margin-left: 20px;
       margin-right: 20px;
 
+      .fields-prompt-container {
+        width: 100%;
+        display: flex;
+        flex-direction: column;
+        gap: 30px;
+        margin-top: 30px;
+      }
+
       .blocks-prompt-container {
         width: 100%;
         display: flex;
