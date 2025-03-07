@@ -116,7 +116,7 @@ const sampleFields = [
     {
         id: "field1",
         name: "Text Field",
-        type: "text",
+        type: "text_field",
     },
     {
         id: "field2",
@@ -131,7 +131,7 @@ const sampleFields = [
     {
         id: "field4",
         name: "Multi Select Field",
-        type: "multi-select",
+        type: "multi_select_field",
     },
     {
         id: "field5",

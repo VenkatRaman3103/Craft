@@ -26,10 +26,10 @@ import axios from "axios";
 import { FieldsList } from "../Fields/FieldsList";
 
 export const FieldsIcons = {
-    text: <Type size={20} color={lightFont} />,
+    text_field: <Type size={20} color={lightFont} />,
     number: <Divide size={20} color={lightFont} />,
     json: <Braces size={20} color={lightFont} />,
-    "multi-select": <SquareCheck size={20} color={lightFont} />,
+    multi_select_field: <SquareCheck size={20} color={lightFont} />,
     "rich-text": <LetterText size={20} color={lightFont} />,
     select: <CircleCheck size={20} color={lightFont} />,
     date: <CalendarDays size={20} color={lightFont} />,
@@ -102,7 +102,6 @@ export const PageItems = ({
                         );
                     }
                 } else {
-                    // if (item?.item_type === "field") {
                     const Field = FieldsList[item.item_type];
 
                     return Field ? (
@@ -110,7 +109,6 @@ export const PageItems = ({
                     ) : (
                         <p key={index}>Yet to be done</p>
                     );
-                    // }
                 }
             })}
         </div>

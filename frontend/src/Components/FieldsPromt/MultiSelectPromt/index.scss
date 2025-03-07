@@ -1,0 +1,70 @@
+.multi-select-field-container {
+  width: 96%;
+  height: auto;
+
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+
+  padding-top: 20px;
+  padding-bottom: 20px;
+
+  .multi-select-field-wrapper {
+    width: 100%;
+    border-radius: 10px;
+    border: 1px solid var(--border-color);
+    overflow: hidden;
+
+    .multi-select-field {
+      height: 45px;
+      width: 100%;
+      font-size: 14px;
+      font-weight: 400;
+      color: var(--dark-font);
+      padding-left: 10px;
+
+      display: flex;
+      align-items: center;
+
+      border-bottom: 1px solid var(--border-color);
+
+      &:hover {
+        background-color: var(--base-color);
+      }
+
+      &.last {
+        border: none;
+      }
+
+      input {
+        margin-right: 15px;
+        cursor: pointer;
+
+      }
+    }
+  }
+
+  .multi-select-field-btn {
+    height: 45px;
+    width: 100%;
+    font-size: 14px;
+    font-weight: 400;
+    color: var(--dark-font);
+    // padding-left: 10px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+
+    border: 1px solid var(--border-color);
+    border-radius: 10px;
+
+    margin-top: 20px;
+
+    &:hover {
+      background-color: var(--base-color);
+    }
+  }
+}

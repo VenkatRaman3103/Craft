@@ -18,8 +18,13 @@ export async function createPageItem(req, res) {
             with: {
                 page_items: {
                     with: {
-                        field: true,
+                        text_field: true,
                         block: true,
+                        multi_select_field: {
+                            with: {
+                                options: true,
+                            },
+                        },
                     },
                 },
             },

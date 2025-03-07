@@ -4,6 +4,7 @@ import { FieldPromtWrapper } from "./FiedsPromtWrapper";
 import React, { useState } from "react";
 import { useMutation } from "@tanstack/react-query";
 import { createField } from "@/Pages/Page/api";
+import { MultiSelectPrompt } from "./MultiSelectPromt";
 
 export const FieldsPromt = ({
     field,
@@ -18,8 +19,10 @@ export const FieldsPromt = ({
     // TODO: move to render fields list
     function renderFieldsPromt(fieldType: string): React.JSX.Element {
         switch (fieldType) {
-            case "text":
+            case "text_field":
                 return <TextFieldPromt text={text} setText={setText} />;
+            case "multi_select_field":
+                return <MultiSelectPrompt />;
             default:
                 return <p>Yet to be done</p>;
         }
@@ -31,7 +34,7 @@ export const FieldsPromt = ({
                 {
                     name: fieldName.split(" ").join("-").toLowerCase(),
                     label: fieldName,
-                    type: "text",
+                    type: "text_field",
                     value: text,
                 },
                 page_id,
