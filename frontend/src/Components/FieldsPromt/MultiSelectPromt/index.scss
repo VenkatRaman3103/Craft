@@ -28,6 +28,7 @@
 
       display: flex;
       align-items: center;
+      justify-content: space-between;
 
       border-bottom: 1.5px solid var(--white-color);
       // border-bottom: 1px solid var(--border-color);
@@ -49,7 +50,7 @@
 
   .multi-select-field-btn {
     height: 45px;
-    width: 100%;
+    width: 97%;
     font-size: 14px;
     font-weight: 400;
     color: var(--dark-font);
@@ -70,4 +71,13 @@
       // background-color: var(--white-color);
     }
   }
+}
+
+.remove-option-btn {
+  background-color: transparent;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transform: translateX(-25px);
 }

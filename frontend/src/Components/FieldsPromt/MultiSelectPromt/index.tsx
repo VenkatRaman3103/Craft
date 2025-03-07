@@ -1,3 +1,4 @@
+import { Trash2 } from "lucide-react";
 import "./index.scss";
 
 export const MultiSelectPrompt = ({
@@ -64,13 +65,12 @@ export const MultiSelectPrompt = ({
                                     placeholder="Enter option value"
                                 />
                             </label>
-                            <button
+                            <div
                                 className="remove-option-btn"
                                 onClick={() => removeOption(item.id)}
-                                title="Remove option"
                             >
-                                ×
-                            </button>
+                                <Trash2 size={18} color="var(--light-font)" />
+                            </div>
                         </div>
                     ))}
                 </div>
