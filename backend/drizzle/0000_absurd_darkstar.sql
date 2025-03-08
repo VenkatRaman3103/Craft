@@ -1,5 +1,5 @@
 CREATE TYPE "public"."scope_enum" AS ENUM('global', 'page', 'collection');--> statement-breakpoint
-CREATE TYPE "public"."item_type" AS ENUM('block', 'text_field', 'multi_select_field', 'single_select_field');--> statement-breakpoint
+CREATE TYPE "public"."item_type" AS ENUM('block', 'text_field', 'multi_select_field', 'single_select_field', 'number_field');--> statement-breakpoint
 CREATE TABLE "array_block_items" (
 	"item_id" uuid PRIMARY KEY DEFAULT gen_random_uuid() NOT NULL,
 	"array_block_ref_id" uuid,
@@ -50,6 +50,16 @@ CREATE TABLE "collections" (
 	"type" text,
 	"reference_id" text,
 	"created_at" timestamp DEFAULT now()
+);
+--> statement-breakpoint
+CREATE TABLE "number_fields" (
+	"field_id" uuid PRIMARY KEY DEFAULT gen_random_uuid() NOT NULL,
+	"name" varchar NOT NULL,
+	"label" varchar NOT NULL,
+	"value" integer NOT NULL,
+	"type" varchar DEFAULT 'number' NOT NULL,
+	"created_at" timestamp DEFAULT now(),
+	"edited_at" timestamp DEFAULT now()
 );
 --> statement-breakpoint
 CREATE TABLE "multi_select_fields" (

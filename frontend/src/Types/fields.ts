@@ -2,7 +2,7 @@ export type field = {
     name?: string;
     type?: fieldTypes;
     label?: string;
-    value: string | multiSelect[];
+    value?: string | multiSelect[];
 };
 
 export type multiSelect = {
@@ -14,4 +14,12 @@ export type fieldTypes =
     | "text_field"
     | "select"
     | "multi-select"
-    | "multi_select_field";
+    | "multi_select_field"
+    | "single_select_field";
+
+// promt
+export type fieldPromt = {
+    id: string;
+    name: string;
+    type: fieldTypes;
+};

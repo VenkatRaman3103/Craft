@@ -1,31 +1,41 @@
 import { TextFieldPromt } from "./TextFieldPromt";
 import "./index.scss";
 import { FieldPromtWrapper } from "./FiedsPromtWrapper";
-import React, { useState } from "react";
+import { useState } from "react";
 import { useMutation } from "@tanstack/react-query";
 import { createField } from "@/Pages/Page/api";
 import { MultiSelectPrompt } from "./MultiSelectPromt";
 import { SingleSelectPromt } from "./SingleSelectPromt";
+import React from "react";
+import { fieldPromt } from "@/Types/fields";
+
+type optType = { id: string; value: string | undefined };
 
 export const FieldsPromt = ({
     field,
     queryClient,
     page_id,
     handleFieldsCancel,
-}: any) => {
+}: {
+    field: fieldPromt;
+    queryClient: any;
+    page_id: string | undefined;
+    handleFieldsCancel: (promtField: fieldPromt) => void;
+}) => {
     const [fieldName, setFieldName] = useState("");
     const [text, setText] = useState<string>("");
 
     // multi select field
-    const [multiSelectOptions, setMultiSelectOptions] = useState<any>([]);
-    const [checkedMultiSelectItems, setCheckedMultiSelectItems] = useState<any>(
-        {},
-    );
+    const [multiSelectOptions, setMultiSelectOptions] = useState([]);
+    const [checkedMultiSelectItems, setCheckedMultiSelectItems] = useState<{
+        [key: string]: boolean;
+    }>({});
 
     // single select field
-    const [singleSelectOptions, setSingleSelectOptions] = useState<any>([]);
-    const [checkedsingleSelectItems, setCheckedSingleSelectItems] =
-        useState<any>({});
+    const [singleSelectOptions, setSingleSelectOptions] = useState([]);
+    const [checkedsingleSelectItems, setCheckedSingleSelectItems] = useState<{
+        [key: string]: boolean;
+    }>({});
 
     console.log(
         singleSelectOptions,
@@ -67,26 +77,30 @@ export const FieldsPromt = ({
 
             if (field.type === "multi_select_field") {
                 const selectedOptions = multiSelectOptions
-                    .filter((opt) => checkedMultiSelectItems[opt.id])
-                    .map((opt) => opt.value);
+                    .filter((opt: optType) => checkedMultiSelectItems[opt.id])
+                    .map((opt: optType) => opt.value);
 
                 payload = {
                     name: fieldName.split(" ").join("-").toLowerCase(),
                     label: fieldName,
                     type: "multi_select_field",
-                    options: multiSelectOptions.map((opt) => opt.value),
+                    options: multiSelectOptions.map(
+                        (opt: optType) => opt.value,
+                    ),
                     selectedOptions,
                 };
             } else if (field.type === "single_select_field") {
                 const selectedOptions = singleSelectOptions
-                    .filter((opt) => checkedsingleSelectItems[opt.id])
-                    .map((opt) => opt.value);
+                    .filter((opt: optType) => checkedsingleSelectItems[opt.id])
+                    .map((opt: optType) => opt.value);
 
                 payload = {
                     name: fieldName.split(" ").join("-").toLowerCase(),
                     label: fieldName,
                     type: "single_select_field",
-                    options: singleSelectOptions.map((opt) => opt.value),
+                    options: singleSelectOptions.map(
+                        (opt: optType) => opt.value,
+                    ),
                     selectedOptions,
                 };
             } else {

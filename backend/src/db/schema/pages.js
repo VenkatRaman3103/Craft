@@ -2,12 +2,14 @@ import { relations } from "drizzle-orm";
 import { pgTable, uuid, text, timestamp, pgEnum } from "drizzle-orm/pg-core";
 import { multiSelectFields, singleSelectFields, textFields } from "./fields.js";
 import { blocks } from "./blocks.js";
+import { numberFields } from "./fields/number.js";
 
 export const pageItemType = pgEnum("item_type", [
     "block",
     "text_field",
     "multi_select_field",
     "single_select_field",
+    "number_field",
 ]);
 
 export const pages = pgTable("pages", {
@@ -47,6 +49,10 @@ export const pageItemsRelation = relations(page_items, ({ one }) => ({
     single_select_field: one(singleSelectFields, {
         fields: [page_items.reference_id],
         references: [singleSelectFields.field_id],
+    }),
+    number_field: one(numberFields, {
+        fields: [page_items.reference_id],
+        references: [numberFields.field_id],
     }),
     block: one(blocks, {
         fields: [page_items.reference_id],

@@ -12,6 +12,7 @@ import { BlockSelectionPopup } from "@/Components/BlocksSelectionPopup";
 import { FieldsPromt } from "@/Components/FieldsPromt";
 import { sampleFields } from "@/Data/fields";
 import { sampleBlocks } from "@/Data/blocks";
+import { fieldPromt } from "@/Types/fields";
 
 export const Page = () => {
     const { page_id } = useParams();
@@ -23,7 +24,7 @@ export const Page = () => {
 
     const [isFieldPopupOpen, setIsFieldPopupOpen] = useState(false);
     const [isBlockPopupOpen, setIsBlockPopupOpen] = useState(false);
-    const [promtFields, setPromtFields] = useState([]);
+    const [promtFields, setPromtFields] = useState<any>([]);
 
     const { data: pageData } = useQuery({
         queryKey: ["pageData", page_id],
@@ -31,7 +32,7 @@ export const Page = () => {
         enabled: !!page_id,
     });
 
-    const handleAddSelectedFields = (selectedFieldIds) => {
+    const handleAddSelectedFields = (selectedFieldIds: string[]) => {
         const fieldsToAdd = sampleFields
             .filter((field) => selectedFieldIds.includes(field.id))
             .map((field) => ({
@@ -85,8 +86,8 @@ export const Page = () => {
         }
     };
 
-    function handleFieldsCancel(promtField) {
-        setPromtFields((prev) =>
+    function handleFieldsCancel(promtField: fieldPromt) {
+        setPromtFields((prev: fieldPromt[]) =>
             prev.filter((field) => field.id !== promtField.id),
         );
 
@@ -111,7 +112,7 @@ export const Page = () => {
 
                     {showFieldPromt && (
                         <div className="fields-prompt-container">
-                            {promtFields.map((field) => (
+                            {promtFields.map((field: fieldPromt) => (
                                 <div key={field.id}>
                                     <FieldsPromt
                                         field={field}

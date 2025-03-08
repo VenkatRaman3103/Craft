@@ -6,4 +6,6 @@ export * from "./collections.js";
 export * from "./collectionJoinPages.js";
 export * from "./parent.js";
 export * from "./child.js";
-// export * from "./page_items.js";
+
+// fields
+export * from "./fields/number.js";
