@@ -14,7 +14,7 @@ import {
 
 export const FieldsIcons = {
     text_field: <Type size={20} color={lightFont} />,
-    number: <Divide size={20} color={lightFont} />,
+    number_field: <Divide size={20} color={lightFont} />,
     json: <Braces size={20} color={lightFont} />,
     multi_select_field: <SquareCheck size={20} color={lightFont} />,
     "rich-text": <LetterText size={20} color={lightFont} />,

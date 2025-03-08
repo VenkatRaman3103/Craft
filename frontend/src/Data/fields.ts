@@ -7,7 +7,7 @@ export const sampleFields = [
     {
         id: "field2",
         name: "Number Field",
-        type: "number",
+        type: "number_field",
     },
     {
         id: "field3",

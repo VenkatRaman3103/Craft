@@ -97,7 +97,7 @@ export const Page = () => {
     }
 
     console.log(selectedBlocks, "selectedBlocks");
-    console.log(promtFields, "fields");
+    console.log(promtFields, "promtfields");
 
     return (
         <div className="page-content-container">

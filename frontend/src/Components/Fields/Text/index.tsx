@@ -5,13 +5,15 @@ import { useState } from "react";
 import * as React from "react";
 
 export const Text = ({ data }: { data: field }) => {
-    const [text, setText] = useState(data.value);
+    const [text, setText] = useState(data?.value);
 
     function handleTextFieldChange(event: React.ChangeEvent<HTMLInputElement>) {
         setText(event.target.value);
     }
 
-    console.log(data.value, "dataText");
+    if (!data) {
+        return;
+    }
 
     return (
         <FieldWrapper data={data}>

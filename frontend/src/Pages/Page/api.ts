@@ -65,8 +65,16 @@ export const createField = async (field, page_id) => {
             reference_id: response.data[0].field_id,
             type: "text_field",
         });
+    } else if (field.type === "number_field") {
+        response = await axios.post(`${backendUrl}/fields/number`, field);
+
+        await axios.post(`${backendUrl}/page/${page_id}/page_items`, {
+            page_id,
+            reference_id: response.data[0].field_id,
+            type: "text_field",
+        });
     }
 
-    console.log(response.data[0].field_id, "Field create response");
-    return response.data;
+    console.log(response?.data[0].field_id, "Field create response");
+    return response?.data;
 };

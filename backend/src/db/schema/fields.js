@@ -9,6 +9,9 @@ import {
 } from "drizzle-orm/pg-core";
 import { page_items } from "./pages.js";
 
+// TODO: add scope column for each field
+// TODO: add scope enum
+
 // text field
 export const textFields = pgTable("text_fields", {
     field_id: uuid("field_id").primaryKey().defaultRandom(),

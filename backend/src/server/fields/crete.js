@@ -5,8 +5,10 @@ import {
     singleSelectOptions,
     textFields,
 } from "../../db/schema/fields.js";
+import { numberFields } from "../../db/schema/index.js";
 import { db } from "../server.js";
 
+// 🟢 Create text field
 export async function createTextField(req, res) {
     const { name, label, type, value } = req.body;
 
@@ -32,6 +34,7 @@ export async function createTextField(req, res) {
     }
 }
 
+// 🟢 Create multi-select field
 export async function createMultiSelectField(req, res) {
     try {
         const { name, label, options, is_selected } = req.body;
@@ -66,6 +69,7 @@ export async function createMultiSelectField(req, res) {
     }
 }
 
+// 🟢 Create single-select field
 export async function createSingleSelectField(req, res) {
     try {
         const { name, label, options, is_selected } = req.body;
@@ -97,5 +101,31 @@ export async function createSingleSelectField(req, res) {
     } catch (error) {
         console.error("Error creating single_select_field:", error);
         res.status(500).json({ error: "Failed to create singe_select_field" });
+    }
+}
+
+// 🟢 Get number field
+export async function createNumberField(req, res) {
+    try {
+        const { name, label, type, value } = req.body;
+
+        const response = await db
+            .insert(numberFields)
+            .values({
+                name,
+                label,
+                type,
+                value,
+            })
+            .returning();
+
+        res.status(201).json(response);
+    } catch (error) {
+        const errorMessage = {
+            error,
+            message: "Error in creating number field",
+            origin: "backend/fieldRouter/number/POST",
+        };
+        res.status(500).json(errorMessage);
     }
 }

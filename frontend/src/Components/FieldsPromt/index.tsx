@@ -8,6 +8,7 @@ import { MultiSelectPrompt } from "./MultiSelectPromt";
 import { SingleSelectPromt } from "./SingleSelectPromt";
 import React from "react";
 import { fieldPromt } from "@/Types/fields";
+import { NumberPrompt } from "./NumberPrompt";
 
 type optType = { id: string; value: string | undefined };
 
@@ -23,6 +24,8 @@ export const FieldsPromt = ({
     handleFieldsCancel: (promtField: fieldPromt) => void;
 }) => {
     const [fieldName, setFieldName] = useState("");
+
+    // text
     const [text, setText] = useState<string>("");
 
     // multi select field
@@ -36,6 +39,9 @@ export const FieldsPromt = ({
     const [checkedsingleSelectItems, setCheckedSingleSelectItems] = useState<{
         [key: string]: boolean;
     }>({});
+
+    // number
+    const [number, setNumber] = useState<number>(0);
 
     console.log(
         singleSelectOptions,
@@ -66,6 +72,8 @@ export const FieldsPromt = ({
                         setCheckedItems={setCheckedSingleSelectItems}
                     />
                 );
+            case "number_field":
+                return <NumberPrompt number={number} setNumber={setNumber} />;
             default:
                 return <p>Yet to be done</p>;
         }
@@ -103,12 +111,19 @@ export const FieldsPromt = ({
                     ),
                     selectedOptions,
                 };
-            } else {
+            } else if (field.type === "text_field") {
                 payload = {
                     name: fieldName.split(" ").join("-").toLowerCase(),
                     label: fieldName,
                     type: "text_field",
                     value: text,
+                };
+            } else if (field.type === "number_field") {
+                payload = {
+                    name: fieldName.split(" ").join("-").toLowerCase(),
+                    label: fieldName,
+                    type: "number_field",
+                    value: number,
                 };
             }
 
@@ -146,12 +161,13 @@ export const FieldsPromt = ({
                     <button
                         className="create-block-button"
                         onClick={handleCreteField}
-                        disabled={
-                            !fieldName ||
-                            (field.type === "multi_select_field" &&
-                                multiSelectOptions.length === 0) ||
-                            (field.type === "text_field" && !text)
-                        }
+                        // disabled={
+                        //     !fieldName ||
+                        //     (field.type === "multi_select_field" &&
+                        //         multiSelectOptions.length === 0) ||
+                        //     (field.type === "text_field" && !text) ||
+                        //     (field.type === "number_field" && !text)
+                        // }
                     >
                         Create Block
                     </button>
