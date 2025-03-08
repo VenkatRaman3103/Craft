@@ -17,6 +17,7 @@
     overflow: hidden;
 
     background-color: var(--primary-color);
+    margin-bottom: 20px;
 
     .single-select-field {
       height: 45px;
@@ -65,7 +66,7 @@
     // border: 1px solid var(--border-color);
     border-radius: 10px;
 
-    margin-top: 20px;
+    // margin-top: 20px;
 
     &:hover {
       // background-color: var(--white-color);
