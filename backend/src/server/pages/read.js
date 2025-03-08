@@ -40,6 +40,7 @@ export async function getPageById(req, res) {
                             },
                         },
                         number_field: true,
+                        email_field: true,
                     },
                 },
             },

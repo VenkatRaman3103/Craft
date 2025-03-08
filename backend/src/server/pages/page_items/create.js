@@ -25,6 +25,13 @@ export async function createPageItem(req, res) {
                                 options: true,
                             },
                         },
+                        single_select_field: {
+                            with: {
+                                options: true,
+                            },
+                        },
+                        number_field: true,
+                        email_field: true,
                     },
                 },
             },
