@@ -37,7 +37,8 @@
       height: 65%;
       width: calc(100% - 2px);
       border-radius: 19px;
-      background-color: var(--white-color);
+      // background-color: var(--white-color);
+      background-color: var(--field-color);
       padding: 20px;
 
       display: flex;
@@ -52,13 +53,16 @@
         gap: 10px;
 
         .prompt-folder-name {
+          background-color: var(--field-color);
           font-size: 20px;
+          color: white;
         }
 
         .prompt-endpoint-name {
           min-width: 50px;
           max-width: 100%;
           font-size: 16px;
+          color: var(--light-font);
           background-color: var(--base-color);
           padding: 2px 4px;
           border: none;

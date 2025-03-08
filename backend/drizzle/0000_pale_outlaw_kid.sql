@@ -56,6 +56,7 @@ CREATE TABLE "multi_select_fields" (
 	"field_id" uuid PRIMARY KEY DEFAULT gen_random_uuid() NOT NULL,
 	"name" varchar NOT NULL,
 	"label" varchar NOT NULL,
+	"type" varchar DEFAULT 'multi_select' NOT NULL,
 	"created_at" timestamp DEFAULT now(),
 	"edited_at" timestamp DEFAULT now()
 );
@@ -75,6 +76,7 @@ CREATE TABLE "single_select_fields" (
 	"field_id" uuid PRIMARY KEY DEFAULT gen_random_uuid() NOT NULL,
 	"name" varchar NOT NULL,
 	"label" varchar NOT NULL,
+	"type" varchar DEFAULT 'single_select' NOT NULL,
 	"created_at" timestamp DEFAULT now(),
 	"edited_at" timestamp DEFAULT now()
 );

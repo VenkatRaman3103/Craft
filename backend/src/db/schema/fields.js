@@ -32,6 +32,7 @@ export const multiSelectFields = pgTable("multi_select_fields", {
     field_id: uuid("field_id").primaryKey().defaultRandom(),
     name: varchar("name").notNull(),
     label: varchar("label").notNull(),
+    type: varchar("type").default("multi_select").notNull(),
     created_at: timestamp("created_at").defaultNow(),
     edited_at: timestamp("edited_at").defaultNow(),
 });
@@ -75,6 +76,7 @@ export const singleSelectFields = pgTable("single_select_fields", {
     field_id: uuid("field_id").primaryKey().defaultRandom(),
     name: varchar("name").notNull(),
     label: varchar("label").notNull(),
+    type: varchar("type").default("single_select").notNull(),
     created_at: timestamp("created_at").defaultNow(),
     edited_at: timestamp("edited_at").defaultNow(),
 });

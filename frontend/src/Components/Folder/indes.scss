@@ -36,7 +36,8 @@
       height: 65%;
       width: calc(100% - 2px);
       border-radius: 19px;
-      background-color: var(--white-color);
+      // background-color: var(--white-color);
+      background-color: var(--field-color);
       padding: 20px;
 
       display: flex;
@@ -53,7 +54,8 @@
 
         .folder-name {
           color: var(--dark-color);
-          background-color: var(--white-color);
+          // background-color: var(--white-color);
+          background-color: var(--field-color);
           font-size: 20px;
         }
 

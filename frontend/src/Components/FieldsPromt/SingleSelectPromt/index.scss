@@ -6,9 +6,10 @@
   flex-direction: column;
   justify-content: center;
   align-items: center;
+  gap: 20px;
 
-  padding-top: 1px;
-  padding-bottom: 20px;
+  // padding-top: 1px;
+  // padding-bottom: 20px;
 
   .single-select-field-wrapper {
     width: 97%;
@@ -17,7 +18,7 @@
     overflow: hidden;
 
     background-color: var(--primary-color);
-    margin-bottom: 20px;
+    // margin-bottom: 20px;
 
     .single-select-field {
       height: 45px;

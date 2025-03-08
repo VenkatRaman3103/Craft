@@ -57,7 +57,7 @@ export const createField = async (field, page_id) => {
             reference_id: response.data[0].field_id,
             type: "single_select_field",
         });
-    } else {
+    } else if (field.type === "text_field") {
         response = await axios.post(`${backendUrl}/fields/text`, field);
 
         await axios.post(`${backendUrl}/page/${page_id}/page_items`, {

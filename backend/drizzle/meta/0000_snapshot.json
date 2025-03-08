@@ -1,5 +1,5 @@
 {
-  "id": "35bebbed-f1a2-4d3e-b767-c5a53736732c",
+  "id": "b5d3ca19-4f89-4c9d-82e1-94c7ed692e98",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "version": "7",
   "dialect": "postgresql",
@@ -386,6 +386,13 @@
           "primaryKey": false,
           "notNull": true
         },
+        "type": {
+          "name": "type",
+          "type": "varchar",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "'multi_select'"
+        },
         "created_at": {
           "name": "created_at",
           "type": "timestamp",
@@ -510,6 +517,13 @@
           "type": "varchar",
           "primaryKey": false,
           "notNull": true
+        },
+        "type": {
+          "name": "type",
+          "type": "varchar",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "'single_select'"
         },
         "created_at": {
           "name": "created_at",
