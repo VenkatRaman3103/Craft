@@ -3,7 +3,7 @@ import { X, Plus, Check, FileText } from "lucide-react";
 import { darkFont, lightFont } from "@/Styles/base";
 import "./index.scss";
 import * as React from "react";
-import { FieldsIcons } from "../Blocks";
+import { FieldsIcons } from "@/Data/fieldsIcon";
 
 type FieldOption = {
     id: string;

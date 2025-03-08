@@ -2,41 +2,13 @@ import { useState, useRef, useEffect } from "react";
 import { Fields } from "../Fields/RenderFields";
 import { blockType } from "@/Types/blocks";
 import "./index.scss";
-import {
-    AtSign,
-    Braces,
-    CalendarDays,
-    CaseSensitive,
-    CircleCheck,
-    Divide,
-    EllipsisVertical,
-    Image,
-    LetterText,
-    Link,
-    SquareCheck,
-    Type,
-} from "lucide-react";
-import { darkGreen, darkRed, lightFont } from "@/Styles/base";
+import { EllipsisVertical } from "lucide-react";
+import { lightFont } from "@/Styles/base";
 import * as React from "react";
 import { BlockMenuOptions } from "../BlockMenuOptions";
-import { AddBtn } from "../Buttons/AddBtn";
-import { FieldSelectionPopup } from "../FieldSelectionPopup";
 import { backendUrl } from "@/config";
 import axios from "axios";
 import { FieldsList } from "../Fields/FieldsList";
-
-export const FieldsIcons = {
-    text_field: <Type size={20} color={lightFont} />,
-    number: <Divide size={20} color={lightFont} />,
-    json: <Braces size={20} color={lightFont} />,
-    multi_select_field: <SquareCheck size={20} color={lightFont} />,
-    "rich-text": <LetterText size={20} color={lightFont} />,
-    single_select_field: <CircleCheck size={20} color={lightFont} />,
-    date: <CalendarDays size={20} color={lightFont} />,
-    email: <AtSign size={20} color={lightFont} />,
-    upload: <Image size={20} color={lightFont} />,
-    relation: <Link size={20} color={lightFont} />,
-};
 
 // Sample field options (replace with your actual data source)
 
