@@ -32,12 +32,12 @@ export const sampleFields = [
     {
         id: "field7",
         name: "Date Field",
-        type: "date",
+        type: "date_field",
     },
     {
         id: "field8",
-        name: "Emain Field",
-        type: "email",
+        name: "Email Field",
+        type: "email_field",
     },
     {
         id: "field9",

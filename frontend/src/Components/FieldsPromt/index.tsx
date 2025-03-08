@@ -9,6 +9,8 @@ import { SingleSelectPromt } from "./SingleSelectPromt";
 import React from "react";
 import { fieldPromt } from "@/Types/fields";
 import { NumberPrompt } from "./NumberPrompt";
+import { EmailPrompt } from "./EmailPrompt";
+import { DatePrompt } from "./DatePrompt";
 
 type optType = { id: string; value: string | undefined };
 
@@ -43,6 +45,12 @@ export const FieldsPromt = ({
     // number
     const [number, setNumber] = useState<number>(0);
 
+    // email
+    const [email, setEmail] = useState<string>("");
+
+    // date
+    const [date, setDate] = useState<Date | null>(null);
+
     console.log(
         singleSelectOptions,
         checkedsingleSelectItems,
@@ -74,6 +82,12 @@ export const FieldsPromt = ({
                 );
             case "number_field":
                 return <NumberPrompt number={number} setNumber={setNumber} />;
+
+            case "email_field":
+                return <EmailPrompt email={email} setEmail={setEmail} />;
+
+            case "date_field":
+                return <DatePrompt date={date} setDate={setDate} />;
             default:
                 return <p>Yet to be done</p>;
         }
@@ -125,8 +139,21 @@ export const FieldsPromt = ({
                     type: "number_field",
                     value: number,
                 };
+            } else if (field.type === "email_field") {
+                payload = {
+                    name: fieldName.split(" ").join("-").toLowerCase(),
+                    label: fieldName,
+                    type: "email_field",
+                    value: email,
+                };
+            } else if (field.type === "date_field") {
+                payload = {
+                    name: fieldName.split(" ").join("-").toLowerCase(),
+                    label: fieldName,
+                    type: "date_field",
+                    value: date ? date.toISOString() : null,
+                };
             }
-
             return createField(payload, page_id);
         },
         {

@@ -1,5 +1,6 @@
 import express from "express";
 import {
+    createEmailField,
     createMultiSelectField,
     createNumberField,
     createSingleSelectField,
@@ -28,3 +29,7 @@ fieldRoute.post("/fields/single_select", createSingleSelectField);
 // number field
 // CREATE: number field
 fieldRoute.post("/fields/number", createNumberField);
+
+// email field
+// CREATE: email field
+fieldRoute.post("/fields/email", createEmailField);

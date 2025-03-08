@@ -13,6 +13,7 @@ export type multiSelect = {
 export type fieldTypes =
     | "text_field"
     | "number_field"
+    | "email_field"
     | "multi_select_field"
     | "single_select_field";
 

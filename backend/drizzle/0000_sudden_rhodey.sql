@@ -56,7 +56,7 @@ CREATE TABLE "email_fields" (
 	"field_id" uuid PRIMARY KEY DEFAULT gen_random_uuid() NOT NULL,
 	"name" varchar NOT NULL,
 	"label" varchar NOT NULL,
-	"value" integer NOT NULL,
+	"value" varchar NOT NULL,
 	"type" varchar DEFAULT 'email' NOT NULL,
 	"created_at" timestamp DEFAULT now(),
 	"edited_at" timestamp DEFAULT now()
