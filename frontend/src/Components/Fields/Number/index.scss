@@ -1,0 +1,25 @@
+  .text-input-field-container {
+    width: 100%;
+    height: auto;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    // padding-top: 20px;
+    // padding-bottom: 10px;
+
+    .text-input-field {
+      height: 45px;
+      width: 96%;
+
+      // border: 1px solid var(--border-color);
+      border-radius: 10px;
+
+      font-size: 14px;
+      font-weight: 400;
+      color: var(--dark-font);
+      padding-left: 10px;
+
+      background-color: var(--field-color);
+    }
+  }

@@ -71,7 +71,7 @@ export const createField = async (field, page_id) => {
         await axios.post(`${backendUrl}/page/${page_id}/page_items`, {
             page_id,
             reference_id: response.data[0].field_id,
-            type: "text_field",
+            type: "number_field",
         });
     }
 

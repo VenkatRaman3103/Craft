@@ -39,6 +39,7 @@ export async function getPageById(req, res) {
                                 options: true,
                             },
                         },
+                        number_field: true,
                     },
                 },
             },

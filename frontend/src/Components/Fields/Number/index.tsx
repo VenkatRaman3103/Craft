@@ -4,16 +4,12 @@ import { FieldWrapper } from "../FieldWrapper";
 import { useState } from "react";
 import * as React from "react";
 
-export const Text = ({ data }: { data: field }) => {
-    const [text, setText] = useState(data.value);
+export const Number = ({ data }: { data: field }) => {
+    const [number, setNumber] = useState(data.value);
 
     function handleTextFieldChange(event: React.ChangeEvent<HTMLInputElement>) {
-        setText(event.target.value);
+        setNumber(event.target.value);
     }
-
-    // if (!data) {
-    //     return;
-    // }
 
     return (
         <FieldWrapper data={data}>
@@ -22,7 +18,7 @@ export const Text = ({ data }: { data: field }) => {
                 <input
                     className="text-input-field"
                     type="text"
-                    value={text}
+                    value={number}
                     onChange={handleTextFieldChange}
                 />
             </div>
