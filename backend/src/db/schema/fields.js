@@ -69,3 +69,46 @@ export const multiSelectOptionsRelations = relations(
         }),
     }),
 );
+
+// single select field
+export const singleSelectFields = pgTable("single_select_fields", {
+    field_id: uuid("field_id").primaryKey().defaultRandom(),
+    name: varchar("name").notNull(),
+    label: varchar("label").notNull(),
+    created_at: timestamp("created_at").defaultNow(),
+    edited_at: timestamp("edited_at").defaultNow(),
+});
+
+export const singleSelectOptions = pgTable("single_select_options", {
+    option_id: uuid("option_id").primaryKey().defaultRandom(),
+    field_id: uuid("field_id")
+        .notNull()
+        .references(() => singleSelectFields.field_id, { onDelete: "cascade" }),
+    label: varchar("label").notNull(),
+    value: varchar("value").notNull(),
+    is_selected: boolean("is_selected").default(false).notNull(),
+    order: integer("display_order").notNull(),
+    created_at: timestamp("created_at").defaultNow(),
+    edited_at: timestamp("edited_at").defaultNow(),
+});
+
+export const singleSelectFieldsRelations = relations(
+    singleSelectFields,
+    ({ one, many }) => ({
+        page_item: one(page_items, {
+            fields: [singleSelectFields.field_id],
+            references: [page_items.reference_id],
+        }),
+        options: many(singleSelectOptions),
+    }),
+);
+
+export const singleSelectOptionsRelations = relations(
+    singleSelectOptions,
+    ({ one }) => ({
+        field: one(singleSelectFields, {
+            fields: [singleSelectOptions.field_id],
+            references: [singleSelectFields.field_id],
+        }),
+    }),
+);

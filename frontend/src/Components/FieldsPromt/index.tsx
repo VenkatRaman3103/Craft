@@ -5,6 +5,7 @@ import React, { useState } from "react";
 import { useMutation } from "@tanstack/react-query";
 import { createField } from "@/Pages/Page/api";
 import { MultiSelectPrompt } from "./MultiSelectPromt";
+import { SingleSelectPromt } from "./SingleSelectPromt";
 
 export const FieldsPromt = ({
     field,
@@ -14,8 +15,23 @@ export const FieldsPromt = ({
 }: any) => {
     const [fieldName, setFieldName] = useState("");
     const [text, setText] = useState<string>("");
-    const [options, setOptions] = useState<any>([]);
-    const [checkedItems, setCheckedItems] = useState<any>({});
+
+    // multi select field
+    const [multiSelectOptions, setMultiSelectOptions] = useState<any>([]);
+    const [checkedMultiSelectItems, setCheckedMultiSelectItems] = useState<any>(
+        {},
+    );
+
+    // single select field
+    const [singleSelectOptions, setSingleSelectOptions] = useState<any>([]);
+    const [checkedsingleSelectItems, setCheckedSingleSelectItems] =
+        useState<any>({});
+
+    console.log(
+        singleSelectOptions,
+        checkedsingleSelectItems,
+        "checkedsingleSelectItems",
+    );
 
     // TODO: move to render fields list
     function renderFieldsPromt(fieldType: string): React.JSX.Element {
@@ -25,10 +41,19 @@ export const FieldsPromt = ({
             case "multi_select_field":
                 return (
                     <MultiSelectPrompt
-                        options={options}
-                        setOptions={setOptions}
-                        checkedItems={checkedItems}
-                        setCheckedItems={setCheckedItems}
+                        options={multiSelectOptions}
+                        setOptions={setMultiSelectOptions}
+                        checkedItems={checkedMultiSelectItems}
+                        setCheckedItems={setCheckedMultiSelectItems}
+                    />
+                );
+            case "single_select_field":
+                return (
+                    <SingleSelectPromt
+                        options={singleSelectOptions}
+                        setOptions={setSingleSelectOptions}
+                        checkedItems={checkedsingleSelectItems}
+                        setCheckedItems={setCheckedSingleSelectItems}
                     />
                 );
             default:
@@ -38,24 +63,33 @@ export const FieldsPromt = ({
 
     const fieldMutation = useMutation(
         () => {
-            // Create different payload based on field type
             let payload;
 
             if (field.type === "multi_select_field") {
-                // For multi_select_field, prepare payload with checked options
-                const selectedOptions = options
-                    .filter((opt) => checkedItems[opt.id])
+                const selectedOptions = multiSelectOptions
+                    .filter((opt) => checkedMultiSelectItems[opt.id])
                     .map((opt) => opt.value);
 
                 payload = {
                     name: fieldName.split(" ").join("-").toLowerCase(),
                     label: fieldName,
                     type: "multi_select_field",
-                    options: options.map((opt) => opt.value),
-                    "hello world": selectedOptions,
+                    options: multiSelectOptions.map((opt) => opt.value),
+                    selectedOptions,
+                };
+            } else if (field.type === "single_select_field") {
+                const selectedOptions = singleSelectOptions
+                    .filter((opt) => checkedsingleSelectItems[opt.id])
+                    .map((opt) => opt.value);
+
+                payload = {
+                    name: fieldName.split(" ").join("-").toLowerCase(),
+                    label: fieldName,
+                    type: "single_select_field",
+                    options: singleSelectOptions.map((opt) => opt.value),
+                    selectedOptions,
                 };
             } else {
-                // For other field types (like text_field)
                 payload = {
                     name: fieldName.split(" ").join("-").toLowerCase(),
                     label: fieldName,
@@ -101,7 +135,7 @@ export const FieldsPromt = ({
                         disabled={
                             !fieldName ||
                             (field.type === "multi_select_field" &&
-                                options.length === 0) ||
+                                multiSelectOptions.length === 0) ||
                             (field.type === "text_field" && !text)
                         }
                     >

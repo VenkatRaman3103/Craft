@@ -1,5 +1,5 @@
 {
-  "id": "7d6f15a1-693e-4234-a47f-af261f1aa18b",
+  "id": "35bebbed-f1a2-4d3e-b767-c5a53736732c",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "version": "7",
   "dialect": "postgresql",
@@ -488,6 +488,131 @@
       "checkConstraints": {},
       "isRLSEnabled": false
     },
+    "public.single_select_fields": {
+      "name": "single_select_fields",
+      "schema": "",
+      "columns": {
+        "field_id": {
+          "name": "field_id",
+          "type": "uuid",
+          "primaryKey": true,
+          "notNull": true,
+          "default": "gen_random_uuid()"
+        },
+        "name": {
+          "name": "name",
+          "type": "varchar",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "label": {
+          "name": "label",
+          "type": "varchar",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": false,
+          "default": "now()"
+        },
+        "edited_at": {
+          "name": "edited_at",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": false,
+          "default": "now()"
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {},
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "public.single_select_options": {
+      "name": "single_select_options",
+      "schema": "",
+      "columns": {
+        "option_id": {
+          "name": "option_id",
+          "type": "uuid",
+          "primaryKey": true,
+          "notNull": true,
+          "default": "gen_random_uuid()"
+        },
+        "field_id": {
+          "name": "field_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "label": {
+          "name": "label",
+          "type": "varchar",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "value": {
+          "name": "value",
+          "type": "varchar",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "is_selected": {
+          "name": "is_selected",
+          "type": "boolean",
+          "primaryKey": false,
+          "notNull": true,
+          "default": false
+        },
+        "display_order": {
+          "name": "display_order",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": false,
+          "default": "now()"
+        },
+        "edited_at": {
+          "name": "edited_at",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": false,
+          "default": "now()"
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "single_select_options_field_id_single_select_fields_field_id_fk": {
+          "name": "single_select_options_field_id_single_select_fields_field_id_fk",
+          "tableFrom": "single_select_options",
+          "tableTo": "single_select_fields",
+          "columnsFrom": [
+            "field_id"
+          ],
+          "columnsTo": [
+            "field_id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
     "public.text_fields": {
       "name": "text_fields",
       "schema": "",
@@ -566,7 +691,7 @@
         },
         "item_type": {
           "name": "item_type",
-          "type": "page_item_type",
+          "type": "item_type",
           "typeSchema": "public",
           "primaryKey": false,
           "notNull": true
@@ -736,13 +861,14 @@
         "collection"
       ]
     },
-    "public.page_item_type": {
-      "name": "page_item_type",
+    "public.item_type": {
+      "name": "item_type",
       "schema": "public",
       "values": [
         "block",
         "text_field",
-        "multi_select_field"
+        "multi_select_field",
+        "single_select_field"
       ]
     }
   },

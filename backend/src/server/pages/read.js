@@ -27,9 +27,14 @@ export async function getPageById(req, res) {
             with: {
                 page_items: {
                     with: {
-                        text_field: true, // Changed from text_fields to text_field to match your schema
+                        text_field: true,
                         block: true,
                         multi_select_field: {
+                            with: {
+                                options: true,
+                            },
+                        },
+                        single_select_field: {
                             with: {
                                 options: true,
                             },

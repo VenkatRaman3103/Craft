@@ -1,6 +1,8 @@
 import {
     multiSelectFields,
     multiSelectOptions,
+    singleSelectFields,
+    singleSelectOptions,
     textFields,
 } from "../../db/schema/fields.js";
 import { db } from "../server.js";
@@ -61,5 +63,39 @@ export async function createMultiSelectField(req, res) {
     } catch (error) {
         console.error("Error creating multi-select field:", error);
         res.status(500).json({ error: "Failed to create multi-select field" });
+    }
+}
+
+export async function createSingleSelectField(req, res) {
+    try {
+        const { name, label, options, is_selected } = req.body;
+
+        const fieldResponse = await db
+            .insert(singleSelectFields)
+            .values({
+                name,
+                label,
+            })
+            .returning();
+
+        const fieldId = fieldResponse[0].field_id;
+
+        if (Array.isArray(options) && options.length > 0) {
+            const optionInserts = options.map((option, index) => ({
+                field_id: fieldId,
+                label: option,
+                value: option,
+                is_selected:
+                    Array.isArray(is_selected) && is_selected.includes(option),
+                order: index,
+            }));
+
+            await db.insert(singleSelectOptions).values(optionInserts);
+        }
+
+        res.status(201).json(fieldResponse);
+    } catch (error) {
+        console.error("Error creating single_select_field:", error);
+        res.status(500).json({ error: "Failed to create singe_select_field" });
     }
 }

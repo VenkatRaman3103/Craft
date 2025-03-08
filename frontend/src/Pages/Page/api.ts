@@ -36,13 +36,26 @@ export const createField = async (field, page_id) => {
             name: field.name,
             label: field.label,
             options: field.options,
-            is_selected: field["hello world"],
+            is_selected: field.selectedOptions,
         });
 
         await axios.post(`${backendUrl}/page/${page_id}/page_items`, {
             page_id,
             reference_id: response.data[0].field_id,
             type: "multi_select_field",
+        });
+    } else if (field.type === "single_select_field") {
+        response = await axios.post(`${backendUrl}/fields/single_select`, {
+            name: field.name,
+            label: field.label,
+            options: field.options,
+            is_selected: field.selectedOptions,
+        });
+
+        await axios.post(`${backendUrl}/page/${page_id}/page_items`, {
+            page_id,
+            reference_id: response.data[0].field_id,
+            type: "single_select_field",
         });
     } else {
         response = await axios.post(`${backendUrl}/fields/text`, field);

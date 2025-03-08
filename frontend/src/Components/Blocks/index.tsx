@@ -31,7 +31,7 @@ export const FieldsIcons = {
     json: <Braces size={20} color={lightFont} />,
     multi_select_field: <SquareCheck size={20} color={lightFont} />,
     "rich-text": <LetterText size={20} color={lightFont} />,
-    select: <CircleCheck size={20} color={lightFont} />,
+    single_select_field: <CircleCheck size={20} color={lightFont} />,
     date: <CalendarDays size={20} color={lightFont} />,
     email: <AtSign size={20} color={lightFont} />,
     upload: <Image size={20} color={lightFont} />,

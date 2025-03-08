@@ -1,5 +1,5 @@
 CREATE TYPE "public"."scope_enum" AS ENUM('global', 'page', 'collection');--> statement-breakpoint
-CREATE TYPE "public"."page_item_type" AS ENUM('block', 'text_field', 'multi_select_field');--> statement-breakpoint
+CREATE TYPE "public"."item_type" AS ENUM('block', 'text_field', 'multi_select_field', 'single_select_field');--> statement-breakpoint
 CREATE TABLE "array_block_items" (
 	"item_id" uuid PRIMARY KEY DEFAULT gen_random_uuid() NOT NULL,
 	"array_block_ref_id" uuid,
@@ -71,6 +71,25 @@ CREATE TABLE "multi_select_options" (
 	"edited_at" timestamp DEFAULT now()
 );
 --> statement-breakpoint
+CREATE TABLE "single_select_fields" (
+	"field_id" uuid PRIMARY KEY DEFAULT gen_random_uuid() NOT NULL,
+	"name" varchar NOT NULL,
+	"label" varchar NOT NULL,
+	"created_at" timestamp DEFAULT now(),
+	"edited_at" timestamp DEFAULT now()
+);
+--> statement-breakpoint
+CREATE TABLE "single_select_options" (
+	"option_id" uuid PRIMARY KEY DEFAULT gen_random_uuid() NOT NULL,
+	"field_id" uuid NOT NULL,
+	"label" varchar NOT NULL,
+	"value" varchar NOT NULL,
+	"is_selected" boolean DEFAULT false NOT NULL,
+	"display_order" integer NOT NULL,
+	"created_at" timestamp DEFAULT now(),
+	"edited_at" timestamp DEFAULT now()
+);
+--> statement-breakpoint
 CREATE TABLE "text_fields" (
 	"field_id" uuid PRIMARY KEY DEFAULT gen_random_uuid() NOT NULL,
 	"name" varchar NOT NULL,
@@ -84,7 +103,7 @@ CREATE TABLE "text_fields" (
 CREATE TABLE "page_items" (
 	"item_id" uuid PRIMARY KEY DEFAULT gen_random_uuid() NOT NULL,
 	"page_ref_id" uuid,
-	"item_type" "page_item_type" NOT NULL,
+	"item_type" "item_type" NOT NULL,
 	"reference_id" uuid NOT NULL
 );
 --> statement-breakpoint
@@ -115,4 +134,5 @@ ALTER TABLE "child" ADD CONSTRAINT "child_parent_ref_id_parent_parent_id_fk" FOR
 ALTER TABLE "collection_pages" ADD CONSTRAINT "collection_pages_collection_ref_id_collections_collection_id_fk" FOREIGN KEY ("collection_ref_id") REFERENCES "public"."collections"("collection_id") ON DELETE restrict ON UPDATE no action;--> statement-breakpoint
 ALTER TABLE "collection_pages" ADD CONSTRAINT "collection_pages_page_ref_id_pages_page_id_fk" FOREIGN KEY ("page_ref_id") REFERENCES "public"."pages"("page_id") ON DELETE cascade ON UPDATE no action;--> statement-breakpoint
 ALTER TABLE "multi_select_options" ADD CONSTRAINT "multi_select_options_field_id_multi_select_fields_field_id_fk" FOREIGN KEY ("field_id") REFERENCES "public"."multi_select_fields"("field_id") ON DELETE cascade ON UPDATE no action;--> statement-breakpoint
+ALTER TABLE "single_select_options" ADD CONSTRAINT "single_select_options_field_id_single_select_fields_field_id_fk" FOREIGN KEY ("field_id") REFERENCES "public"."single_select_fields"("field_id") ON DELETE cascade ON UPDATE no action;--> statement-breakpoint
 ALTER TABLE "page_items" ADD CONSTRAINT "page_items_page_ref_id_pages_page_id_fk" FOREIGN KEY ("page_ref_id") REFERENCES "public"."pages"("page_id") ON DELETE cascade ON UPDATE no action;

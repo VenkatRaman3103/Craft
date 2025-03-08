@@ -35,7 +35,6 @@ export const FieldSelectionPopup: React.FC<FieldSelectionPopupProps> = ({
     //     }
     // }, [isOpen]);
 
-    // Close popup when clicking outside
     useEffect(() => {
         const handleClickOutside = (event: MouseEvent) => {
             if (

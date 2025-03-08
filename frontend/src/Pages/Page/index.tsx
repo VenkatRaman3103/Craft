@@ -1,13 +1,11 @@
 import { PageItems } from "@/Components/Blocks";
 import { PageIntro } from "@/Components/PageIntro";
-import { pageType } from "@/Types/blocks";
 import { useState } from "react";
 import { useParams } from "react-router";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import "./index.scss";
 import { AddBtn } from "@/Components/Buttons/AddBtn";
 import { BlockPrompt } from "@/Components/BlockPrompt";
-import * as React from "react";
 import { fetchPageData, createBlock } from "./api";
 import { FieldSelectionPopup } from "@/Components/FieldSelectionPopup";
 import { BlockSelectionPopup } from "@/Components/BlocksSelectionPopup";
@@ -136,7 +134,7 @@ const sampleFields = [
     {
         id: "field5",
         name: "Select Field",
-        type: "select",
+        type: "single_select_field",
     },
     {
         id: "field6",
