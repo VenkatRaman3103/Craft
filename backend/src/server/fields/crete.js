@@ -6,6 +6,7 @@ import {
     textFields,
 } from "../../db/schema/fields.js";
 import { colorPickerFields } from "../../db/schema/fields/colorPicker.js";
+import { jsonFields } from "../../db/schema/fields/jsonField.js";
 import { textAreaFields } from "../../db/schema/fields/textArea.js";
 import {
     dateFields,
@@ -257,6 +258,32 @@ export async function createTextAreaField(req, res) {
         const errorMessage = {
             error,
             message: "Error in creating textarea field",
+            origin: "backend/fieldRouter/POST",
+        };
+        res.status(500).json(errorMessage);
+    }
+}
+
+// 🟢 Create json field
+export async function createJsonField(req, res) {
+    const { name, label, type, value } = req.body;
+
+    try {
+        const response = await db
+            .insert(jsonFields)
+            .values({
+                name,
+                label,
+                type,
+                value,
+            })
+            .returning();
+
+        res.status(201).json(response);
+    } catch (error) {
+        const errorMessage = {
+            error,
+            message: "Error in creating json field",
             origin: "backend/fieldRouter/POST",
         };
         res.status(500).json(errorMessage);

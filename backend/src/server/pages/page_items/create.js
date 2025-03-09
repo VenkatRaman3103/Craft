@@ -35,6 +35,7 @@ export async function createPageItem(req, res) {
                         date_field: true,
                         color_picker_field: true,
                         textarea_field: true,
+                        json_field: true,
                     },
                 },
             },

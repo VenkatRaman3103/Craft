@@ -20,11 +20,6 @@ export const sampleFields = [
         type: "number_field",
     },
     {
-        id: "field3",
-        name: "Json Field",
-        type: "json",
-    },
-    {
         id: "field4",
         name: "Multi Select Field",
         type: "multi_select_field",

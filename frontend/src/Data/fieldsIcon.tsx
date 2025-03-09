@@ -19,7 +19,7 @@ export const FieldsIcons = {
     color_picker_field: <Paintbrush size={20} color={lightFont} />,
     text_field: <Type size={20} color={lightFont} />,
     number_field: <Divide size={20} color={lightFont} />,
-    json: <Braces size={20} color={lightFont} />,
+    json_field: <Braces size={20} color={lightFont} />,
     multi_select_field: <SquareCheck size={20} color={lightFont} />,
     "rich-text": <LetterText size={20} color={lightFont} />,
     single_select_field: <CircleCheck size={20} color={lightFont} />,

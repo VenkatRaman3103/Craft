@@ -149,6 +149,7 @@ export async function getRawPageById(req, res) {
                         email_field: true,
                         date_field: true,
                         color_picker_field: true,
+                        json_field: true,
                         textarea_field: true,
                     },
                 },

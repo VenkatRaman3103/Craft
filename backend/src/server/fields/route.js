@@ -3,6 +3,7 @@ import {
     createColorPickerField,
     createDateField,
     createEmailField,
+    createJsonField,
     createMultiSelectField,
     createNumberField,
     createSingleSelectField,
@@ -48,3 +49,7 @@ fieldRoute.post("/fields/color_picker", createColorPickerField);
 // textarea
 // CREATE: color picker
 fieldRoute.post("/fields/textarea_field", createTextAreaField);
+
+// json
+// CREATE: json
+fieldRoute.post("/fields/json", createJsonField);
