@@ -13,3 +13,4 @@ export * from "./fields/email.js";
 export * from "./fields/date.js";
 export * from "./fields/colorPicker.js";
 export * from "./fields/textArea.js";
+export * from "./fields/jsonField.js";

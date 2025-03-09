@@ -52,4 +52,4 @@ fieldRoute.post("/fields/textarea_field", createTextAreaField);
 
 // json
 // CREATE: json
-fieldRoute.post("/fields/json", createJsonField);
+fieldRoute.post("/fields/json_field", createJsonField);

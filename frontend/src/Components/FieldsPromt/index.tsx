@@ -63,7 +63,8 @@ export const FieldsPromt = ({
     //json
     const [jsonData, setJsonData] = useState('{"example": "data"}');
 
-    console.log(color, "selectedColor");
+    // console.log(color, "selectedColor");
+    console.log(jsonData, "jsonData");
 
     // TODO: move to render fields list
     function renderFieldsPromt(fieldType: string): React.JSX.Element {
@@ -192,6 +193,13 @@ export const FieldsPromt = ({
                     label: fieldName,
                     type: "textarea_field",
                     value: textarea,
+                };
+            } else if (field.type === "json_field") {
+                payload = {
+                    name: fieldName.split(" ").join("-").toLowerCase(),
+                    label: fieldName,
+                    type: "json_field",
+                    value: JSON.stringify(jsonData),
                 };
             }
 

@@ -108,6 +108,14 @@ export const createField = async (field, page_id) => {
             reference_id: response.data[0].field_id,
             type: "textarea_field",
         });
+    } else if (field.type === "json_field") {
+        response = await axios.post(`${backendUrl}/fields/json_field`, field);
+
+        await axios.post(`${backendUrl}/page/${page_id}/page_items`, {
+            page_id,
+            reference_id: response.data[0].field_id,
+            type: "json_field",
+        });
     }
 
     console.log(response?.data[0].field_id, "Field create response");

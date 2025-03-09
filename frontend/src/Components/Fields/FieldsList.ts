@@ -8,6 +8,7 @@ import { Email } from "./Email";
 import { DateField } from "./Date";
 import { ColorPicker } from "./ColorPicker";
 import { TextareaField } from "./TextArea";
+import { JSONField } from "./JsonField";
 
 export const FieldsList: Record<fieldTypes, React.ComponentType<any>> = {
     text_field: Text,
@@ -17,5 +18,6 @@ export const FieldsList: Record<fieldTypes, React.ComponentType<any>> = {
     number_field: Number,
     email_field: Email,
     date_field: DateField,
+    json_field: JSONField,
     color_picker_field: ColorPicker,
 };

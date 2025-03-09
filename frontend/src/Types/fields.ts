@@ -12,6 +12,7 @@ export type multiSelect = {
 
 export type fieldTypes =
     | "text_field"
+    | "json_field"
     | "textarea_field"
     | "number_field"
     | "email_field"
