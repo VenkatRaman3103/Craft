@@ -32,6 +32,7 @@ export async function createPageItem(req, res) {
                         },
                         number_field: true,
                         email_field: true,
+                        date_field: true,
                     },
                 },
             },

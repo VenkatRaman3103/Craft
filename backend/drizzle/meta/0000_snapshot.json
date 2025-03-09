@@ -1,5 +1,5 @@
 {
-  "id": "3a4e34a0-80bc-40ff-aaa0-c01338c3eaca",
+  "id": "6d3219aa-bb6f-44c3-b5bc-875a74d3efc9",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "version": "7",
   "dialect": "postgresql",
@@ -349,6 +349,65 @@
         },
         "created_at": {
           "name": "created_at",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": false,
+          "default": "now()"
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {},
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "public.date_fields": {
+      "name": "date_fields",
+      "schema": "",
+      "columns": {
+        "field_id": {
+          "name": "field_id",
+          "type": "uuid",
+          "primaryKey": true,
+          "notNull": true,
+          "default": "gen_random_uuid()"
+        },
+        "name": {
+          "name": "name",
+          "type": "varchar",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "label": {
+          "name": "label",
+          "type": "varchar",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "value": {
+          "name": "value",
+          "type": "varchar",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "type": {
+          "name": "type",
+          "type": "varchar",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "'date'"
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": false,
+          "default": "now()"
+        },
+        "edited_at": {
+          "name": "edited_at",
           "type": "timestamp",
           "primaryKey": false,
           "notNull": false,
@@ -1002,7 +1061,8 @@
         "multi_select_field",
         "single_select_field",
         "number_field",
-        "email_field"
+        "email_field",
+        "date_field"
       ]
     }
   },

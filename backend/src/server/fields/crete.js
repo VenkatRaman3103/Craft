@@ -5,7 +5,11 @@ import {
     singleSelectOptions,
     textFields,
 } from "../../db/schema/fields.js";
-import { emailFields, numberFields } from "../../db/schema/index.js";
+import {
+    dateFields,
+    emailFields,
+    numberFields,
+} from "../../db/schema/index.js";
 import { db } from "../server.js";
 
 // 🟢 Create text field
@@ -104,7 +108,7 @@ export async function createSingleSelectField(req, res) {
     }
 }
 
-// 🟢 Get number field
+// 🟢 Create number field
 export async function createNumberField(req, res) {
     try {
         const { name, label, type, value } = req.body;
@@ -130,13 +134,38 @@ export async function createNumberField(req, res) {
     }
 }
 
-// 🟢 Get all text fields
+// 🟢 Create email field
 export async function createEmailField(req, res) {
     try {
         const { name, label, type, value } = req.body;
 
         const response = await db
             .insert(emailFields)
+            .values({
+                name,
+                label,
+                type,
+                value,
+            })
+            .returning();
+        res.status(201).json(response);
+    } catch (error) {
+        const errorMessage = {
+            error,
+            message: "Error in creating email field",
+            origin: "backend/fieldRouter/email/POST",
+        };
+        res.status(500).json(errorMessage);
+    }
+}
+
+// 🟢 Create date field
+export async function createDateField(req, res) {
+    try {
+        const { name, label, type, value } = req.body;
+
+        const response = await db
+            .insert(dateFields)
             .values({
                 name,
                 label,

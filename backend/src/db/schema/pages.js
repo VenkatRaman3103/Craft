@@ -4,6 +4,7 @@ import { multiSelectFields, singleSelectFields, textFields } from "./fields.js";
 import { blocks } from "./blocks.js";
 import { numberFields } from "./fields/number.js";
 import { emailFields } from "./fields/email.js";
+import { dateFields } from "./fields/date.js";
 
 export const pageItemType = pgEnum("item_type", [
     "block",
@@ -12,6 +13,7 @@ export const pageItemType = pgEnum("item_type", [
     "single_select_field",
     "number_field",
     "email_field",
+    "date_field",
 ]);
 
 export const pages = pgTable("pages", {
@@ -59,6 +61,10 @@ export const pageItemsRelation = relations(page_items, ({ one }) => ({
     email_field: one(emailFields, {
         fields: [page_items.reference_id],
         references: [emailFields.field_id],
+    }),
+    date_field: one(dateFields, {
+        fields: [page_items.reference_id],
+        references: [dateFields.field_id],
     }),
     block: one(blocks, {
         fields: [page_items.reference_id],

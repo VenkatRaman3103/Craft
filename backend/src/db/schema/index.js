@@ -10,3 +10,4 @@ export * from "./child.js";
 // fields
 export * from "./fields/number.js";
 export * from "./fields/email.js";
+export * from "./fields/date.js";
