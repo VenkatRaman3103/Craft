@@ -1,9 +1,9 @@
 .date-picker-container {
   width: 100%;
-  position: relative;
   margin-bottom: 1rem;
 
   display: flex;
+  flex-direction: column;
   justify-content: center;
   align-items: center;
 
@@ -20,8 +20,10 @@
     align-items: center;
     box-sizing: border-box;
 
+    position: relative;
+
     &:hover {
-      background-color: var(--secondary-color);
+      // background-color: var(--secondary-color);
     }
 
     .calendar-icon {
@@ -32,11 +34,12 @@
   .calendar-dropdown {
     position: absolute;
     top: calc(100% + 5px);
-    left: 0;
+    left: 0px;
     width: 280px;
-    background-color: var(--secondary-color);
+    // background-color: var(--secondary-color);
+    background-color: var(--primary-color);
     border: 1px solid var(--border-color);
-    border-radius: 4px;
+    border-radius: 12px;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
     z-index: 100;
 
@@ -44,7 +47,7 @@
       display: flex;
       justify-content: space-between;
       align-items: center;
-      padding: 10px;
+      padding: 8px 10px;
       border-bottom: 1px solid var(--border-color);
 
       .month-nav {
@@ -61,7 +64,7 @@
       }
 
       .current-month {
-        font-weight: bold;
+        font-weight: 500;
         color: var(--dark-font);
       }
     }
@@ -93,7 +96,7 @@
         color: var(--dark-font);
 
         &:hover {
-          background-color: var(--primary-color);
+          background-color: var(--secondary-color);
         }
 
         &.empty {
@@ -105,11 +108,12 @@
         }
 
         &.selected {
-          background-color: var(--dark-blue);
-          color: white;
+          background-color: white;
+          color: black;
 
           &:hover {
-            background-color: var(--dark-blue);
+            background-color: var(--secondary-color);
+            color: white;
           }
         }
       }
@@ -117,4 +121,51 @@
   }
 }
 
-//}//}
+.date-formats-table-container {
+  width: 97%;
+  margin-top: 1rem;
+}
+
+.date-formats-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.9rem;
+  border: 1px solid var(--border-color);
+  border-radius: 4px;
+  overflow: hidden;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+  border-radius: 10px;
+}
+
+.date-formats-table th {
+  background-color: var(--primary-color);
+  padding: 0.75rem 1rem;
+  text-align: left;
+  font-weight: 600;
+  color: #333;
+  border-bottom: 1px solid var(--border-color);
+}
+
+.date-formats-table td {
+  padding: 0.75rem 1rem;
+  border-bottom: 1px solid var(--border-color);
+}
+
+.date-formats-table tr:last-child td {
+  border-bottom: none;
+}
+
+.date-formats-table .format-label {
+  font-weight: 500;
+  color: #555;
+  width: 30%;
+}
+
+.date-formats-table .format-value {
+  font-family: monospace;
+  color: #111;
+}
+
+.date-formats-table tbody tr:hover {
+  background-color: #f9f9f9;
+}

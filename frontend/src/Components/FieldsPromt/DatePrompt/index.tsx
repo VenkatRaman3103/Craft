@@ -1,23 +1,68 @@
 import React, { useState, useEffect, useRef } from "react";
 import "./index.scss";
+import { CalendarDays, ChevronLeft, ChevronRight } from "lucide-react";
+import { darkFont, lightFont } from "@/Styles/base";
 
 export const DatePrompt = ({ date, setDate }) => {
     const [isOpen, setIsOpen] = useState(false);
     const [currentMonth, setCurrentMonth] = useState(
         date ? new Date(date) : new Date(),
     );
+    const [dateFormats, setDateFormats] = useState({
+        display: "Select a date",
+        iso: "",
+        short: "",
+        medium: "",
+        long: "",
+    });
     const calendarRef = useRef(null);
 
-    // Format date to display
-    const formatDate = (date) => {
-        if (!date) return "Select a date";
+    // Format dates in various formats
+    const formatDates = (date) => {
+        if (!date)
+            return {
+                display: "Select a date",
+                iso: "",
+                short: "",
+                medium: "",
+                long: "",
+            };
 
         const day = date.getDate();
         const month = date.toLocaleString("default", { month: "long" });
         const year = date.getFullYear();
 
-        return `${month} ${day}, ${year}`;
+        // Format as MM/DD/YYYY
+        const shortMonth = date.getMonth() + 1;
+        const shortFormat = `${shortMonth}/${day}/${year}`;
+
+        // ISO format YYYY-MM-DD
+        const isoMonth = (shortMonth < 10 ? "0" : "") + shortMonth;
+        const isoDay = (day < 10 ? "0" : "") + day;
+        const isoFormat = `${year}-${isoMonth}-${isoDay}`;
+
+        // Medium format: Month DD, YYYY
+        const mediumFormat = `${month} ${day}, ${year}`;
+
+        // Long format: Day of week, Month DD, YYYY
+        const weekday = date.toLocaleString("default", { weekday: "long" });
+        const longFormat = `${weekday}, ${month} ${day}, ${year}`;
+
+        return {
+            display: mediumFormat,
+            iso: isoFormat,
+            short: shortFormat,
+            medium: mediumFormat,
+            long: longFormat,
+        };
     };
+
+    // Update date formats when date changes
+    useEffect(() => {
+        if (date) {
+            setDateFormats(formatDates(date));
+        }
+    }, [date]);
 
     // Generate days for the calendar
     const getDaysInMonth = (year, month) => {
@@ -35,7 +80,10 @@ export const DatePrompt = ({ date, setDate }) => {
             currentMonth.getMonth(),
             day,
         );
+
+        // Set the complete date object and also update formats
         setDate(newDate);
+        setDateFormats(formatDates(newDate));
         setIsOpen(false);
     };
 
@@ -123,46 +171,103 @@ export const DatePrompt = ({ date, setDate }) => {
         return days;
     };
 
+    console.log(date, "date");
+
     return (
         <div className="date-picker-container">
             <div
                 className="date-input-field"
                 onClick={() => setIsOpen(!isOpen)}
             >
-                {formatDate(date)}
-                <span className="calendar-icon">📅</span>
-            </div>
+                {dateFormats.display}
+                <span className="calendar-icon">
+                    <CalendarDays size={20} color={lightFont} />
+                </span>
 
-            {isOpen && (
-                <div className="calendar-dropdown" ref={calendarRef}>
-                    <div className="calendar-header">
-                        <button className="month-nav" onClick={handlePrevMonth}>
-                            ←
-                        </button>
-                        <span className="current-month">
-                            {currentMonth.toLocaleString("default", {
-                                month: "long",
-                                year: "numeric",
-                            })}
-                        </span>
-                        <button className="month-nav" onClick={handleNextMonth}>
-                            →
-                        </button>
-                    </div>
+                {isOpen && (
+                    <div className="calendar-dropdown" ref={calendarRef}>
+                        <div className="calendar-header">
+                            <button
+                                className="month-nav"
+                                onClick={handlePrevMonth}
+                            >
+                                <ChevronLeft size={20} color={lightFont} />
+                            </button>
+                            <span className="current-month">
+                                {currentMonth.toLocaleString("default", {
+                                    month: "long",
+                                    year: "numeric",
+                                })}
+                            </span>
+                            <button
+                                className="month-nav"
+                                onClick={handleNextMonth}
+                            >
+                                <ChevronRight size={20} color={lightFont} />
+                            </button>
+                        </div>
 
-                    <div className="calendar-weekdays">
-                        {["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"].map(
-                            (day) => (
+                        <div className="calendar-weekdays">
+                            {[
+                                "Sun",
+                                "Mon",
+                                "Tue",
+                                "Wed",
+                                "Thu",
+                                "Fri",
+                                "Sat",
+                            ].map((day) => (
                                 <div key={day} className="weekday">
                                     {day}
                                 </div>
-                            ),
-                        )}
-                    </div>
+                            ))}
+                        </div>
 
-                    <div className="calendar-days">{renderCalendarDays()}</div>
-                </div>
-            )}
+                        <div className="calendar-days">
+                            {renderCalendarDays()}
+                        </div>
+                    </div>
+                )}
+            </div>
+
+            {/* {date && ( */}
+            {/*     <div className="date-formats-table-container"> */}
+            {/*         <table className="date-formats-table"> */}
+            {/*             <thead> */}
+            {/*                 <tr> */}
+            {/*                     <th>Format Type</th> */}
+            {/*                     <th>Date Value</th> */}
+            {/*                 </tr> */}
+            {/*             </thead> */}
+            {/*             <tbody> */}
+            {/*                 <tr> */}
+            {/*                     <td className="format-label">ISO</td> */}
+            {/*                     <td className="format-value"> */}
+            {/*                         {dateFormats.iso} */}
+            {/*                     </td> */}
+            {/*                 </tr> */}
+            {/*                 <tr> */}
+            {/*                     <td className="format-label">Short</td> */}
+            {/*                     <td className="format-value"> */}
+            {/*                         {dateFormats.short} */}
+            {/*                     </td> */}
+            {/*                 </tr> */}
+            {/*                 <tr> */}
+            {/*                     <td className="format-label">Medium</td> */}
+            {/*                     <td className="format-value"> */}
+            {/*                         {dateFormats.medium} */}
+            {/*                     </td> */}
+            {/*                 </tr> */}
+            {/*                 <tr> */}
+            {/*                     <td className="format-label">Long</td> */}
+            {/*                     <td className="format-value"> */}
+            {/*                         {dateFormats.long} */}
+            {/*                     </td> */}
+            {/*                 </tr> */}
+            {/*             </tbody> */}
+            {/*         </table> */}
+            {/*     </div> */}
+            {/* )} */}
         </div>
     );
 };
