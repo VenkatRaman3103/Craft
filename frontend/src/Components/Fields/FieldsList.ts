@@ -5,6 +5,7 @@ import { fieldTypes } from "@/Types/fields";
 import { SingleSelect } from "./SingleSelect";
 import { Number } from "./Number";
 import { Email } from "./Email";
+import { DateField } from "./Date";
 
 export const FieldsList: Record<fieldTypes, React.ComponentType<any>> = {
     text_field: Text,
@@ -12,4 +13,5 @@ export const FieldsList: Record<fieldTypes, React.ComponentType<any>> = {
     multi_select_field: MultiSelect,
     number_field: Number,
     email_field: Email,
+    date_field: DateField,
 };

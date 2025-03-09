@@ -81,6 +81,14 @@ export const createField = async (field, page_id) => {
             reference_id: response.data[0].field_id,
             type: "email_field",
         });
+    } else if (field.type === "date_field") {
+        response = await axios.post(`${backendUrl}/fields/date`, field);
+
+        await axios.post(`${backendUrl}/page/${page_id}/page_items`, {
+            page_id,
+            reference_id: response.data[0].field_id,
+            type: "date_field",
+        });
     }
 
     console.log(response?.data[0].field_id, "Field create response");

@@ -1,8 +1,10 @@
-import React, { useState } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import { FieldWrapper } from "../FieldWrapper";
 import "./index.scss";
+import { CalendarDays } from "lucide-react";
+import { lightFont } from "@/Styles/base";
 
-export const Date = ({ data }: { data: field }) => {
+export const DateField = ({ data }: { data: field }) => {
     const [date, setDate] = useState(data.value ? new Date(data.value) : null);
     const [isOpen, setIsOpen] = useState(false);
     const calendarRef = useRef(null);
@@ -26,6 +28,11 @@ export const Date = ({ data }: { data: field }) => {
     const getFirstDayOfMonth = (year, month) => {
         return new Date(year, month, 1).getDay();
     };
+
+    // State for current month being viewed
+    const [currentMonth, setCurrentMonth] = useState(
+        date ? new Date(date) : new Date(),
+    );
 
     // Handle date selection
     const handleDateSelect = (day) => {
@@ -61,11 +68,6 @@ export const Date = ({ data }: { data: field }) => {
             ),
         );
     };
-
-    // State for current month being viewed
-    const [currentMonth, setCurrentMonth] = useState(
-        date ? new Date(date) : new Date(),
-    );
 
     // Close calendar when clicking outside
     useEffect(() => {
@@ -138,7 +140,9 @@ export const Date = ({ data }: { data: field }) => {
                     onClick={() => setIsOpen(!isOpen)}
                 >
                     {formatDate(date)}
-                    <span className="calendar-icon">📅</span>
+                    <span className="calendar-icon">
+                        <CalendarDays size={20} color={lightFont} />
+                    </span>
                 </div>
 
                 {isOpen && (
