@@ -1,0 +1,42 @@
+.json-input-field-container {
+  width: 96%;
+  height: auto;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  border-radius: 10px;
+  overflow: hidden;
+  padding: 10px;
+  background-color: var(--field-color);
+
+  .json-input-field {
+    height: 300px;
+    width: 96%;
+    border-radius: 10px;
+    font-size: 14px;
+    font-weight: 400;
+    color: var(--dark-font);
+    background-color: var(--field-color);
+    overflow: hidden;
+
+    // Customize Monaco editor's appearance to match your input style
+    .monaco-editor {
+      border-radius: 10px;
+      padding-left: 10px;
+
+      .overflow-guard {
+        border-radius: 10px;
+      }
+
+      // Adjust cursor style
+      .monaco-editor-background {
+        border-radius: 10px;
+      }
+    }
+  }
+}
+
+.monaco-editor {
+  background-color: red !important;
+}

@@ -13,6 +13,7 @@ import { EmailPrompt } from "./EmailPrompt";
 import { DatePrompt } from "./DatePrompt";
 import { ColorPickerPrompt } from "./ColorPickerPrompt";
 import { TextareaFieldPrompt, TextareaFieldPromt } from "./TextareaPrompt";
+import { JSONPromptField } from "./JsonPromptField";
 
 type optType = { id: string; value: string | undefined };
 
@@ -59,6 +60,9 @@ export const FieldsPromt = ({
     // textarea
     const [textarea, setTextarea] = useState("");
 
+    //json
+    const [jsonData, setJsonData] = useState('{"example": "data"}');
+
     console.log(color, "selectedColor");
 
     // TODO: move to render fields list
@@ -100,6 +104,10 @@ export const FieldsPromt = ({
                         textarea={textarea}
                         setTextarea={setTextarea}
                     />
+                );
+            case "json_field":
+                return (
+                    <JSONPromptField json={jsonData} setJSON={setJsonData} />
                 );
             default:
                 return <p>Yet to be done</p>;
