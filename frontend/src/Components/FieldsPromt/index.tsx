@@ -53,9 +53,9 @@ export const FieldsPromt = ({
     const [date, setDate] = useState<Date | null>(null);
 
     // color picker
-    const [selectedColor, setColor] = useState("#3498db");
+    const [color, setColor] = useState("#3498db");
 
-    console.log(selectedColor, "selectedColor");
+    console.log(color, "selectedColor");
 
     // TODO: move to render fields list
     function renderFieldsPromt(fieldType: string): React.JSX.Element {
@@ -89,9 +89,7 @@ export const FieldsPromt = ({
             case "date_field":
                 return <DatePrompt date={date} setDate={setDate} />;
             case "color_picker_field":
-                return (
-                    <ColorPicker color={selectedColor} setColor={setColor} />
-                );
+                return <ColorPicker color={color} setColor={setColor} />;
             default:
                 return <p>Yet to be done</p>;
         }
@@ -157,7 +155,20 @@ export const FieldsPromt = ({
                     type: "date_field",
                     value: date ? date.toISOString() : null,
                 };
+            } else if (field.type === "color_picker_field") {
+                payload = {
+                    name: fieldName.split(" ").join("-").toLowerCase(),
+                    label: fieldName,
+                    type: "color_picker_field",
+                    value: color.value,
+                    hex: color.hex,
+                    rgb: color.rgb,
+                    rgba: color.rgba,
+                    hsl: color.hsl,
+                    hsla: color.hsla,
+                };
             }
+
             return createField(payload, page_id);
         },
         {

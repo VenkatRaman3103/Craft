@@ -89,6 +89,14 @@ export const createField = async (field, page_id) => {
             reference_id: response.data[0].field_id,
             type: "date_field",
         });
+    } else if (field.type === "color_picker_field") {
+        response = await axios.post(`${backendUrl}/fields/color_picker`, field);
+
+        await axios.post(`${backendUrl}/page/${page_id}/page_items`, {
+            page_id,
+            reference_id: response.data[0].field_id,
+            type: "color_picker_field",
+        });
     }
 
     console.log(response?.data[0].field_id, "Field create response");

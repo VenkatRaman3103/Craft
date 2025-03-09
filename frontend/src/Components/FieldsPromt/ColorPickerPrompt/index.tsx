@@ -1,8 +1,9 @@
 import React, { useState, useRef, useEffect } from "react";
 import "./index.scss";
 import { ChevronDown, Copy } from "lucide-react";
+import { FieldWrapper } from "@/Components/Fields/FieldWrapper";
 
-export const ColorPicker = ({ color, setColor }) => {
+export const ColorPicker = ({ data }: any) => {
     const [isOpen, setIsOpen] = useState(false);
     const [colorFormats, setColorFormats] = useState({
         hex: "#000000",
@@ -20,10 +21,10 @@ export const ColorPicker = ({ color, setColor }) => {
     const pickerRef = useRef(null);
     const saturationRef = useRef(null);
 
-    const handleColorChange = (colorData) => {
-        setSelectedColor(colorData);
-        console.log("Color changed:", colorData);
-    };
+    // const handleColorChange = (colorData) => {
+    //     setSelectedColor(colorData);
+    //     console.log("Color changed:", colorData);
+    // };
 
     // Convert RGB to HEX
     const rgbToHex = (r, g, b) => {
@@ -147,60 +148,60 @@ export const ColorPicker = ({ color, setColor }) => {
         setHexInput(hexValue);
 
         // Update the actual color state for parent component
-        setColor({
-            hex: hexValue,
-            rgb: { r, g, b },
-            rgba: { r, g, b, a },
-            hsl: { h, s, l },
-            hsla: { h, s, l, a },
-            value: hexValue, // For backward compatibility
-        });
+        // setColor({
+        //     hex: hexValue,
+        //     rgb: { r, g, b },
+        //     rgba: { r, g, b, a },
+        //     hsl: { h, s, l },
+        //     hsla: { h, s, l, a },
+        //     value: hexValue, // For backward compatibility
+        // });
     };
 
     // Initialize component with provided color
     useEffect(() => {
-        if (color) {
+        if (data) {
             let h,
                 s,
                 l,
                 a = 1;
 
-            if (typeof color === "string") {
+            if (typeof data === "string") {
                 // It's a hex color
-                const { r, g, b } = hexToRgb(color);
+                const { r, g, b } = hexToRgb(data);
                 const hslValues = rgbToHsl(r, g, b);
                 h = hslValues.h;
                 s = hslValues.s;
                 l = hslValues.l;
-            } else if (color.hex) {
+            } else if (data.hex) {
                 // It's our color object
-                const { r, g, b } = hexToRgb(color.hex);
+                const { r, g, b } = hexToRgb(data.hex);
                 const hslValues = rgbToHsl(r, g, b);
                 h = hslValues.h;
                 s = hslValues.s;
                 l = hslValues.l;
-                a = color.hsla?.a || 1;
+                a = data.hsla?.a || 1;
             } else if (
-                color.h !== undefined &&
-                color.s !== undefined &&
-                color.l !== undefined
+                data.h !== undefined &&
+                data.s !== undefined &&
+                data.l !== undefined
             ) {
                 // It's an HSL object
-                h = color.h;
-                s = color.s;
-                l = color.l;
-                a = color.a || 1;
+                h = data.h;
+                s = data.s;
+                l = data.l;
+                a = data.a || 1;
             } else if (
-                color.r !== undefined &&
-                color.g !== undefined &&
-                color.b !== undefined
+                data.r !== undefined &&
+                data.g !== undefined &&
+                data.b !== undefined
             ) {
                 // It's an RGB object
-                const hslValues = rgbToHsl(color.r, color.g, color.b);
+                const hslValues = rgbToHsl(data.r, data.g, data.b);
                 h = hslValues.h;
                 s = hslValues.s;
                 l = hslValues.l;
-                a = color.a || 1;
+                a = data.a || 1;
             }
 
             setHue(h);
@@ -270,14 +271,14 @@ export const ColorPicker = ({ color, setColor }) => {
             });
 
             // Update the parent color state
-            setColor({
-                hex: value,
-                rgb: { r, g, b },
-                rgba: { r, g, b, a: alpha },
-                hsl: { h, s, l },
-                hsla: { h, s, l, a: alpha },
-                value: value,
-            });
+            // setColor({
+            //     hex: value,
+            //     rgb: { r, g, b },
+            //     rgba: { r, g, b, a: alpha },
+            //     hsl: { h, s, l },
+            //     hsla: { h, s, l, a: alpha },
+            //     value: value,
+            // });
         }
     };
 
@@ -348,253 +349,260 @@ export const ColorPicker = ({ color, setColor }) => {
         return `linear-gradient(to right, rgba(${hexToRgb(colorFormats.hex).r}, ${hexToRgb(colorFormats.hex).g}, ${hexToRgb(colorFormats.hex).b}, 0), rgba(${hexToRgb(colorFormats.hex).r}, ${hexToRgb(colorFormats.hex).g}, ${hexToRgb(colorFormats.hex).b}, 1))`;
     };
 
+    console.log(data, "data");
+
     return (
-        <div
-            className="color-picker-container"
-            onClick={() => setIsOpen(!isOpen)}
-            ref={pickerRef}
-        >
-            <div className="color-preview">
-                <div
-                    className="color-display"
-                    style={{ backgroundColor: colorFormats.hex }}
-                >
-                    {/* <ChevronDown size={16} /> */}
-                </div>
-            </div>
-
-            <div className="color-preview-text">{colorFormats.hex}</div>
-
-            {isOpen && (
-                <div className="color-picker-dropdown">
-                    <div className="color-picker-header">
-                        {/* <div */}
-                        {/*     className="current-color-preview" */}
-                        {/*     style={{ backgroundColor: colorFormats.rgba }} */}
-                        {/* /> */}
-                    </div>
-
+        <FieldWrapper data={data}>
+            <div
+                className="color-picker-container"
+                onClick={() => setIsOpen(!isOpen)}
+                ref={pickerRef}
+            >
+                <div className="color-preview">
                     <div
-                        className="saturation-picker"
-                        ref={saturationRef}
-                        onClick={handleSaturationPickerClick}
-                        style={{
-                            backgroundColor: `hsl(${hue}, 100%, 50%)`,
-                        }}
+                        className="color-display"
+                        style={{ backgroundColor: colorFormats.hex }}
                     >
-                        <div className="saturation-white canvas" />
-                        <div className="saturation-black canvas" />
-                        <div
-                            className="saturation-picker-cursor"
-                            style={{
-                                left: `${saturation}%`,
-                                bottom: `${lightness}%`,
-                            }}
-                        />
+                        {/* <ChevronDown size={16} /> */}
                     </div>
+                </div>
 
-                    <div className="color-controls">
-                        <div className="control-row">
-                            <label>Hue</label>
-                            <div className="slider-container">
-                                <div
-                                    className="slider-background"
-                                    style={{ background: generateHueColors() }}
-                                />
-                                <input
-                                    type="range"
-                                    min="0"
-                                    max="360"
-                                    value={hue}
-                                    onChange={handleHueChange}
-                                    className="hue-slider color-slider"
-                                />
-                            </div>
-                            <span>{hue}°</span>
+                <div className="color-preview-text">{colorFormats.hex}</div>
+
+                {isOpen && (
+                    <div className="color-picker-dropdown">
+                        <div className="color-picker-header">
+                            {/* <div */}
+                            {/*     className="current-color-preview" */}
+                            {/*     style={{ backgroundColor: colorFormats.rgba }} */}
+                            {/* /> */}
                         </div>
 
-                        <div className="control-row">
-                            <label>Saturation</label>
-                            <div className="slider-container">
-                                <div
-                                    className="slider-background"
-                                    style={{
-                                        background:
-                                            generateSaturationBackground(),
-                                    }}
-                                />
-                                <input
-                                    type="range"
-                                    min="0"
-                                    max="100"
-                                    value={saturation}
-                                    onChange={handleSaturationChange}
-                                    className="saturation-slider color-slider"
-                                />
-                            </div>
-                            <span>{saturation}%</span>
-                        </div>
-
-                        <div className="control-row">
-                            <label>Lightness</label>
-                            <div className="slider-container">
-                                <div
-                                    className="slider-background"
-                                    style={{
-                                        background:
-                                            generateLightnessBackground(),
-                                    }}
-                                />
-                                <input
-                                    type="range"
-                                    min="0"
-                                    max="100"
-                                    value={lightness}
-                                    onChange={handleLightnessChange}
-                                    className="lightness-slider color-slider"
-                                />
-                            </div>
-                            <span>{lightness}%</span>
-                        </div>
-
-                        <div className="control-row">
-                            <label>Alpha</label>
-                            <div className="slider-container">
-                                <div
-                                    className="slider-background alpha-background"
-                                    style={{
-                                        background: generateAlphaBackground(),
-                                    }}
-                                />
-                                <input
-                                    type="range"
-                                    min="0"
-                                    max="1"
-                                    step="0.01"
-                                    value={alpha}
-                                    onChange={handleAlphaChange}
-                                    className="alpha-slider color-slider"
-                                />
-                            </div>
-                            <span>{alpha.toFixed(2)}</span>
-                        </div>
-
-                        <div className="hex-input-row">
-                            <label>HEX</label>
-                            <input
-                                type="text"
-                                value={hexInput}
-                                onChange={handleHexChange}
-                                maxLength="7"
+                        <div
+                            className="saturation-picker"
+                            ref={saturationRef}
+                            onClick={handleSaturationPickerClick}
+                            style={{
+                                backgroundColor: `hsl(${hue}, 100%, 50%)`,
+                            }}
+                        >
+                            <div className="saturation-white canvas" />
+                            <div className="saturation-black canvas" />
+                            <div
+                                className="saturation-picker-cursor"
+                                style={{
+                                    left: `${saturation}%`,
+                                    bottom: `${lightness}%`,
+                                }}
                             />
                         </div>
-                    </div>
 
-                    <div className="color-formats-table">
-                        <table>
-                            <thead>
-                                <tr>
-                                    <th>Format</th>
-                                    <th>Value</th>
-                                    <th>Copy</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr>
-                                    <td>HEX</td>
-                                    <td className="format-value">
-                                        {colorFormats.hex}
-                                    </td>
-                                    <td>
-                                        <button
-                                            className="copy-button"
-                                            onClick={() =>
-                                                copyToClipboard(
-                                                    colorFormats.hex,
-                                                )
-                                            }
-                                        >
-                                            <Copy size={14} />
-                                        </button>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>RGB</td>
-                                    <td className="format-value">
-                                        {colorFormats.rgb}
-                                    </td>
-                                    <td>
-                                        <button
-                                            className="copy-button"
-                                            onClick={() =>
-                                                copyToClipboard(
-                                                    colorFormats.rgb,
-                                                )
-                                            }
-                                        >
-                                            <Copy size={14} />
-                                        </button>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>RGBA</td>
-                                    <td className="format-value">
-                                        {colorFormats.rgba}
-                                    </td>
-                                    <td>
-                                        <button
-                                            className="copy-button"
-                                            onClick={() =>
-                                                copyToClipboard(
-                                                    colorFormats.rgba,
-                                                )
-                                            }
-                                        >
-                                            <Copy size={14} />
-                                        </button>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>HSL</td>
-                                    <td className="format-value">
-                                        {colorFormats.hsl}
-                                    </td>
-                                    <td>
-                                        <button
-                                            className="copy-button"
-                                            onClick={() =>
-                                                copyToClipboard(
-                                                    colorFormats.hsl,
-                                                )
-                                            }
-                                        >
-                                            <Copy size={14} />
-                                        </button>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>HSLA</td>
-                                    <td className="format-value">
-                                        {colorFormats.hsla}
-                                    </td>
-                                    <td>
-                                        <button
-                                            className="copy-button"
-                                            onClick={() =>
-                                                copyToClipboard(
-                                                    colorFormats.hsla,
-                                                )
-                                            }
-                                        >
-                                            <Copy size={14} />
-                                        </button>
-                                    </td>
-                                </tr>
-                            </tbody>
-                        </table>
+                        <div className="color-controls">
+                            <div className="control-row">
+                                <label>Hue</label>
+                                <div className="slider-container">
+                                    <div
+                                        className="slider-background"
+                                        style={{
+                                            background: generateHueColors(),
+                                        }}
+                                    />
+                                    <input
+                                        type="range"
+                                        min="0"
+                                        max="360"
+                                        value={hue}
+                                        onChange={handleHueChange}
+                                        className="hue-slider color-slider"
+                                    />
+                                </div>
+                                <span>{hue}°</span>
+                            </div>
+
+                            <div className="control-row">
+                                <label>Saturation</label>
+                                <div className="slider-container">
+                                    <div
+                                        className="slider-background"
+                                        style={{
+                                            background:
+                                                generateSaturationBackground(),
+                                        }}
+                                    />
+                                    <input
+                                        type="range"
+                                        min="0"
+                                        max="100"
+                                        value={saturation}
+                                        onChange={handleSaturationChange}
+                                        className="saturation-slider color-slider"
+                                    />
+                                </div>
+                                <span>{saturation}%</span>
+                            </div>
+
+                            <div className="control-row">
+                                <label>Lightness</label>
+                                <div className="slider-container">
+                                    <div
+                                        className="slider-background"
+                                        style={{
+                                            background:
+                                                generateLightnessBackground(),
+                                        }}
+                                    />
+                                    <input
+                                        type="range"
+                                        min="0"
+                                        max="100"
+                                        value={lightness}
+                                        onChange={handleLightnessChange}
+                                        className="lightness-slider color-slider"
+                                    />
+                                </div>
+                                <span>{lightness}%</span>
+                            </div>
+
+                            <div className="control-row">
+                                <label>Alpha</label>
+                                <div className="slider-container">
+                                    <div
+                                        className="slider-background alpha-background"
+                                        style={{
+                                            background:
+                                                generateAlphaBackground(),
+                                        }}
+                                    />
+                                    <input
+                                        type="range"
+                                        min="0"
+                                        max="1"
+                                        step="0.01"
+                                        value={alpha}
+                                        onChange={handleAlphaChange}
+                                        className="alpha-slider color-slider"
+                                    />
+                                </div>
+                                <span>{alpha.toFixed(2)}</span>
+                            </div>
+
+                            <div className="hex-input-row">
+                                <label>HEX</label>
+                                <input
+                                    type="text"
+                                    value={hexInput}
+                                    onChange={handleHexChange}
+                                    maxLength="7"
+                                />
+                            </div>
+                        </div>
+
+                        <div className="color-formats-table">
+                            <table>
+                                <thead>
+                                    <tr>
+                                        <th>Format</th>
+                                        <th>Value</th>
+                                        <th>Copy</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>HEX</td>
+                                        <td className="format-value">
+                                            {colorFormats.hex}
+                                        </td>
+                                        <td>
+                                            <button
+                                                className="copy-button"
+                                                onClick={() =>
+                                                    copyToClipboard(
+                                                        colorFormats.hex,
+                                                    )
+                                                }
+                                            >
+                                                <Copy size={14} />
+                                            </button>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>RGB</td>
+                                        <td className="format-value">
+                                            {colorFormats.rgb}
+                                        </td>
+                                        <td>
+                                            <button
+                                                className="copy-button"
+                                                onClick={() =>
+                                                    copyToClipboard(
+                                                        colorFormats.rgb,
+                                                    )
+                                                }
+                                            >
+                                                <Copy size={14} />
+                                            </button>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>RGBA</td>
+                                        <td className="format-value">
+                                            {colorFormats.rgba}
+                                        </td>
+                                        <td>
+                                            <button
+                                                className="copy-button"
+                                                onClick={() =>
+                                                    copyToClipboard(
+                                                        colorFormats.rgba,
+                                                    )
+                                                }
+                                            >
+                                                <Copy size={14} />
+                                            </button>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>HSL</td>
+                                        <td className="format-value">
+                                            {colorFormats.hsl}
+                                        </td>
+                                        <td>
+                                            <button
+                                                className="copy-button"
+                                                onClick={() =>
+                                                    copyToClipboard(
+                                                        colorFormats.hsl,
+                                                    )
+                                                }
+                                            >
+                                                <Copy size={14} />
+                                            </button>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>HSLA</td>
+                                        <td className="format-value">
+                                            {colorFormats.hsla}
+                                        </td>
+                                        <td>
+                                            <button
+                                                className="copy-button"
+                                                onClick={() =>
+                                                    copyToClipboard(
+                                                        colorFormats.hsla,
+                                                    )
+                                                }
+                                            >
+                                                <Copy size={14} />
+                                            </button>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
                     </div>
-                </div>
-            )}
-        </div>
+                )}
+            </div>
+        </FieldWrapper>
     );
 };

@@ -5,6 +5,7 @@ import {
     singleSelectOptions,
     textFields,
 } from "../../db/schema/fields.js";
+import { colorPickerFields } from "../../db/schema/fields/colorPicker.js";
 import {
     dateFields,
     emailFields,
@@ -180,6 +181,57 @@ export async function createDateField(req, res) {
             message: "Error in creating email field",
             origin: "backend/fieldRouter/email/POST",
         };
+        res.status(500).json(errorMessage);
+    }
+}
+
+// 🟢 Create color picker field
+export async function createColorPickerField(req, res) {
+    try {
+        const { name, label, type, hex, rgb, rgba, hsl, hsla, value } =
+            req.body;
+
+        if (
+            !name ||
+            !label ||
+            !hex ||
+            !rgb ||
+            !rgba ||
+            !hsl ||
+            !hsla ||
+            !value
+        ) {
+            return res.status(400).json({
+                message: "Missing required fields",
+                origin: "backend/fieldRouter/colorPicker/POST",
+            });
+        }
+
+        const response = await db
+            .insert(colorPickerFields)
+            .values({
+                name,
+                label,
+                type: type || "color_picker",
+                hex,
+                rgb,
+                rgba,
+                hsl,
+                hsla,
+                value,
+            })
+            .returning();
+
+        res.status(201).json(response);
+    } catch (error) {
+        console.error("Error creating color picker field:", error);
+
+        const errorMessage = {
+            error: error.message,
+            message: "Error in creating color picker field",
+            origin: "backend/fieldRouter/colorPicker/POST",
+        };
+
         res.status(500).json(errorMessage);
     }
 }

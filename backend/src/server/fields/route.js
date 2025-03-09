@@ -1,5 +1,6 @@
 import express from "express";
 import {
+    createColorPickerField,
     createDateField,
     createEmailField,
     createMultiSelectField,
@@ -38,3 +39,7 @@ fieldRoute.post("/fields/email", createEmailField);
 // date field
 // CREATE: date field
 fieldRoute.post("/fields/date", createDateField);
+
+// color picker
+// CREATE: color picker
+fieldRoute.post("/fields/color_picker", createColorPickerField);

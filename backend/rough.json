@@ -1,6 +1,29 @@
 {
     "name": "text data for date",
     "label": "date",
-    "type": "date",
-    "value": "31/03/2001"
+    "type": "color_picker",
+    "hex": "#3398db",
+    "rgb": {
+        "r": 51,
+        "g": 152,
+        "b": 219
+    },
+    "rgba": {
+        "r": 51,
+        "g": 152,
+        "b": 219,
+        "a": 1
+    },
+    "hsl": {
+        "h": 204,
+        "s": 70,
+        "l": 53
+    },
+    "hsla": {
+        "h": 204,
+        "s": 70,
+        "l": 53,
+        "a": 1
+    },
+    "value": "#3398db"
 }
