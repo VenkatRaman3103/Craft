@@ -11,6 +11,7 @@ import { fieldPromt } from "@/Types/fields";
 import { NumberPrompt } from "./NumberPrompt";
 import { EmailPrompt } from "./EmailPrompt";
 import { DatePrompt } from "./DatePrompt";
+import { ColorPicker } from "./ColorPickerPrompt";
 
 type optType = { id: string; value: string | undefined };
 
@@ -51,11 +52,10 @@ export const FieldsPromt = ({
     // date
     const [date, setDate] = useState<Date | null>(null);
 
-    console.log(
-        singleSelectOptions,
-        checkedsingleSelectItems,
-        "checkedsingleSelectItems",
-    );
+    // color picker
+    const [selectedColor, setColor] = useState("#3498db");
+
+    console.log(selectedColor, "selectedColor");
 
     // TODO: move to render fields list
     function renderFieldsPromt(fieldType: string): React.JSX.Element {
@@ -88,6 +88,10 @@ export const FieldsPromt = ({
 
             case "date_field":
                 return <DatePrompt date={date} setDate={setDate} />;
+            case "color_picker_field":
+                return (
+                    <ColorPicker color={selectedColor} setColor={setColor} />
+                );
             default:
                 return <p>Yet to be done</p>;
         }

@@ -16,6 +16,7 @@ export type fieldTypes =
     | "email_field"
     | "multi_select_field"
     | "date_field"
+    | "color_picker_field"
     | "single_select_field";
 
 // promt

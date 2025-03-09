@@ -1,5 +1,10 @@
 export const sampleFields = [
     {
+        id: "field0",
+        name: "Color Picker Field",
+        type: "color_picker_field",
+    },
+    {
         id: "field1",
         name: "Text Field",
         type: "text_field",

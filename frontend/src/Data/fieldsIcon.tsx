@@ -19,7 +19,7 @@ export const FieldsIcons = {
     multi_select_field: <SquareCheck size={20} color={lightFont} />,
     "rich-text": <LetterText size={20} color={lightFont} />,
     single_select_field: <CircleCheck size={20} color={lightFont} />,
-    date: <CalendarDays size={20} color={lightFont} />,
+    date_field: <CalendarDays size={20} color={lightFont} />,
     email_field: <AtSign size={20} color={lightFont} />,
     upload: <Image size={20} color={lightFont} />,
     relation: <Link size={20} color={lightFont} />,
