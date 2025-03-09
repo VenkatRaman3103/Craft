@@ -5,7 +5,7 @@ import { ButtonWrapper } from "../ButtonWrapper";
 
 export const Json = ({ iconColor = lightFont }: { iconColor?: string }) => {
     return (
-        <ButtonWrapper label="JSON">
+        <ButtonWrapper label="API">
             <FileJson2 size={18} color={iconColor} />
         </ButtonWrapper>
     );

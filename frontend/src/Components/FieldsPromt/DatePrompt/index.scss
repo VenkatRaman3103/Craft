@@ -7,6 +7,8 @@
   justify-content: center;
   align-items: center;
 
+  position: relative;
+
   .date-input-field {
     width: 97%;
     background-color: var(--field-color);
@@ -20,8 +22,6 @@
     align-items: center;
     box-sizing: border-box;
 
-    position: relative;
-
     &:hover {
       // background-color: var(--secondary-color);
     }
@@ -33,8 +33,8 @@
 
   .calendar-dropdown {
     position: absolute;
-    top: calc(100% + 5px);
-    left: 0px;
+    top: calc(100% + 10px);
+    left: 18px;
     width: 280px;
     // background-color: var(--secondary-color);
     background-color: var(--primary-color);

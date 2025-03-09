@@ -57,7 +57,7 @@
     }
 
     .sidebar-container {
-      width: 40vw;
+      width: 0vw;
       min-height: 100vh;
       height: auto;
       display: flex;
@@ -66,7 +66,13 @@
       justify-content: center;
       gap: 10px;
 
-      border-left: 1px solid var(--border-color);
+      border-left: 1px solid transparent;
+      transition: width 0.2s ease-in-out;
+
+      &.open {
+        width: 40vw;
+        border-left: 1px solid var(--border-color);
+      }
     }
   }
 }

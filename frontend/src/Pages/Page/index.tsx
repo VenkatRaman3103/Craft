@@ -160,11 +160,11 @@ export const Page = () => {
                         onBlocksSelected={handleBlocksSelected}
                     />
                 </div>
-                {openSideBar && (
-                    <div className="sidebar-container">
-                        <div className="sidebar-wrapper"></div>
-                    </div>
-                )}
+                <div
+                    className={`sidebar-container ${openSideBar ? "open" : ""}`}
+                >
+                    <div className="sidebar-wrapper"></div>
+                </div>
             </div>
         </div>
     );
