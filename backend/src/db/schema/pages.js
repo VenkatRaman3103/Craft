@@ -6,6 +6,7 @@ import { numberFields } from "./fields/number.js";
 import { emailFields } from "./fields/email.js";
 import { dateFields } from "./fields/date.js";
 import { colorPickerFields } from "./fields/colorPicker.js";
+import { textAreaFields } from "./fields/textArea.js";
 
 export const pageItemType = pgEnum("item_type", [
     "block",
@@ -16,6 +17,7 @@ export const pageItemType = pgEnum("item_type", [
     "email_field",
     "date_field",
     "color_picker_field",
+    "textarea_field",
 ]);
 
 export const pages = pgTable("pages", {
@@ -70,7 +72,11 @@ export const pageItemsRelation = relations(page_items, ({ one }) => ({
     }),
     color_picker_field: one(colorPickerFields, {
         fields: [page_items.reference_id],
-        references: [colorPickerFields.field_id], // Make sure this matches
+        references: [colorPickerFields.field_id],
+    }),
+    textarea_field: one(textAreaFields, {
+        fields: [page_items.reference_id],
+        references: [textAreaFields.field_id],
     }),
     block: one(blocks, {
         fields: [page_items.reference_id],

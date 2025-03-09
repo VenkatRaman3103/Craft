@@ -6,6 +6,7 @@ import {
     createMultiSelectField,
     createNumberField,
     createSingleSelectField,
+    createTextAreaField,
     createTextField,
 } from "./crete.js";
 import { readTextFields } from "./read.js";
@@ -43,3 +44,7 @@ fieldRoute.post("/fields/date", createDateField);
 // color picker
 // CREATE: color picker
 fieldRoute.post("/fields/color_picker", createColorPickerField);
+
+// textarea
+// CREATE: color picker
+fieldRoute.post("/fields/textarea_field", createTextAreaField);

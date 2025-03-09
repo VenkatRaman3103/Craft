@@ -1,5 +1,5 @@
 {
-  "id": "bdeed98b-40c2-47a3-87be-eb1446540b15",
+  "id": "0a5e27aa-730e-4fd6-8565-b313934904e5",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "version": "7",
   "dialect": "postgresql",
@@ -418,7 +418,7 @@
         },
         "value": {
           "name": "value",
-          "type": "varchar",
+          "type": "varchar(7)",
           "primaryKey": false,
           "notNull": true
         },
@@ -605,6 +605,65 @@
           "primaryKey": false,
           "notNull": true,
           "default": "'number'"
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": false,
+          "default": "now()"
+        },
+        "edited_at": {
+          "name": "edited_at",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": false,
+          "default": "now()"
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {},
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "public.textarea_fields": {
+      "name": "textarea_fields",
+      "schema": "",
+      "columns": {
+        "field_id": {
+          "name": "field_id",
+          "type": "uuid",
+          "primaryKey": true,
+          "notNull": true,
+          "default": "gen_random_uuid()"
+        },
+        "name": {
+          "name": "name",
+          "type": "varchar",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "label": {
+          "name": "label",
+          "type": "varchar",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "value": {
+          "name": "value",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "type": {
+          "name": "type",
+          "type": "varchar",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "'textarea'"
         },
         "created_at": {
           "name": "created_at",
@@ -1152,7 +1211,8 @@
         "number_field",
         "email_field",
         "date_field",
-        "color_picker_field"
+        "color_picker_field",
+        "textarea_field"
       ]
     }
   },

@@ -12,6 +12,7 @@ import { NumberPrompt } from "./NumberPrompt";
 import { EmailPrompt } from "./EmailPrompt";
 import { DatePrompt } from "./DatePrompt";
 import { ColorPickerPrompt } from "./ColorPickerPrompt";
+import { TextareaFieldPrompt, TextareaFieldPromt } from "./TextareaPrompt";
 
 type optType = { id: string; value: string | undefined };
 
@@ -55,6 +56,9 @@ export const FieldsPromt = ({
     // color picker
     const [color, setColor] = useState("#3498db");
 
+    // textarea
+    const [textarea, setTextarea] = useState("");
+
     console.log(color, "selectedColor");
 
     // TODO: move to render fields list
@@ -90,6 +94,13 @@ export const FieldsPromt = ({
                 return <DatePrompt date={date} setDate={setDate} />;
             case "color_picker_field":
                 return <ColorPickerPrompt color={color} setColor={setColor} />;
+            case "textarea_field":
+                return (
+                    <TextareaFieldPrompt
+                        textarea={textarea}
+                        setTextarea={setTextarea}
+                    />
+                );
             default:
                 return <p>Yet to be done</p>;
         }
@@ -166,6 +177,13 @@ export const FieldsPromt = ({
                     rgba: color.rgba,
                     hsl: color.hsl,
                     hsla: color.hsla,
+                };
+            } else if (field.type === "textarea_field") {
+                payload = {
+                    name: fieldName.split(" ").join("-").toLowerCase(),
+                    label: fieldName,
+                    type: "textarea_field",
+                    value: textarea,
                 };
             }
 

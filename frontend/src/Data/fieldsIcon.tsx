@@ -14,6 +14,7 @@ import {
 } from "lucide-react";
 
 export const FieldsIcons = {
+    textarea_field: <Paintbrush size={20} color={lightFont} />,
     color_picker_field: <Paintbrush size={20} color={lightFont} />,
     text_field: <Type size={20} color={lightFont} />,
     number_field: <Divide size={20} color={lightFont} />,
