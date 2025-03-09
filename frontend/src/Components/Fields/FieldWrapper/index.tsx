@@ -17,8 +17,8 @@ export const FieldWrapper = ({
             <div className="text-field-header-contianer">
                 <div className="text-field-header-wrapper">
                     <div className="text-field-heading-container">
-                        <div className="text-field-label">{data.label}</div>
-                        <div className="text-field-type">/ {data.type}</div>
+                        <div className="text-field-label">{data?.label}</div>
+                        <div className="text-field-type">/ {data?.type}</div>
                     </div>
                     <div className="text-field-actions">
                         {/* <div className="text-field-edit"> */}

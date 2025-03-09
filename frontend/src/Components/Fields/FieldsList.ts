@@ -6,7 +6,7 @@ import { SingleSelect } from "./SingleSelect";
 import { Number } from "./Number";
 import { Email } from "./Email";
 import { DateField } from "./Date";
-import { ColorPicker } from "../FieldsPromt/ColorPickerPrompt";
+import { ColorPicker } from "./ColorPicker";
 
 export const FieldsList: Record<fieldTypes, React.ComponentType<any>> = {
     text_field: Text,

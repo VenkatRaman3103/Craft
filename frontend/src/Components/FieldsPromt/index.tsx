@@ -11,7 +11,7 @@ import { fieldPromt } from "@/Types/fields";
 import { NumberPrompt } from "./NumberPrompt";
 import { EmailPrompt } from "./EmailPrompt";
 import { DatePrompt } from "./DatePrompt";
-import { ColorPicker } from "./ColorPickerPrompt";
+import { ColorPickerPrompt } from "./ColorPickerPrompt";
 
 type optType = { id: string; value: string | undefined };
 
@@ -89,7 +89,7 @@ export const FieldsPromt = ({
             case "date_field":
                 return <DatePrompt date={date} setDate={setDate} />;
             case "color_picker_field":
-                return <ColorPicker color={color} setColor={setColor} />;
+                return <ColorPickerPrompt color={color} setColor={setColor} />;
             default:
                 return <p>Yet to be done</p>;
         }

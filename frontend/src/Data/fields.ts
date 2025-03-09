@@ -1,10 +1,5 @@
 export const sampleFields = [
     {
-        id: "field0",
-        name: "Color Picker Field",
-        type: "color_picker_field",
-    },
-    {
         id: "field1",
         name: "Text Field",
         type: "text_field",
@@ -29,10 +24,11 @@ export const sampleFields = [
         name: "Select Field",
         type: "single_select_field",
     },
+
     {
-        id: "field6",
-        name: "Rich Text Field",
-        type: "rich-text",
+        id: "field0",
+        name: "Color Picker Field",
+        type: "color_picker_field",
     },
     {
         id: "field7",
@@ -53,5 +49,10 @@ export const sampleFields = [
         id: "field10",
         name: "Relation Field",
         type: "relation",
+    },
+    {
+        id: "field6",
+        name: "Rich Text Field",
+        type: "rich-text",
     },
 ];
