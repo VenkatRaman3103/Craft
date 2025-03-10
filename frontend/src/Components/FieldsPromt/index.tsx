@@ -199,7 +199,7 @@ export const FieldsPromt = ({
                     name: fieldName.split(" ").join("-").toLowerCase(),
                     label: fieldName,
                     type: "json_field",
-                    value: JSON.stringify(jsonData),
+                    value: jsonData,
                 };
             }
 

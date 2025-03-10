@@ -79,14 +79,12 @@ export const JSONField = ({ data }: { data: field }) => {
     }, [isEditorReady]);
 
     return (
-        <FieldWrapper data={data}>
-            <div className="json-input-field-container">
-                <div
-                    ref={containerRef}
-                    className="monaco-editor-container"
-                    style={{ width: "100%", height: "300px" }}
-                />
-            </div>
-        </FieldWrapper>
+        <div className="json-input-field-container">
+            <div
+                ref={containerRef}
+                className="monaco-editor-container"
+                style={{ width: "100%", height: "300px" }}
+            />
+        </div>
     );
 };

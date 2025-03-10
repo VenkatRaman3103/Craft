@@ -16,6 +16,12 @@ export const pageItemType = pgEnum("item_type", [
     "text_field",
     "multi_select_field",
     "single_select_field",
+    "textarea_field",
+    "number_field",
+    "email_field",
+    "date_field",
+    "color_picker_field",
+    "json_field",
 ]);
 export const scopeEnum = pgEnum("scope_enum", ["global", "page", "collection"]);
 

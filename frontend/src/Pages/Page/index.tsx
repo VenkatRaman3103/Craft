@@ -1,6 +1,6 @@
 import { PageItems } from "@/Components/Blocks";
 import { PageIntro } from "@/Components/PageIntro";
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useParams } from "react-router";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import "./index.scss";
@@ -98,6 +98,11 @@ export const Page = () => {
 
     console.log(selectedBlocks, "selectedBlocks");
     console.log(promtFields, "promtfields");
+    console.log(pageData, "pageData");
+
+    if (!pageData) {
+        return <div>Loading...</div>;
+    }
 
     return (
         <div className="page-content-container">
@@ -108,7 +113,11 @@ export const Page = () => {
             />
             <div className="blocks-list-container">
                 <div className="blocks-list-wrapper">
-                    <PageItems pageItems={pageData?.page_items || []} />
+                    <PageItems
+                        queryClient={queryClient}
+                        pageItems={pageData.page_items || []}
+                        page_id={page_id}
+                    />
 
                     {showFieldPromt && (
                         <div className="fields-prompt-container">

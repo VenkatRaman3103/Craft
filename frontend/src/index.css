@@ -118,6 +118,8 @@ input:focus-visible {
         --primary-color: #101011;
         /* --secondary-color: #17181b; */
         --secondary-color: #1c1d1f;
+        /* --tertiary-color: #181a1b; */
+        --tertiary-color: #1c1d1f;
 
         --base-color-1: #17181b;
         --base-color-2: #101011;

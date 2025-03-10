@@ -133,63 +133,47 @@ export const DateField = ({ data }: { data: field }) => {
     };
 
     return (
-        <FieldWrapper data={data}>
-            <div className="date-picker-container">
-                <div
-                    className="date-input-field"
-                    onClick={() => setIsOpen(!isOpen)}
-                >
-                    {formatDate(date)}
-                    <span className="calendar-icon">
-                        <CalendarDays size={20} color={lightFont} />
-                    </span>
-                </div>
+        <div className="date-picker-container">
+            <div
+                className="date-input-field"
+                onClick={() => setIsOpen(!isOpen)}
+            >
+                {formatDate(date)}
+                <span className="calendar-icon">
+                    <CalendarDays size={20} color={lightFont} />
+                </span>
+            </div>
 
-                {isOpen && (
-                    <div className="calendar-dropdown" ref={calendarRef}>
-                        <div className="calendar-header">
-                            <button
-                                className="month-nav"
-                                onClick={handlePrevMonth}
-                            >
-                                ←
-                            </button>
-                            <span className="current-month">
-                                {currentMonth.toLocaleString("default", {
-                                    month: "long",
-                                    year: "numeric",
-                                })}
-                            </span>
-                            <button
-                                className="month-nav"
-                                onClick={handleNextMonth}
-                            >
-                                →
-                            </button>
-                        </div>
+            {isOpen && (
+                <div className="calendar-dropdown" ref={calendarRef}>
+                    <div className="calendar-header">
+                        <button className="month-nav" onClick={handlePrevMonth}>
+                            ←
+                        </button>
+                        <span className="current-month">
+                            {currentMonth.toLocaleString("default", {
+                                month: "long",
+                                year: "numeric",
+                            })}
+                        </span>
+                        <button className="month-nav" onClick={handleNextMonth}>
+                            →
+                        </button>
+                    </div>
 
-                        <div className="calendar-weekdays">
-                            {[
-                                "Sun",
-                                "Mon",
-                                "Tue",
-                                "Wed",
-                                "Thu",
-                                "Fri",
-                                "Sat",
-                            ].map((day) => (
+                    <div className="calendar-weekdays">
+                        {["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"].map(
+                            (day) => (
                                 <div key={day} className="weekday">
                                     {day}
                                 </div>
-                            ))}
-                        </div>
-
-                        <div className="calendar-days">
-                            {renderCalendarDays()}
-                        </div>
+                            ),
+                        )}
                     </div>
-                )}
-            </div>
-        </FieldWrapper>
+
+                    <div className="calendar-days">{renderCalendarDays()}</div>
+                </div>
+            )}
+        </div>
     );
 };

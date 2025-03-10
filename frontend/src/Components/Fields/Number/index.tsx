@@ -12,16 +12,14 @@ export const Number = ({ data }: { data: field }) => {
     }
 
     return (
-        <FieldWrapper data={data}>
-            <div className="text-input-field-container">
-                {/* <div>{data.name}</div> */}
-                <input
-                    className="text-input-field"
-                    type="text"
-                    value={number}
-                    onChange={handleTextFieldChange}
-                />
-            </div>
-        </FieldWrapper>
+        <div className="text-input-field-container">
+            {/* <div>{data.name}</div> */}
+            <input
+                className="text-input-field"
+                type="text"
+                value={number}
+                onChange={handleTextFieldChange}
+            />
+        </div>
     );
 };

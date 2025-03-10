@@ -12,15 +12,13 @@ export const Email = ({ data }: { data: field }) => {
     }
 
     return (
-        <FieldWrapper data={data}>
-            <div className="email-input-field-container">
-                <input
-                    className="email-input-field"
-                    type="text"
-                    value={email}
-                    onChange={handleTextFieldChange}
-                />
-            </div>
-        </FieldWrapper>
+        <div className="email-input-field-container">
+            <input
+                className="email-input-field"
+                type="text"
+                value={email}
+                onChange={handleTextFieldChange}
+            />
+        </div>
     );
 };

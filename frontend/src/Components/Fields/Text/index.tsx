@@ -11,21 +11,14 @@ export const Text = ({ data }: { data: field }) => {
         setText(event.target.value);
     }
 
-    // if (!data) {
-    //     return;
-    // }
-
     return (
-        <FieldWrapper data={data}>
-            <div className="text-input-field-container">
-                {/* <div>{data.name}</div> */}
-                <input
-                    className="text-input-field"
-                    type="text"
-                    value={text}
-                    onChange={handleTextFieldChange}
-                />
-            </div>
-        </FieldWrapper>
+        <div className="text-input-field-container">
+            <input
+                className="text-input-field"
+                type="text"
+                value={text}
+                onChange={handleTextFieldChange}
+            />
+        </div>
     );
 };

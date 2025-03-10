@@ -1,10 +1,5 @@
 export const sampleFields = [
     {
-        id: "field-2",
-        name: "Json Field",
-        type: "json_field",
-    },
-    {
         id: "field1",
         name: "Text Field",
         type: "text_field",
@@ -44,6 +39,11 @@ export const sampleFields = [
         id: "field8",
         name: "Email Field",
         type: "email_field",
+    },
+    {
+        id: "field-2",
+        name: "Json Field",
+        type: "json_field",
     },
     {
         id: "field9",

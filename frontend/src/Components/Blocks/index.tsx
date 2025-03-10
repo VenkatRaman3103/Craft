@@ -9,14 +9,16 @@ import { BlockMenuOptions } from "../BlockMenuOptions";
 import { backendUrl } from "@/config";
 import axios from "axios";
 import { FieldsList } from "../Fields/FieldsList";
-
-// Sample field options (replace with your actual data source)
+import autoAnimate from "@formkit/auto-animate";
+import { FieldWrapper } from "../Fields/FieldWrapper";
 
 export const PageItems = ({
     pageItems,
     isSidebarOpen,
     onScopeChange,
     onAddFields,
+    queryClient,
+    page_id,
 }: {
     pageItems: blockType[];
     isSidebarOpen?: boolean;
@@ -27,6 +29,8 @@ export const PageItems = ({
         withContent: boolean,
     ) => void;
     onAddFields?: (blockId: string) => void;
+    queryClient: any;
+    page_id: string | undefined;
 }) => {
     const [pageItemsList, setPageItemsList] = useState<blockType[]>(pageItems);
 
@@ -54,8 +58,6 @@ export const PageItems = ({
         );
     }
 
-    console.log(pageItemsList, "pageItems");
-
     return (
         <div className="blocks-container">
             {pageItemsList.map((item: any, index) => {
@@ -63,7 +65,7 @@ export const PageItems = ({
                     if (item.block) {
                         return (
                             <Block
-                                key={index}
+                                key={item.item_id || index}
                                 block={item.block}
                                 isSidebarOpen={isSidebarOpen}
                                 onScopeChange={onScopeChange}
@@ -74,10 +76,17 @@ export const PageItems = ({
                         );
                     }
                 } else {
-                    const Field = FieldsList[item.item_type];
+                    const Field = FieldsList[item?.item_type];
 
-                    return Field ? (
-                        <Field key={index} data={item[item.item_type]} />
+                    return item[item.item_type] ? (
+                        <FieldWrapper
+                            key={item.item_id || index}
+                            data={item[item.item_type]}
+                            queryClient={queryClient}
+                            page_id={page_id}
+                        >
+                            <Field data={item[item.item_type]} />
+                        </FieldWrapper>
                     ) : (
                         <p key={index}>Yet to be done</p>
                     );
@@ -104,7 +113,7 @@ export const Block = ({
         withContent: boolean,
     ) => void;
     item_id?: string;
-    onDelete?: (block_id: string) => void;
+    onDelete?: (block_id: string, item_id?: string) => void;
     onAddFields?: (blockId: string) => void;
 }) => {
     const [isCollapsed, setIsCollapsed] = useState(false);
@@ -116,7 +125,15 @@ export const Block = ({
     const optionsRef = useRef<HTMLDivElement>(null);
     const nameInputRef = useRef<HTMLDivElement>(null);
     const ellipsisRef = useRef<HTMLDivElement>(null);
+    const fieldsContainerRef = useRef<HTMLDivElement>(null);
     const [fields, setFields] = useState([]);
+
+    // Apply animations to fields container
+    useEffect(() => {
+        if (fieldsContainerRef.current) {
+            autoAnimate(fieldsContainerRef.current);
+        }
+    }, [fieldsContainerRef]);
 
     const toggleCollapse = () => {
         setIsCollapsed(!isCollapsed);
@@ -182,8 +199,6 @@ export const Block = ({
         setFields(block.fields);
     }, [block]);
 
-    console.log(block, "blockForPage");
-
     return (
         <div className="block-container">
             <div className="block-wrapper">
@@ -222,6 +237,7 @@ export const Block = ({
 
                 <div
                     className={`fields-container ${isCollapsed ? "collapsed" : ""}`}
+                    ref={fieldsContainerRef}
                 >
                     <Fields fields={block.fields} />
                 </div>

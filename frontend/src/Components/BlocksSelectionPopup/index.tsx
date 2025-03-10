@@ -16,7 +16,6 @@ type BlockOption = {
 type SelectedBlock = {
     blockId: string;
     blockType: string;
-    instanceId?: string;
 };
 
 interface BlockSelectionPopupProps {
@@ -39,7 +38,7 @@ export const BlockSelectionPopup: React.FC<BlockSelectionPopupProps> = ({
     >([]);
     const [searchTerm, setSearchTerm] = useState("");
 
-    // Reset state completely when popup opens
+    // Reset state when popup opens
     // useEffect(() => {
     //     if (isOpen) {
     //         setLocalSelectedBlocks([]);
@@ -79,7 +78,6 @@ export const BlockSelectionPopup: React.FC<BlockSelectionPopupProps> = ({
                     {
                         blockId: block.id,
                         blockType: block.type,
-                        instanceId: `${block.id}-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`,
                     },
                 ];
             }
@@ -88,6 +86,7 @@ export const BlockSelectionPopup: React.FC<BlockSelectionPopupProps> = ({
 
     const handleAddSelected = () => {
         onBlocksSelected(localSelectedBlocks);
+        setLocalSelectedBlocks([]);
         onClose();
     };
 
@@ -107,6 +106,22 @@ export const BlockSelectionPopup: React.FC<BlockSelectionPopupProps> = ({
         }
         return true;
     });
+
+    // Filter blocks by type if needed
+    const displayedBlocks =
+        selectedBlocksType === "all-blocks"
+            ? filteredBlocks
+            : filteredBlocks.filter((block) => {
+                  // Add logic here to filter by custom or template blocks based on block properties
+                  if (selectedBlocksType === "custom-blocks") {
+                      // Example filter condition for custom blocks
+                      return block.type.includes("custom");
+                  } else if (selectedBlocksType === "template-blocks") {
+                      // Example filter condition for template blocks
+                      return block.type.includes("template");
+                  }
+                  return true;
+              });
 
     const typeOfBlocks = [
         { label: "All Blocks", value: "all-blocks" },
@@ -164,7 +179,7 @@ export const BlockSelectionPopup: React.FC<BlockSelectionPopupProps> = ({
                 </div>
 
                 <div className="blocks-grid">
-                    {filteredBlocks.map((block) => (
+                    {displayedBlocks.map((block) => (
                         <div
                             key={block.id}
                             className={`block-option ${
