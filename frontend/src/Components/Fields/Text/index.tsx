@@ -4,11 +4,17 @@ import { FieldWrapper } from "../FieldWrapper";
 import { useState } from "react";
 import * as React from "react";
 
-export const Text = ({ data }: { data: field }) => {
-    const [text, setText] = useState(data.value);
-
+export const Text = ({
+    data,
+    onChange,
+}: {
+    data: field;
+    onChange?: (value: string) => void;
+}) => {
     function handleTextFieldChange(event: React.ChangeEvent<HTMLInputElement>) {
-        setText(event.target.value);
+        if (onChange) {
+            onChange(event.target.value);
+        }
     }
 
     return (
@@ -16,8 +22,9 @@ export const Text = ({ data }: { data: field }) => {
             <input
                 className="text-input-field"
                 type="text"
-                value={text}
+                value={data.value}
                 onChange={handleTextFieldChange}
+                readOnly={!onChange} // Make it read-only when no onChange handler is provided
             />
         </div>
     );

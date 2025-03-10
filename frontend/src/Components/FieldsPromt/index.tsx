@@ -237,13 +237,6 @@ export const FieldsPromt = ({
                     <button
                         className="create-block-button"
                         onClick={handleCreteField}
-                        // disabled={
-                        //     !fieldName ||
-                        //     (field.type === "multi_select_field" &&
-                        //         multiSelectOptions.length === 0) ||
-                        //     (field.type === "text_field" && !text) ||
-                        //     (field.type === "number_field" && !text)
-                        // }
                     >
                         Create Block
                     </button>

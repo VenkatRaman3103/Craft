@@ -7,6 +7,7 @@ import { FieldMenuOptions } from "@/Components/FieldMenuOptions";
 import { backendUrl } from "@/config";
 import axios from "axios";
 import { useMutation } from "@tanstack/react-query";
+import { TextFieldPromt } from "@/Components/FieldsPromt/TextFieldPromt";
 
 export const FieldWrapper = ({
     children,
@@ -29,6 +30,7 @@ export const FieldWrapper = ({
 
     const [isEditable, setIsEditable] = useState(false);
     const [label, setLabel] = useState(data?.label || "");
+    const [text, setText] = useState(data?.value || "");
 
     const optionsRef = useRef<HTMLDivElement>(null);
     const nameInputRef = useRef<HTMLDivElement>(null);
@@ -148,11 +150,21 @@ export const FieldWrapper = ({
     );
 
     async function onUpdate(data: any) {
-        const updateData = {
+        let payload = {
             field_id: data.field_id,
             label: label,
         };
-        updateFieldMutation.mutate(updateData);
+
+        // Add value based on field type
+        if (data.type === "text_field") {
+            payload = {
+                ...payload,
+                value: text,
+            };
+        }
+        // Add other field types as needed
+
+        updateFieldMutation.mutate(payload);
     }
 
     function onEdit() {}
@@ -221,6 +233,20 @@ export const FieldWrapper = ({
     function handleEdit() {
         setIsEditable(true);
         setShowOptions(false);
+
+        if (data.type === "text_field") {
+            setText(data.value);
+        }
+    }
+
+    function renderEditComponent() {
+        switch (data.type) {
+            case "text_field":
+                return <TextFieldPromt text={text} setText={setText} />;
+            // Add other field types as needed
+            default:
+                return <div>Unsupported field type</div>;
+        }
     }
 
     console.log(data, "dataField");
@@ -270,13 +296,22 @@ export const FieldWrapper = ({
                     handleDelete={handleDelete}
                     withContent={withContent}
                     setWithContent={setWithContent}
-                    // isEditable={isEditable}
-                    // setIsEditable={setIsEditable}
                     handleEdit={handleEdit}
                 />
             )}
 
-            {children}
+            {isEditable ? (
+                <div className="text-input-field-container">
+                    <input
+                        className="text-input-field"
+                        type="text"
+                        value={text}
+                        onChange={(e) => setText(e.target.value)}
+                    />
+                </div>
+            ) : (
+                children
+            )}
 
             {isEditable && (
                 <div className="action-btn-wrapper">
@@ -288,7 +323,7 @@ export const FieldWrapper = ({
                     </button>
                     <button
                         className="create-block-button"
-                        onClick={handleUpdate}
+                        onClick={() => onUpdate(data)}
                     >
                         Update Field
                     </button>
