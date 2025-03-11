@@ -12,11 +12,11 @@ import { field } from "@/Types/fields";
 
 // Define Ayu Dark theme colors
 const ayuDarkColors = {
-    background: "101011",
+    background: "#101011",
     foreground: "#B3B1AD",
     selection: "#253340",
     cursor: "#E6B450",
-    gutterBackground: "#0A0E14",
+    gutterBackground: "#101011",
     gutterForeground: "#3D424D",
 
     // Syntax highlighting colors
@@ -54,13 +54,13 @@ const ayuDark = EditorView.theme({
     ".cm-gutters": {
         backgroundColor: ayuDarkColors.gutterBackground,
         color: ayuDarkColors.gutterForeground,
-        borderRight: "1px solid rgba(61, 66, 77, 0.5)",
+        borderRight: "0px solid rgba(61, 66, 77, 0.5)",
     },
     ".cm-activeLine": {
-        backgroundColor: "rgba(37, 51, 64, 0.5)",
+        backgroundColor: "#1c1d1f",
     },
     ".cm-activeLineGutter": {
-        backgroundColor: "rgba(37, 51, 64, 0.5)",
+        backgroundColor: "#1c1d1f",
     },
 });
 
