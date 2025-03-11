@@ -22,51 +22,71 @@ import {
     deleteTextareaField,
     deleteTextField,
 } from "./delete.js";
-import { patchUpdateTextField } from "./update.js";
+import {
+    patchUpdateTextField,
+    patchUpdateMultiSelectField,
+    patchUpdateSingleSelectField,
+    patchUpdateNumberField,
+    patchUpdateEmailField,
+    patchUpdateDateField,
+    patchUpdateColorPickerField,
+    patchUpdateTextareaField,
+    patchUpdateJsonField,
+} from "./update.js";
 
 export const fieldRoute = express.Router();
 
-// TODO: make the route for creating text field field
-
-// text field
+// Text field routes
 fieldRoute.get("/fields/text", readTextFields); // READ: all text fields
 fieldRoute.post("/fields/text", createTextField); // CREATE: text field
 fieldRoute.delete("/fields/text_field/:field_id", deleteTextField); // DELETE: text field by field_id
-fieldRoute.patch("/fields/text_field/:field_id", patchUpdateTextField);
+fieldRoute.patch("/fields/text_field/:field_id", patchUpdateTextField); // UPDATE: text field by field_id
 
-// multi select
+// Multi-select field routes
 fieldRoute.post("/fields/mutli_select", createMultiSelectField); // CREATE: multi select
 fieldRoute.delete("/fields/multi_select/:field_id", deleteMultiSelectField); // DELETE: multi select field by field_id
+fieldRoute.patch("/fields/multi_select/:field_id", patchUpdateMultiSelectField); // UPDATE: multi select field by field_id
 
-// single select
-
+// Single-select field routes
 fieldRoute.post("/fields/single_select", createSingleSelectField); // CREATE: single select
-fieldRoute.delete("/fields/single_select/:field_id", deleteSingleSelectField); // DELETE: text field by field_id
+fieldRoute.delete("/fields/single_select/:field_id", deleteSingleSelectField); // DELETE: single select field by field_id
+fieldRoute.patch(
+    "/fields/single_select/:field_id",
+    patchUpdateSingleSelectField,
+); // UPDATE: single select field by field_id
 
-// number field
+// Number field routes
 fieldRoute.post("/fields/number", createNumberField); // CREATE: number field
 fieldRoute.delete("/fields/number_field/:field_id", deleteNumberField); // DELETE: number field by field_id
+fieldRoute.patch("/fields/number_field/:field_id", patchUpdateNumberField); // UPDATE: number field by field_id
 
-// email field
-
+// Email field routes
 fieldRoute.post("/fields/email", createEmailField); // CREATE: email field
 fieldRoute.delete("/fields/email_field/:field_id", deleteEmailField); // DELETE: email field by field_id
+fieldRoute.patch("/fields/email_field/:field_id", patchUpdateEmailField); // UPDATE: email field by field_id
 
-// date field
+// Date field routes
 fieldRoute.post("/fields/date", createDateField); // CREATE: date field
 fieldRoute.delete("/fields/date_field/:field_id", deleteDateField); // DELETE: date field by field_id
+fieldRoute.patch("/fields/date_field/:field_id", patchUpdateDateField); // UPDATE: date field by field_id
 
-// color picker
-fieldRoute.post("/fields/color_picker", createColorPickerField); // CREATE: color picker
+// Color picker field routes
+fieldRoute.post("/fields/color_picker", createColorPickerField); // CREATE: color picker field
 fieldRoute.delete(
     "/fields/color_picker_field/:field_id",
     deleteColorPickerField,
 ); // DELETE: color picker field by field_id
+fieldRoute.patch(
+    "/fields/color_picker_field/:field_id",
+    patchUpdateColorPickerField,
+); // UPDATE: color picker field by field_id
 
-// textarea
-fieldRoute.post("/fields/textarea_field", createTextAreaField); // CREATE: color picker
+// Textarea field routes
+fieldRoute.post("/fields/textarea_field", createTextAreaField); // CREATE: textarea field
 fieldRoute.delete("/fields/textarea_field/:field_id", deleteTextareaField); // DELETE: textarea field by field_id
+fieldRoute.patch("/fields/textarea_field/:field_id", patchUpdateTextareaField); // UPDATE: textarea field by field_id
 
-// json
-fieldRoute.post("/fields/json_field", createJsonField); // CREATE: json
+// JSON field routes
+fieldRoute.post("/fields/json_field", createJsonField); // CREATE: json field
 fieldRoute.delete("/fields/json_field/:field_id", deleteJsonField); // DELETE: json field by field_id
+fieldRoute.patch("/fields/json_field/:field_id", patchUpdateJsonField); // UPDATE: json field by field_id

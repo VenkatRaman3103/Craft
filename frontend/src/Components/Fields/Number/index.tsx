@@ -1,8 +1,7 @@
 import { field } from "@/Types/fields";
 import "./index.scss";
 import { FieldWrapper } from "../FieldWrapper";
-import { useState } from "react";
-import * as React from "react";
+import { useEffect, useState } from "react";
 
 export const Number = ({ data }: { data: field }) => {
     const [number, setNumber] = useState(data.value);
@@ -10,6 +9,10 @@ export const Number = ({ data }: { data: field }) => {
     function handleTextFieldChange(event: React.ChangeEvent<HTMLInputElement>) {
         setNumber(event.target.value);
     }
+
+    useEffect(() => {
+        setNumber(data.value);
+    }, [data.value]);
 
     return (
         <div className="text-input-field-container">

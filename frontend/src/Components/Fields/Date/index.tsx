@@ -5,13 +5,28 @@ import { CalendarDays } from "lucide-react";
 import { lightFont } from "@/Styles/base";
 
 export const DateField = ({ data }: { data: field }) => {
-    const [date, setDate] = useState(data.value ? new Date(data.value) : null);
+    const [date, setDate] = useState(
+        data?.value ? new Date(data?.value) : null,
+    );
     const [isOpen, setIsOpen] = useState(false);
     const calendarRef = useRef(null);
+
+    console.log(date, "date");
+
+    useEffect(() => {
+        // Convert data.value to a Date object if it's not null
+        setDate(data.value ? new Date(data.value) : null);
+    }, [data.value]);
 
     // Format date to display
     const formatDate = (date) => {
         if (!date) return "Select a date";
+
+        // Make sure date is a Date object
+        if (!(date instanceof Date)) return "Select a date";
+
+        // Check if date is valid
+        if (isNaN(date.getTime())) return "Select a date";
 
         const day = date.getDate();
         const month = date.toLocaleString("default", { month: "long" });
@@ -31,7 +46,7 @@ export const DateField = ({ data }: { data: field }) => {
 
     // State for current month being viewed
     const [currentMonth, setCurrentMonth] = useState(
-        date ? new Date(date) : new Date(),
+        date && date instanceof Date ? new Date(date) : new Date(),
     );
 
     // Handle date selection
@@ -113,7 +128,7 @@ export const DateField = ({ data }: { data: field }) => {
                 day,
             );
             const isSelected =
-                date &&
+                date instanceof Date &&
                 date.getDate() === day &&
                 date.getMonth() === currentMonth.getMonth() &&
                 date.getFullYear() === currentMonth.getFullYear();

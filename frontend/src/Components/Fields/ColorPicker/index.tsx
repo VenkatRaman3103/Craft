@@ -21,6 +21,32 @@ export const ColorPicker = ({ data }) => {
     const pickerRef = useRef(null);
     const saturationRef = useRef(null);
 
+    console.log(data, "dataColorCode");
+
+    useEffect(() => {
+        const convertColorData = (data) => {
+            if (!data)
+                return {
+                    hex: "#000000",
+                    rgb: "rgb(0, 0, 0)",
+                    rgba: "rgba(0, 0, 0, 1)",
+                    hsl: "hsl(0, 0%, 0%)",
+                    hsla: "hsla(0, 0%, 0%, 1)",
+                };
+
+            return {
+                hex: data.hex || "#000000",
+                rgb: `rgb(${data.rgb?.r || 0}, ${data.rgb?.g || 0}, ${data.rgb?.b || 0})`,
+                rgba: `rgba(${data.rgba?.r || 0}, ${data.rgba?.g || 0}, ${data.rgba?.b || 0}, ${data.rgba?.a || 1})`,
+                hsl: `hsl(${data.hsl?.h || 0}, ${data.hsl?.s || 0}%, ${data.hsl?.l || 0}%)`,
+                hsla: `hsla(${data.hsla?.h || 0}, ${data.hsla?.s || 0}%, ${data.hsla?.l || 0}%, ${data.hsla?.a || 1})`,
+            };
+        };
+        if (data) {
+            setColorFormats(convertColorData(data));
+        }
+    }, [data]);
+
     // const handleColorChange = (colorData) => {
     //     setSelectedColor(colorData);
     //     console.log("Color changed:", colorData);

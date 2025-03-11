@@ -1,137 +1,143 @@
 import React, { useRef, useEffect, useState } from "react";
-import * as monaco from "monaco-editor";
+import { EditorView, basicSetup } from "codemirror";
+import { json } from "@codemirror/lang-json";
+import { EditorState } from "@codemirror/state";
+import { keymap } from "@codemirror/view";
+import { defaultKeymap, indentWithTab } from "@codemirror/commands";
+import { oneDark } from "@codemirror/theme-one-dark";
 import "./index.scss";
 
-export const JSONPromptField = ({ json, setJSON }) => {
+export const JSONPromptField = ({ json: jsonProp, setJSON }) => {
     const editorRef = useRef(null);
     const containerRef = useRef(null);
+    const viewRef = useRef(null);
+    const isEditingRef = useRef(false);
     const [isEditorReady, setIsEditorReady] = useState(false);
+
+    // Store the initial and current value
     const [internalValue, setInternalValue] = useState(
-        typeof json === "string" ? json : JSON.stringify(json, null, 2),
+        typeof jsonProp === "string"
+            ? jsonProp
+            : JSON.stringify(jsonProp, null, 2),
     );
 
-    // Use local state to track user edits without immediately syncing with parent
-    const isUserEditingRef = useRef(false);
+    // Keep track of the last value we sent to parent
+    const lastSyncedValueRef = useRef(internalValue);
 
-    monaco.editor.defineTheme("myCustomTheme", {
-        base: "vs-dark",
-        inherit: true,
-        rules: [],
-        colors: {
-            "editor.background": "#101011",
-        },
-    });
-
-    // Setup editor only once on mount
+    // Initialize the editor
     useEffect(() => {
-        if (containerRef.current && !editorRef.current) {
-            // Initialize Monaco editor
-            const editor = monaco.editor.create(containerRef.current, {
-                value: internalValue,
-                language: "json",
-                theme: "myCustomTheme",
-                automaticLayout: true,
-                minimap: { enabled: false },
-                scrollBeyondLastLine: false,
-                fontSize: 16,
-                lineNumbers: "on",
-                tabSize: 4,
-                wordWrap: "on",
-                scrollbar: {
-                    useShadows: false,
-                    verticalScrollbarSize: 10,
-                    horizontalScrollbarSize: 10,
-                    alwaysConsumeMouseWheel: false,
-                },
-                formatOnPaste: true,
+        if (containerRef.current && !viewRef.current) {
+            const startState = EditorState.create({
+                doc: internalValue,
+                extensions: [
+                    basicSetup,
+                    json(),
+                    oneDark,
+                    keymap.of([indentWithTab, ...defaultKeymap]),
+                    EditorView.updateListener.of((update) => {
+                        if (update.docChanged) {
+                            isEditingRef.current = true;
+                            const newValue = update.state.doc.toString();
+                            setInternalValue(newValue);
+
+                            // Debounce the parent update
+                            clearTimeout(editorRef.current);
+                            editorRef.current = setTimeout(() => {
+                                try {
+                                    // Try to parse JSON to validate
+                                    JSON.parse(newValue);
+
+                                    // Only update parent if valid JSON and value has changed
+                                    if (
+                                        newValue !== lastSyncedValueRef.current
+                                    ) {
+                                        setJSON(newValue);
+                                        lastSyncedValueRef.current = newValue;
+                                    }
+                                } catch (e) {
+                                    console.warn("Invalid JSON", e);
+                                }
+
+                                // After debounce completes, allow external updates again
+                                setTimeout(() => {
+                                    isEditingRef.current = false;
+                                }, 200);
+                            }, 800);
+                        }
+                    }),
+                    EditorView.domEventHandlers({
+                        focus: () => {
+                            isEditingRef.current = true;
+                        },
+                        blur: () => {
+                            // Small delay before allowing external updates to ensure
+                            // the blur event doesn't immediately reset editing state
+                            setTimeout(() => {
+                                isEditingRef.current = false;
+                            }, 200);
+                        },
+                    }),
+                ],
             });
 
-            // Save editor reference
-            editorRef.current = editor;
+            // Create the editor view
+            const view = new EditorView({
+                state: startState,
+                parent: containerRef.current,
+            });
+
+            viewRef.current = view;
             setIsEditorReady(true);
 
-            // Clean up on unmount
+            // Clean up
             return () => {
-                editor.dispose();
-                editorRef.current = null;
+                if (viewRef.current) {
+                    clearTimeout(editorRef.current);
+                    viewRef.current.destroy();
+                    viewRef.current = null;
+                }
             };
         }
-    }, [internalValue]);
+    }, []);
 
-    // Handle content changes with debounce
+    // Handle changes from parent props
     useEffect(() => {
-        if (!isEditorReady || !editorRef.current) return;
+        const externalValue =
+            typeof jsonProp === "string"
+                ? jsonProp
+                : JSON.stringify(jsonProp, null, 2);
 
-        let timeoutId;
-        const changeHandler = () => {
-            if (!editorRef.current) return;
+        // Only update when editor is ready, not editing, and value has changed
+        if (
+            isEditorReady &&
+            viewRef.current &&
+            externalValue !== internalValue &&
+            !isEditingRef.current
+        ) {
+            // Store cursor position
+            const prevSel = viewRef.current.state.selection;
 
-            // Mark that user is editing (prevents external updates during user typing)
-            isUserEditingRef.current = true;
+            // Create a new state with the updated content
+            const newState = EditorState.create({
+                doc: externalValue,
+                extensions: viewRef.current.state.extensions,
+            });
 
-            // Update internal state immediately to prevent cursor jump
-            const currentValue = editorRef.current.getValue();
-            setInternalValue(currentValue);
+            // Update editor
+            viewRef.current.setState(newState);
 
-            // Debounce the parent update
-            clearTimeout(timeoutId);
-            timeoutId = setTimeout(() => {
-                try {
-                    // Try to parse JSON to validate it
-                    JSON.parse(currentValue);
-                    // Only update parent if valid JSON
-                    setJSON(currentValue);
-                } catch (e) {
-                    // Don't update parent if invalid JSON
-                    console.warn("Invalid JSON", e);
-                }
-
-                // Reset editing flag after debounce
-                setTimeout(() => {
-                    isUserEditingRef.current = false;
-                }, 100);
-            }, 500); // 500ms debounce
-        };
-
-        const disposable =
-            editorRef.current.onDidChangeModelContent(changeHandler);
-
-        return () => {
-            clearTimeout(timeoutId);
-            disposable.dispose();
-        };
-    }, [isEditorReady, setJSON]);
-
-    // Only update from props when user is not actively editing
-    useEffect(() => {
-        if (isEditorReady && editorRef.current && !isUserEditingRef.current) {
-            const newValue =
-                typeof json === "string" ? json : JSON.stringify(json, null, 2);
-
-            if (internalValue !== newValue) {
-                // Store cursor/selection state
-                const selections = editorRef.current.getSelections();
-                const scrollPosition = editorRef.current.getScrollPosition();
-
-                // Update value
-                editorRef.current.setValue(newValue);
-                setInternalValue(newValue);
-
-                // Restore cursor/selection
-                if (selections && selections.length) {
-                    editorRef.current.setSelections(selections);
-                    editorRef.current.setScrollPosition(scrollPosition);
-                }
-            }
+            // Update internal state
+            setInternalValue(externalValue);
+            lastSyncedValueRef.current = externalValue;
         }
-    }, [isEditorReady, json, internalValue]);
+    }, [isEditorReady, jsonProp, internalValue]);
 
     return (
         <div className="json-input-field-container">
             <div
                 ref={containerRef}
-                className="monaco-editor-container"
-                style={{ width: "100%", height: "300px" }}
+                className="codemirror-editor-container"
+                style={{ width: "100%", height: "300px", overflow: "auto" }}
             />
         </div>
     );

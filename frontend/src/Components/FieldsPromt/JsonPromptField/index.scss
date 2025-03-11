@@ -1,42 +1,41 @@
 .json-input-field-container {
   width: 96%;
-  height: auto;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-
-  border-radius: 10px;
+  border-radius: 8px;
   overflow: hidden;
-  padding: 10px;
-  background-color: var(--field-color);
+  border: 1px solid #3a3a3c;
 
-  .json-input-field {
-    height: 300px;
-    width: 96%;
-    border-radius: 10px;
-    font-size: 14px;
-    font-weight: 400;
-    color: var(--dark-font);
-    background-color: var(--field-color);
-    overflow: hidden;
+  .codemirror-editor-container {
+    /* Base editor styling */
+    font-family: 'Menlo', 'Monaco', 'Courier New', monospace;
 
-    // Customize Monaco editor's appearance to match your input style
-    .monaco-editor {
-      border-radius: 10px;
-      padding-left: 10px;
+    /* Style the CodeMirror container */
+    .cm-editor {
+      height: 100%;
 
-      .overflow-guard {
-        border-radius: 10px;
+      .cm-scroller {
+        overflow: auto;
       }
 
-      // Adjust cursor style
-      .monaco-editor-background {
-        border-radius: 10px;
+      .cm-content {
+        padding: 10px 0;
+      }
+
+      /* Optional: custom styles for JSON syntax highlighting */
+      .cm-string {
+        color: #a8ff60;
+      }
+
+      .cm-property {
+        color: #66d9ef;
+      }
+
+      .cm-number {
+        color: #fd971f;
+      }
+
+      .cm-atom {
+        color: #ae81ff;
       }
     }
   }
-}
-
-.monaco-editor {
-  background-color: red !important;
 }

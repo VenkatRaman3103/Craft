@@ -8,6 +8,14 @@ import { backendUrl } from "@/config";
 import axios from "axios";
 import { useMutation } from "@tanstack/react-query";
 import { TextFieldPromt } from "@/Components/FieldsPromt/TextFieldPromt";
+import { MultiSelectPrompt } from "@/Components/FieldsPromt/MultiSelectPromt";
+import { SingleSelectPromt } from "@/Components/FieldsPromt/SingleSelectPromt";
+import { NumberPrompt } from "@/Components/FieldsPromt/NumberPrompt";
+import { EmailPrompt } from "@/Components/FieldsPromt/EmailPrompt";
+import { DatePrompt } from "@/Components/FieldsPromt/DatePrompt";
+import { ColorPickerPrompt } from "@/Components/FieldsPromt/ColorPickerPrompt";
+import { TextareaFieldPrompt } from "@/Components/FieldsPromt/TextareaPrompt";
+import { JSONPromptField } from "@/Components/FieldsPromt/JsonPromptField";
 
 export const FieldWrapper = ({
     children,
@@ -30,7 +38,49 @@ export const FieldWrapper = ({
 
     const [isEditable, setIsEditable] = useState(false);
     const [label, setLabel] = useState(data?.label || "");
+
+    // State for different field types
     const [text, setText] = useState(data?.value || "");
+    const [number, setNumber] = useState(data?.value || 0);
+    const [email, setEmail] = useState(data?.value || "");
+    const [date, setDate] = useState(data?.value ? new Date(data.value) : null);
+    const [color, setColor] = useState(data?.value || "#3498db");
+    const [textarea, setTextarea] = useState(data?.value || "");
+    const [jsonData, setJsonData] = useState(
+        data?.value || '{"example": "data"}',
+    );
+
+    // Multi-select fields
+    const [multiSelectOptions, setMultiSelectOptions] = useState(
+        data?.options || [],
+    );
+    const [checkedMultiSelectItems, setCheckedMultiSelectItems] = useState<{
+        [key: string]: boolean;
+    }>(() => {
+        const initialState: { [key: string]: boolean } = {};
+        if (data?.selectedOptions && data?.options) {
+            data.options.forEach((option: string, index: number) => {
+                initialState[index] = data.selectedOptions.includes(option);
+            });
+        }
+        return initialState;
+    });
+
+    // Single-select fields
+    const [singleSelectOptions, setSingleSelectOptions] = useState(
+        data?.options || [],
+    );
+    const [checkedSingleSelectItems, setCheckedSingleSelectItems] = useState<{
+        [key: string]: boolean;
+    }>(() => {
+        const initialState: { [key: string]: boolean } = {};
+        if (data?.selectedOptions && data?.options) {
+            data.options.forEach((option: string, index: number) => {
+                initialState[index] = data.selectedOptions.includes(option);
+            });
+        }
+        return initialState;
+    });
 
     const optionsRef = useRef<HTMLDivElement>(null);
     const nameInputRef = useRef<HTMLDivElement>(null);
@@ -117,7 +167,6 @@ export const FieldWrapper = ({
 
     async function onDelete(data: any) {
         console.log(data, "data to be deleted");
-
         fieldMutation.mutate(data);
     }
 
@@ -125,7 +174,7 @@ export const FieldWrapper = ({
         async (updateData: any) => {
             try {
                 const response = await axios.patch(
-                    `${backendUrl}/fields/text_field/${updateData.field_id}`,
+                    `${backendUrl}/fields/${updateData.type}/${updateData.field_id}`,
                     updateData,
                 );
                 console.log(response.data, "Updated");
@@ -152,8 +201,11 @@ export const FieldWrapper = ({
     async function onUpdate(data: any) {
         let payload = {
             field_id: data.field_id,
+            type: data.type,
             label: label,
         };
+
+        console.log(data, "data to be updated");
 
         // Add value based on field type
         if (data.type === "text_field") {
@@ -161,8 +213,65 @@ export const FieldWrapper = ({
                 ...payload,
                 value: text,
             };
+        } else if (data.type === "multi_select") {
+            const selectedOptions = multiSelectOptions
+                .filter((opt, index) => checkedMultiSelectItems[index])
+                .map((opt) => opt);
+
+            payload = {
+                ...payload,
+                options: multiSelectOptions,
+                selectedOptions,
+            };
+        } else if (data.type === "single_select") {
+            const selectedOptions = singleSelectOptions
+                .filter(
+                    (opt: string, index: number) =>
+                        checkedSingleSelectItems[index],
+                )
+                .map((opt: string) => opt);
+
+            payload = {
+                ...payload,
+                options: singleSelectOptions,
+                selectedOptions,
+            };
+        } else if (data.type === "number_field") {
+            payload = {
+                ...payload,
+                value: number,
+            };
+        } else if (data.type === "email_field") {
+            payload = {
+                ...payload,
+                value: email,
+            };
+        } else if (data.type === "date_field") {
+            payload = {
+                ...payload,
+                value: date ? date.toISOString() : null,
+            };
+        } else if (data.type === "color_picker_field") {
+            payload = {
+                ...payload,
+                value: color.value,
+                hex: color.hex,
+                rgb: color.rgb,
+                rgba: color.rgba,
+                hsl: color.hsl,
+                hsla: color.hsla,
+            };
+        } else if (data.type === "textarea_field") {
+            payload = {
+                ...payload,
+                value: textarea,
+            };
+        } else if (data.type === "json_field") {
+            payload = {
+                ...payload,
+                value: jsonData,
+            };
         }
-        // Add other field types as needed
 
         updateFieldMutation.mutate(payload);
     }
@@ -192,7 +301,6 @@ export const FieldWrapper = ({
 
     const handleScopeOptionClick = (e: React.MouseEvent, scope: string) => {
         e.stopPropagation();
-
         setActiveScopeOption((prev) => (prev === scope ? null : scope));
     };
 
@@ -228,28 +336,94 @@ export const FieldWrapper = ({
 
     useEffect(() => {
         setFieldName(data?.label || "");
+        setLabel(data?.label || "");
+
+        // Update all fields based on type
+        if (data.type === "text_field") {
+            setText(data.value || "");
+        } else if (data.type === "multi_select") {
+            setMultiSelectOptions(data.options || []);
+            const initialState: { [key: string]: boolean } = {};
+            if (data?.selectedOptions && data?.options) {
+                data.options.forEach((option: string, index: number) => {
+                    initialState[index] = data.selectedOptions.includes(option);
+                });
+            }
+            setCheckedMultiSelectItems(initialState);
+        } else if (data.type === "single_select") {
+            setSingleSelectOptions(data.options || []);
+            const initialState: { [key: string]: boolean } = {};
+            if (data?.selectedOptions && data?.options) {
+                data.options.forEach((option: string, index: number) => {
+                    initialState[index] = data.selectedOptions.includes(option);
+                });
+            }
+            setCheckedSingleSelectItems(initialState);
+        } else if (data.type === "number_field") {
+            setNumber(data.value || 0);
+        } else if (data.type === "email_field") {
+            setEmail(data.value || "");
+        } else if (data.type === "date_field") {
+            setDate(data.value ? new Date(data.value) : null);
+        } else if (data.type === "color_picker_field") {
+            setColor(data.value || "#3498db");
+        } else if (data.type === "textarea_field") {
+            setTextarea(data.value || "");
+        } else if (data.type === "json_field") {
+            setJsonData(data.value || '{"example": "data"}');
+        }
     }, [data]);
 
     function handleEdit() {
         setIsEditable(true);
         setShowOptions(false);
-
-        if (data.type === "text_field") {
-            setText(data.value);
-        }
     }
 
     function renderEditComponent() {
         switch (data.type) {
             case "text_field":
                 return <TextFieldPromt text={text} setText={setText} />;
-            // Add other field types as needed
+            case "multi_select":
+                return (
+                    <MultiSelectPrompt
+                        options={multiSelectOptions}
+                        setOptions={setMultiSelectOptions}
+                        checkedItems={checkedMultiSelectItems}
+                        setCheckedItems={setCheckedMultiSelectItems}
+                    />
+                );
+            case "single_select":
+                return (
+                    <SingleSelectPromt
+                        options={singleSelectOptions}
+                        setOptions={setSingleSelectOptions}
+                        checkedItems={checkedSingleSelectItems}
+                        setCheckedItems={setCheckedSingleSelectItems}
+                    />
+                );
+            case "number_field":
+                return <NumberPrompt number={number} setNumber={setNumber} />;
+            case "email_field":
+                return <EmailPrompt email={email} setEmail={setEmail} />;
+            case "date_field":
+                return <DatePrompt date={date} setDate={setDate} />;
+            case "color_picker_field":
+                return <ColorPickerPrompt color={color} setColor={setColor} />;
+            case "textarea_field":
+                return (
+                    <TextareaFieldPrompt
+                        textarea={textarea}
+                        setTextarea={setTextarea}
+                    />
+                );
+            case "json_field":
+                return (
+                    <JSONPromptField json={jsonData} setJSON={setJsonData} />
+                );
             default:
                 return <div>Unsupported field type</div>;
         }
     }
-
-    console.log(data, "dataField");
 
     return (
         <div className="text-field-container">
@@ -300,18 +474,7 @@ export const FieldWrapper = ({
                 />
             )}
 
-            {isEditable ? (
-                <div className="text-input-field-container">
-                    <input
-                        className="text-input-field"
-                        type="text"
-                        value={text}
-                        onChange={(e) => setText(e.target.value)}
-                    />
-                </div>
-            ) : (
-                children
-            )}
+            {isEditable ? renderEditComponent() : children}
 
             {isEditable && (
                 <div className="action-btn-wrapper">

@@ -9,14 +9,14 @@ export const SingleSelectPromt = ({
 }: any) => {
     function addOptions() {
         const newId = `option-${Date.now()}`;
-        setOptions([...options, { id: newId, value: "" }]);
+        setOptions([...options, { option_id: newId, value: "" }]);
         setCheckedItems({ ...checkedItems, [newId]: false });
     }
 
     function handleTextChange(id, newValue) {
         setOptions(
             options.map((opt) =>
-                opt.id === id ? { ...opt, value: newValue } : opt,
+                opt.option_id === id ? { ...opt, value: newValue } : opt,
             ),
         );
     }
@@ -29,11 +29,13 @@ export const SingleSelectPromt = ({
     }
 
     function removeOption(id) {
-        setOptions(options.filter((opt) => opt.id !== id));
+        setOptions(options.filter((opt) => opt.option_id !== id));
         const updatedItems = { ...checkedItems };
         delete updatedItems[id];
         setCheckedItems(updatedItems);
     }
+
+    console.log(options, "options");
 
     return (
         <div className="single-select-field-container">
@@ -58,7 +60,7 @@ export const SingleSelectPromt = ({
                                     value={item.value}
                                     onChange={(e) =>
                                         handleTextChange(
-                                            item.id,
+                                            item.option_id,
                                             e.target.value,
                                         )
                                     }
@@ -67,7 +69,7 @@ export const SingleSelectPromt = ({
                             </label>
                             <div
                                 className="remove-option-btn"
-                                onClick={() => removeOption(item.id)}
+                                onClick={() => removeOption(item.option_id)}
                             >
                                 <Trash2 size={18} color="var(--light-font)" />
                             </div>

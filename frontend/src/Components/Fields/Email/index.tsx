@@ -1,11 +1,14 @@
 import { field } from "@/Types/fields";
 import "./index.scss";
 import { FieldWrapper } from "../FieldWrapper";
-import { useState } from "react";
-import * as React from "react";
+import { useEffect, useState } from "react";
 
 export const Email = ({ data }: { data: field }) => {
     const [email, setEmail] = useState(data.value);
+
+    useEffect(() => {
+        setEmail(data.value);
+    }, [data.value]);
 
     function handleTextFieldChange(event: React.ChangeEvent<HTMLInputElement>) {
         setEmail(event.target.value);
