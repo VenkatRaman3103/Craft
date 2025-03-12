@@ -12,6 +12,7 @@ import {
     jsonFields,
     numberFields,
     textAreaFields,
+    urlFields,
 } from "../../db/schema/index.js";
 
 export async function deleteTextField(req, res) {
@@ -179,6 +180,25 @@ export async function deleteJsonField(req, res) {
             error,
             message: "Error in deleting json field",
             origin: "backend/fieldRouter/json_field/DELETE",
+        };
+        console.log(errorMessage);
+        res.status(500).json(errorMessage);
+    }
+}
+
+export async function deleteUrlField(req, res) {
+    const { field_id } = req.params;
+
+    try {
+        const response = await db
+            .delete(urlFields)
+            .where(eq(urlFields.field_id, field_id));
+        res.status(200).json(response);
+    } catch (error) {
+        const errorMessage = {
+            error,
+            message: "Error in deleting url field",
+            origin: "backend/fieldRouter/url_field/DELETE",
         };
         console.log(errorMessage);
         res.status(500).json(errorMessage);

@@ -116,6 +116,14 @@ export const createField = async (field, page_id) => {
             reference_id: response.data[0].field_id,
             type: "json_field",
         });
+    } else if (field.type === "url_field") {
+        response = await axios.post(`${backendUrl}/fields/url_field`, field);
+
+        await axios.post(`${backendUrl}/page/${page_id}/page_items`, {
+            page_id,
+            reference_id: response.data[0].field_id,
+            type: "url_field",
+        });
     }
 
     console.log(response?.data[0].field_id, "Field create response");

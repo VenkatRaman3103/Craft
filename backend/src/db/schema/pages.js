@@ -8,6 +8,7 @@ import { dateFields } from "./fields/date.js";
 import { colorPickerFields } from "./fields/colorPicker.js";
 import { textAreaFields } from "./fields/textArea.js";
 import { jsonFields } from "./fields/jsonField.js";
+import { urlFields } from "./fields/urlField.js";
 
 export const pageItemType = pgEnum("item_type", [
     "block",
@@ -20,6 +21,7 @@ export const pageItemType = pgEnum("item_type", [
     "color_picker_field",
     "textarea_field",
     "json_field",
+    "url_field",
 ]);
 
 export const pages = pgTable("pages", {
@@ -83,6 +85,10 @@ export const pageItemsRelation = relations(page_items, ({ one }) => ({
     json_field: one(jsonFields, {
         fields: [page_items.reference_id],
         references: [jsonFields.field_id],
+    }),
+    url_field: one(urlFields, {
+        fields: [page_items.reference_id],
+        references: [urlFields.field_id],
     }),
     block: one(blocks, {
         fields: [page_items.reference_id],

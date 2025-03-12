@@ -8,6 +8,7 @@ import {
     Image,
     LetterText,
     Link,
+    Link2,
     Paintbrush,
     Pilcrow,
     SquareCheck,
@@ -25,6 +26,7 @@ export const FieldsIcons = {
     single_select_field: <CircleCheck size={20} color={lightFont} />,
     date_field: <CalendarDays size={20} color={lightFont} />,
     email_field: <AtSign size={20} color={lightFont} />,
+    url_field: <Link2 size={20} color={lightFont} />,
     upload: <Image size={20} color={lightFont} />,
     relation: <Link size={20} color={lightFont} />,
 };

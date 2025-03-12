@@ -1,5 +1,14 @@
 import { darkGreen, darkRed, lightFont } from "@/Styles/base";
-import { Check, File, FileText, Globe, Trash2, X, Box } from "lucide-react";
+import {
+    Check,
+    File,
+    FileText,
+    Globe,
+    Trash2,
+    X,
+    Box,
+    Pencil,
+} from "lucide-react";
 import * as React from "react";
 import "./index.scss";
 
@@ -16,8 +25,6 @@ export const FieldMenuOptions = ({
     isSidebarOpen,
     handleScopeOptionClick,
     handleDelete,
-    isEditable,
-    setIsEditable,
     handleEdit,
 }: any) => {
     return (
@@ -80,7 +87,8 @@ export const FieldMenuOptions = ({
                 className={`options-menu ${isSidebarOpen ? "sidebar-open" : ""}`}
             >
                 <div className={`option-item `} onClick={handleEdit}>
-                    <Box size={16} />
+                    {/* <Box size={16} /> */}
+                    <Pencil size={16} />
                     <span>Edit</span>
                 </div>
                 <div

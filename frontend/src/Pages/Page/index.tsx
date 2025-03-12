@@ -1,6 +1,6 @@
 import { PageItems } from "@/Components/Blocks";
 import { PageIntro } from "@/Components/PageIntro";
-import { useEffect, useRef, useState } from "react";
+import { useState } from "react";
 import { useParams } from "react-router";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import "./index.scss";
@@ -24,7 +24,7 @@ export const Page = () => {
 
     const [isFieldPopupOpen, setIsFieldPopupOpen] = useState(false);
     const [isBlockPopupOpen, setIsBlockPopupOpen] = useState(false);
-    const [promtFields, setPromtFields] = useState<any>([]);
+    const [promtFields, setPromtFields] = useState<fieldPromt[]>([]);
 
     const { data: pageData } = useQuery({
         queryKey: ["pageData", page_id],
@@ -227,7 +227,13 @@ export const BlocksPropmts = ({ block, page_id, queryClient, onCancel }) => {
     );
 };
 
-export const AddPageItemsBtn = ({ openFieldPopup, openBlockPopup }) => {
+export const AddPageItemsBtn = ({
+    openFieldPopup,
+    openBlockPopup,
+}: {
+    openFieldPopup: () => void;
+    openBlockPopup: () => void;
+}) => {
     return (
         <div className="add-button-wrapper">
             <div onClick={openFieldPopup} className="btn">

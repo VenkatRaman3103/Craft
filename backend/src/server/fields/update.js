@@ -14,6 +14,7 @@ import {
     jsonFields,
     numberFields,
     textAreaFields,
+    urlFields,
 } from "../../db/schema/index.js";
 
 export async function patchUpdateTextField(req, res) {
@@ -359,6 +360,73 @@ export async function patchUpdateJsonField(req, res) {
             error,
             message: "Error in updating JSON field",
             origin: "backend/fieldRouter/json_field/UPDATE",
+        };
+        console.log(errorMessage);
+        res.status(500).json(errorMessage);
+    }
+}
+
+export async function getUrlFields(req, res) {
+    try {
+        const response = await db.select().from(urlFields);
+        res.status(200).json(response);
+    } catch (error) {
+        const errorMessage = {
+            error,
+            message: `error in fetching the Url fields`,
+            origin: "backend/fieldRouter/url_field/GET",
+        };
+        console.log(errorMessage);
+        res.status(500).json(errorMessage);
+    }
+}
+
+export async function createUrlField(req, res) {
+    const { label, value, name, type, url_type } = req.body;
+    try {
+        const response = await db
+            .insert(urlFields)
+            .values({
+                name,
+                label,
+                value,
+                type,
+                url_type,
+            })
+            .returning();
+
+        res.status(200).json(response);
+    } catch (error) {
+        const errorMessage = {
+            error,
+            message: `error in creating the Url fields`,
+            origin: "backend/fieldRouter/url_field/POST",
+        };
+        console.log(errorMessage);
+        res.status(500).json(errorMessage);
+    }
+}
+
+export async function patchUpdateUrlField(req, res) {
+    const { field_id } = req.params;
+    const updateData = req.body;
+    try {
+        if (Object.keys(updateData).length === 0) {
+            return res.status(400).json({ message: "No update data provided" });
+        }
+        const response = await db
+            .update(urlFields)
+            .set(updateData)
+            .where(eq(urlFields.field_id, field_id));
+        if (response.rowCount === 0) {
+            return res.status(404).json({ message: "Text field not found" });
+        }
+        res.status(200).json(response);
+    } catch (error) {
+        const errorMessage = {
+            error,
+            message: "Error in updating url field",
+            origin: "backend/fieldRouter/url_field/UPDATE",
         };
         console.log(errorMessage);
         res.status(500).json(errorMessage);

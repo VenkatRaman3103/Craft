@@ -1,8 +1,15 @@
 import React, { useState, useRef, useEffect } from "react";
 import "./index.scss";
-import { ChevronDown, Copy } from "lucide-react";
+import { Copy } from "lucide-react";
+import { colorPicker } from "@/Types/fields";
 
-export const ColorPickerPrompt = ({ color, setColor }) => {
+export const ColorPickerPrompt = ({
+    color,
+    setColor,
+}: {
+    color: colorPicker;
+    setColor: React.Dispatch<React.SetStateAction<colorPicker>>;
+}) => {
     const [isOpen, setIsOpen] = useState(false);
     const [colorFormats, setColorFormats] = useState({
         hex: "#000000",
@@ -17,8 +24,8 @@ export const ColorPickerPrompt = ({ color, setColor }) => {
     const [alpha, setAlpha] = useState(1);
     const [hexInput, setHexInput] = useState("#000000");
 
-    const pickerRef = useRef(null);
-    const saturationRef = useRef(null);
+    const pickerRef = useRef<HTMLDivElement>(null);
+    const saturationRef = useRef<HTMLDivElement>(null);
 
     // const handleColorChange = (colorData) => {
     //     setSelectedColor(colorData);
@@ -26,8 +33,8 @@ export const ColorPickerPrompt = ({ color, setColor }) => {
     // };
 
     // Convert RGB to HEX
-    const rgbToHex = (r, g, b) => {
-        const toHex = (c) => {
+    const rgbToHex = (r: number, g: number, b: number) => {
+        const toHex = (c: number) => {
             const hex = Math.round(c).toString(16);
             return hex.length === 1 ? "0" + hex : hex;
         };
@@ -35,7 +42,7 @@ export const ColorPickerPrompt = ({ color, setColor }) => {
     };
 
     // Convert HEX to RGB
-    const hexToRgb = (hex) => {
+    const hexToRgb = (hex: string) => {
         const result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
         return result
             ? {
@@ -47,7 +54,7 @@ export const ColorPickerPrompt = ({ color, setColor }) => {
     };
 
     // Convert RGB to HSL
-    const rgbToHsl = (r, g, b) => {
+    const rgbToHsl = (r: number, g: number, b: number) => {
         r /= 255;
         g /= 255;
         b /= 255;
@@ -89,7 +96,7 @@ export const ColorPickerPrompt = ({ color, setColor }) => {
     };
 
     // Convert HSL to RGB
-    const hslToRgb = (h, s, l) => {
+    const hslToRgb = (h: number, s: number, l: number) => {
         h /= 360;
         s /= 100;
         l /= 100;
@@ -99,7 +106,7 @@ export const ColorPickerPrompt = ({ color, setColor }) => {
         if (s === 0) {
             r = g = b = l; // achromatic
         } else {
-            const hue2rgb = (p, q, t) => {
+            const hue2rgb = (p: number, q: number, t: number) => {
                 if (t < 0) t += 1;
                 if (t > 1) t -= 1;
                 if (t < 1 / 6) return p + (q - p) * 6 * t;
@@ -124,7 +131,7 @@ export const ColorPickerPrompt = ({ color, setColor }) => {
     };
 
     // Update all color formats
-    const updateColorFormats = (h, s, l, a = 1) => {
+    const updateColorFormats = (h: number, s: number, l: number, a = 1) => {
         // Convert HSL to RGB
         const { r, g, b } = hslToRgb(h, s, l);
 
@@ -160,9 +167,9 @@ export const ColorPickerPrompt = ({ color, setColor }) => {
     // Initialize component with provided color
     useEffect(() => {
         if (color) {
-            let h,
-                s,
-                l,
+            let h = 0,
+                s = 0,
+                l = 0,
                 a = 1;
 
             if (typeof color === "string") {
@@ -172,35 +179,53 @@ export const ColorPickerPrompt = ({ color, setColor }) => {
                 h = hslValues.h;
                 s = hslValues.s;
                 l = hslValues.l;
-            } else if (color.hex) {
+            } else {
                 // It's our color object
-                const { r, g, b } = hexToRgb(color.hex);
-                const hslValues = rgbToHsl(r, g, b);
-                h = hslValues.h;
-                s = hslValues.s;
-                l = hslValues.l;
-                a = color.hsla?.a || 1;
-            } else if (
-                color.h !== undefined &&
-                color.s !== undefined &&
-                color.l !== undefined
-            ) {
-                // It's an HSL object
-                h = color.h;
-                s = color.s;
-                l = color.l;
-                a = color.a || 1;
-            } else if (
-                color.r !== undefined &&
-                color.g !== undefined &&
-                color.b !== undefined
-            ) {
-                // It's an RGB object
-                const hslValues = rgbToHsl(color.r, color.g, color.b);
-                h = hslValues.h;
-                s = hslValues.s;
-                l = hslValues.l;
-                a = color.a || 1;
+                if (color.hex) {
+                    const { r, g, b } = hexToRgb(color.hex);
+                    const hslValues = rgbToHsl(r, g, b);
+                    h = hslValues.h;
+                    s = hslValues.s;
+                    l = hslValues.l;
+                    // Check if hsla exists and has an alpha value
+                    a = color.hsla?.a ?? 1;
+                } else if (color.hsl) {
+                    // It's an HSL object
+                    h = color.hsl.h;
+                    s = color.hsl.s;
+                    l = color.hsl.l;
+                    // Check if hsla exists and has an alpha value
+                    a = color.hsla?.a ?? 1;
+                } else if (color.hsla) {
+                    // It's an HSLA object
+                    h = color.hsla.h;
+                    s = color.hsla.s;
+                    l = color.hsla.l;
+                    a = color.hsla.a ?? 1;
+                } else if (color.rgb) {
+                    // It's an RGB object
+                    const hslValues = rgbToHsl(
+                        color.rgb.r,
+                        color.rgb.g,
+                        color.rgb.b,
+                    );
+                    h = hslValues.h;
+                    s = hslValues.s;
+                    l = hslValues.l;
+                    // Default alpha
+                    a = 1;
+                } else if (color.rgba) {
+                    // It's an RGBA object
+                    const hslValues = rgbToHsl(
+                        color.rgba.r,
+                        color.rgba.g,
+                        color.rgba.b,
+                    );
+                    h = hslValues.h;
+                    s = hslValues.s;
+                    l = hslValues.l;
+                    a = color.rgba.a ?? 1;
+                }
             }
 
             setHue(h);
@@ -216,38 +241,38 @@ export const ColorPickerPrompt = ({ color, setColor }) => {
             setAlpha(1);
             updateColorFormats(0, 0, 0, 1);
         }
-    }, []);
+    }, [color]);
 
     // Handle hue change
-    const handleHueChange = (e) => {
+    const handleHueChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const newHue = parseInt(e.target.value);
         setHue(newHue);
         updateColorFormats(newHue, saturation, lightness, alpha);
     };
 
     // Handle saturation change
-    const handleSaturationChange = (e) => {
+    const handleSaturationChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const newSaturation = parseInt(e.target.value);
         setSaturation(newSaturation);
         updateColorFormats(hue, newSaturation, lightness, alpha);
     };
 
     // Handle lightness change
-    const handleLightnessChange = (e) => {
+    const handleLightnessChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const newLightness = parseInt(e.target.value);
         setLightness(newLightness);
         updateColorFormats(hue, saturation, newLightness, alpha);
     };
 
     // Handle alpha change
-    const handleAlphaChange = (e) => {
+    const handleAlphaChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const newAlpha = parseFloat(e.target.value);
         setAlpha(newAlpha);
         updateColorFormats(hue, saturation, lightness, newAlpha);
     };
 
     // Handle hex input change
-    const handleHexChange = (e) => {
+    const handleHexChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const value = e.target.value;
         setHexInput(value);
 
@@ -282,7 +307,9 @@ export const ColorPickerPrompt = ({ color, setColor }) => {
     };
 
     // Handle color picker click
-    const handleSaturationPickerClick = (e) => {
+    const handleSaturationPickerClick = (
+        e: React.ChangeEvent<HTMLInputElement>,
+    ) => {
         if (saturationRef.current) {
             const rect = saturationRef.current.getBoundingClientRect();
             const x = Math.max(
@@ -306,7 +333,7 @@ export const ColorPickerPrompt = ({ color, setColor }) => {
 
     // Handle document click to close dropdown
     useEffect(() => {
-        const handleClickOutside = (e) => {
+        const handleClickOutside = (e: React.ChangeEvent<HTMLInputElement>) => {
             if (pickerRef.current && !pickerRef.current.contains(e.target)) {
                 setIsOpen(false);
             }
@@ -319,7 +346,7 @@ export const ColorPickerPrompt = ({ color, setColor }) => {
     }, []);
 
     // Handle copy format to clipboard
-    const copyToClipboard = (text) => {
+    const copyToClipboard = (text: string) => {
         navigator.clipboard.writeText(text);
         // You could add a temporary "Copied!" notification here
     };
@@ -485,7 +512,7 @@ export const ColorPickerPrompt = ({ color, setColor }) => {
                                 type="text"
                                 value={hexInput}
                                 onChange={handleHexChange}
-                                maxLength="7"
+                                maxLength={7}
                             />
                         </div>
                     </div>

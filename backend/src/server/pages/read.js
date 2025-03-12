@@ -45,6 +45,7 @@ export async function getPageById(req, res) {
                         json_field: true,
                         color_picker_field: true,
                         textarea_field: true,
+                        url_field: true,
                     },
                 },
             },

@@ -58,6 +58,8 @@ export const PageItems = ({
         );
     }
 
+    console.log(pageItemsList, "pageItemsList");
+
     return (
         <div className="blocks-container">
             {pageItemsList.map((item: any, index) => {

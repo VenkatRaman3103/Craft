@@ -1,0 +1,33 @@
+# host
+http://localhost:5000/api
+
+# curl options
+ --silent
+# include response headers
+# --include
+# to ignore SSL when working with localhost
+# --insecure
+# to read a header(s) from a file.  File format should be like:
+
+# authorization
+# Header-Name: Header-Value
+# e.g. Authorization: YOUR_AUTH_TOKEN_HERE
+# -H @/path/to/file.txt
+
+# headers
+Accept: application/json;
+Connection: keep-alive
+Content-Type: application/json; charset=utf-8
+User-Agent: VRC
+
+# query
+# GET /page/6a3fe9a8-d3f9-4122-929b-59f11215e4a8
+GET /fields/url_fields
+# POST /fields/url_fields
+
+# body
+# {
+#     "name": "Test2 url label",
+#     "label": "Test2 url label",
+#     "value": "https://google.com"
+# }

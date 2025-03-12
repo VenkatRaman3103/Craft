@@ -3,11 +3,25 @@ export type field = {
     type?: fieldTypes;
     label?: string;
     value?: string | multiSelect[];
+    hex?: string;
+    rgb?: string;
+    rgba?: string;
+    hsl?: string;
+    hsla?: string;
 };
 
 export type multiSelect = {
     value: string;
     checked: boolean;
+};
+
+export type colorPicker = {
+    value: string;
+    hex?: string;
+    rgb?: { r: number; g: number; b: number };
+    rgba?: { r: number; g: number; b: number; a?: number };
+    hsl?: { h: number; s: number; l: number };
+    hsla?: { h: number; s: number; l: number; a?: number };
 };
 
 export type fieldTypes =
@@ -19,6 +33,7 @@ export type fieldTypes =
     | "multi_select_field"
     | "date_field"
     | "color_picker_field"
+    | "url_field"
     | "single_select_field";
 
 // promt

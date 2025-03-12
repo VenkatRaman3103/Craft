@@ -1,4 +1,11 @@
-export const sampleFields = [
+import { fieldPromt } from "@/Types/fields";
+
+export const sampleFields: fieldPromt[] = [
+    {
+        id: "field1234",
+        name: "Url Field",
+        type: "url_field",
+    },
     {
         id: "field1",
         name: "Text Field",

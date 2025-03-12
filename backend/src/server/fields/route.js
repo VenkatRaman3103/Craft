@@ -21,6 +21,7 @@ import {
     deleteSingleSelectField,
     deleteTextareaField,
     deleteTextField,
+    deleteUrlField,
 } from "./delete.js";
 import {
     patchUpdateTextField,
@@ -32,6 +33,9 @@ import {
     patchUpdateColorPickerField,
     patchUpdateTextareaField,
     patchUpdateJsonField,
+    getUrlFields,
+    createUrlField,
+    patchUpdateUrlField,
 } from "./update.js";
 
 export const fieldRoute = express.Router();
@@ -90,3 +94,9 @@ fieldRoute.patch("/fields/textarea_field/:field_id", patchUpdateTextareaField); 
 fieldRoute.post("/fields/json_field", createJsonField); // CREATE: json field
 fieldRoute.delete("/fields/json_field/:field_id", deleteJsonField); // DELETE: json field by field_id
 fieldRoute.patch("/fields/json_field/:field_id", patchUpdateJsonField); // UPDATE: json field by field_id
+
+// url field
+fieldRoute.get("/fields/url_fields", getUrlFields);
+fieldRoute.post("/fields/url_field", createUrlField);
+fieldRoute.delete("/fields/url_field/:field_id", deleteUrlField);
+fieldRoute.patch("/fields/url_field/:field_id", patchUpdateUrlField); // UPDATE: json field by field_id

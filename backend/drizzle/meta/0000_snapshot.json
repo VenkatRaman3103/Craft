@@ -1,5 +1,5 @@
 {
-  "id": "cb946ce9-119d-4ab4-abfd-1d98a68b107c",
+  "id": "710d2d3b-659a-460d-81cf-d83be08fb545",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "version": "7",
   "dialect": "postgresql",
@@ -747,6 +747,73 @@
       "checkConstraints": {},
       "isRLSEnabled": false
     },
+    "public.url_fields": {
+      "name": "url_fields",
+      "schema": "",
+      "columns": {
+        "field_id": {
+          "name": "field_id",
+          "type": "uuid",
+          "primaryKey": true,
+          "notNull": true,
+          "default": "gen_random_uuid()"
+        },
+        "name": {
+          "name": "name",
+          "type": "varchar",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "label": {
+          "name": "label",
+          "type": "varchar",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "value": {
+          "name": "value",
+          "type": "varchar",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "url_type": {
+          "name": "url_type",
+          "type": "url_type_enum",
+          "typeSchema": "public",
+          "primaryKey": false,
+          "notNull": false,
+          "default": "'http'"
+        },
+        "type": {
+          "name": "type",
+          "type": "varchar",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "'url'"
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": false,
+          "default": "now()"
+        },
+        "edited_at": {
+          "name": "edited_at",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": false,
+          "default": "now()"
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {},
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
     "public.multi_select_fields": {
       "name": "multi_select_fields",
       "schema": "",
@@ -1259,6 +1326,14 @@
         "collection"
       ]
     },
+    "public.url_type_enum": {
+      "name": "url_type_enum",
+      "schema": "public",
+      "values": [
+        "http",
+        "https"
+      ]
+    },
     "public.item_type": {
       "name": "item_type",
       "schema": "public",
@@ -1272,7 +1347,8 @@
         "date_field",
         "color_picker_field",
         "textarea_field",
-        "json_field"
+        "json_field",
+        "url_field"
       ]
     }
   },

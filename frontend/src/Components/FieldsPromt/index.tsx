@@ -2,18 +2,20 @@ import { TextFieldPromt } from "./TextFieldPromt";
 import "./index.scss";
 import { FieldPromtWrapper } from "./FiedsPromtWrapper";
 import { useState } from "react";
-import { useMutation } from "@tanstack/react-query";
+import { QueryClient, useMutation } from "@tanstack/react-query";
 import { createField } from "@/Pages/Page/api";
 import { MultiSelectPrompt } from "./MultiSelectPromt";
 import { SingleSelectPromt } from "./SingleSelectPromt";
 import React from "react";
-import { fieldPromt } from "@/Types/fields";
+import { colorPicker, fieldPromt } from "@/Types/fields";
 import { NumberPrompt } from "./NumberPrompt";
 import { EmailPrompt } from "./EmailPrompt";
 import { DatePrompt } from "./DatePrompt";
 import { ColorPickerPrompt } from "./ColorPickerPrompt";
-import { TextareaFieldPrompt, TextareaFieldPromt } from "./TextareaPrompt";
+import { TextareaFieldPrompt } from "./TextareaPrompt";
 import { JSONPromptField } from "./JsonPromptField";
+import { UrlPromt } from "./UrlPromptField";
+import { type } from "os";
 
 type optType = { id: string; value: string | undefined };
 
@@ -24,7 +26,7 @@ export const FieldsPromt = ({
     handleFieldsCancel,
 }: {
     field: fieldPromt;
-    queryClient: any;
+    queryClient: QueryClient;
     page_id: string | undefined;
     handleFieldsCancel: (promtField: fieldPromt) => void;
 }) => {
@@ -55,7 +57,14 @@ export const FieldsPromt = ({
     const [date, setDate] = useState<Date | null>(null);
 
     // color picker
-    const [color, setColor] = useState("#3498db");
+    const [color, setColor] = useState<colorPicker>({
+        value: "#3498db",
+        hex: "#3498db",
+        rgb: { r: 52, g: 152, b: 219 },
+        rgba: { r: 52, g: 152, b: 219, a: 1 },
+        hsl: { h: 204, s: 70, l: 53 },
+        hsla: { h: 204, s: 70, l: 53, a: 1 },
+    });
 
     // textarea
     const [textarea, setTextarea] = useState("");
@@ -63,8 +72,11 @@ export const FieldsPromt = ({
     //json
     const [jsonData, setJsonData] = useState('{"example": "data"}');
 
-    // console.log(color, "selectedColor");
-    console.log(jsonData, "jsonData");
+    // url
+    const [url, setUrl] = useState({
+        value: "",
+        url_type: "https",
+    });
 
     // TODO: move to render fields list
     function renderFieldsPromt(fieldType: string): React.JSX.Element {
@@ -110,6 +122,8 @@ export const FieldsPromt = ({
                 return (
                     <JSONPromptField json={jsonData} setJSON={setJsonData} />
                 );
+            case "url_field":
+                return <UrlPromt url={url} setUrl={setUrl} />;
             default:
                 return <p>Yet to be done</p>;
         }
@@ -200,6 +214,14 @@ export const FieldsPromt = ({
                     label: fieldName,
                     type: "json_field",
                     value: jsonData,
+                };
+            } else if (field.type == "url_field") {
+                payload = {
+                    name: fieldName.split(" ").join("-").toLowerCase(),
+                    label: fieldName,
+                    type: "url_field",
+                    value: url.value,
+                    url_type: url.type,
                 };
             }
 

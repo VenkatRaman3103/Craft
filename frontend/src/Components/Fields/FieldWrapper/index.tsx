@@ -6,7 +6,7 @@ import { useState, useRef, useEffect } from "react";
 import { FieldMenuOptions } from "@/Components/FieldMenuOptions";
 import { backendUrl } from "@/config";
 import axios from "axios";
-import { useMutation } from "@tanstack/react-query";
+import { QueryClient, useMutation } from "@tanstack/react-query";
 import { TextFieldPromt } from "@/Components/FieldsPromt/TextFieldPromt";
 import { MultiSelectPrompt } from "@/Components/FieldsPromt/MultiSelectPromt";
 import { SingleSelectPromt } from "@/Components/FieldsPromt/SingleSelectPromt";
@@ -16,6 +16,7 @@ import { DatePrompt } from "@/Components/FieldsPromt/DatePrompt";
 import { ColorPickerPrompt } from "@/Components/FieldsPromt/ColorPickerPrompt";
 import { TextareaFieldPrompt } from "@/Components/FieldsPromt/TextareaPrompt";
 import { JSONPromptField } from "@/Components/FieldsPromt/JsonPromptField";
+import { UrlPromt } from "@/Components/FieldsPromt/UrlPromptField";
 
 export const FieldWrapper = ({
     children,
@@ -25,7 +26,7 @@ export const FieldWrapper = ({
 }: {
     data: any;
     children: React.ReactNode;
-    queryClient: any;
+    queryClient: QueryClient;
     page_id: string;
 }) => {
     const [showOptions, setShowOptions] = useState(false);
@@ -49,6 +50,10 @@ export const FieldWrapper = ({
     const [jsonData, setJsonData] = useState(
         data?.value || '{"example": "data"}',
     );
+    const [url, setUrl] = useState({
+        value: data.value || "",
+        url_type: data.url_type,
+    });
 
     // Multi-select fields
     const [multiSelectOptions, setMultiSelectOptions] = useState(
@@ -271,6 +276,12 @@ export const FieldWrapper = ({
                 ...payload,
                 value: jsonData,
             };
+        } else if (data.type === "url_field") {
+            payload = {
+                ...payload,
+                value: url.value,
+                url_type: url.url_type,
+            };
         }
 
         updateFieldMutation.mutate(payload);
@@ -371,6 +382,11 @@ export const FieldWrapper = ({
             setTextarea(data.value || "");
         } else if (data.type === "json_field") {
             setJsonData(data.value || '{"example": "data"}');
+        } else if (data.type == "url_field") {
+            setUrl({
+                value: data.value,
+                url_type: data.url_type,
+            });
         }
     }, [data]);
 
@@ -380,6 +396,7 @@ export const FieldWrapper = ({
     }
 
     function renderEditComponent() {
+        console.log(data, "dataEdit");
         switch (data.type) {
             case "text_field":
                 return <TextFieldPromt text={text} setText={setText} />;
@@ -420,10 +437,15 @@ export const FieldWrapper = ({
                 return (
                     <JSONPromptField json={jsonData} setJSON={setJsonData} />
                 );
+
+            case "url_field":
+                return <UrlPromt url={url} setUrl={setUrl} />;
             default:
                 return <div>Unsupported field type</div>;
         }
     }
+
+    console.log(data, "datalhlh");
 
     return (
         <div className="text-field-container">

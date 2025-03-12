@@ -1,5 +1,6 @@
 CREATE TYPE "public"."scope_enum" AS ENUM('global', 'page', 'collection');--> statement-breakpoint
-CREATE TYPE "public"."item_type" AS ENUM('block', 'text_field', 'multi_select_field', 'single_select_field', 'number_field', 'email_field', 'date_field', 'color_picker_field', 'textarea_field', 'json_field');--> statement-breakpoint
+CREATE TYPE "public"."url_type_enum" AS ENUM('http', 'https');--> statement-breakpoint
+CREATE TYPE "public"."item_type" AS ENUM('block', 'text_field', 'multi_select_field', 'single_select_field', 'number_field', 'email_field', 'date_field', 'color_picker_field', 'textarea_field', 'json_field', 'url_field');--> statement-breakpoint
 CREATE TABLE "array_block_items" (
 	"item_id" uuid PRIMARY KEY DEFAULT gen_random_uuid() NOT NULL,
 	"array_block_ref_id" uuid,
@@ -113,6 +114,17 @@ CREATE TABLE "textarea_fields" (
 	"label" varchar NOT NULL,
 	"value" text NOT NULL,
 	"type" varchar DEFAULT 'textarea' NOT NULL,
+	"created_at" timestamp DEFAULT now(),
+	"edited_at" timestamp DEFAULT now()
+);
+--> statement-breakpoint
+CREATE TABLE "url_fields" (
+	"field_id" uuid PRIMARY KEY DEFAULT gen_random_uuid() NOT NULL,
+	"name" varchar NOT NULL,
+	"label" varchar NOT NULL,
+	"value" varchar NOT NULL,
+	"url_type" "url_type_enum" DEFAULT 'http',
+	"type" varchar DEFAULT 'url' NOT NULL,
 	"created_at" timestamp DEFAULT now(),
 	"edited_at" timestamp DEFAULT now()
 );
