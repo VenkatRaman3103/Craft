@@ -1,84 +1,72 @@
 import { CollectionIntro } from "@/Components/CollectionIntro";
 import { backendUrl } from "@/config";
 import axios from "axios";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { useNavigate, useParams } from "react-router";
 import "./index.scss";
 import { pageType } from "@/Types/blocks";
 import { v4 as uuidv4 } from "uuid";
 import * as React from "react";
 import { FieldsAndBlocksList } from "@/Components/FieldsAndBlocksList";
-import { useQuery } from "@tanstack/react-query";
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 
 export const Collection = () => {
     const { collection_id } = useParams();
-    // const {data} = useQuery({
-    //     queryKey: ["collection", collection_id],
-    //     queryFn: async () => {
-    //         const response = await axios.get(`${backendUrl}/collection/${collection_id}`);
-    //         return response.data;
-    //     },
-    // })
+    const queryClient = useQueryClient();
 
-    const [pagesList, setPagesList] = useState<pageType[]>();
-    const [showAddPage, setShowAddPage] = useState(false);
-    const [collection, setCollection] = useState<any>();
-
-    const options = ["Pages", "Components", "Fields"];
-    const [selectedOption, setSelectedOption] = useState(options[0]);
-
-    useEffect(() => {
-        async function getPages() {
-            const response = await axios.get(
-                `${backendUrl}/collection/${collection_id}`,
-            );
-
-            setPagesList(response.data);
-        }
-        getPages();
-
-        async function getCollection() {
+    const { data: collectionData, isLoading } = useQuery({
+        queryKey: ["collection", collection_id],
+        queryFn: async () => {
             const response = await axios.get(
                 `${backendUrl}/collections/collectionItems/${collection_id}`,
             );
+            return response.data;
+        },
+    });
 
-            console.log(response.data, "responseCollection");
+    const [showAddPage, setShowAddPage] = useState(false);
+    const options = ["Pages", "Components", "Fields"];
+    const [selectedOption, setSelectedOption] = useState(options[0]);
 
-            setCollection(response.data);
-        }
-        getCollection();
-    }, [collection_id]);
-
-    console.log(pagesList, "pagesList");
-    console.log(collection, "collectionsCurrent");
+    const deleteMutation = useMutation({
+        mutationFn: async (page_id: string) => {
+            await axios.delete(`${backendUrl}/page/${page_id}`);
+            await axios.delete(`${backendUrl}/collection_items/${page_id}`);
+            return page_id;
+        },
+        onSuccess: () => {
+            queryClient.invalidateQueries({
+                queryKey: ["collection", collection_id],
+            });
+        },
+        onError: (error) => {
+            console.error("Error deleting page:", error);
+        },
+    });
 
     function handleDeletePage(page_id: string) {
-        try {
-            const response = axios.delete(`${backendUrl}/page/${page_id}`);
-            console.log(response, `successfully deleted the page ${page_id}`);
-        } catch (error) {
-            console.log("frontend - error in deleting the page:", error);
-        }
-
-        setPagesList((prev) =>
-            prev?.filter((item) => item.pages.page_id !== page_id),
-        );
+        deleteMutation.mutate(page_id);
     }
 
-    if (!collection) {
+    // Handle loading state
+    if (isLoading) {
         return <div>Collection Loading...</div>;
+    }
+
+    // Handle case when data is not available
+    if (!collectionData) {
+        return <div>Collection not found</div>;
     }
 
     return (
         <div className="collection-pages-container">
             <div className="collection-pages-wrapper">
                 <CollectionIntro
-                    collection={collection}
-                    collection_id={collection.collection_id}
+                    collection={collectionData}
+                    collection_id={collectionData.collection_id}
                     showNavBtn={false}
                 />
                 <div className="view-options-container">
-                    {/* <div className="view-options-wrapper"> */}
                     {options.map((item, ind) => (
                         <div
                             key={ind}
@@ -88,40 +76,37 @@ export const Collection = () => {
                             {item}
                         </div>
                     ))}
-                    {/* </div> */}
                 </div>
-                {/* TODO: filters */}
-                {/* TODO: pages */}
-                {/* TODO: components */}
-                {/* TODO: fields */}
                 {selectedOption == "Pages" && (
                     <div className="pages-list-container">
                         <div className="pages-list-wrapper">
-                            {pagesList?.map((item: pageType, ind: number) => (
-                                <PagePreview
-                                    key={ind}
-                                    page={item.pages}
-                                    deletePage={handleDeletePage}
-                                />
-                            ))}
+                            {collectionData.pages?.map(
+                                (item: pageType, ind: number) => (
+                                    <PagePreview
+                                        key={ind}
+                                        page={item}
+                                        deletePage={handleDeletePage}
+                                        isDeleting={deleteMutation.isPending}
+                                    />
+                                ),
+                            )}
                         </div>
                     </div>
                 )}
                 {selectedOption == "Fields" && (
                     <FieldsAndBlocksList
-                        itemsList={collection.collection_items}
+                        itemsList={collectionData.collection_items}
                         query_key_id={collection_id}
                         parentCollectionId={collection_id}
                         itemType="collection"
                     />
                 )}
-
                 {showAddPage && (
                     <PagePrompt
-                        slug={collection?.slug}
-                        collection_id={collection.collection_id}
-                        setPagesList={setPagesList}
+                        slug={collectionData?.slug}
+                        collection_id={collectionData.collection_id}
                         setShowAddPage={setShowAddPage}
+                        queryClient={queryClient}
                     />
                 )}
                 <button
@@ -138,39 +123,58 @@ export const Collection = () => {
 export const PagePrompt = ({
     slug,
     collection_id,
-    setPagesList,
     setShowAddPage,
+    queryClient,
 }: {
     slug: string;
     collection_id: string;
-    setPagesList: React.Dispatch<React.SetStateAction<pageType[]>>;
     setShowAddPage: React.Dispatch<React.SetStateAction<boolean>>;
+    queryClient: any;
 }) => {
-    const [pageTitle, setPageTitle] = useState<string>();
-    const page_id = uuidv4();
+    const [pageTitle, setPageTitle] = useState<string>("");
 
-    async function handleSave() {
-        const newPage = {
-            title: pageTitle,
-            slug: slug,
-            page_id,
-        };
+    const createPageMutation = useMutation({
+        mutationFn: async () => {
+            const page_id = uuidv4();
+            const newPage = {
+                title: pageTitle,
+                slug: slug,
+                page_id,
+            };
 
-        await axios.post(`${backendUrl}/page`, newPage);
-        await axios.post(`${backendUrl}/collection-page`, {
-            collection_id,
-            page_id,
-        });
-        await axios.post(
-            `${backendUrl}/collection/${collection_id}/collection_items`,
-            {
-                reference_id: page_id,
-                type: "page",
-            },
-        );
+            await axios.post(`${backendUrl}/page`, newPage);
 
-        setPagesList((prev: pageType) => [...(prev || []), { pages: newPage }]);
-        setShowAddPage(false);
+            await axios.post(`${backendUrl}/collection-page`, {
+                collection_id,
+                page_id,
+            });
+
+            await axios.post(
+                `${backendUrl}/collection/${collection_id}/collection_items`,
+                {
+                    reference_id: page_id,
+                    type: "page",
+                },
+            );
+
+            return newPage;
+        },
+        onSuccess: () => {
+            // Invalidate and refetch the collection query
+            queryClient.invalidateQueries({
+                queryKey: ["collection", collection_id],
+            });
+            setShowAddPage(false);
+        },
+        onError: (error) => {
+            console.error("Error creating page:", error);
+        },
+    });
+
+    function handleSave() {
+        if (pageTitle) {
+            createPageMutation.mutate();
+        }
     }
 
     return (
@@ -188,8 +192,16 @@ export const PagePrompt = ({
                             onChange={(e) => setPageTitle(e.target.value)}
                             className="heading"
                         />
-                        <button className="go-to-page-btn" onClick={handleSave}>
-                            Save
+                        <button
+                            className="go-to-page-btn"
+                            onClick={handleSave}
+                            disabled={
+                                createPageMutation.isPending || !pageTitle
+                            }
+                        >
+                            {createPageMutation.isPending
+                                ? "Saving..."
+                                : "Save"}
                         </button>
                     </div>
                 </div>
@@ -198,7 +210,15 @@ export const PagePrompt = ({
     );
 };
 
-export const PagePreview = ({ page, deletePage }: { page: pageType }) => {
+export const PagePreview = ({
+    page,
+    deletePage,
+    isDeleting,
+}: {
+    page: pageType;
+    deletePage: (page_id: string) => void;
+    isDeleting: boolean;
+}) => {
     const navigate = useNavigate();
 
     function handleOpenPage(page_id: string) {
@@ -223,8 +243,9 @@ export const PagePreview = ({ page, deletePage }: { page: pageType }) => {
                         <button
                             className="go-to-page-btn"
                             onClick={() => deletePage(page.page_id)}
+                            disabled={isDeleting}
                         >
-                            Delete
+                            {isDeleting ? "Deleting..." : "Delete"}
                         </button>
                     </div>
                 </div>
