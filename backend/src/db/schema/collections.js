@@ -51,7 +51,6 @@ export const collectionItemsRelations = relations(
             fields: [collectionItems.reference_id],
             references: [pages.page_id],
         }),
-
         text_field: one(textFields, {
             fields: [collectionItems.reference_id],
             references: [textFields.field_id],

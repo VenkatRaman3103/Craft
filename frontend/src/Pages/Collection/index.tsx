@@ -8,9 +8,18 @@ import { pageType } from "@/Types/blocks";
 import { v4 as uuidv4 } from "uuid";
 import * as React from "react";
 import { FieldsAndBlocksList } from "@/Components/FieldsAndBlocksList";
+import { useQuery } from "@tanstack/react-query";
 
 export const Collection = () => {
     const { collection_id } = useParams();
+    // const {data} = useQuery({
+    //     queryKey: ["collection", collection_id],
+    //     queryFn: async () => {
+    //         const response = await axios.get(`${backendUrl}/collection/${collection_id}`);
+    //         return response.data;
+    //     },
+    // })
+
     const [pagesList, setPagesList] = useState<pageType[]>();
     const [showAddPage, setShowAddPage] = useState(false);
     const [collection, setCollection] = useState<any>();
@@ -103,6 +112,7 @@ export const Collection = () => {
                         itemsList={collection.collection_items}
                         query_key_id={collection_id}
                         parentCollectionId={collection_id}
+                        itemType="collection"
                     />
                 )}
 
@@ -151,6 +161,13 @@ export const PagePrompt = ({
             collection_id,
             page_id,
         });
+        await axios.post(
+            `${backendUrl}/collection/${collection_id}/collection_items`,
+            {
+                reference_id: page_id,
+                type: "page",
+            },
+        );
 
         setPagesList((prev: pageType) => [...(prev || []), { pages: newPage }]);
         setShowAddPage(false);

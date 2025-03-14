@@ -23,6 +23,7 @@ export const FieldsPromt = ({
     field,
     queryClient,
     query_key_id,
+    itemType,
     handleFieldsCancel,
 }: {
     field: fieldPromt;
@@ -132,6 +133,7 @@ export const FieldsPromt = ({
     const fieldMutation = useMutation(
         () => {
             let payload;
+            let parent_id = query_key_id;
 
             // const field_id = uuidv4();
 
@@ -229,7 +231,7 @@ export const FieldsPromt = ({
                 };
             }
 
-            return createField(payload, query_key_id);
+            return createField(payload, parent_id, itemType);
         },
         {
             onSuccess: () => {

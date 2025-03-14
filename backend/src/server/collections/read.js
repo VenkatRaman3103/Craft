@@ -43,21 +43,46 @@ export async function getCollectionByCollectionId(req, res) {
     }
 }
 
+function reorganizeCollectionData(collection) {
+    const { collection_items, ...collectionInfo } = collection;
+
+    const pages = [];
+    const nonPageItems = [];
+
+    collection_items.forEach((item) => {
+        if (item.item_type === "page") {
+            pages.push(item.page);
+        } else {
+            nonPageItems.push(item);
+        }
+    });
+
+    return {
+        ...collectionInfo,
+        pages,
+        collection_items: nonPageItems,
+    };
+}
+
 export async function getCollectionItemsByCollectionId(req, res) {
     const { collection_id } = req.params;
     try {
-        const collectionItems = await db.query.collections.findFirst({
+        const collectionData = await db.query.collections.findFirst({
             where: (collection, { eq }) =>
                 eq(collection.collection_id, collection_id),
             with: {
                 collection_items: {
                     with: {
+                        page: true,
                         text_field: true,
                     },
                 },
             },
         });
-        res.status(200).json(collectionItems);
+
+        const reorganizedData = reorganizeCollectionData(collectionData);
+
+        res.status(200).json(reorganizedData);
     } catch (error) {
         console.log(
             `Error in fetching the collection items by Id: ${collection_id}`,

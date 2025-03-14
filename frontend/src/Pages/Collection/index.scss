@@ -23,6 +23,7 @@
       // background-color: var(--base-color);
       background-color: var(--primary-color);
       border-radius: 100px;
+      // border: 1px solid var(--border-color);
 
       .options {
         padding: 10px 20px;
@@ -114,6 +115,7 @@
         gap: 10px;
 
         .heading {
+          color: white;
           font-size: 22px;
         }
 

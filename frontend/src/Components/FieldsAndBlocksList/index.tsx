@@ -27,6 +27,7 @@ export const FieldsAndBlocksList = ({
     itemsList,
     query_key_id,
     parentCollectionId,
+    itemType,
 }: BlocksListContainerProps) => {
     const queryClient = useQueryClient();
     const [showFieldPromt, setShowFieldPromt] = useState(false);
@@ -124,6 +125,7 @@ export const FieldsAndBlocksList = ({
                                     queryClient={queryClient}
                                     query_key_id={query_key_id}
                                     handleFieldsCancel={handleFieldsCancel}
+                                    itemType={itemType}
                                 />
                             </div>
                         ))}
@@ -136,7 +138,7 @@ export const FieldsAndBlocksList = ({
                             <BlocksPropmts
                                 key={block.instanceId || block.blockId}
                                 block={block}
-                                page_id={page_id}
+                                page_id={""}
                                 queryClient={queryClient}
                                 onCancel={() => handleBlockPromptCancel(block)}
                             />

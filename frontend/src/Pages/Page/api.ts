@@ -28,104 +28,72 @@ export const createBlock = async (page_id, blockData) => {
 };
 
 // create a new feild
-export const createField = async (field, page_id) => {
+export const createField = async (field, parent_id, itemType = "page") => {
+    console.log(itemType, "itemType");
+
     let response;
+    const fieldEndpoints = {
+        multi_select_field: "/fields/mutli_select", // Note: there's a typo in 'mutli_select'
+        single_select_field: "/fields/single_select",
+        text_field: "/fields/text",
+        number_field: "/fields/number",
+        email_field: "/fields/email",
+        date_field: "/fields/date",
+        color_picker_field: "/fields/color_picker",
+        textarea_field: "/fields/textarea_field",
+        json_field: "/fields/json_field",
+        url_field: "/fields/url_field",
+    };
 
-    if (field.type === "multi_select_field") {
-        response = await axios.post(`${backendUrl}/fields/mutli_select`, {
-            name: field.name,
-            label: field.label,
-            options: field.options,
-            is_selected: field.selectedOptions,
-        });
-
-        await axios.post(`${backendUrl}/page/${page_id}/page_items`, {
-            page_id,
-            reference_id: response.data[0].field_id,
-            type: "multi_select_field",
-        });
-    } else if (field.type === "single_select_field") {
-        response = await axios.post(`${backendUrl}/fields/single_select`, {
-            name: field.name,
-            label: field.label,
-            options: field.options,
-            is_selected: field.selectedOptions,
-        });
-
-        await axios.post(`${backendUrl}/page/${page_id}/page_items`, {
-            page_id,
-            reference_id: response.data[0].field_id,
-            type: "single_select_field",
-        });
-    } else if (field.type === "text_field") {
-        response = await axios.post(`${backendUrl}/fields/text`, field);
-
-        await axios.post(`${backendUrl}/page/${page_id}/page_items`, {
-            page_id,
-            reference_id: response.data[0].field_id,
-            type: "text_field",
-        });
-    } else if (field.type === "number_field") {
-        response = await axios.post(`${backendUrl}/fields/number`, field);
-
-        await axios.post(`${backendUrl}/page/${page_id}/page_items`, {
-            page_id,
-            reference_id: response.data[0].field_id,
-            type: "number_field",
-        });
-    } else if (field.type === "email_field") {
-        response = await axios.post(`${backendUrl}/fields/email`, field);
-
-        await axios.post(`${backendUrl}/page/${page_id}/page_items`, {
-            page_id,
-            reference_id: response.data[0].field_id,
-            type: "email_field",
-        });
-    } else if (field.type === "date_field") {
-        response = await axios.post(`${backendUrl}/fields/date`, field);
-
-        await axios.post(`${backendUrl}/page/${page_id}/page_items`, {
-            page_id,
-            reference_id: response.data[0].field_id,
-            type: "date_field",
-        });
-    } else if (field.type === "color_picker_field") {
-        response = await axios.post(`${backendUrl}/fields/color_picker`, field);
-
-        await axios.post(`${backendUrl}/page/${page_id}/page_items`, {
-            page_id,
-            reference_id: response.data[0].field_id,
-            type: "color_picker_field",
-        });
-    } else if (field.type === "textarea_field") {
-        response = await axios.post(
-            `${backendUrl}/fields/textarea_field`,
-            field,
-        );
-
-        await axios.post(`${backendUrl}/page/${page_id}/page_items`, {
-            page_id,
-            reference_id: response.data[0].field_id,
-            type: "textarea_field",
-        });
-    } else if (field.type === "json_field") {
-        response = await axios.post(`${backendUrl}/fields/json_field`, field);
-
-        await axios.post(`${backendUrl}/page/${page_id}/page_items`, {
-            page_id,
-            reference_id: response.data[0].field_id,
-            type: "json_field",
-        });
-    } else if (field.type === "url_field") {
-        response = await axios.post(`${backendUrl}/fields/url_field`, field);
-
-        await axios.post(`${backendUrl}/page/${page_id}/page_items`, {
-            page_id,
-            reference_id: response.data[0].field_id,
-            type: "url_field",
-        });
+    // Create the field based on its type
+    const endpoint = fieldEndpoints[field.type];
+    if (!endpoint) {
+        throw new Error(`Unsupported field type: ${field.type}`);
     }
 
-    console.log(response?.data[0].field_id, "Field create response");
+    // Prepare the field data based on field type
+    let fieldData = field;
+    if (
+        field.type === "multi_select_field" ||
+        field.type === "single_select_field"
+    ) {
+        fieldData = {
+            name: field.name,
+            label: field.label,
+            options: field.options,
+            is_selected: field.selectedOptions,
+        };
+    }
+
+    // Create the field
+    response = await axios.post(`${backendUrl}${endpoint}`, fieldData);
+    const field_id = response.data[0].field_id;
+
+    // Determine which join table to update based on itemType
+    const joinTableConfig = {
+        page: {
+            endpoint: `/page/${parent_id}/page_items`,
+            idField: "page_id",
+        },
+        collection: {
+            endpoint: `/collection/${parent_id}/collection_items`,
+            idField: "collection_id",
+        },
+    };
+
+    const config = joinTableConfig[itemType];
+    console.log(config, "config");
+    if (!config) {
+        throw new Error(`Unsupported item type: ${itemType}`);
+    }
+
+    // Update the join table (page_items or collection_items)
+    await axios.post(`${backendUrl}${config.endpoint}`, {
+        [config.idField]: parent_id,
+        reference_id: field_id,
+        type: field.type,
+    });
+
+    console.log(field_id, `Field created and linked to ${itemType}`);
     return response?.data;
 };
