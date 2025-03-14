@@ -22,7 +22,7 @@ export const FieldWrapper = ({
     children,
     data,
     queryClient,
-    page_id,
+    query_key_id,
     parentCollectionId,
 }: {
     data: any;
@@ -178,7 +178,7 @@ export const FieldWrapper = ({
             onSuccess: () => {
                 // invalidate the "page_items"
                 queryClient.invalidateQueries({
-                    queryKey: ["pageData", page_id],
+                    queryKey: ["pageData", query_key_id],
                 });
             },
         },
@@ -205,7 +205,7 @@ export const FieldWrapper = ({
         {
             onSuccess: () => {
                 queryClient.invalidateQueries({
-                    queryKey: ["pageData", page_id],
+                    queryKey: ["pageData", query_key_id],
                 });
                 setIsEditable(false);
             },
@@ -233,7 +233,7 @@ export const FieldWrapper = ({
         {
             onSuccess: () => {
                 queryClient.invalidateQueries({
-                    queryKey: ["pageData", page_id],
+                    queryKey: ["pageData", query_key_id],
                 });
             },
         },
@@ -260,7 +260,7 @@ export const FieldWrapper = ({
         {
             onSuccess: () => {
                 queryClient.invalidateQueries({
-                    queryKey: ["pageData", page_id],
+                    queryKey: ["pageData", query_key_id],
                 });
             },
         },
@@ -289,7 +289,7 @@ export const FieldWrapper = ({
         {
             onSuccess: () => {
                 queryClient.invalidateQueries({
-                    queryKey: ["pageData", page_id],
+                    queryKey: ["pageData", query_key_id],
                 });
             },
         },
@@ -318,7 +318,7 @@ export const FieldWrapper = ({
         {
             onSuccess: () => {
                 queryClient.invalidateQueries({
-                    queryKey: ["pageData", page_id],
+                    queryKey: ["pageData", query_key_id],
                 });
             },
         },

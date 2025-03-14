@@ -12,15 +12,7 @@ import { FieldsList } from "../Fields/FieldsList";
 import autoAnimate from "@formkit/auto-animate";
 import { FieldWrapper } from "../Fields/FieldWrapper";
 
-export const PageItems = ({
-    itemsList,
-    isSidebarOpen,
-    onScopeChange,
-    onAddFields,
-    queryClient,
-    page_id,
-    parentCollectionId,
-}: {
+type PageItemsType = {
     itemsList: any;
     isSidebarOpen?: boolean;
     onScopeChange?: (
@@ -31,8 +23,19 @@ export const PageItems = ({
     ) => void;
     onAddFields?: (blockId: string) => void;
     queryClient: any;
-    page_id: string | undefined;
-}) => {
+    query_key_id: string | undefined;
+    parentCollectionId: any;
+};
+
+export const PageItems = ({
+    itemsList,
+    isSidebarOpen,
+    onScopeChange,
+    onAddFields,
+    queryClient,
+    query_key_id,
+    parentCollectionId,
+}: PageItemsType) => {
     const [pageItemsList, setPageItemsList] = useState<blockType[]>(itemsList);
 
     useEffect(() => {
@@ -86,7 +89,7 @@ export const PageItems = ({
                             key={item.item_id || index}
                             data={item[item.item_type]}
                             queryClient={queryClient}
-                            page_id={page_id}
+                            query_key_id={query_key_id}
                             parentCollectionId={parentCollectionId}
                         >
                             <Field data={item[item.item_type]} />

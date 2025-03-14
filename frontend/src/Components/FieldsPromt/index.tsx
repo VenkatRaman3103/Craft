@@ -22,7 +22,7 @@ type optType = { id: string; value: string | undefined };
 export const FieldsPromt = ({
     field,
     queryClient,
-    page_id,
+    query_key_id,
     handleFieldsCancel,
 }: {
     field: fieldPromt;
@@ -229,12 +229,12 @@ export const FieldsPromt = ({
                 };
             }
 
-            return createField(payload, page_id);
+            return createField(payload, query_key_id);
         },
         {
             onSuccess: () => {
                 queryClient.invalidateQueries({
-                    queryKey: ["pageData", page_id],
+                    queryKey: ["pageData", query_key_id],
                 });
                 handleFieldsCancel(field);
             },

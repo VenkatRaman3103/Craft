@@ -33,9 +33,9 @@ export const Collection = () => {
                 `${backendUrl}/collections/collectionItems/${collection_id}`,
             );
 
-            console.log(response.data, "responseCollection");
+            console.log(response,'responseCollection')
 
-            setCollection(response.data);
+            setCollection(response.data[0]);
         }
         getCollection();
     }, [collection_id]);
@@ -100,8 +100,8 @@ export const Collection = () => {
                 )}
                 {selectedOption == "Fields" && (
                     <FieldsAndBlocksList
-                        itemsList={collection.collection_items}
-                        query_key_id={collection_id}
+                        itemsList={pageData.page_items}
+                        page_id={collection_id}
                         parentCollectionId={collection_id}
                     />
                 )}

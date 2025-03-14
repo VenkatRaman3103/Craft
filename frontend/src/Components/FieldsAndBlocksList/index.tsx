@@ -12,9 +12,9 @@ import { BlockSelectionPopup } from "../BlocksSelectionPopup";
 import { sampleBlocks } from "@/Data/blocks";
 
 interface BlocksListContainerProps {
-    pageData: any;
-    page_id: string;
-    parentCollectionId: string | null;
+    itemsList: any;
+    query_key_id: string | undefined;
+    parentCollectionId: string | undefined;
 }
 
 interface fieldPromt {
@@ -25,7 +25,7 @@ interface fieldPromt {
 
 export const FieldsAndBlocksList = ({
     itemsList,
-    page_id,
+    query_key_id,
     parentCollectionId,
 }: BlocksListContainerProps) => {
     const queryClient = useQueryClient();
@@ -111,7 +111,7 @@ export const FieldsAndBlocksList = ({
                 <PageItems
                     queryClient={queryClient}
                     itemsList={itemsList}
-                    page_id={page_id}
+                    query_key_id={query_key_id}
                     parentCollectionId={parentCollectionId}
                 />
 
@@ -122,7 +122,7 @@ export const FieldsAndBlocksList = ({
                                 <FieldsPromt
                                     field={field}
                                     queryClient={queryClient}
-                                    page_id={page_id}
+                                    query_key_id={query_key_id}
                                     handleFieldsCancel={handleFieldsCancel}
                                 />
                             </div>

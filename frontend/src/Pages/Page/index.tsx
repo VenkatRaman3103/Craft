@@ -51,7 +51,7 @@ export const Page = () => {
             <div className="wrapper">
                 <FieldsAndBlocksList
                     itemsList={pageData.page_items}
-                    page_id={page_id}
+                    query_key_id={page_id}
                     parentCollectionId={parentCollectionId}
                 />
 
