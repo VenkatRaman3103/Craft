@@ -19,6 +19,7 @@ export const PageItems = ({
     onAddFields,
     queryClient,
     page_id,
+    parentCollectionId,
 }: {
     pageItems: blockType[];
     isSidebarOpen?: boolean;
@@ -86,6 +87,7 @@ export const PageItems = ({
                             data={item[item.item_type]}
                             queryClient={queryClient}
                             page_id={page_id}
+                            parentCollectionId={parentCollectionId}
                         >
                             <Field data={item[item.item_type]} />
                         </FieldWrapper>

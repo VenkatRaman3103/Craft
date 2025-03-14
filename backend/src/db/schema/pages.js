@@ -9,20 +9,8 @@ import { colorPickerFields } from "./fields/colorPicker.js";
 import { textAreaFields } from "./fields/textArea.js";
 import { jsonFields } from "./fields/jsonField.js";
 import { urlFields } from "./fields/urlField.js";
-
-export const pageItemType = pgEnum("item_type", [
-    "block",
-    "text_field",
-    "multi_select_field",
-    "single_select_field",
-    "number_field",
-    "email_field",
-    "date_field",
-    "color_picker_field",
-    "textarea_field",
-    "json_field",
-    "url_field",
-]);
+import { collectionItems } from "./collections.js";
+import { itemType } from "./itemTypeEnum.js";
 
 export const pages = pgTable("pages", {
     page_id: uuid("page_id").primaryKey().defaultRandom(),
@@ -37,12 +25,16 @@ export const page_items = pgTable("page_items", {
     page_ref_id: uuid("page_ref_id").references(() => pages.page_id, {
         onDelete: "cascade",
     }),
-    item_type: pageItemType("item_type").notNull(),
+    item_type: itemType("item_type").notNull(),
     reference_id: uuid("reference_id").notNull(),
 });
 
-export const pageRelation = relations(pages, ({ many }) => ({
+export const pageRelation = relations(pages, ({ one, many }) => ({
     page_items: many(page_items),
+    collection_item: one(collectionItems, {
+        fields: [pages.page_id],
+        references: [collectionItems.reference_id],
+    }),
 }));
 
 export const pageItemsRelation = relations(page_items, ({ one }) => ({

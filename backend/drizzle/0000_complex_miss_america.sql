@@ -1,6 +1,7 @@
 CREATE TYPE "public"."scope_enum" AS ENUM('global', 'page', 'collection');--> statement-breakpoint
 CREATE TYPE "public"."url_type_enum" AS ENUM('http', 'https');--> statement-breakpoint
-CREATE TYPE "public"."item_type" AS ENUM('block', 'text_field', 'multi_select_field', 'single_select_field', 'number_field', 'email_field', 'date_field', 'color_picker_field', 'textarea_field', 'json_field', 'url_field');--> statement-breakpoint
+CREATE TYPE "public"."field_scope_enum" AS ENUM('global', 'collection', 'block', 'page');--> statement-breakpoint
+CREATE TYPE "public"."item_type" AS ENUM('block', 'page', 'text_field', 'multi_select_field', 'single_select_field', 'number_field', 'email_field', 'date_field', 'color_picker_field', 'textarea_field', 'json_field', 'url_field');--> statement-breakpoint
 CREATE TABLE "array_block_items" (
 	"item_id" uuid PRIMARY KEY DEFAULT gen_random_uuid() NOT NULL,
 	"array_block_ref_id" uuid,
@@ -43,6 +44,15 @@ CREATE TABLE "collection_pages" (
 	CONSTRAINT "collection_pages_collection_ref_id_page_ref_id_pk" PRIMARY KEY("collection_ref_id","page_ref_id")
 );
 --> statement-breakpoint
+CREATE TABLE "collection_items" (
+	"collection_item_id" uuid PRIMARY KEY DEFAULT gen_random_uuid() NOT NULL,
+	"collection_ref_id" uuid NOT NULL,
+	"item_type" "item_type" NOT NULL,
+	"reference_id" uuid NOT NULL,
+	"created_at" timestamp DEFAULT now(),
+	"edited_at" timestamp DEFAULT now()
+);
+--> statement-breakpoint
 CREATE TABLE "collections" (
 	"collection_id" uuid PRIMARY KEY DEFAULT gen_random_uuid() NOT NULL,
 	"name" text NOT NULL,
@@ -63,6 +73,9 @@ CREATE TABLE "color_picker_fields" (
 	"name" varchar NOT NULL,
 	"label" varchar NOT NULL,
 	"value" varchar(7) NOT NULL,
+	"required" boolean DEFAULT false NOT NULL,
+	"scope" "field_scope_enum" DEFAULT 'page' NOT NULL,
+	"description" varchar,
 	"type" varchar DEFAULT 'colorPicker' NOT NULL,
 	"created_at" timestamp DEFAULT now(),
 	"edited_at" timestamp DEFAULT now()
@@ -74,6 +87,9 @@ CREATE TABLE "date_fields" (
 	"label" varchar NOT NULL,
 	"value" varchar NOT NULL,
 	"type" varchar DEFAULT 'date' NOT NULL,
+	"required" boolean DEFAULT false NOT NULL,
+	"scope" "field_scope_enum" DEFAULT 'page' NOT NULL,
+	"description" varchar,
 	"created_at" timestamp DEFAULT now(),
 	"edited_at" timestamp DEFAULT now()
 );
@@ -84,6 +100,9 @@ CREATE TABLE "email_fields" (
 	"label" varchar NOT NULL,
 	"value" varchar NOT NULL,
 	"type" varchar DEFAULT 'email' NOT NULL,
+	"required" boolean DEFAULT false NOT NULL,
+	"scope" "field_scope_enum" DEFAULT 'page' NOT NULL,
+	"description" varchar,
 	"created_at" timestamp DEFAULT now(),
 	"edited_at" timestamp DEFAULT now()
 );
@@ -94,6 +113,9 @@ CREATE TABLE "json_fields" (
 	"label" varchar NOT NULL,
 	"value" jsonb NOT NULL,
 	"type" varchar DEFAULT 'json_fields' NOT NULL,
+	"required" boolean DEFAULT false NOT NULL,
+	"scope" "field_scope_enum" DEFAULT 'page' NOT NULL,
+	"description" varchar,
 	"created_at" timestamp DEFAULT now(),
 	"edited_at" timestamp DEFAULT now()
 );
@@ -104,6 +126,9 @@ CREATE TABLE "number_fields" (
 	"label" varchar NOT NULL,
 	"value" integer NOT NULL,
 	"type" varchar DEFAULT 'number' NOT NULL,
+	"required" boolean DEFAULT false NOT NULL,
+	"scope" "field_scope_enum" DEFAULT 'page' NOT NULL,
+	"description" varchar,
 	"created_at" timestamp DEFAULT now(),
 	"edited_at" timestamp DEFAULT now()
 );
@@ -114,6 +139,9 @@ CREATE TABLE "textarea_fields" (
 	"label" varchar NOT NULL,
 	"value" text NOT NULL,
 	"type" varchar DEFAULT 'textarea' NOT NULL,
+	"required" boolean DEFAULT false NOT NULL,
+	"scope" "field_scope_enum" DEFAULT 'page' NOT NULL,
+	"description" varchar,
 	"created_at" timestamp DEFAULT now(),
 	"edited_at" timestamp DEFAULT now()
 );
@@ -125,6 +153,9 @@ CREATE TABLE "url_fields" (
 	"value" varchar NOT NULL,
 	"url_type" "url_type_enum" DEFAULT 'http',
 	"type" varchar DEFAULT 'url' NOT NULL,
+	"required" boolean DEFAULT false NOT NULL,
+	"scope" "field_scope_enum" DEFAULT 'page' NOT NULL,
+	"description" varchar,
 	"created_at" timestamp DEFAULT now(),
 	"edited_at" timestamp DEFAULT now()
 );
@@ -134,6 +165,9 @@ CREATE TABLE "multi_select_fields" (
 	"name" varchar NOT NULL,
 	"label" varchar NOT NULL,
 	"type" varchar DEFAULT 'multi_select' NOT NULL,
+	"required" boolean DEFAULT false NOT NULL,
+	"scope" "field_scope_enum" DEFAULT 'page' NOT NULL,
+	"description" varchar,
 	"created_at" timestamp DEFAULT now(),
 	"edited_at" timestamp DEFAULT now()
 );
@@ -154,6 +188,9 @@ CREATE TABLE "single_select_fields" (
 	"name" varchar NOT NULL,
 	"label" varchar NOT NULL,
 	"type" varchar DEFAULT 'single_select' NOT NULL,
+	"required" boolean DEFAULT false NOT NULL,
+	"scope" "field_scope_enum" DEFAULT 'page' NOT NULL,
+	"description" varchar,
 	"created_at" timestamp DEFAULT now(),
 	"edited_at" timestamp DEFAULT now()
 );
@@ -175,6 +212,9 @@ CREATE TABLE "text_fields" (
 	"label" varchar NOT NULL,
 	"value" varchar NOT NULL,
 	"type" varchar DEFAULT 'text' NOT NULL,
+	"required" boolean DEFAULT false NOT NULL,
+	"scope" "field_scope_enum" DEFAULT 'page' NOT NULL,
+	"description" varchar,
 	"created_at" timestamp DEFAULT now(),
 	"edited_at" timestamp DEFAULT now()
 );
@@ -212,6 +252,7 @@ ALTER TABLE "array_block_items" ADD CONSTRAINT "array_block_items_array_block_re
 ALTER TABLE "child" ADD CONSTRAINT "child_parent_ref_id_parent_parent_id_fk" FOREIGN KEY ("parent_ref_id") REFERENCES "public"."parent"("parent_id") ON DELETE no action ON UPDATE no action;--> statement-breakpoint
 ALTER TABLE "collection_pages" ADD CONSTRAINT "collection_pages_collection_ref_id_collections_collection_id_fk" FOREIGN KEY ("collection_ref_id") REFERENCES "public"."collections"("collection_id") ON DELETE restrict ON UPDATE no action;--> statement-breakpoint
 ALTER TABLE "collection_pages" ADD CONSTRAINT "collection_pages_page_ref_id_pages_page_id_fk" FOREIGN KEY ("page_ref_id") REFERENCES "public"."pages"("page_id") ON DELETE cascade ON UPDATE no action;--> statement-breakpoint
+ALTER TABLE "collection_items" ADD CONSTRAINT "collection_items_collection_ref_id_collections_collection_id_fk" FOREIGN KEY ("collection_ref_id") REFERENCES "public"."collections"("collection_id") ON DELETE cascade ON UPDATE no action;--> statement-breakpoint
 ALTER TABLE "multi_select_options" ADD CONSTRAINT "multi_select_options_field_id_multi_select_fields_field_id_fk" FOREIGN KEY ("field_id") REFERENCES "public"."multi_select_fields"("field_id") ON DELETE cascade ON UPDATE no action;--> statement-breakpoint
 ALTER TABLE "single_select_options" ADD CONSTRAINT "single_select_options_field_id_single_select_fields_field_id_fk" FOREIGN KEY ("field_id") REFERENCES "public"."single_select_fields"("field_id") ON DELETE cascade ON UPDATE no action;--> statement-breakpoint
 ALTER TABLE "page_items" ADD CONSTRAINT "page_items_page_ref_id_pages_page_id_fk" FOREIGN KEY ("page_ref_id") REFERENCES "public"."pages"("page_id") ON DELETE cascade ON UPDATE no action;

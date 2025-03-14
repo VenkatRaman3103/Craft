@@ -2,12 +2,15 @@ import { relations } from "drizzle-orm";
 import {
     boolean,
     integer,
+    pgEnum,
     pgTable,
     timestamp,
     uuid,
     varchar,
 } from "drizzle-orm/pg-core";
 import { page_items } from "./pages.js";
+import { collectionItems } from "./collections.js";
+import { fieldScopeEnums } from "./fieldScopeEnums.js";
 
 // TODO: add scope column for each field
 // TODO: add scope enum
@@ -19,6 +22,9 @@ export const textFields = pgTable("text_fields", {
     label: varchar("label").notNull(),
     value: varchar("value").notNull(),
     type: varchar("type").default("text").notNull(),
+    required: boolean("required").default(false).notNull(),
+    scope: fieldScopeEnums("scope").default("page").notNull(),
+    description: varchar("description"),
     created_at: timestamp("created_at").defaultNow(),
     edited_at: timestamp("edited_at").defaultNow(),
 });
@@ -28,6 +34,10 @@ export const textFieldsRelations = relations(textFields, ({ one }) => ({
         fields: [textFields.field_id],
         references: [page_items.reference_id],
     }),
+    collection_item: one(collectionItems, {
+        fields: [textFields.field_id],
+        references: [collectionItems.reference_id],
+    }),
 }));
 
 // multi select field
@@ -36,6 +46,9 @@ export const multiSelectFields = pgTable("multi_select_fields", {
     name: varchar("name").notNull(),
     label: varchar("label").notNull(),
     type: varchar("type").default("multi_select").notNull(),
+    required: boolean("required").default(false).notNull(),
+    scope: fieldScopeEnums("scope").default("page").notNull(),
+    description: varchar("description"),
     created_at: timestamp("created_at").defaultNow(),
     edited_at: timestamp("edited_at").defaultNow(),
 });
@@ -80,6 +93,9 @@ export const singleSelectFields = pgTable("single_select_fields", {
     name: varchar("name").notNull(),
     label: varchar("label").notNull(),
     type: varchar("type").default("single_select").notNull(),
+    required: boolean("required").default(false).notNull(),
+    scope: fieldScopeEnums("scope").default("page").notNull(),
+    description: varchar("description"),
     created_at: timestamp("created_at").defaultNow(),
     edited_at: timestamp("edited_at").defaultNow(),
 });

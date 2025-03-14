@@ -1,6 +1,13 @@
 import { relations } from "drizzle-orm";
-import { pgTable, timestamp, uuid, varchar } from "drizzle-orm/pg-core";
+import {
+    boolean,
+    pgTable,
+    timestamp,
+    uuid,
+    varchar,
+} from "drizzle-orm/pg-core";
 import { page_items } from "../pages.js";
+import { fieldScopeEnums } from "../fieldScopeEnums.js";
 
 // date_fields table
 export const dateFields = pgTable("date_fields", {
@@ -9,6 +16,9 @@ export const dateFields = pgTable("date_fields", {
     label: varchar("label").notNull(),
     value: varchar("value").notNull(),
     type: varchar("type").default("date").notNull(),
+    required: boolean("required").default(false).notNull(),
+    scope: fieldScopeEnums("scope").default("page").notNull(),
+    description: varchar("description"),
     created_at: timestamp("created_at").defaultNow(),
     edited_at: timestamp("edited_at").defaultNow(),
 });

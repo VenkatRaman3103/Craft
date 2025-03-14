@@ -23,6 +23,7 @@ export const FieldWrapper = ({
     data,
     queryClient,
     page_id,
+    parentCollectionId,
 }: {
     data: any;
     children: React.ReactNode;
@@ -30,15 +31,28 @@ export const FieldWrapper = ({
     page_id: string;
 }) => {
     const [showOptions, setShowOptions] = useState(false);
-    const [activeOption, setActiveOption] = useState<string | null>(null);
+    const [activeMenu, setActiveMenu] = useState<string | null>(null);
+    const [activeSubMenu, setActiveSubMenu] = useState<string | null>(null);
     const [withContent, setWithContent] = useState(true);
     const [fieldName, setFieldName] = useState(data?.label || "");
-    const [activeScopeOption, setActiveScopeOption] = useState<string | null>(
-        null,
-    );
-
     const [isEditable, setIsEditable] = useState(false);
     const [label, setLabel] = useState(data?.label || "");
+    const [description, setDescription] = useState(data?.description || "");
+
+    // For constraints menu
+    const [selectedConstraints, setSelectedConstraints] = useState<number[]>(
+        data?.constraints || [],
+    );
+
+    // Available constraints for the constraints menu
+    const availableConstraints = [
+        { id: 1, name: "Required" },
+        { id: 2, name: "Number only" },
+        { id: 3, name: "Text only" },
+        { id: 4, name: "Min length" },
+        { id: 5, name: "Max length" },
+        { id: 6, name: "Regex pattern" },
+    ];
 
     // State for different field types
     const [text, setText] = useState(data?.value || "");
@@ -94,8 +108,8 @@ export const FieldWrapper = ({
     const toggleOptions = (e: React.MouseEvent) => {
         e.stopPropagation();
         setShowOptions(!showOptions);
-        setActiveOption(null);
-        setActiveScopeOption(null); // Reset scope option when toggling menu
+        setActiveMenu(null);
+        setActiveSubMenu(null);
     };
 
     const [inputWidth, setInputWidth] = useState("auto");
@@ -129,15 +143,15 @@ export const FieldWrapper = ({
             !ellipsisRef.current.contains(event.target as Node)
         ) {
             setShowOptions(false);
-            setActiveOption(null);
-            setActiveScopeOption(null);
+            setActiveMenu(null);
+            setActiveSubMenu(null);
         }
     };
 
     const fieldMutation = useMutation(
         async (data: any) => {
             try {
-                // delete the field from page_items using  field_id
+                // delete the field from page_items using field_id
                 const fieldResponse = await axios.delete(
                     `${backendUrl}/fields/${data.type}/${data.field_id}`,
                 );
@@ -170,11 +184,6 @@ export const FieldWrapper = ({
         },
     );
 
-    async function onDelete(data: any) {
-        console.log(data, "data to be deleted");
-        fieldMutation.mutate(data);
-    }
-
     const updateFieldMutation = useMutation(
         async (updateData: any) => {
             try {
@@ -202,6 +211,123 @@ export const FieldWrapper = ({
             },
         },
     );
+
+    const copyFieldMutation = useMutation(
+        async (copyData: any) => {
+            try {
+                const response = await axios.post(
+                    `${backendUrl}/fields/copy`,
+                    copyData,
+                );
+                console.log(response.data, "Copied");
+                return response.data;
+            } catch (error) {
+                const errorMessage = {
+                    error,
+                    message: `Failed to copy field: ${copyData.field_id}`,
+                };
+                console.log(errorMessage);
+                throw error;
+            }
+        },
+        {
+            onSuccess: () => {
+                queryClient.invalidateQueries({
+                    queryKey: ["pageData", page_id],
+                });
+            },
+        },
+    );
+
+    const moveFieldMutation = useMutation(
+        async (moveData: any) => {
+            try {
+                const response = await axios.patch(
+                    `${backendUrl}/move/field/${moveData.field_id}/to/collection/${parentCollectionId}`,
+                    // moveData,
+                );
+                console.log(response.data, "Moved");
+                return response.data;
+            } catch (error) {
+                const errorMessage = {
+                    error,
+                    message: `Failed to move field: ${moveData.field_id}`,
+                };
+                console.log(errorMessage);
+                throw error;
+            }
+        },
+        {
+            onSuccess: () => {
+                queryClient.invalidateQueries({
+                    queryKey: ["pageData", page_id],
+                });
+            },
+        },
+    );
+
+    const updateConstraintsMutation = useMutation(
+        async (constraintsData: any) => {
+            try {
+                const response = await axios.patch(
+                    `${backendUrl}/fields/${data.type}/${data.field_id}/constraints`,
+                    {
+                        constraints: constraintsData.constraints,
+                    },
+                );
+                console.log(response.data, "Constraints Updated");
+                return response.data;
+            } catch (error) {
+                const errorMessage = {
+                    error,
+                    message: `Failed to update constraints: ${data.field_id}`,
+                };
+                console.log(errorMessage);
+                throw error;
+            }
+        },
+        {
+            onSuccess: () => {
+                queryClient.invalidateQueries({
+                    queryKey: ["pageData", page_id],
+                });
+            },
+        },
+    );
+
+    const updateDescriptionMutation = useMutation(
+        async (descriptionData: any) => {
+            try {
+                const response = await axios.patch(
+                    `${backendUrl}/fields/${data.type}/${data.field_id}/description`,
+                    {
+                        description: descriptionData.description,
+                    },
+                );
+                console.log(response.data, "Description Updated");
+                return response.data;
+            } catch (error) {
+                const errorMessage = {
+                    error,
+                    message: `Failed to update description: ${data.field_id}`,
+                };
+                console.log(errorMessage);
+                throw error;
+            }
+        },
+        {
+            onSuccess: () => {
+                queryClient.invalidateQueries({
+                    queryKey: ["pageData", page_id],
+                });
+            },
+        },
+    );
+
+    async function onDelete() {
+        console.log(data, "data to be deleted");
+        fieldMutation.mutate(data);
+    }
 
     async function onUpdate(data: any) {
         let payload = {
@@ -287,55 +413,103 @@ export const FieldWrapper = ({
         updateFieldMutation.mutate(payload);
     }
 
-    function onEdit() {}
-    function onRename() {}
-    function onDuplicate() {}
-    function onMove() {}
-    function onRenameOption() {}
-    function onMoveOption() {}
-
-    const handleOptionClick = (e: React.MouseEvent, type: string) => {
-        e.stopPropagation();
-        setActiveOption(type);
-
-        if (type === "edit" && onEdit) {
-            onEdit(data.id);
-            setShowOptions(false);
-        } else if (type === "duplicate" && onDuplicate) {
-            onDuplicate(data.id);
-            setShowOptions(false);
-        } else if (type === "move" && onMove) {
-            onMove(data.id);
-            setShowOptions(false);
-        }
-    };
-
-    const handleScopeOptionClick = (e: React.MouseEvent, scope: string) => {
-        e.stopPropagation();
-        setActiveScopeOption((prev) => (prev === scope ? null : scope));
-    };
-
-    const handleDelete = () => {
-        if (onDelete) {
-            onDelete(data);
-        }
+    function handleEdit() {
+        setIsEditable(true);
         setShowOptions(false);
-    };
+        setActiveMenu(null);
+        setActiveSubMenu(null);
+    }
 
-    const handleUpdate = () => {
-        if (onUpdate) {
-            onUpdate(data);
-        }
+    function handleHide() {
+        // Implement hide functionality
+        console.log("Hide field", data.field_id);
         setShowOptions(false);
-    };
+        // You would typically update a 'visible' property in your database
+        // For now, just log the action
+    }
+
+    function handleAddConstraint(constraintId: number) {
+        // Toggle the selected constraint
+        setSelectedConstraints((prev) => {
+            if (prev.includes(constraintId)) {
+                return prev.filter((id) => id !== constraintId);
+            } else {
+                return [...prev, constraintId];
+            }
+        });
+    }
+
+    function handleAddDescription() {
+        // Implement description functionality
+        // For simplicity, we'll just set isEditable to true and focus on description field
+        // In a real implementation, you might want a modal or a dedicated UI for this
+        setActiveMenu(null);
+        setShowOptions(false);
+
+        // Prompt the user for a description
+        const newDescription = prompt("Enter field description:", description);
+        if (newDescription !== null) {
+            setDescription(newDescription);
+            updateDescriptionMutation.mutate({
+                description: newDescription,
+            });
+        }
+    }
 
     const handleNameSubmit = () => {
-        if (onRename && fieldName.trim() && activeScopeOption) {
-            onRename(data.id, fieldName);
-            setShowOptions(false);
-            setActiveOption(null);
-            setActiveScopeOption(null);
+        if (!fieldName.trim()) return;
+
+        if (activeMenu === "move") {
+            if (activeSubMenu === "local") {
+                // Handle move to local with the fieldName and withContent options
+                console.log("Moving to local:", fieldName, withContent);
+                moveFieldMutation.mutate({
+                    field_id: data.field_id,
+                    type: data.type,
+                    new_name: fieldName,
+                    with_content: withContent,
+                    destination: "local",
+                });
+            } else if (activeSubMenu === "global") {
+                // Handle move to global library with the fieldName and withContent options
+                console.log("Moving to global:", data, withContent);
+                moveFieldMutation.mutate({
+                    field_id: data.field_id,
+                    type: data.type,
+                    new_name: fieldName,
+                    with_content: withContent,
+                    destination: "global",
+                });
+            }
+        } else if (activeMenu === "copy") {
+            if (activeSubMenu === "local") {
+                // Handle copy to local with the fieldName and withContent options
+                console.log("Copying to local:", fieldName, withContent);
+                copyFieldMutation.mutate({
+                    field_id: data.field_id,
+                    type: data.type,
+                    new_name: fieldName,
+                    with_content: withContent,
+                    destination: "local",
+                });
+            } else if (activeSubMenu === "global") {
+                // Handle copy to global library with the fieldName and withContent options
+                console.log("Copying to global:", fieldName, withContent);
+                copyFieldMutation.mutate({
+                    field_id: data.field_id,
+                    type: data.type,
+                    new_name: fieldName,
+                    with_content: withContent,
+                    destination: "global",
+                });
+            }
         }
+
+        // Reset states after submission
+        setFieldName("");
+        setActiveSubMenu(null);
+        setActiveMenu(null);
+        setShowOptions(false);
     };
 
     useEffect(() => {
@@ -348,6 +522,8 @@ export const FieldWrapper = ({
     useEffect(() => {
         setFieldName(data?.label || "");
         setLabel(data?.label || "");
+        setDescription(data?.description || "");
+        setSelectedConstraints(data?.constraints || []);
 
         // Update all fields based on type
         if (data.type === "text_field") {
@@ -389,11 +565,6 @@ export const FieldWrapper = ({
             });
         }
     }, [data]);
-
-    function handleEdit() {
-        setIsEditable(true);
-        setShowOptions(false);
-    }
 
     function renderEditComponent() {
         console.log(data, "dataEdit");
@@ -437,15 +608,12 @@ export const FieldWrapper = ({
                 return (
                     <JSONPromptField json={jsonData} setJSON={setJsonData} />
                 );
-
             case "url_field":
                 return <UrlPromt url={url} setUrl={setUrl} />;
             default:
                 return <div>Unsupported field type</div>;
         }
     }
-
-    console.log(data, "datalhlh");
 
     return (
         <div className="text-field-container">
@@ -482,17 +650,25 @@ export const FieldWrapper = ({
             {showOptions && (
                 <FieldMenuOptions
                     nameInputRef={nameInputRef}
-                    activeScopeOption={activeOption}
+                    activeMenu={activeMenu}
+                    activeSubMenu={activeSubMenu}
                     fieldName={fieldName}
                     handleNameSubmit={handleNameSubmit}
-                    setActiveScopeOption={setActiveOption}
+                    setActiveMenu={setActiveMenu}
+                    setActiveSubMenu={setActiveSubMenu}
                     setFieldName={setFieldName}
-                    optionsRef={optionsRef}
-                    handleScopeOptionClick={handleOptionClick}
-                    handleDelete={handleDelete}
                     withContent={withContent}
                     setWithContent={setWithContent}
+                    optionsRef={optionsRef}
+                    isSidebarOpen={false}
                     handleEdit={handleEdit}
+                    handleDelete={onDelete}
+                    handleAddConstraint={handleAddConstraint}
+                    handleAddDescription={handleAddDescription}
+                    handleHide={handleHide}
+                    availableConstraints={availableConstraints}
+                    selectedConstraints={selectedConstraints}
+                    setSelectedConstraints={setSelectedConstraints}
                 />
             )}
 

@@ -7,11 +7,13 @@ import { users } from "../db/schema/user.js";
 import { eq } from "drizzle-orm";
 import { collectionsRouter } from "./collections/route.js";
 import { collectionRouter } from "./collection/route.js";
-import collectionJoinPageRouter from "./collectionJoinPageRouter/route.js";
+import collectionJoinPageRouter from "./collectionJoinPage/route.js";
 import { blocksRouter } from "./blocks/route.js";
 import { pagesRoute } from "./pages/route.js";
 import * as schema from "../db/schema/index.js";
 import { fieldRoute } from "./fields/route.js";
+import { collectionItemsRouter } from "./collectionItems/route.js";
+import { move } from "./move/route.js";
 
 dotenv.config();
 
@@ -83,6 +85,9 @@ app.use("/api", blocksRouter);
 // field
 app.use("/api", fieldRoute);
 
+// collectionItems
+app.use("/api", collectionItemsRouter);
+
 app.get("/api/get/pages", async (req, res) => {
     try {
         const result = await db.query.pages.findMany({
@@ -103,6 +108,8 @@ app.get("/api/get/pages", async (req, res) => {
         });
     }
 });
+
+app.use("/api", move);
 
 // Start the server
 const PORT = 5000;

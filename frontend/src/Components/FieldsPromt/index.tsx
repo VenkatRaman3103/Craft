@@ -15,7 +15,7 @@ import { ColorPickerPrompt } from "./ColorPickerPrompt";
 import { TextareaFieldPrompt } from "./TextareaPrompt";
 import { JSONPromptField } from "./JsonPromptField";
 import { UrlPromt } from "./UrlPromptField";
-import { type } from "os";
+import { v4 as uuidv4 } from "uuid";
 
 type optType = { id: string; value: string | undefined };
 
@@ -132,6 +132,10 @@ export const FieldsPromt = ({
     const fieldMutation = useMutation(
         () => {
             let payload;
+
+            // const field_id = uuidv4();
+
+            console.log(field, "fieldToMove");
 
             if (field.type === "multi_select_field") {
                 const selectedOptions = multiSelectOptions

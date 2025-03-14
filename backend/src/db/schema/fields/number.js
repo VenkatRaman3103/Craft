@@ -1,5 +1,6 @@
 import { relations } from "drizzle-orm";
 import {
+    boolean,
     integer,
     pgTable,
     timestamp,
@@ -7,6 +8,7 @@ import {
     varchar,
 } from "drizzle-orm/pg-core";
 import { page_items } from "../pages.js";
+import { fieldScopeEnums } from "../fieldScopeEnums.js";
 
 // number_fields table
 export const numberFields = pgTable("number_fields", {
@@ -15,6 +17,9 @@ export const numberFields = pgTable("number_fields", {
     label: varchar("label").notNull(),
     value: integer("value").notNull(),
     type: varchar("type").default("number").notNull(),
+    required: boolean("required").default(false).notNull(),
+    scope: fieldScopeEnums("scope").default("page").notNull(),
+    description: varchar("description"),
     created_at: timestamp("created_at").defaultNow(),
     edited_at: timestamp("edited_at").defaultNow(),
 });
