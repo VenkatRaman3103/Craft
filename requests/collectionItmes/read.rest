@@ -22,7 +22,8 @@ Content-Type: application/json; charset=utf-8
 User-Agent: VRC
 
 # query
-GET /collectionItems
+# GET /collectionItems
+GET /collections/collectionItems/aede9957-7260-42d8-91fa-fb76e9ae91a5
 
 # body
 # {

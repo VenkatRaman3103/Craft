@@ -3,6 +3,7 @@ import {
     readCollection,
     getCollectionsByReference,
     getCollectionByCollectionId,
+    getCollectionItemsByCollectionId,
 } from "./read.js";
 import { createCollection } from "./creat.js";
 import { deleteCollection } from "./delete.js";
@@ -26,6 +27,12 @@ collectionsRouter.get(
 collectionsRouter.get(
     "/collections/collection/:collection_id",
     getCollectionByCollectionId,
+);
+
+// test route
+collectionsRouter.get(
+    "/collections/collectionItems/:collection_id",
+    getCollectionItemsByCollectionId,
 );
 
 // Update: PUT/PATCH

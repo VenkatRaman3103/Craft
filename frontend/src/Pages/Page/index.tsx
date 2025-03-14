@@ -39,6 +39,7 @@ export const Page = () => {
     }
 
     console.log("openSideBar", openSideBar);
+    console.log(pageData.page_items, "pageData");
 
     return (
         <div className="page-content-container">
@@ -49,7 +50,7 @@ export const Page = () => {
             />
             <div className="wrapper">
                 <FieldsAndBlocksList
-                    pageData={pageData}
+                    itemsList={pageData.page_items}
                     page_id={page_id}
                     parentCollectionId={parentCollectionId}
                 />

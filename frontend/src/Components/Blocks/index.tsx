@@ -13,7 +13,7 @@ import autoAnimate from "@formkit/auto-animate";
 import { FieldWrapper } from "../Fields/FieldWrapper";
 
 export const PageItems = ({
-    pageItems,
+    itemsList,
     isSidebarOpen,
     onScopeChange,
     onAddFields,
@@ -21,7 +21,7 @@ export const PageItems = ({
     page_id,
     parentCollectionId,
 }: {
-    pageItems: blockType[];
+    itemsList: any;
     isSidebarOpen?: boolean;
     onScopeChange?: (
         blockId: string,
@@ -33,11 +33,11 @@ export const PageItems = ({
     queryClient: any;
     page_id: string | undefined;
 }) => {
-    const [pageItemsList, setPageItemsList] = useState<blockType[]>(pageItems);
+    const [pageItemsList, setPageItemsList] = useState<blockType[]>(itemsList);
 
     useEffect(() => {
-        setPageItemsList(pageItems);
-    }, [pageItems]);
+        setPageItemsList(itemsList);
+    }, [itemsList]);
 
     async function onDelete(block_id: string, item_id: string) {
         try {
@@ -63,7 +63,7 @@ export const PageItems = ({
 
     return (
         <div className="blocks-container">
-            {pageItemsList.map((item: any, index) => {
+            {pageItemsList?.map((item: any, index) => {
                 if (item?.item_type === "block") {
                     if (item.block) {
                         return (

@@ -42,3 +42,26 @@ export async function getCollectionByCollectionId(req, res) {
         res.status(500).json({ error: error });
     }
 }
+
+export async function getCollectionItemsByCollectionId(req, res) {
+    const { collection_id } = req.params;
+    try {
+        const collectionItems = await db.query.collections.findFirst({
+            where: (collection, { eq }) =>
+                eq(collection.collection_id, collection_id),
+            with: {
+                collection_items: {
+                    with: {
+                        text_field: true,
+                    },
+                },
+            },
+        });
+        res.status(200).json(collectionItems);
+    } catch (error) {
+        console.log(
+            `Error in fetching the collection items by Id: ${collection_id}`,
+        );
+        res.status(500).json({ error: error });
+    }
+}

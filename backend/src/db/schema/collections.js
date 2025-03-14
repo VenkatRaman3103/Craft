@@ -36,6 +36,10 @@ export const collectionItems = pgTable("collection_items", {
     editedAt: timestamp("edited_at").defaultNow(),
 });
 
+export const collectionRelation = relations(collections, ({ many }) => ({
+    collection_items: many(collectionItems),
+}));
+
 export const collectionItemsRelations = relations(
     collectionItems,
     ({ one }) => ({
@@ -90,7 +94,3 @@ export const collectionItemsRelations = relations(
         }),
     }),
 );
-
-export const collectionRelation = relations(collections, ({ many }) => ({
-    collection_items: many(collectionItems),
-}));

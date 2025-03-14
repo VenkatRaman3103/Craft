@@ -24,7 +24,7 @@ interface fieldPromt {
 }
 
 export const FieldsAndBlocksList = ({
-    pageData,
+    itemsList,
     page_id,
     parentCollectionId,
 }: BlocksListContainerProps) => {
@@ -103,13 +103,14 @@ export const FieldsAndBlocksList = ({
     console.log(selectedBlocks, "selectedBlocks");
     console.log(promtFields, "promtfields");
     console.log(parentCollectionId, "parentCollectionId");
+    console.log(itemsList, "itemsList");
 
     return (
         <div className="blocks-list-container">
             <div className="blocks-list-wrapper">
                 <PageItems
                     queryClient={queryClient}
-                    pageItems={pageData.page_items || []}
+                    itemsList={itemsList}
                     page_id={page_id}
                     parentCollectionId={parentCollectionId}
                 />
