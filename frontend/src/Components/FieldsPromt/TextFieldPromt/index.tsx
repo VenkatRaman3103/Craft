@@ -8,7 +8,7 @@ export const TextFieldPromt = ({ text, setText }) => {
     }
 
     return (
-        <div className="text-input-field-container">
+        <div className="text-input-field-container prior">
             <input
                 className="text-input-field"
                 type="text"

@@ -6,10 +6,10 @@ import { sampleFields } from "@/Data/fields";
 import { PageItems } from "../Blocks";
 import { FieldsPromt } from "../FieldsPromt";
 import { BlocksPropmts } from "../BlocksPromts";
-import { AddPageItemsBtn } from "@/Pages/Page";
 import { FieldSelectionPopup } from "../FieldSelectionPopup";
 import { BlockSelectionPopup } from "../BlocksSelectionPopup";
 import { sampleBlocks } from "@/Data/blocks";
+import { AddBtn } from "../Buttons/AddBtn";
 
 interface BlocksListContainerProps {
     itemsList: any;
@@ -148,6 +148,7 @@ export const FieldsAndBlocksList = ({
                 <AddPageItemsBtn
                     openFieldPopup={openFieldPopup}
                     openBlockPopup={openBlockPopup}
+                    itemType={itemType}
                 />
 
                 <FieldSelectionPopup
@@ -164,6 +165,29 @@ export const FieldsAndBlocksList = ({
                     onBlocksSelected={handleBlocksSelected}
                 />
             </div>
+        </div>
+    );
+};
+
+export const AddPageItemsBtn = ({
+    openFieldPopup,
+    openBlockPopup,
+    itemType,
+}: {
+    openFieldPopup: () => void;
+    openBlockPopup: () => void;
+}) => {
+    return (
+        <div className="add-button-wrapper">
+            <div onClick={openFieldPopup} className="btn">
+                <AddBtn iconLable="Add Field" />
+            </div>
+
+            {itemType != "collection" && (
+                <div onClick={openBlockPopup} className="btn">
+                    <AddBtn iconLable="Add Blocks" />
+                </div>
+            )}
         </div>
     );
 };

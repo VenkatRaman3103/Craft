@@ -15,7 +15,7 @@ export const Number = ({ data }: { data: field }) => {
     }, [data.value]);
 
     return (
-        <div className="text-input-field-container">
+        <div className="text-input-field-container prior-drop">
             {/* <div>{data.name}</div> */}
             <input
                 className="text-input-field"

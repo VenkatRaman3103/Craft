@@ -55,14 +55,15 @@
         }
       }
     }
-
-    .add-button-wrapper {
-      margin-top: 20px;
-      display: flex;
-      gap: 20px;
-    }
-
   }
+}
+
+.add-button-wrapper {
+  margin-top: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 20px;
 }
 
 .sidebar-container {

@@ -630,8 +630,8 @@ export const FieldWrapper = ({
     }
 
     return (
-        <div className="text-field-container">
-            <div className="text-field-header-container">
+        <div className="text-field-container prior-drop">
+            <div className="text-field-header-container prior-drop">
                 <div className="text-field-header-wrapper">
                     <div className="text-field-heading-container">
                         {isEditable ? (

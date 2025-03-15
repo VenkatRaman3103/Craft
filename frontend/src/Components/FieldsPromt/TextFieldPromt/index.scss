@@ -5,8 +5,11 @@
     display: flex;
     justify-content: center;
     align-items: center;
-    // padding-top: 20px;
-    // padding-bottom: 10px;
+
+    &.prior {
+      padding-top: 20px;
+      padding-bottom: 20px;
+    }
 
     .text-input-field {
       height: 45px;

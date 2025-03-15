@@ -66,23 +66,3 @@ export const Page = () => {
         </div>
     );
 };
-
-export const AddPageItemsBtn = ({
-    openFieldPopup,
-    openBlockPopup,
-}: {
-    openFieldPopup: () => void;
-    openBlockPopup: () => void;
-}) => {
-    return (
-        <div className="add-button-wrapper">
-            <div onClick={openFieldPopup} className="btn">
-                <AddBtn iconLable="Add Field" />
-            </div>
-
-            <div onClick={openBlockPopup} className="btn">
-                <AddBtn iconLable="Add Blocks" />
-            </div>
-        </div>
-    );
-};
