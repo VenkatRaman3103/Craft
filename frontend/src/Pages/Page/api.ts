@@ -75,6 +75,14 @@ export const createField = async (field, parent_id, itemType = "page") => {
             endpoint: `/page/${parent_id}/page_items`,
             idField: "page_id",
         },
+        local: {
+            endpoint: `/page/${parent_id}/page_items`,
+            idField: "page_id",
+        },
+        all: {
+            endpoint: `/collection/${parent_id}/collection_items`,
+            idField: "collection_id",
+        },
         collection: {
             endpoint: `/collection/${parent_id}/collection_items`,
             idField: "collection_id",
@@ -82,7 +90,9 @@ export const createField = async (field, parent_id, itemType = "page") => {
     };
 
     const config = joinTableConfig[itemType];
+
     console.log(config, "config");
+
     if (!config) {
         throw new Error(`Unsupported item type: ${itemType}`);
     }

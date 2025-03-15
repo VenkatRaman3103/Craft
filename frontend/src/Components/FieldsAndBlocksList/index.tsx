@@ -40,7 +40,7 @@ export const FieldsAndBlocksList = ({
     const [isBlockPopupOpen, setIsBlockPopupOpen] = useState(false);
     const [promtFields, setPromtFields] = useState<fieldPromt[]>([]);
 
-    const [fieldType, setFieldType] = useState("all");
+    const [fieldType, setFieldType] = useState(itemType);
 
     const handleAddSelectedFields = (selectedFieldIds, selectedFieldsType) => {
         setFieldType(selectedFieldsType);
@@ -64,6 +64,7 @@ export const FieldsAndBlocksList = ({
                     field_id: `${field[field.item_type].field_id}`,
                     name: field[field.item_type].name,
                     type: field[field.item_type].type,
+                    value: field[field.item_type].value,
                 }));
             setPromtFields([...promtFields, ...fieldsToAdd]);
         }

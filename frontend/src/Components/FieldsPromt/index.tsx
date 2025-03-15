@@ -42,7 +42,7 @@ export const FieldsPromt = ({
     }, [field, fieldType]);
 
     // text
-    const [text, setText] = useState<string>("");
+    const [text, setText] = useState<string>(field.value ? field.value : "");
 
     // multi select field
     const [multiSelectOptions, setMultiSelectOptions] = useState([]);

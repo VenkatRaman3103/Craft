@@ -1,5 +1,5 @@
 import { useState, useRef, useEffect } from "react";
-import { X, Plus, Check, FileText } from "lucide-react";
+import { X, Plus, FileText } from "lucide-react";
 import { darkFont, lightFont } from "@/Styles/base";
 import "./index.scss";
 import * as React from "react";
