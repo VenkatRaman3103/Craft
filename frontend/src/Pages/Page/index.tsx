@@ -53,6 +53,8 @@ export const Page = () => {
                     itemsList={pageData.page_items}
                     query_key_id={page_id}
                     parentCollectionId={parentCollectionId}
+                    queryKey={["pageData", page_id]}
+                    itemType="page"
                 />
 
                 <div

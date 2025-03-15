@@ -24,12 +24,14 @@ export const FieldsPromt = ({
     queryClient,
     query_key_id,
     itemType,
+    queryKey,
     handleFieldsCancel,
 }: {
     field: fieldPromt;
     queryClient: QueryClient;
     page_id: string | undefined;
     handleFieldsCancel: (promtField: fieldPromt) => void;
+    itemType: string;
 }) => {
     const [fieldName, setFieldName] = useState("");
 
@@ -236,7 +238,7 @@ export const FieldsPromt = ({
         {
             onSuccess: () => {
                 queryClient.invalidateQueries({
-                    queryKey: ["pageData", query_key_id],
+                    queryKey: queryKey,
                 });
                 handleFieldsCancel(field);
             },

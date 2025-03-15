@@ -99,6 +99,7 @@ export const Collection = () => {
                         query_key_id={collection_id}
                         parentCollectionId={collection_id}
                         itemType="collection"
+                        queryKey={["collection", collection_id]}
                     />
                 )}
                 {showAddPage && (

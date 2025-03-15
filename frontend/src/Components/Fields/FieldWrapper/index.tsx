@@ -22,6 +22,8 @@ export const FieldWrapper = ({
     children,
     data,
     queryClient,
+    queryKey,
+    itemType,
     query_key_id,
     parentCollectionId,
 }: {
@@ -157,15 +159,27 @@ export const FieldWrapper = ({
                 );
 
                 // delete the field from its respective table using field_id and type
-                const pageItemsResponse = await axios.delete(
-                    `${backendUrl}/page_items/${data.field_id}`,
-                );
+                if (itemType == "page") {
+                    const pageItemsResponse = await axios.delete(
+                        `${backendUrl}/page_items/${data.field_id}`,
+                    );
 
-                console.log(
-                    fieldResponse.data,
-                    pageItemsResponse.data,
-                    "Deleted",
-                );
+                    console.log(
+                        fieldResponse.data,
+                        pageItemsResponse.data,
+                        "Deleted",
+                    );
+                } else if (itemType == "collection") {
+                    const collectionItemsResponse = await axios.delete(
+                        `${backendUrl}/collection_items/${data.field_id}/field`,
+                    );
+
+                    console.log(
+                        fieldResponse.data,
+                        collectionItemsResponse.data,
+                        "Deleted",
+                    );
+                }
             } catch (error) {
                 const errorMessage = {
                     error,
@@ -178,7 +192,7 @@ export const FieldWrapper = ({
             onSuccess: () => {
                 // invalidate the "page_items"
                 queryClient.invalidateQueries({
-                    queryKey: ["pageData", query_key_id],
+                    queryKey: queryKey,
                 });
             },
         },
@@ -205,7 +219,7 @@ export const FieldWrapper = ({
         {
             onSuccess: () => {
                 queryClient.invalidateQueries({
-                    queryKey: ["pageData", query_key_id],
+                    queryKey: queryKey,
                 });
                 setIsEditable(false);
             },
@@ -233,7 +247,7 @@ export const FieldWrapper = ({
         {
             onSuccess: () => {
                 queryClient.invalidateQueries({
-                    queryKey: ["pageData", query_key_id],
+                    queryKey: queryKey,
                 });
             },
         },
@@ -260,7 +274,7 @@ export const FieldWrapper = ({
         {
             onSuccess: () => {
                 queryClient.invalidateQueries({
-                    queryKey: ["pageData", query_key_id],
+                    queryKey: queryKey,
                 });
             },
         },
@@ -289,7 +303,7 @@ export const FieldWrapper = ({
         {
             onSuccess: () => {
                 queryClient.invalidateQueries({
-                    queryKey: ["pageData", query_key_id],
+                    queryKey: queryKey,
                 });
             },
         },
@@ -318,7 +332,7 @@ export const FieldWrapper = ({
         {
             onSuccess: () => {
                 queryClient.invalidateQueries({
-                    queryKey: ["pageData", query_key_id],
+                    queryKey: queryKey,
                 });
             },
         },

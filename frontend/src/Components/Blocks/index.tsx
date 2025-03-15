@@ -34,7 +34,9 @@ export const PageItems = ({
     onAddFields,
     queryClient,
     query_key_id,
+    itemType,
     parentCollectionId,
+    queryKey,
 }: PageItemsType) => {
     const [pageItemsList, setPageItemsList] = useState<blockType[]>(itemsList);
 
@@ -90,7 +92,9 @@ export const PageItems = ({
                             data={item[item.item_type]}
                             queryClient={queryClient}
                             query_key_id={query_key_id}
+                            queryKey={queryKey}
                             parentCollectionId={parentCollectionId}
+                            itemType={itemType}
                         >
                             <Field data={item[item.item_type]} />
                         </FieldWrapper>

@@ -14,3 +14,16 @@ export async function deleteCollectionItem(req, res) {
         res.status(500).json({ error: "Internal Server Error" });
     }
 }
+
+export async function deleteFieldCollectionItems(req, res) {
+    const { field_id } = req.params;
+    try {
+        const response = await db
+            .delete(collectionItems)
+            .where(eq(collectionItems.reference_id, field_id));
+
+        res.status(200).json(response);
+    } catch (error) {
+        res.status(500).json({ error: "Internal Server Error" });
+    }
+}

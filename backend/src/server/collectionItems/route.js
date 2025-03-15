@@ -1,7 +1,10 @@
 import express from "express";
 import { readCollectionItems } from "./read.js";
 import { createCollectionItem } from "./create.js";
-import { deleteCollectionItem } from "./delete.js";
+import {
+    deleteFieldCollectionItems,
+    deleteCollectionItem as deletePageCollectionItems,
+} from "./delete.js";
 
 export const collectionItemsRouter = express.Router();
 
@@ -13,10 +16,15 @@ collectionItemsRouter.post(
     createCollectionItem,
 );
 
-// delete
+// delete by page_id
 collectionItemsRouter.delete(
-    "/collection_items/:page_id",
-    deleteCollectionItem,
+    "/collection_items/:page_id/page",
+    deletePageCollectionItems,
+);
+
+collectionItemsRouter.delete(
+    "/collection_items/:field_id/field",
+    deleteFieldCollectionItems,
 );
 
 // Move an item from page_items to collection_items based on the id

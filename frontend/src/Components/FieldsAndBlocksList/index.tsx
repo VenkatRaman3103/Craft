@@ -15,6 +15,7 @@ interface BlocksListContainerProps {
     itemsList: any;
     query_key_id: string | undefined;
     parentCollectionId: string | undefined;
+    itemType: string;
 }
 
 interface fieldPromt {
@@ -28,6 +29,7 @@ export const FieldsAndBlocksList = ({
     query_key_id,
     parentCollectionId,
     itemType,
+    queryKey,
 }: BlocksListContainerProps) => {
     const queryClient = useQueryClient();
     const [showFieldPromt, setShowFieldPromt] = useState(false);
@@ -101,11 +103,6 @@ export const FieldsAndBlocksList = ({
         }
     }
 
-    console.log(selectedBlocks, "selectedBlocks");
-    console.log(promtFields, "promtfields");
-    console.log(parentCollectionId, "parentCollectionId");
-    console.log(itemsList, "itemsList");
-
     return (
         <div className="blocks-list-container">
             <div className="blocks-list-wrapper">
@@ -114,6 +111,7 @@ export const FieldsAndBlocksList = ({
                     itemsList={itemsList}
                     query_key_id={query_key_id}
                     parentCollectionId={parentCollectionId}
+                    itemType={itemType}
                 />
 
                 {showFieldPromt && (
@@ -126,6 +124,7 @@ export const FieldsAndBlocksList = ({
                                     query_key_id={query_key_id}
                                     handleFieldsCancel={handleFieldsCancel}
                                     itemType={itemType}
+                                    queryKey={queryKey}
                                 />
                             </div>
                         ))}
