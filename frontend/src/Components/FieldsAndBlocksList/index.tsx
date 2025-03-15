@@ -30,6 +30,7 @@ export const FieldsAndBlocksList = ({
     parentCollectionId,
     itemType,
     queryKey,
+    localFields,
 }: BlocksListContainerProps) => {
     const queryClient = useQueryClient();
     const [showFieldPromt, setShowFieldPromt] = useState(false);
@@ -39,16 +40,39 @@ export const FieldsAndBlocksList = ({
     const [isBlockPopupOpen, setIsBlockPopupOpen] = useState(false);
     const [promtFields, setPromtFields] = useState<fieldPromt[]>([]);
 
-    const handleAddSelectedFields = (selectedFieldIds: string[]) => {
-        const fieldsToAdd = sampleFields
-            .filter((field) => selectedFieldIds.includes(field.id))
-            .map((field) => ({
-                id: `${field.id}-${Date.now()}`,
-                name: field.name,
-                type: field.type,
-            }));
+    const [fieldType, setFieldType] = useState("all");
 
-        setPromtFields([...promtFields, ...fieldsToAdd]);
+    const handleAddSelectedFields = (
+        selectedFieldIds: string[],
+        selectedFieldsType,
+    ) => {
+        setFieldType(selectedFieldsType);
+
+        if (selectedFieldsType == "all") {
+            const fieldsToAdd = sampleFields
+                .filter((field) => selectedFieldIds.includes(field.id))
+                .map((field) => ({
+                    field_id: `${field.id}-${Date.now()}`,
+                    name: field.name,
+                    type: field.type,
+                }));
+
+            setPromtFields([...promtFields, ...fieldsToAdd]);
+        } else if (selectedFieldsType == "local") {
+            const fieldsToAdd = localFields
+                .filter((field) =>
+                    selectedFieldIds.includes(field[field.item_type].field_id),
+                )
+                .map((field) => ({
+                    field_id: `${field[field.item_type].field_id}`,
+                    name: field[field.item_type].name,
+                    type: field[field.item_type].type,
+                }));
+
+            console.log(localFields, "selectedFieldIds");
+
+            setPromtFields([...promtFields, ...fieldsToAdd]);
+        }
 
         if (selectedFieldIds.length > 0) {
             setShowFieldPromt(true);
@@ -123,7 +147,7 @@ export const FieldsAndBlocksList = ({
                                     queryClient={queryClient}
                                     query_key_id={query_key_id}
                                     handleFieldsCancel={handleFieldsCancel}
-                                    itemType={itemType}
+                                    fieldType={fieldType}
                                     queryKey={queryKey}
                                 />
                             </div>
@@ -155,6 +179,7 @@ export const FieldsAndBlocksList = ({
                     isOpen={isFieldPopupOpen}
                     onClose={closeFieldPopup}
                     onAddFields={handleAddSelectedFields}
+                    localFields={localFields}
                     availableFields={sampleFields}
                 />
 

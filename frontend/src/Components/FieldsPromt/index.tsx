@@ -1,7 +1,7 @@
 import { TextFieldPromt } from "./TextFieldPromt";
 import "./index.scss";
 import { FieldPromtWrapper } from "./FiedsPromtWrapper";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { QueryClient, useMutation } from "@tanstack/react-query";
 import { createField } from "@/Pages/Page/api";
 import { MultiSelectPrompt } from "./MultiSelectPromt";
@@ -23,7 +23,7 @@ export const FieldsPromt = ({
     field,
     queryClient,
     query_key_id,
-    itemType,
+    fieldType,
     queryKey,
     handleFieldsCancel,
 }: {
@@ -34,6 +34,12 @@ export const FieldsPromt = ({
     itemType: string;
 }) => {
     const [fieldName, setFieldName] = useState("");
+
+    useEffect(() => {
+        if (fieldType === "local") {
+            setFieldName(field.name);
+        }
+    }, [field, fieldType]);
 
     // text
     const [text, setText] = useState<string>("");
@@ -233,7 +239,7 @@ export const FieldsPromt = ({
                 };
             }
 
-            return createField(payload, parent_id, itemType);
+            return createField(payload, parent_id, fieldType);
         },
         {
             onSuccess: () => {
@@ -248,6 +254,8 @@ export const FieldsPromt = ({
     async function handleCreteField() {
         fieldMutation.mutate();
     }
+
+    console.log(field, fieldType, "fieldLocal");
 
     return (
         <FieldPromtWrapper

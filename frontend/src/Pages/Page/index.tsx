@@ -13,6 +13,7 @@ export const Page = () => {
     const { page_id } = useParams();
     const [openSideBar, setOpenSideBar] = useState(false);
     const [parentCollectionId, setParentCollectionId] = useState(null);
+    const [localFields, setLocalFields] = useState([]);
 
     const { data: pageData } = useQuery({
         queryKey: ["pageData", page_id],
@@ -32,7 +33,20 @@ export const Page = () => {
         if (pageData) {
             fetchParentCollection();
         }
-    }, [pageData]);
+
+        async function getLocalFields() {
+            const response = await axios.get(
+                `${backendUrl}/collections/collectionItems/${parentCollectionId}`,
+            );
+
+            setLocalFields(response.data.collection_items);
+            console.log(localFields, "localFields");
+        }
+
+        if (parentCollectionId) {
+            getLocalFields();
+        }
+    }, [pageData, parentCollectionId]);
 
     if (!pageData) {
         return <div>Loading...</div>;
@@ -55,6 +69,7 @@ export const Page = () => {
                     parentCollectionId={parentCollectionId}
                     queryKey={["pageData", page_id]}
                     itemType="page"
+                    localFields={localFields}
                 />
 
                 <div

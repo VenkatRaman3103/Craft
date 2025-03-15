@@ -23,17 +23,12 @@ export const FieldSelectionPopup: React.FC<FieldSelectionPopupProps> = ({
     isOpen,
     onClose,
     onAddFields,
+    localFields,
     availableFields,
 }) => {
     const [selectedFields, setSelectedFields] = useState<string[]>([]);
     const popupRef = useRef<HTMLDivElement>(null);
     const [selectedFieldsType, setSelectedFieldsType] = useState("all");
-
-    // useEffect(() => {
-    //     if (isOpen) {
-    //         setSelectedFields([]);
-    //     }
-    // }, [isOpen]);
 
     useEffect(() => {
         const handleClickOutside = (event: MouseEvent) => {
@@ -63,10 +58,12 @@ export const FieldSelectionPopup: React.FC<FieldSelectionPopupProps> = ({
     };
 
     const handleAddSelected = () => {
-        onAddFields(selectedFields);
+        onAddFields(selectedFields, selectedFieldsType);
         setSelectedFields([]);
         onClose();
     };
+
+    console.log(selectedFields, "selectedFields");
 
     function renderFieldsList(fieldsType: string): JSX.Element {
         switch (fieldsType) {
@@ -98,6 +95,42 @@ export const FieldSelectionPopup: React.FC<FieldSelectionPopupProps> = ({
                                 </div>
                             </div>
                         ))}
+                    </>
+                );
+            case "local":
+                return (
+                    <>
+                        {localFields.map((item) => {
+                            const field = item[item.item_type];
+
+                            return (
+                                <div
+                                    key={field.id}
+                                    className={`field-option ${selectedFields.includes(field.field_id) ? "selected" : ""}`}
+                                    onClick={() =>
+                                        toggleFieldSelection(field.field_id)
+                                    }
+                                >
+                                    <div className="field-icon">
+                                        {FieldsIcons[field.type]}
+                                    </div>
+
+                                    <div className="field-info">
+                                        <div className="field-name">
+                                            {field.name}
+                                        </div>
+                                        <div className="field-type">
+                                            {field.type}
+                                        </div>
+                                        {field.description && (
+                                            <div className="field-description">
+                                                {field.description}
+                                            </div>
+                                        )}
+                                    </div>
+                                </div>
+                            );
+                        })}
                     </>
                 );
 

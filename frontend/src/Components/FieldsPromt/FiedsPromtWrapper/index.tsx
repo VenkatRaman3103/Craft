@@ -43,6 +43,7 @@ export const FieldPromtWrapper = ({
     }
 
     console.log(data, "dataText");
+
     return (
         <div className="text-field-container prior-drop">
             <div className="text-field-header-contianer">
