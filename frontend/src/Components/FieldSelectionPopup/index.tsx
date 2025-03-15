@@ -63,8 +63,6 @@ export const FieldSelectionPopup: React.FC<FieldSelectionPopupProps> = ({
         onClose();
     };
 
-    console.log(selectedFields, "selectedFields");
-
     function renderFieldsList(fieldsType: string): JSX.Element {
         switch (fieldsType) {
             case "all":

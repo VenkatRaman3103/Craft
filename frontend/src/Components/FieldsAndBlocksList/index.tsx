@@ -42,10 +42,7 @@ export const FieldsAndBlocksList = ({
 
     const [fieldType, setFieldType] = useState("all");
 
-    const handleAddSelectedFields = (
-        selectedFieldIds: string[],
-        selectedFieldsType,
-    ) => {
+    const handleAddSelectedFields = (selectedFieldIds, selectedFieldsType) => {
         setFieldType(selectedFieldsType);
 
         if (selectedFieldsType == "all") {
@@ -68,9 +65,6 @@ export const FieldsAndBlocksList = ({
                     name: field[field.item_type].name,
                     type: field[field.item_type].type,
                 }));
-
-            console.log(localFields, "selectedFieldIds");
-
             setPromtFields([...promtFields, ...fieldsToAdd]);
         }
 

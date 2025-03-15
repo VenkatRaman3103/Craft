@@ -143,10 +143,6 @@ export const FieldsPromt = ({
             let payload;
             let parent_id = query_key_id;
 
-            // const field_id = uuidv4();
-
-            console.log(field, "fieldToMove");
-
             if (field.type === "multi_select_field") {
                 const selectedOptions = multiSelectOptions
                     .filter((opt: optType) => checkedMultiSelectItems[opt.id])
@@ -254,8 +250,6 @@ export const FieldsPromt = ({
     async function handleCreteField() {
         fieldMutation.mutate();
     }
-
-    console.log(field, fieldType, "fieldLocal");
 
     return (
         <FieldPromtWrapper
