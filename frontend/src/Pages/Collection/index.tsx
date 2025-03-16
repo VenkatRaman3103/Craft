@@ -100,6 +100,7 @@ export const Collection = () => {
                         parentCollectionId={collection_id}
                         itemType="collection"
                         queryKey={["collection", collection_id]}
+                        // joinTable="collection"
                     />
                 )}
                 {showAddPage && (

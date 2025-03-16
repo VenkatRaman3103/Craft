@@ -9,6 +9,7 @@ import {
 } from "drizzle-orm/pg-core";
 import { page_items } from "../pages.js";
 import { fieldScopeEnums } from "../fieldScopeEnums.js";
+import { collectionItems } from "../collections.js";
 
 export const colorPickerFields = pgTable("color_picker_fields", {
     field_id: uuid("field_id").primaryKey().defaultRandom(),
@@ -32,5 +33,9 @@ export const colorRelations = relations(colorPickerFields, ({ one }) => ({
     page_item: one(page_items, {
         fields: [colorPickerFields.field_id],
         references: [page_items.reference_id],
+    }),
+    collection_item: one(collectionItems, {
+        fields: [colorPickerFields.field_id],
+        references: [collectionItems.reference_id],
     }),
 }));

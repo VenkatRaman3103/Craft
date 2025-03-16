@@ -9,6 +9,7 @@ import {
 } from "drizzle-orm/pg-core";
 import { page_items } from "../pages.js";
 import { fieldScopeEnums } from "../fieldScopeEnums.js";
+import { collectionItems } from "../collections.js";
 
 export const jsonFields = pgTable("json_fields", {
     field_id: uuid("field_id").primaryKey().defaultRandom(),
@@ -27,5 +28,9 @@ export const jsonRelations = relations(jsonFields, ({ one }) => ({
     page_item: one(page_items, {
         fields: [jsonFields.field_id],
         references: [page_items.reference_id],
+    }),
+    collection_item: one(collectionItems, {
+        fields: [jsonFields.field_id],
+        references: [collectionItems.reference_id],
     }),
 }));

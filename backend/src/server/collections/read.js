@@ -75,6 +75,23 @@ export async function getCollectionItemsByCollectionId(req, res) {
                     with: {
                         page: true,
                         text_field: true,
+                        multi_select_field: {
+                            with: {
+                                options: true,
+                            },
+                        },
+                        single_select_field: {
+                            with: {
+                                options: true,
+                            },
+                        },
+                        number_field: true,
+                        email_field: true,
+                        date_field: true,
+                        json_field: true,
+                        color_picker_field: true,
+                        textarea_field: true,
+                        url_field: true,
                     },
                 },
             },

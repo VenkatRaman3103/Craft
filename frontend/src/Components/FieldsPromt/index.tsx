@@ -25,6 +25,7 @@ export const FieldsPromt = ({
     query_key_id,
     fieldType,
     queryKey,
+    itemType,
     handleFieldsCancel,
 }: {
     field: fieldPromt;
@@ -45,25 +46,31 @@ export const FieldsPromt = ({
     const [text, setText] = useState<string>(field.value ? field.value : "");
 
     // multi select field
-    const [multiSelectOptions, setMultiSelectOptions] = useState([]);
+    const [multiSelectOptions, setMultiSelectOptions] = useState(
+        field.options ? field.options : [],
+    );
     const [checkedMultiSelectItems, setCheckedMultiSelectItems] = useState<{
         [key: string]: boolean;
-    }>({});
+    }>(field.value ? field.value : {});
 
     // single select field
-    const [singleSelectOptions, setSingleSelectOptions] = useState([]);
+    const [singleSelectOptions, setSingleSelectOptions] = useState(
+        field.options ? field.options : [],
+    );
     const [checkedsingleSelectItems, setCheckedSingleSelectItems] = useState<{
         [key: string]: boolean;
-    }>({});
+    }>(field.value ? field.value : {});
 
     // number
-    const [number, setNumber] = useState<number>(0);
+    const [number, setNumber] = useState<number>(field.value ? field.value : 0);
 
     // email
-    const [email, setEmail] = useState<string>("");
+    const [email, setEmail] = useState<string>(field.value ? field.value : "");
 
     // date
-    const [date, setDate] = useState<Date | null>(null);
+    const [date, setDate] = useState<Date | null>(
+        field.value ? field.value : null,
+    );
 
     // color picker
     const [color, setColor] = useState<colorPicker>({
@@ -76,19 +83,26 @@ export const FieldsPromt = ({
     });
 
     // textarea
-    const [textarea, setTextarea] = useState("");
+    const [textarea, setTextarea] = useState(field.value ? field.value : "");
 
     //json
-    const [jsonData, setJsonData] = useState('{"example": "data"}');
+    const [jsonData, setJsonData] = useState(
+        field.value ? field.value : '{"example": "data"}',
+    );
 
     // url
-    const [url, setUrl] = useState({
-        value: "",
-        url_type: "https",
-    });
+    const [url, setUrl] = useState(
+        field.value
+            ? field.value
+            : {
+                  value: "",
+                  url_type: "https",
+              },
+    );
 
     // TODO: move to render fields list
     function renderFieldsPromt(fieldType: string): React.JSX.Element {
+        console.log(fieldType, "fieldType");
         switch (fieldType) {
             case "text_field":
                 return <TextFieldPromt text={text} setText={setText} />;
@@ -235,7 +249,7 @@ export const FieldsPromt = ({
                 };
             }
 
-            return createField(payload, parent_id, fieldType);
+            return createField(payload, parent_id, itemType);
         },
         {
             onSuccess: () => {
@@ -250,6 +264,8 @@ export const FieldsPromt = ({
     async function handleCreteField() {
         fieldMutation.mutate();
     }
+
+    console.log(field, "fieldMulti");
 
     return (
         <FieldPromtWrapper

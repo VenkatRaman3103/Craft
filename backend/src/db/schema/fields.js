@@ -73,6 +73,10 @@ export const multiSelectFieldsRelations = relations(
             fields: [multiSelectFields.field_id],
             references: [page_items.reference_id],
         }),
+        collection_item: one(collectionItems, {
+            fields: [multiSelectFields.field_id],
+            references: [collectionItems.reference_id],
+        }),
         options: many(multiSelectOptions),
     }),
 );
@@ -119,6 +123,10 @@ export const singleSelectFieldsRelations = relations(
         page_item: one(page_items, {
             fields: [singleSelectFields.field_id],
             references: [page_items.reference_id],
+        }),
+        collection_item: one(collectionItems, {
+            fields: [singleSelectFields.field_id],
+            references: [collectionItems.reference_id],
         }),
         options: many(singleSelectOptions),
     }),

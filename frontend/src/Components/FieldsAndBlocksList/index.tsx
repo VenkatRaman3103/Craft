@@ -60,12 +60,9 @@ export const FieldsAndBlocksList = ({
                 .filter((field) =>
                     selectedFieldIds.includes(field[field.item_type].field_id),
                 )
-                .map((field) => ({
-                    field_id: `${field[field.item_type].field_id}`,
-                    name: field[field.item_type].name,
-                    type: field[field.item_type].type,
-                    value: field[field.item_type].value,
-                }));
+                .map((field) => field[field.item_type]);
+
+            console.log(fieldsToAdd, "localFields");
             setPromtFields([...promtFields, ...fieldsToAdd]);
         }
 
@@ -144,6 +141,7 @@ export const FieldsAndBlocksList = ({
                                     handleFieldsCancel={handleFieldsCancel}
                                     fieldType={fieldType}
                                     queryKey={queryKey}
+                                    itemType={itemType}
                                 />
                             </div>
                         ))}

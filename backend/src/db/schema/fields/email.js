@@ -8,6 +8,7 @@ import {
 } from "drizzle-orm/pg-core";
 import { page_items } from "../pages.js";
 import { fieldScopeEnums } from "../fieldScopeEnums.js";
+import { collectionItems } from "../collections.js";
 
 // email_fields table
 export const emailFields = pgTable("email_fields", {
@@ -27,5 +28,9 @@ export const emailRelations = relations(emailFields, ({ one }) => ({
     page_item: one(page_items, {
         fields: [emailFields.field_id],
         references: [page_items.reference_id],
+    }),
+    collection_item: one(collectionItems, {
+        fields: [emailFields.field_id],
+        references: [collectionItems.reference_id],
     }),
 }));

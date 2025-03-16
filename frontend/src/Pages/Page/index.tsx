@@ -70,6 +70,7 @@ export const Page = () => {
                     queryKey={["pageData", page_id]}
                     itemType="page"
                     localFields={localFields}
+                    // joinTable="page"
                 />
 
                 <div

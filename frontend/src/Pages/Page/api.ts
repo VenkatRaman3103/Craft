@@ -28,7 +28,7 @@ export const createBlock = async (page_id, blockData) => {
 };
 
 // create a new feild
-export const createField = async (field, parent_id, itemType = "page") => {
+export const createField = async (field, parent_id, itemType) => {
     console.log(itemType, "itemType");
 
     let response;
@@ -71,22 +71,22 @@ export const createField = async (field, parent_id, itemType = "page") => {
 
     // Determine which join table to update based on itemType
     const joinTableConfig = {
-        page: {
-            endpoint: `/page/${parent_id}/page_items`,
-            idField: "page_id",
-        },
-        local: {
-            endpoint: `/page/${parent_id}/page_items`,
-            idField: "page_id",
-        },
-        all: {
-            endpoint: `/collection/${parent_id}/collection_items`,
-            idField: "collection_id",
-        },
         collection: {
             endpoint: `/collection/${parent_id}/collection_items`,
             idField: "collection_id",
         },
+        page: {
+            endpoint: `/page/${parent_id}/page_items`,
+            idField: "page_id",
+        },
+        // page: {
+        //     endpoint: `/page/${parent_id}/page_items`,
+        //     idField: "page_id",
+        // },
+        // collection: {
+        //     endpoint: `/collection/${parent_id}/collection_items`,
+        //     idField: "collection_id",
+        // },
     };
 
     const config = joinTableConfig[itemType];
