@@ -119,6 +119,8 @@ export const FieldsAndBlocksList = ({
         }
     }
 
+    console.log(promtFields, "promtFields");
+
     return (
         <div className="blocks-list-container">
             <div className="blocks-list-wrapper">

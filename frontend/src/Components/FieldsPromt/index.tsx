@@ -69,18 +69,22 @@ export const FieldsPromt = ({
 
     // date
     const [date, setDate] = useState<Date | null>(
-        field.value ? field.value : null,
+        field.value ? new Date(field.value) : null,
     );
 
     // color picker
-    const [color, setColor] = useState<colorPicker>({
-        value: "#3498db",
-        hex: "#3498db",
-        rgb: { r: 52, g: 152, b: 219 },
-        rgba: { r: 52, g: 152, b: 219, a: 1 },
-        hsl: { h: 204, s: 70, l: 53 },
-        hsla: { h: 204, s: 70, l: 53, a: 1 },
-    });
+    const [color, setColor] = useState<colorPicker>(
+        field.value
+            ? field.value
+            : {
+                  value: "#3498db",
+                  hex: "#3498db",
+                  rgb: { r: 52, g: 152, b: 219 },
+                  rgba: { r: 52, g: 152, b: 219, a: 1 },
+                  hsl: { h: 204, s: 70, l: 53 },
+                  hsla: { h: 204, s: 70, l: 53, a: 1 },
+              },
+    );
 
     // textarea
     const [textarea, setTextarea] = useState(field.value ? field.value : "");
@@ -273,7 +277,7 @@ export const FieldsPromt = ({
         fieldMutation.mutate();
     }
 
-    console.log(field, "fieldMulti");
+    console.log(field, "colorField");
 
     return (
         <FieldPromtWrapper

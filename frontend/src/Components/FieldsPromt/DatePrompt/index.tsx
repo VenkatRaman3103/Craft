@@ -17,6 +17,8 @@ export const DatePrompt = ({ date, setDate }) => {
     });
     const calendarRef = useRef(null);
 
+    console.log(date, "dateErroCheck");
+
     // Format dates in various formats
     const formatDates = (date) => {
         if (!date)

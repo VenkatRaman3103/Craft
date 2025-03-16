@@ -166,6 +166,19 @@ export const ColorPickerPrompt = ({
 
     // Initialize component with provided color
     useEffect(() => {
+        if (
+            JSON.stringify(color) ===
+            JSON.stringify({
+                hex: colorFormats.hex,
+                rgb: hexToRgb(colorFormats.hex),
+                rgba: { ...hexToRgb(colorFormats.hex), a: alpha },
+                hsl: { h: hue, s: saturation, l: lightness },
+                hsla: { h: hue, s: saturation, l: lightness, a: alpha },
+                value: colorFormats.hex,
+            })
+        ) {
+            return;
+        }
         if (color) {
             let h = 0,
                 s = 0,
