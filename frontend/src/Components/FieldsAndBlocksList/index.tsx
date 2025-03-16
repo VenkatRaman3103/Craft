@@ -62,7 +62,7 @@ export const FieldsAndBlocksList = ({
                 )
                 .map((field) => field[field.item_type]);
 
-            console.log(fieldsToAdd, "localFields");
+            console.log(localFields, "localFields");
             setPromtFields([...promtFields, ...fieldsToAdd]);
         }
 

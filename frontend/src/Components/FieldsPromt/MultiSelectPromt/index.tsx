@@ -35,6 +35,8 @@ export const MultiSelectPrompt = ({
         setCheckedItems(updatedItems);
     }
 
+    console.log(options, "optionsMulti");
+
     return (
         <div className="multi-select-field-container">
             {options.length > 0 && (

@@ -107,6 +107,7 @@ export const FieldsPromt = ({
             case "text_field":
                 return <TextFieldPromt text={text} setText={setText} />;
             case "multi_select_field":
+            case "multi_select":
                 return (
                     <MultiSelectPrompt
                         options={multiSelectOptions}
@@ -116,6 +117,7 @@ export const FieldsPromt = ({
                     />
                 );
             case "single_select_field":
+            case "single_select":
                 return (
                     <SingleSelectPromt
                         options={singleSelectOptions}
@@ -157,7 +159,10 @@ export const FieldsPromt = ({
             let payload;
             let parent_id = query_key_id;
 
-            if (field.type === "multi_select_field") {
+            if (
+                field.type === "multi_select_field" ||
+                field.type === "multi_select"
+            ) {
                 const selectedOptions = multiSelectOptions
                     .filter((opt: optType) => checkedMultiSelectItems[opt.id])
                     .map((opt: optType) => opt.value);
@@ -171,7 +176,10 @@ export const FieldsPromt = ({
                     ),
                     selectedOptions,
                 };
-            } else if (field.type === "single_select_field") {
+            } else if (
+                field.type === "single_select_field" ||
+                field.type === "single_select"
+            ) {
                 const selectedOptions = singleSelectOptions
                     .filter((opt: optType) => checkedsingleSelectItems[opt.id])
                     .map((opt: optType) => opt.value);

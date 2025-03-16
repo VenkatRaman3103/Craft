@@ -29,7 +29,7 @@ export const createBlock = async (page_id, blockData) => {
 
 // create a new feild
 export const createField = async (field, parent_id, itemType) => {
-    console.log(itemType, "itemType");
+    console.log(field, "itemType");
 
     let response;
     const fieldEndpoints = {
