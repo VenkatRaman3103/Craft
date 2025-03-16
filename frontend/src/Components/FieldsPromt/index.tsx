@@ -97,7 +97,7 @@ export const FieldsPromt = ({
     // url
     const [url, setUrl] = useState(
         field.value
-            ? field.value
+            ? { value: field.value, url_type: field.url_type }
             : {
                   value: "",
                   url_type: "https",
