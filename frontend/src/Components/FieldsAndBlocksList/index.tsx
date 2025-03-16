@@ -10,12 +10,15 @@ import { FieldSelectionPopup } from "../FieldSelectionPopup";
 import { BlockSelectionPopup } from "../BlocksSelectionPopup";
 import { sampleBlocks } from "@/Data/blocks";
 import { AddBtn } from "../Buttons/AddBtn";
+import { field } from "@/Types/fields";
 
 interface BlocksListContainerProps {
     itemsList: any;
     query_key_id: string | undefined;
-    parentCollectionId: string | undefined;
+    parentCollectionId: string | null;
     itemType: string;
+    queryKey: [string, string | undefined];
+    localFields: any;
 }
 
 interface fieldPromt {
@@ -35,14 +38,17 @@ export const FieldsAndBlocksList = ({
     const queryClient = useQueryClient();
     const [showFieldPromt, setShowFieldPromt] = useState(false);
     const [showBlockPrompt, setShowBlockPrompt] = useState(false);
-    const [selectedBlocks, setSelectedBlocks] = useState([]);
+    const [selectedBlocks, setSelectedBlocks] = useState<any>([]);
     const [isFieldPopupOpen, setIsFieldPopupOpen] = useState(false);
     const [isBlockPopupOpen, setIsBlockPopupOpen] = useState(false);
-    const [promtFields, setPromtFields] = useState<fieldPromt[]>([]);
+    const [promtFields, setPromtFields] = useState<any[]>([]);
 
     const [fieldType, setFieldType] = useState(itemType);
 
-    const handleAddSelectedFields = (selectedFieldIds, selectedFieldsType) => {
+    const handleAddSelectedFields = (
+        selectedFieldIds: any[],
+        selectedFieldsType: string,
+    ) => {
         setFieldType(selectedFieldsType);
 
         if (selectedFieldsType == "all") {
@@ -57,10 +63,10 @@ export const FieldsAndBlocksList = ({
             setPromtFields([...promtFields, ...fieldsToAdd]);
         } else if (selectedFieldsType == "local") {
             const fieldsToAdd = localFields
-                .filter((field) =>
+                .filter((field: any) =>
                     selectedFieldIds.includes(field[field.item_type].field_id),
                 )
-                .map((field) => field[field.item_type]);
+                .map((field: any) => field[field.item_type]);
 
             console.log(localFields, "localFields");
             setPromtFields([...promtFields, ...fieldsToAdd]);
@@ -87,18 +93,18 @@ export const FieldsAndBlocksList = ({
         setIsBlockPopupOpen(true);
     };
 
-    const handleBlocksSelected = (newSelectedBlocks) => {
-        setSelectedBlocks((prev) => [...prev, ...newSelectedBlocks]);
+    const handleBlocksSelected = (newSelectedBlocks: any) => {
+        setSelectedBlocks((prev: any) => [...prev, ...newSelectedBlocks]);
 
         if (newSelectedBlocks.length > 0) {
             setShowBlockPrompt(true);
         }
     };
 
-    const handleBlockPromptCancel = (block) => {
-        setSelectedBlocks((prev) =>
+    const handleBlockPromptCancel = (block: any) => {
+        setSelectedBlocks((prev: any) =>
             prev.filter(
-                (b) =>
+                (b: any) =>
                     (b.instanceId || b.blockId) !==
                     (block.instanceId || block.blockId),
             ),
@@ -130,6 +136,7 @@ export const FieldsAndBlocksList = ({
                     query_key_id={query_key_id}
                     parentCollectionId={parentCollectionId}
                     itemType={itemType}
+                    queryKey={queryKey}
                 />
 
                 {showFieldPromt && (
@@ -152,7 +159,7 @@ export const FieldsAndBlocksList = ({
 
                 {showBlockPrompt && (
                     <div className="blocks-prompt-container">
-                        {selectedBlocks.map((block) => (
+                        {selectedBlocks.map((block: any) => (
                             <BlocksPropmts
                                 key={block.instanceId || block.blockId}
                                 block={block}
@@ -196,6 +203,7 @@ export const AddPageItemsBtn = ({
 }: {
     openFieldPopup: () => void;
     openBlockPopup: () => void;
+    itemType: string;
 }) => {
     return (
         <div className="add-button-wrapper">

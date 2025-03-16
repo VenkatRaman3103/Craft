@@ -11,6 +11,7 @@ import {
 import { page_items } from "./pages.js";
 import { collectionItems } from "./collections.js";
 import { fieldScopeEnums } from "./fieldScopeEnums.js";
+import { block_items } from "./blocks.js";
 
 // TODO: add scope column for each field
 // TODO: add scope enum
@@ -29,7 +30,7 @@ export const textFields = pgTable("text_fields", {
     edited_at: timestamp("edited_at").defaultNow(),
 });
 
-export const textFieldsRelations = relations(textFields, ({ one }) => ({
+export const textFieldsRelations = relations(textFields, ({ one, many }) => ({
     page_item: one(page_items, {
         fields: [textFields.field_id],
         references: [page_items.reference_id],
@@ -38,6 +39,7 @@ export const textFieldsRelations = relations(textFields, ({ one }) => ({
         fields: [textFields.field_id],
         references: [collectionItems.reference_id],
     }),
+    items: many(block_items),
 }));
 
 // multi select field

@@ -14,6 +14,7 @@ import * as schema from "../db/schema/index.js";
 import { fieldRoute } from "./fields/route.js";
 import { collectionItemsRouter } from "./collectionItems/route.js";
 import { move } from "./move/route.js";
+import { testRoute } from "./test/route.js";
 
 dotenv.config();
 
@@ -110,6 +111,8 @@ app.get("/api/get/pages", async (req, res) => {
 });
 
 app.use("/api", move);
+
+app.use("/api", testRoute);
 
 // Start the server
 const PORT = 5000;

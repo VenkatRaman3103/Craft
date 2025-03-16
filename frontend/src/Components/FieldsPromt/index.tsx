@@ -28,9 +28,12 @@ export const FieldsPromt = ({
     itemType,
     handleFieldsCancel,
 }: {
-    field: fieldPromt;
+    field: any;
     queryClient: QueryClient;
-    page_id: string | undefined;
+    query_key_id: string | undefined;
+    fieldType: string;
+    queryKey: [string, string | undefined];
+    page_id?: string | undefined;
     handleFieldsCancel: (promtField: fieldPromt) => void;
     itemType: string;
 }) => {

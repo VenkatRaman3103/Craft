@@ -3,7 +3,6 @@ import { useEffect, useState } from "react";
 import { useParams } from "react-router";
 import { useQuery } from "@tanstack/react-query";
 import "./index.scss";
-import { AddBtn } from "@/Components/Buttons/AddBtn";
 import { fetchPageData } from "./api";
 import axios from "axios";
 import { backendUrl } from "@/config";
@@ -70,7 +69,6 @@ export const Page = () => {
                     queryKey={["pageData", page_id]}
                     itemType="page"
                     localFields={localFields}
-                    // joinTable="page"
                 />
 
                 <div

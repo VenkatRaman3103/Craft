@@ -11,7 +11,8 @@ import { TextareaField } from "./TextArea";
 import { JSONField } from "./JsonField";
 import { UrlField } from "./UrlField";
 
-export const FieldsList: Record<fieldTypes, React.ComponentType<any>> = {
+// export const FieldsList: Record<fieldTypes, React.ComponentType<any>> = {
+export const FieldsList: any = {
     text_field: Text,
     textarea_field: TextareaField,
     single_select_field: SingleSelect,

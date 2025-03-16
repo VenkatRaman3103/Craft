@@ -23,16 +23,16 @@ export const BlocksPropmts = ({ block, page_id, queryClient, onCancel }) => {
 
     const handleCreateBlock = () => {
         if (!blockInput) return;
-
         createBlockMutation.mutate(blockInput);
         onCancel();
     };
 
-    const handleInputChange = (value) => {
+    const handleInputChange = (_, value) => {
         setBlockInput(value);
     };
 
     const blockDetails = sampleBlocks.find((b) => b.id === block.blockId);
+
     if (!blockDetails) return null;
 
     return (
@@ -42,11 +42,27 @@ export const BlocksPropmts = ({ block, page_id, queryClient, onCancel }) => {
             block={{
                 id: block.instanceId || block.blockId,
                 name: blockDetails.name,
-                type: block.blockType,
+                type: block.blockType || "block",
             }}
             handleCreateBlock={handleCreateBlock}
-            handleInputChange={(_, value) => handleInputChange(value)}
+            handleInputChange={handleInputChange}
             handleBlockPromptCancel={onCancel}
+            queryClient={queryClient}
+            itemType="block"
         />
     );
+};
+
+// Placeholder for createBlock function if it's not defined elsewhere
+const createBlock = async (pageId, blockData) => {
+    // Implementation of createBlock function
+    // This would typically make an API call to create a block
+    console.log("Creating block:", blockData, "for page:", pageId);
+
+    // Simulate API call
+    return new Promise((resolve) => {
+        setTimeout(() => {
+            resolve({ id: Date.now().toString(), ...blockData });
+        }, 500);
+    });
 };

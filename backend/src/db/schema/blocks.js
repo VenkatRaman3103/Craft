@@ -8,18 +8,38 @@ export const scopeEnum = pgEnum("scope_enum", ["global", "page", "collection"]);
 export const blocks = pgTable("blocks", {
     block_id: uuid("block_id").primaryKey().defaultRandom(),
     name: text("name").notNull(),
-    description: text("content").notNull(),
+    description: text("description"),
     scope: scopeEnum("scope").default("global"),
     block_type: text("block_type").default("normal").notNull(),
-    reference_id: text("reference_id").default(null),
     createdAt: timestamp("created_at").defaultNow(),
     editedAt: timestamp("edited_at").defaultNow(),
 });
 
-export const blocksRelations = relations(blocks, ({ one }) => ({
+export const block_items = pgTable("block_items", {
+    item_id: uuid("item_id").primaryKey().defaultRandom(),
+    parent_block_id: uuid("parent_block_id")
+        .references(() => blocks.block_id)
+        .notNull(),
+    item_type: text("item_type").notNull(),
+    reference_id: uuid("reference_id").notNull(),
+    order: text("order").notNull(),
+    created_at: timestamp("created_at").defaultNow(),
+    edited_at: timestamp("edited_at").defaultNow(),
+});
+
+export const blocksRelations = relations(blocks, ({ one, many }) => ({
     page_item: one(page_items, {
         fields: [blocks.block_id],
         references: [page_items.reference_id],
+    }),
+    items: many(block_items),
+}));
+
+export const blockItemsRelations = relations(block_items, ({ one }) => ({
+    // A block item belongs to a parent block
+    parent: one(blocks, {
+        fields: [block_items.parent_block_id],
+        references: [blocks.block_id],
     }),
 }));
 

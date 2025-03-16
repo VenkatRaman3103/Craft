@@ -28,9 +28,12 @@ export const FieldWrapper = ({
     parentCollectionId,
 }: {
     data: any;
+    queryKey: [string, string | undefined];
+    itemType: string;
+    query_key_id: string | undefined;
+    parentCollectionId: string | undefined;
     children: React.ReactNode;
     queryClient: QueryClient;
-    page_id: string;
 }) => {
     const [showOptions, setShowOptions] = useState(false);
     const [activeMenu, setActiveMenu] = useState<string | null>(null);
@@ -360,8 +363,10 @@ export const FieldWrapper = ({
             };
         } else if (data.type === "multi_select") {
             const selectedOptions = multiSelectOptions
-                .filter((opt, index) => checkedMultiSelectItems[index])
-                .map((opt) => opt);
+                .filter(
+                    (opt: any, index: number) => checkedMultiSelectItems[index],
+                )
+                .map((opt: any) => opt);
 
             payload = {
                 ...payload,

@@ -14,6 +14,7 @@ import { FieldWrapper } from "../Fields/FieldWrapper";
 
 type PageItemsType = {
     itemsList: any;
+    itemType: string;
     isSidebarOpen?: boolean;
     onScopeChange?: (
         blockId: string,
@@ -25,6 +26,7 @@ type PageItemsType = {
     queryClient: any;
     query_key_id: string | undefined;
     parentCollectionId: any;
+    queryKey: [string, string | undefined];
 };
 
 export const PageItems = ({
@@ -60,7 +62,7 @@ export const PageItems = ({
 
         // update the page items
         setPageItemsList((prevItems) =>
-            prevItems.filter((item) => item.item_id !== item_id),
+            prevItems.filter((item: any) => item.item_id !== item_id),
         );
     }
 
@@ -124,7 +126,7 @@ export const Block = ({
         withContent: boolean,
     ) => void;
     item_id?: string;
-    onDelete?: (block_id: string, item_id?: string) => void;
+    onDelete?: (block_id: string, item_id: string) => void;
     onAddFields?: (blockId: string) => void;
 }) => {
     const [isCollapsed, setIsCollapsed] = useState(false);
