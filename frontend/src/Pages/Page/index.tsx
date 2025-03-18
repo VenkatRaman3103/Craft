@@ -7,6 +7,7 @@ import { fetchPageData } from "./api";
 import axios from "axios";
 import { backendUrl } from "@/config";
 import { FieldsAndBlocksList } from "@/Components/FieldsAndBlocksList";
+import { Drumstick } from "lucide-react";
 
 export const Page = () => {
     const { page_id } = useParams();

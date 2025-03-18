@@ -19,7 +19,7 @@ export const BlockPrompt = ({
     handleBlockPromptCancel, // This is the prop received from parent
     queryClient,
     itemType = "block",
-}) => {
+}:any) => {
     const [inputWidth, setInputWidth] = useState("auto");
     const inputRef = useRef(null);
 
