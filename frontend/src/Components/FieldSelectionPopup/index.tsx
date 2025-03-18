@@ -2,7 +2,7 @@ import { useState, useRef, useEffect } from "react";
 import { X, Plus, FileText } from "lucide-react";
 import { darkFont, lightFont } from "@/Styles/base";
 import "./index.scss";
-import * as React from "react";
+import React from "react";
 import { FieldsIcons } from "@/Data/fieldsIcon";
 
 type FieldOption = {
@@ -64,7 +64,7 @@ export const FieldSelectionPopup: React.FC<FieldSelectionPopupProps> = ({
         onClose();
     };
 
-    function renderFieldsList(fieldsType: string): JSX.Element {
+    function renderFieldsList(fieldsType: string): React.JSX.Element {
         switch (fieldsType) {
             case "all":
                 return (
