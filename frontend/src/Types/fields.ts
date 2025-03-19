@@ -8,6 +8,9 @@ export type field = {
     rgba?: string;
     hsl?: string;
     hsla?: string;
+    item_type?: string;
+    field_id?: string;
+    [key: string]: any;
 };
 
 export type multiSelect = {

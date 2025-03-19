@@ -4,6 +4,7 @@ import { darkFont, lightFont } from "@/Styles/base";
 import "./index.scss";
 import React from "react";
 import { FieldsIcons } from "@/Data/fieldsIcon";
+import { field } from "@/Types/fields";
 
 type FieldOption = {
     id: string;
@@ -17,7 +18,7 @@ interface FieldSelectionPopupProps {
     onClose: () => void;
     onAddFields: (selectedFields: string[], selectedFieldsType: string) => void;
     availableFields: FieldOption[];
-    localFields: any;
+    localFields: field[];
 }
 
 export const FieldSelectionPopup: React.FC<FieldSelectionPopupProps> = ({
@@ -60,7 +61,7 @@ export const FieldSelectionPopup: React.FC<FieldSelectionPopupProps> = ({
 
     const handleAddSelected = () => {
         console.log(selectedFields, "setSelectedFields");
-        onAddFields(selectedFields, selectedFieldsType, localFields);
+        onAddFields(selectedFields, selectedFieldsType);
         setSelectedFields([]);
         onClose();
     };
@@ -100,7 +101,12 @@ export const FieldSelectionPopup: React.FC<FieldSelectionPopupProps> = ({
             case "local":
                 return (
                     <>
-                        {localFields.map((item) => {
+                        {localFields.map((item: field) => {
+                            if (!item.item_type)
+                                return (
+                                    <h3 key={item.field_id}>invalid field</h3>
+                                );
+
                             const field = item[item.item_type];
 
                             return (
@@ -135,7 +141,7 @@ export const FieldSelectionPopup: React.FC<FieldSelectionPopupProps> = ({
                 );
 
             default:
-                break;
+                return <h1>Invalid fields scope</h1>;
         }
     }
 

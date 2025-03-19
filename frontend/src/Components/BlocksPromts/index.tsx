@@ -2,6 +2,8 @@ import { sampleBlocks } from "@/Data/blocks";
 import { useMutation } from "@tanstack/react-query";
 import { useState } from "react";
 import { BlockPrompt } from "../BlockPrompt";
+import axios from "axios";
+import { backendUrl } from "@/config";
 
 export const BlocksPropmts = ({
     block,
@@ -9,7 +11,7 @@ export const BlocksPropmts = ({
     queryClient,
     onCancel,
     localFields,
-}) => {
+}: any) => {
     const [blockInput, setBlockInput] = useState("");
 
     const createBlockMutation = useMutation({
@@ -18,6 +20,7 @@ export const BlocksPropmts = ({
                 name: blockName,
                 description: "",
                 scope: "page",
+                blocK_type: "normal_block",
             }),
         onSuccess: () => {
             queryClient.invalidateQueries({ queryKey: ["pageData", page_id] });
@@ -29,6 +32,7 @@ export const BlocksPropmts = ({
 
     const handleCreateBlock = () => {
         if (!blockInput) return;
+        console.log(blockInput, "blockInput");
         createBlockMutation.mutate(blockInput);
         onCancel();
     };
@@ -62,14 +66,25 @@ export const BlocksPropmts = ({
 
 // Placeholder for createBlock function if it's not defined elsewhere
 const createBlock = async (pageId, blockData) => {
-    // Implementation of createBlock function
-    // This would typically make an API call to create a block
-    console.log("Creating block:", blockData, "for page:", pageId);
+    try {
+        const blockResponse = await axios.post(
+            `${backendUrl}/block`,
+            blockData,
+        );
 
-    // Simulate API call
-    return new Promise((resolve) => {
-        setTimeout(() => {
-            resolve({ id: Date.now().toString(), ...blockData });
-        }, 500);
-    });
+        console.log(blockResponse, "blockResponse");
+
+        const pageItemsResponse = await axios.post(
+            `${backendUrl}/page/${pageId}/page_items`,
+            { reference_id: blockResponse.data.block_id, type: "block" },
+        );
+        console.log(pageItemsResponse, "pageItemsResponse");
+    } catch (error) {
+        const errorMessage = {
+            error: {
+                message: error,
+            },
+        };
+        console.error(errorMessage);
+    }
 };

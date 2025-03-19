@@ -21,13 +21,12 @@ Content-Type: application/json; charset=utf-8
 User-Agent: VRC
 
 # query
-# PATCH /move/field/3dd64935-b6a9-4567-8bc4-62d755be95a1/to/collection/aede9957-7260-42d8-91fa-fb76e9ae91a5
-
-GET /page_items
+# GET /setup-test-data
+POST /block
 
 # body
-# {
-#     "name": "Test2 url label",
-#     "label": "Test2 url label",
-#     "value": "https://google.com"
-# }
+{
+    "name": "block name",
+    "description": "Hello world",
+    "block_type": "normal_block"
+}
