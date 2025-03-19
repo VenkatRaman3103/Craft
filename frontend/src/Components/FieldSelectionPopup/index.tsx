@@ -105,7 +105,7 @@ export const FieldSelectionPopup: React.FC<FieldSelectionPopupProps> = ({
 
                             return (
                                 <div
-                                    key={field.id}
+                                    key={field.field_id}
                                     className={`field-option ${selectedFields.includes(field.field_id) ? "selected" : ""}`}
                                     onClick={() =>
                                         toggleFieldSelection(field.field_id)
