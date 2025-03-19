@@ -7,7 +7,6 @@ import { fetchPageData } from "./api";
 import axios from "axios";
 import { backendUrl } from "@/config";
 import { FieldsAndBlocksList } from "@/Components/FieldsAndBlocksList";
-import { Drumstick } from "lucide-react";
 
 export const Page = () => {
     const { page_id } = useParams();
@@ -40,7 +39,6 @@ export const Page = () => {
             );
 
             setLocalFields(response.data.collection_items);
-            console.log(localFields, "localFields");
         }
 
         if (parentCollectionId) {

@@ -3,7 +3,13 @@ import { useMutation } from "@tanstack/react-query";
 import { useState } from "react";
 import { BlockPrompt } from "../BlockPrompt";
 
-export const BlocksPropmts = ({ block, page_id, queryClient, onCancel }) => {
+export const BlocksPropmts = ({
+    block,
+    page_id,
+    queryClient,
+    onCancel,
+    localFields,
+}) => {
     const [blockInput, setBlockInput] = useState("");
 
     const createBlockMutation = useMutation({
@@ -49,6 +55,7 @@ export const BlocksPropmts = ({ block, page_id, queryClient, onCancel }) => {
             handleBlockPromptCancel={onCancel}
             queryClient={queryClient}
             itemType="block"
+            localFields={localFields}
         />
     );
 };

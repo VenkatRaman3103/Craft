@@ -106,6 +106,7 @@ export const FieldsBlocksRenderer = ({
                     {selectedBlocks.map((block: any) => (
                         <BlocksPropmts
                             key={block.instanceId || block.blockId}
+                            localFields={localFields}
                             block={block}
                             page_id={query_key_id || ""}
                             queryClient={queryClient}

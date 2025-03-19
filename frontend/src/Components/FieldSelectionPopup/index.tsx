@@ -60,7 +60,7 @@ export const FieldSelectionPopup: React.FC<FieldSelectionPopupProps> = ({
 
     const handleAddSelected = () => {
         console.log(selectedFields, "setSelectedFields");
-        onAddFields(selectedFields, selectedFieldsType);
+        onAddFields(selectedFields, selectedFieldsType, localFields);
         setSelectedFields([]);
         onClose();
     };

@@ -39,6 +39,8 @@ export const useFieldsBlocks = ({
         selectedFieldsType: string,
         localFields: any[] = [],
     ) => {
+        console.log(localFields, "localfieldssome");
+
         setFieldType(selectedFieldsType);
 
         if (selectedFieldsType === "all") {
