@@ -25,7 +25,7 @@ CREATE TABLE "block_items" (
 	"parent_block_id" uuid NOT NULL,
 	"item_type" text NOT NULL,
 	"reference_id" uuid NOT NULL,
-	"order" text NOT NULL,
+	"order" text,
 	"created_at" timestamp DEFAULT now(),
 	"edited_at" timestamp DEFAULT now()
 );

@@ -39,6 +39,44 @@ export async function getBlockById(req, res) {
     }
 }
 
+// TODO: instead of formatting the data from response use drizzle-orm ( with functinality )
+export async function getBlockWithNestedContent(block_id) {
+    if (!block_id) return null;
+
+    const block = await db.query.blocks.findFirst({
+        where: (blocks, { eq }) => eq(blocks.block_id, block_id),
+    });
+
+    if (!block) return null;
+
+    const items = await db.query.block_items.findMany({
+        where: (blockItems, { eq }) => eq(blockItems.parent_block_id, block_id),
+        orderBy: (blockItems, { asc }) => asc(blockItems.order),
+    });
+
+    const processedItems = await Promise.all(
+        items.map(async (item) => {
+            if (item.item_type === "text_field") {
+                const field = await db.query.textFields.findFirst({
+                    where: (textFields, { eq }) =>
+                        eq(textFields.field_id, item.reference_id),
+                });
+                return { item_type: "text_field", text_field: field };
+            } else if (item.item_type === "block") {
+                const nestedContent = await getBlockWithNestedContent(
+                    item.reference_id,
+                );
+                return { block: nestedContent };
+            }
+
+            return null;
+        }),
+    );
+
+    return { ...block, block_items: processedItems.filter(Boolean) };
+}
+// Express route handler
+
 export async function getBlockByReference(req, res) {
     const { reference_id } = req.params;
     try {

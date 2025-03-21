@@ -149,6 +149,24 @@ export const Block = ({
     const fieldsContainerRef = useRef<HTMLDivElement>(null);
     const [fields, setFields] = useState([]);
 
+    const [blockItemsList, setBlockItemsList] = useState([]);
+    const [parentBlockId, setParentBlockId] = useState(block.block_id);
+
+    useEffect(() => {
+        async function fetchBlockItems() {
+            const response = await axios.get(
+                `${backendUrl}/block/${parentBlockId}`,
+            );
+            setBlockItemsList(response.data.block_items);
+
+            console.log(response.data.block_items, "blockItemsList");
+        }
+
+        if (parentBlockId) {
+            fetchBlockItems();
+        }
+    }, [parentBlockId]);
+
     const fieldsBlocksProps = useFieldsBlocks({
         itemType,
         queryClient,
@@ -271,7 +289,7 @@ export const Block = ({
                 </div>
 
                 <FieldsBlocksRenderer
-                    itemsList={[]}
+                    itemsList={blockItemsList}
                     query_key_id={""}
                     parentCollectionId={null}
                     itemType={"block"}

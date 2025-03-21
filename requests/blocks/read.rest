@@ -22,7 +22,7 @@ User-Agent: VRC
 
 # query
 # GET /setup-test-data
-GET /test/454f2a3c-bff9-43dd-82e5-1956a1a5b28a
+GET /block/374a4eb6-662b-4e4a-94d2-597da3f75b90
 
 # body
 # {

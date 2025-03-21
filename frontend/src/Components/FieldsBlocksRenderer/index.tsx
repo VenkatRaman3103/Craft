@@ -73,6 +73,7 @@ export const FieldsBlocksRenderer = ({
     handleBlocksSelected,
     handleBlockPromptCancel,
 }: FieldsBlocksRendererProps) => {
+    console.log(itemsList, "itemsListpage");
     return (
         <div className="fields-blocks-renderer">
             {/* Page Items */}

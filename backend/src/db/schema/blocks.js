@@ -32,9 +32,10 @@ export const blocksRelations = relations(blocks, ({ one, many }) => ({
         fields: [blocks.block_id],
         references: [page_items.reference_id],
     }),
-    items: many(block_items),
+    block_item: many(block_items),
 }));
 
+// TODO: change the parent_block_id to generic name
 export const blockItemsRelations = relations(block_items, ({ one }) => ({
     // A block item belongs to a parent block
     parent: one(blocks, {

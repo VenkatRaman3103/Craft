@@ -2,6 +2,8 @@ import React, { useState, useRef, useEffect } from "react";
 import "./index.scss";
 import { useFieldsBlocks } from "@/hooks/useFieldsBlocks";
 import { FieldsBlocksRenderer } from "../FieldsBlocksRenderer";
+import axios from "axios";
+import { backendUrl } from "@/config";
 
 export const BlockPrompt = ({
     blockInputs,
@@ -18,6 +20,19 @@ export const BlockPrompt = ({
     const [inputWidth, setInputWidth] = useState("auto");
     const inputRef = useRef(null);
     const [blockItemsList, setBlockItemsList] = useState([]);
+
+    useEffect(() => {
+        async function fetchBlockItems() {
+            const response = await axios.get(
+                `${backendUrl}/block/${parentBlockId}`,
+            );
+            setBlockItemsList(response.data);
+        }
+
+        if (parentBlockId) {
+            fetchBlockItems();
+        }
+    }, [parentBlockId]);
 
     // Use the shared hook for fields and blocks management
     const fieldsBlocksProps = useFieldsBlocks({
