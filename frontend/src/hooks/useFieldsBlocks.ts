@@ -3,17 +3,9 @@ import { sampleFields } from "@/Data/fields";
 
 interface UseFieldsBlocksProps {
     itemType: string;
-    queryClient: any;
-    query_key_id?: string;
-    queryKey: [string, string | undefined];
 }
 
-export const useFieldsBlocks = ({
-    itemType,
-    queryClient,
-    query_key_id,
-    queryKey,
-}: UseFieldsBlocksProps) => {
+export const useFieldsBlocks = ({ itemType }: UseFieldsBlocksProps) => {
     // Field states
     const [showFieldPromt, setShowFieldPromt] = useState(false);
     const [isFieldPopupOpen, setIsFieldPopupOpen] = useState(false);

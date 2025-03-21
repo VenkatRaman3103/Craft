@@ -13,6 +13,7 @@ import autoAnimate from "@formkit/auto-animate";
 import { FieldWrapper } from "../Fields/FieldWrapper";
 import { FieldsBlocksRenderer } from "../FieldsBlocksRenderer";
 import { useFieldsBlocks } from "@/hooks/useFieldsBlocks";
+import { useQuery } from "@tanstack/react-query";
 
 type PageItemsType = {
     itemsList: any;
@@ -149,29 +150,20 @@ export const Block = ({
     const fieldsContainerRef = useRef<HTMLDivElement>(null);
     const [fields, setFields] = useState([]);
 
-    const [blockItemsList, setBlockItemsList] = useState([]);
-    const [parentBlockId, setParentBlockId] = useState(block.block_id);
-
-    useEffect(() => {
-        async function fetchBlockItems() {
+    const { data: blockItemsList } = useQuery({
+        queryKey: ["blockItems", block.block_id],
+        queryFn: async function fetchBlockItems() {
             const response = await axios.get(
                 `${backendUrl}/block/${parentBlockId}`,
             );
-            setBlockItemsList(response.data.block_items);
 
-            console.log(response.data.block_items, "blockItemsList");
-        }
-
-        if (parentBlockId) {
-            fetchBlockItems();
-        }
-    }, [parentBlockId]);
+            return response.data.block_items;
+        },
+    });
+    const [parentBlockId, setParentBlockId] = useState(block.block_id);
 
     const fieldsBlocksProps = useFieldsBlocks({
         itemType,
-        queryClient,
-        query_key_id: block.id,
-        queryKey: ["blockItems", block.id],
     });
 
     // Apply animations to fields container
@@ -294,7 +286,7 @@ export const Block = ({
                     parentCollectionId={null}
                     itemType={"block"}
                     parentBlockId={block.block_id}
-                    queryKey={["blockItems", "12345"]}
+                    queryKey={["blockItems", block.block_id]}
                     queryClient={queryClient}
                     localFields={[]}
                     {...fieldsBlocksProps}
