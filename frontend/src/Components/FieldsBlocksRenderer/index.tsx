@@ -19,6 +19,8 @@ interface FieldsBlocksRendererProps {
     queryClient: QueryClient;
     localFields: any[];
 
+    parentBlockId?: string | undefined;
+
     // From the custom hook
     showFieldPromt: boolean;
     promtFields: any[];
@@ -51,6 +53,8 @@ export const FieldsBlocksRenderer = ({
     queryClient,
     localFields,
 
+    parentBlockId,
+
     // Hook-derived props
     showFieldPromt,
     promtFields,
@@ -78,6 +82,7 @@ export const FieldsBlocksRenderer = ({
                 query_key_id={query_key_id}
                 parentCollectionId={parentCollectionId}
                 itemType={itemType}
+                localFields={localFields}
                 queryKey={queryKey}
             />
 
@@ -92,6 +97,7 @@ export const FieldsBlocksRenderer = ({
                                 query_key_id={query_key_id}
                                 handleFieldsCancel={handleFieldsCancel}
                                 fieldType={fieldType}
+                                parentBlockId={parentBlockId}
                                 queryKey={queryKey}
                                 itemType={itemType}
                             />
@@ -109,6 +115,7 @@ export const FieldsBlocksRenderer = ({
                             localFields={localFields}
                             block={block}
                             page_id={query_key_id || ""}
+                            itemType={itemType}
                             queryClient={queryClient}
                             onCancel={() => handleBlockPromptCancel(block)}
                         />

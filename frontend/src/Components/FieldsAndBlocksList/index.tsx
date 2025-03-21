@@ -71,6 +71,8 @@ export const AddPageItemsBtn = ({
                     <AddBtn iconLable="Add Blocks" />
                 </div>
             )}
+
+            <p>{itemType}</p>
         </div>
     );
 };

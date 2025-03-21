@@ -13,6 +13,7 @@ export const BlocksPropmts = ({
     localFields,
 }: any) => {
     const [blockInput, setBlockInput] = useState("");
+    const [parentBlockId, setParentBlockId] = useState(null);
 
     const createBlockMutation = useMutation({
         mutationFn: (blockName) =>
@@ -54,9 +55,11 @@ export const BlocksPropmts = ({
                 name: blockDetails.name,
                 type: block.blockType || "block",
             }}
+            page_id={page_id}
             handleCreateBlock={handleCreateBlock}
             handleInputChange={handleInputChange}
             handleBlockPromptCancel={onCancel}
+            parentBlockId={block.block_id}
             queryClient={queryClient}
             itemType="block"
             localFields={localFields}
@@ -78,7 +81,18 @@ const createBlock = async (pageId, blockData) => {
             `${backendUrl}/page/${pageId}/page_items`,
             { reference_id: blockResponse.data.block_id, type: "block" },
         );
-        console.log(pageItemsResponse, "pageItemsResponse");
+
+        // if (itemType === "page") {
+        //     const pageItemsResponse = await axios.post(
+        //         `${backendUrl}/page/${pageId}/page_items`,
+        //         { reference_id: blockResponse.data.block_id, type: "block" },
+        //     );
+        // } else if (itemType == "block") {
+        //     const pageItemsResponse = await axios.post(
+        //         `${backendUrl}/page/${pageId}/page_items`,
+        //         { reference_id: blockResponse.data.block_id, type: "block" },
+        //     );
+        // }
     } catch (error) {
         const errorMessage = {
             error: {

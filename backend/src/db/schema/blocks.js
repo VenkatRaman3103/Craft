@@ -22,7 +22,7 @@ export const block_items = pgTable("block_items", {
         .notNull(),
     item_type: text("item_type").notNull(),
     reference_id: uuid("reference_id").notNull(),
-    order: text("order").notNull(),
+    order: text("order"),
     created_at: timestamp("created_at").defaultNow(),
     edited_at: timestamp("edited_at").defaultNow(),
 });

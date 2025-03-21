@@ -1,4 +1,4 @@
-import { blocks } from "../../db/schema/blocks.js";
+import { block_items, blocks } from "../../db/schema/blocks.js";
 import { db } from "../server.js";
 
 export async function creatBlock(req, res) {
@@ -45,6 +45,41 @@ export async function createBlockOnRef(req, res) {
             })
             .returning();
 
+        res.status(201).json(newBlock[0]);
+    } catch (error) {
+        const errorMessage = {
+            error,
+            message: `Error in creating the block`,
+            origin: "backend/blocksRouter/POST",
+        };
+        console.log(errorMessage);
+        res.status(500).json(errorMessage);
+    }
+}
+
+/*
+ *
+            parent_block_id: mainBlockId,
+            item_type: "text_field",
+            reference_id: titleFieldId,
+            order: "1",
+ * */
+
+export async function creatBlockItem(req, res) {
+    const { block_id } = req.params;
+
+    const { reference_id, type } = req.body;
+
+    try {
+        const newBlock = await db
+            .insert(block_items)
+            .values({
+                parent_block_id: block_id,
+                item_type: type,
+                reference_id: reference_id,
+                order: "1",
+            })
+            .returning();
         res.status(201).json(newBlock[0]);
     } catch (error) {
         const errorMessage = {

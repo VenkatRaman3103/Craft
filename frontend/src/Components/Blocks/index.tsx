@@ -11,6 +11,8 @@ import axios from "axios";
 import { FieldsList } from "../Fields/FieldsList";
 import autoAnimate from "@formkit/auto-animate";
 import { FieldWrapper } from "../Fields/FieldWrapper";
+import { FieldsBlocksRenderer } from "../FieldsBlocksRenderer";
+import { useFieldsBlocks } from "@/hooks/useFieldsBlocks";
 
 type PageItemsType = {
     itemsList: any;
@@ -34,6 +36,7 @@ export const PageItems = ({
     isSidebarOpen,
     onScopeChange,
     onAddFields,
+    localFields,
     queryClient,
     query_key_id,
     itemType,
@@ -80,7 +83,9 @@ export const PageItems = ({
                                 isSidebarOpen={isSidebarOpen}
                                 onScopeChange={onScopeChange}
                                 onDelete={onDelete}
+                                localFields={localFields}
                                 onAddFields={onAddFields}
+                                queryClient={queryClient}
                                 item_id={item.item_id}
                             />
                         );
@@ -114,7 +119,9 @@ export const Block = ({
     isSidebarOpen,
     onScopeChange,
     onDelete,
+    queryClient,
     onAddFields,
+    itemType = "block",
     item_id,
 }: {
     block: blockType;
@@ -128,6 +135,7 @@ export const Block = ({
     item_id?: string;
     onDelete?: (block_id: string, item_id: string) => void;
     onAddFields?: (blockId: string) => void;
+    queryClient?: any;
 }) => {
     const [isCollapsed, setIsCollapsed] = useState(false);
     const [showOptions, setShowOptions] = useState(false);
@@ -140,6 +148,13 @@ export const Block = ({
     const ellipsisRef = useRef<HTMLDivElement>(null);
     const fieldsContainerRef = useRef<HTMLDivElement>(null);
     const [fields, setFields] = useState([]);
+
+    const fieldsBlocksProps = useFieldsBlocks({
+        itemType,
+        queryClient,
+        query_key_id: block.id,
+        queryKey: ["blockItems", block.id],
+    });
 
     // Apply animations to fields container
     useEffect(() => {
@@ -254,6 +269,18 @@ export const Block = ({
                 >
                     <Fields fields={block.fields} />
                 </div>
+
+                <FieldsBlocksRenderer
+                    itemsList={[]}
+                    query_key_id={""}
+                    parentCollectionId={null}
+                    itemType={"block"}
+                    parentBlockId={block.block_id}
+                    queryKey={["blockItems", "12345"]}
+                    queryClient={queryClient}
+                    localFields={[]}
+                    {...fieldsBlocksProps}
+                />
             </div>
         </div>
     );

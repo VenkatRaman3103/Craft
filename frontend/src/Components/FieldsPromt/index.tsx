@@ -26,6 +26,7 @@ export const FieldsPromt = ({
     fieldType,
     queryKey,
     itemType,
+    parentBlockId,
     handleFieldsCancel,
 }: {
     field: any;
@@ -164,7 +165,7 @@ export const FieldsPromt = ({
     const fieldMutation = useMutation(
         () => {
             let payload;
-            let parent_id = query_key_id;
+            let parent_id = itemType == "block" ? parentBlockId : query_key_id;
 
             if (
                 field.type === "multi_select_field" ||
@@ -280,8 +281,6 @@ export const FieldsPromt = ({
         fieldMutation.mutate();
     }
 
-    console.log(field, "colorField");
-
     return (
         <FieldPromtWrapper
             data={field}
@@ -303,6 +302,8 @@ export const FieldsPromt = ({
                     >
                         Create Block
                     </button>
+
+                    {itemType}
                 </div>
             </div>
         </FieldPromtWrapper>

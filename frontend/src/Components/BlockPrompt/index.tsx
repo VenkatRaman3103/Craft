@@ -11,6 +11,7 @@ export const BlockPrompt = ({
     handleInputChange,
     handleBlockPromptCancel,
     localFields,
+    parentBlockId,
     queryClient,
     itemType = "block",
 }: any) => {
@@ -86,9 +87,10 @@ export const BlockPrompt = ({
                             query_key_id={block.id}
                             parentCollectionId={null}
                             itemType={itemType}
+                            parentBlockId={parentBlockId}
                             queryKey={["blockItems", block.id]}
                             queryClient={queryClient}
-                            localFields={localFields} // Pass local fields if needed
+                            localFields={localFields}
                             {...fieldsBlocksProps}
                         />
                     </div>
