@@ -156,10 +156,11 @@ export const FieldWrapper = ({
     const fieldMutation = useMutation(
         async (data: any) => {
             try {
-                // delete the field from page_items using field_id
                 const fieldResponse = await axios.delete(
                     `${backendUrl}/fields/${data.type}/${data.field_id}`,
                 );
+
+                console.log(itemType, "itemTypeFielddelete");
 
                 // delete the field from its respective table using field_id and type
                 if (itemType == "page") {
@@ -175,6 +176,16 @@ export const FieldWrapper = ({
                 } else if (itemType == "collection") {
                     const collectionItemsResponse = await axios.delete(
                         `${backendUrl}/collection_items/${data.field_id}/field`,
+                    );
+
+                    console.log(
+                        fieldResponse.data,
+                        collectionItemsResponse.data,
+                        "Deleted",
+                    );
+                } else if (itemType == "block") {
+                    const collectionItemsResponse = await axios.delete(
+                        `${backendUrl}/block_items/${data.field_id}`,
                     );
 
                     console.log(

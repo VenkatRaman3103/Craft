@@ -5,7 +5,7 @@ import {
     getBlockByReference,
     getBlockWithNestedContent,
 } from "./read.js";
-import { deleteBlockById } from "./delete.js";
+import { deleteBlockById, deleteBlockByReference } from "./delete.js";
 import { creatBlock, createBlockOnRef, creatBlockItem } from "./create.js";
 
 export const blocksRouter = express.Router();
@@ -40,6 +40,7 @@ blocksRouter.get("/block/reference/:reference_id", getBlockByReference); // blco
 
 // TODO: blocks delete
 blocksRouter.delete("/block/:block_id", deleteBlockById);
+blocksRouter.delete("/block_items/:reference_id", deleteBlockByReference);
 
 // CREATE
 blocksRouter.post("/block", creatBlock);
