@@ -52,10 +52,17 @@ export const PageItems = ({
 
     async function onDelete(block_id: string, item_id: string) {
         try {
-            const response = await axios.delete(
+            const responseBlock = await axios.delete(
                 `${backendUrl}/block/${block_id}`,
             );
-            console.log(response.data, "Deleted");
+
+            if (itemType === "block" && item_id) {
+                const blockItemsReponse = await axios.delete(
+                    `/block_items/${item_id}`,
+                );
+            }
+
+            console.log(responseBlock.data, "Deleted");
         } catch (error) {
             const errorMessage = {
                 error,
@@ -70,7 +77,7 @@ export const PageItems = ({
         );
     }
 
-    console.log(pageItemsList, "pageItemsList");
+    console.log(itemsList, itemType, "pageItemsList");
 
     return (
         <div className="blocks-container prior-drop">

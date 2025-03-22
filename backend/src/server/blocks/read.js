@@ -66,7 +66,7 @@ export async function getBlockWithNestedContent(block_id) {
                 const nestedContent = await getBlockWithNestedContent(
                     item.reference_id,
                 );
-                return { block: nestedContent };
+                return { item_type: item.item_type, block: nestedContent };
             }
 
             return null;

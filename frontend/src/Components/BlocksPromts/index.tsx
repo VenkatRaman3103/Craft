@@ -10,21 +10,17 @@ export const BlocksPropmts = ({
     page_id,
     queryClient,
     onCancel,
+    itemType,
     query_key_id,
     queryKey,
     localFields,
+    parentBlockId,
 }: any) => {
     const [blockInput, setBlockInput] = useState("");
-    const [parentBlockId, setParentBlockId] = useState(null);
 
     const createBlockMutation = useMutation({
         mutationFn: (blockName) =>
-            createBlock(page_id, {
-                name: blockName,
-                description: "",
-                scope: "page",
-                blocK_type: "normal_block",
-            }),
+            createBlock(page_id, itemType, blockName, parentBlockId, block),
         onSuccess: () => {
             queryClient.invalidateQueries({ queryKey: queryKey });
         },
@@ -35,7 +31,7 @@ export const BlocksPropmts = ({
 
     const handleCreateBlock = (block) => {
         if (!blockInput) return;
-        console.log(block, blockInput, "blockInput");
+        console.log(block, blockInput, itemType, "blockInput");
         console.log(queryKey, "queryKey");
         createBlockMutation.mutate(blockInput);
         onCancel();
@@ -71,17 +67,39 @@ export const BlocksPropmts = ({
 };
 
 // Placeholder for createBlock function if it's not defined elsewhere
-const createBlock = async (pageId, blockData) => {
-    try {
-        const blockResponse = await axios.post(
-            `${backendUrl}/block`,
-            blockData,
-        );
+const createBlock = async (
+    page_id,
+    itemType,
+    blockName,
+    parentBlockId,
+    block,
+) => {
+    let payload = {
+        name: blockName,
+        description: "",
+        scope: itemType,
+        blocK_type: "normal_block",
+        item_type: "block",
+    };
 
-        const pageItemsResponse = await axios.post(
-            `${backendUrl}/page/${pageId}/page_items`,
-            { reference_id: blockResponse.data.block_id, type: "block" },
-        );
+    try {
+        const blockResponse = await axios.post(`${backendUrl}/block`, payload);
+
+        if (itemType === "page") {
+            const pageItemsResponse = await axios.post(
+                `${backendUrl}/page/${page_id}/page_items`,
+                { reference_id: blockResponse.data.block_id, type: "block" },
+            );
+        } else if (itemType == "block") {
+            const blockItemsResponse = await axios.post(
+                `${backendUrl}/block/${parentBlockId}/block_items`,
+                {
+                    reference_id: blockResponse.data.block_id,
+                    parent_block_id: block.block_id,
+                    type: itemType,
+                },
+            );
+        }
 
         // if (itemType === "page") {
         //     const pageItemsResponse = await axios.post(

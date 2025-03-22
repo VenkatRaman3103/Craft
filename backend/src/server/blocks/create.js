@@ -57,14 +57,6 @@ export async function createBlockOnRef(req, res) {
     }
 }
 
-/*
- *
-            parent_block_id: mainBlockId,
-            item_type: "text_field",
-            reference_id: titleFieldId,
-            order: "1",
- * */
-
 export async function creatBlockItem(req, res) {
     const { block_id } = req.params;
 

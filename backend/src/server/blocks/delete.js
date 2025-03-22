@@ -5,6 +5,10 @@ import { db } from "../server.js";
 export async function deleteBlockById(req, res) {
     const { block_id } = req.params;
     try {
+        await db
+            .delete(block_items)
+            .where(eq(block_items.parent_block_id, block_id));
+
         const deletedBlock = await db
             .delete(blocks)
             .where(eq(blocks.block_id, block_id))
@@ -19,11 +23,11 @@ export async function deleteBlockById(req, res) {
         };
         if (error.code === "P2002") {
             res.status(400).json(errorMessage);
+        } else {
+            res.status(500).json(errorMessage);
         }
-        res.status(500).json(errorMessage);
     }
 }
-
 export async function deleteBlockByReference(req, res) {
     const { reference_id } = req.params;
     try {

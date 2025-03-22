@@ -73,7 +73,7 @@ export const FieldsBlocksRenderer = ({
     handleBlocksSelected,
     handleBlockPromptCancel,
 }: FieldsBlocksRendererProps) => {
-    console.log(itemsList, "itemsListpage");
+    console.log(itemsList, itemType, "itemsListpage");
     return (
         <div className="fields-blocks-renderer">
             {/* Page Items */}
@@ -117,6 +117,7 @@ export const FieldsBlocksRenderer = ({
                             query_key_id={query_key_id}
                             queryKey={queryKey}
                             block={block}
+                            parentBlockId={parentBlockId}
                             page_id={query_key_id || ""}
                             itemType={itemType}
                             queryClient={queryClient}
