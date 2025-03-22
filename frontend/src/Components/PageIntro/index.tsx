@@ -13,7 +13,7 @@ export const PageIntro = ({
     openSideBar,
     setOpenSideBar,
 }: {
-    data: any;
+    data: any | undefined;
     openSideBar: boolean;
     setOpenSideBar: React.Dispatch<React.SetStateAction<boolean>>;
 }) => {
