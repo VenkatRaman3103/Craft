@@ -31,7 +31,7 @@ export const useFieldsBlocks = ({ itemType }: UseFieldsBlocksProps) => {
         selectedFieldsType: string,
         localFields: any[] = [],
     ) => {
-        console.log(localFields, "localfieldssome");
+        console.log(selectedFieldsType, "localfieldssome");
 
         setFieldType(selectedFieldsType);
 

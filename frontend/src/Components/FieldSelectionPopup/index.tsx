@@ -16,7 +16,11 @@ type FieldOption = {
 interface FieldSelectionPopupProps {
     isOpen: boolean;
     onClose: () => void;
-    onAddFields: (selectedFields: string[], selectedFieldsType: string) => void;
+    onAddFields: (
+        selectedFields: string[],
+        selectedFieldsType: string,
+        localFields: any,
+    ) => void;
     availableFields: FieldOption[];
     localFields: field[];
 }
@@ -61,7 +65,7 @@ export const FieldSelectionPopup: React.FC<FieldSelectionPopupProps> = ({
 
     const handleAddSelected = () => {
         console.log(selectedFields, "setSelectedFields");
-        onAddFields(selectedFields, selectedFieldsType);
+        onAddFields(selectedFields, selectedFieldsType, localFields);
         setSelectedFields([]);
         onClose();
     };

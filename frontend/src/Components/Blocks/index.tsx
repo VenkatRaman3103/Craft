@@ -124,6 +124,7 @@ export const Block = ({
     onAddFields,
     itemType = "block",
     item_id,
+    localFields,
 }: {
     block: blockType;
     isSidebarOpen?: boolean;
@@ -288,7 +289,7 @@ export const Block = ({
                     parentBlockId={block.block_id}
                     queryKey={["blockItems", block.block_id]}
                     queryClient={queryClient}
-                    localFields={[]}
+                    localFields={localFields}
                     {...fieldsBlocksProps}
                 />
             </div>
