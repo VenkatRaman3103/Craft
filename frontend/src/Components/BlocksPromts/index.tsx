@@ -10,6 +10,8 @@ export const BlocksPropmts = ({
     page_id,
     queryClient,
     onCancel,
+    query_key_id,
+    queryKey,
     localFields,
 }: any) => {
     const [blockInput, setBlockInput] = useState("");
@@ -24,17 +26,16 @@ export const BlocksPropmts = ({
                 blocK_type: "normal_block",
             }),
         onSuccess: () => {
-            queryClient.invalidateQueries({ queryKey: ["pageData", page_id] });
+            queryClient.invalidateQueries({ queryKey: queryKey });
         },
         onError: (error) => {
             console.error("Failed to create block:", error);
         },
     });
 
-    const handleCreateBlock = () => {
+    const handleCreateBlock = (block, itemType) => {
         if (!blockInput) return;
-        console.log(blockInput, "blockInput");
-        createBlockMutation.mutate(blockInput);
+        createBlockMutation.mutate(blockInput, itemType);
         onCancel();
     };
 
@@ -74,8 +75,6 @@ const createBlock = async (pageId, blockData) => {
             `${backendUrl}/block`,
             blockData,
         );
-
-        console.log(blockResponse, "blockResponse");
 
         const pageItemsResponse = await axios.post(
             `${backendUrl}/page/${pageId}/page_items`,

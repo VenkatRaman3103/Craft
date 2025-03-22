@@ -1,6 +1,4 @@
-import React from "react";
 import { useQueryClient } from "@tanstack/react-query";
-import { sampleFields } from "@/Data/fields";
 import { useFieldsBlocks } from "@/hooks/useFieldsBlocks";
 import { FieldsBlocksRenderer } from "../FieldsBlocksRenderer";
 import { AddBtn } from "../Buttons/AddBtn";

@@ -114,6 +114,8 @@ export const FieldsBlocksRenderer = ({
                         <BlocksPropmts
                             key={block.instanceId || block.blockId}
                             localFields={localFields}
+                            query_key_id={query_key_id}
+                            queryKey={queryKey}
                             block={block}
                             page_id={query_key_id || ""}
                             itemType={itemType}

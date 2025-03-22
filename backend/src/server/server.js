@@ -32,7 +32,8 @@ export const db = drizzle(pool, {
 
 // Connect to DB
 pool.connect()
-    .then(() => console.log("🟢 Connected to the db"))
+    // .then(() => console.log("🟢⭕🞆 Connected to the db"))
+    .then(() => console.log("🞆 Connected to the db"))
     .catch((error) => console.log(`Failed to connect: ${error}`));
 
 // 🟢 Get all users
@@ -117,5 +118,6 @@ app.use("/api", testRoute);
 // Start the server
 const PORT = 5000;
 app.listen(PORT, () => {
-    console.log(`🟢 Server is running on http://localhost:${PORT}`);
+    // console.log(`🟢🞆 Server is running on http://localhost:${PORT}`);
+    console.log(`🞆 Server is running on http://localhost:${PORT}`);
 });

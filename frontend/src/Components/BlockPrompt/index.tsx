@@ -120,7 +120,7 @@ export const BlockPrompt = ({
                         </button>
                         <button
                             className="create-block-button"
-                            onClick={() => handleCreateBlock(block)}
+                            onClick={() => handleCreateBlock(block, itemType)}
                         >
                             Create Block
                         </button>
