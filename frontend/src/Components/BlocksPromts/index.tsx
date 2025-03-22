@@ -33,9 +33,11 @@ export const BlocksPropmts = ({
         },
     });
 
-    const handleCreateBlock = (block, itemType) => {
+    const handleCreateBlock = (block) => {
         if (!blockInput) return;
-        createBlockMutation.mutate(blockInput, itemType);
+        console.log(block, blockInput, "blockInput");
+        console.log(queryKey, "queryKey");
+        createBlockMutation.mutate(blockInput);
         onCancel();
     };
 
