@@ -97,17 +97,17 @@ export const BlockPrompt = ({
                     {/* Block content area */}
                     <div className="block-content-area">
                         {/* Use the shared renderer component */}
-                        <FieldsBlocksRenderer
-                            itemsList={blockItemsList}
-                            query_key_id={block.id}
-                            parentCollectionId={null}
-                            itemType={itemType}
-                            parentBlockId={parentBlockId}
-                            queryKey={["blockItems", block.id]}
-                            queryClient={queryClient}
-                            localFields={localFields}
-                            {...fieldsBlocksProps}
-                        />
+                        {/* <FieldsBlocksRenderer */}
+                        {/*     itemsList={blockItemsList} */}
+                        {/*     query_key_id={block.id} */}
+                        {/*     parentCollectionId={null} */}
+                        {/*     itemType={itemType} */}
+                        {/*     parentBlockId={parentBlockId} */}
+                        {/*     queryKey={["blockItems", block.id]} */}
+                        {/*     queryClient={queryClient} */}
+                        {/*     localFields={localFields} */}
+                        {/*     {...fieldsBlocksProps} */}
+                        {/* /> */}
                     </div>
 
                     {/* Action buttons */}

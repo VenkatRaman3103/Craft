@@ -2,6 +2,7 @@ import { useQueryClient } from "@tanstack/react-query";
 import { useFieldsBlocks } from "@/hooks/useFieldsBlocks";
 import { FieldsBlocksRenderer } from "../FieldsBlocksRenderer";
 import { AddBtn } from "../Buttons/AddBtn";
+import { useState } from "react";
 
 interface FieldsAndBlocksListProps {
     itemsList: any[];
@@ -48,29 +49,74 @@ export const FieldsAndBlocksList = ({
     );
 };
 
-// Keep this export since it's used elsewhere
 export const AddPageItemsBtn = ({
     openFieldPopup,
     openBlockPopup,
     itemType,
+    isVerbose = true, // New prop with default value true
 }: {
     openFieldPopup: () => void;
     openBlockPopup: () => void;
     itemType: string;
+    isVerbose?: boolean; // Optional prop
 }) => {
-    return (
-        <div className="add-button-wrapper">
-            <div onClick={openFieldPopup} className="btn">
-                <AddBtn iconLable="Add Field" />
-            </div>
+    const [showOptions, setShowOptions] = useState(false);
 
-            {itemType !== "collection" && (
-                <div onClick={openBlockPopup} className="btn">
-                    <AddBtn iconLable="Add Blocks" />
+    // Function to handle clicking the plus button in minimal mode
+    const handlePlusClick = () => {
+        setShowOptions((prev) => !prev);
+    };
+
+    if (isVerbose) {
+        // Verbose mode - original UI
+        return (
+            <div className="add-button-wrapper">
+                <div onClick={openFieldPopup} className="btn">
+                    <AddBtn iconLable="Add Field" />
                 </div>
-            )}
+                {itemType !== "collection" && (
+                    <div onClick={openBlockPopup} className="btn">
+                        <AddBtn iconLable="Add Blocks" />
+                    </div>
+                )}
+                <p>{itemType}</p>
+            </div>
+        );
+    } else {
+        // Minimal mode - hidden until hover, with popup options
+        return (
+            <div className="add-button-wrapper minimal">
+                <div className="minimal-plus-container">
+                    <div onClick={handlePlusClick} className="minimal-plus-btn">
+                        <span>+</span>
+                    </div>
 
-            <p>{itemType}</p>
-        </div>
-    );
+                    {showOptions && (
+                        <div className="options-popup">
+                            <div
+                                onClick={() => {
+                                    openFieldPopup();
+                                    setShowOptions(false);
+                                }}
+                                className="popup-btn"
+                            >
+                                <AddBtn iconLable="Add Field" />
+                            </div>
+                            {itemType !== "collection" && (
+                                <div
+                                    onClick={() => {
+                                        openBlockPopup();
+                                        setShowOptions(false);
+                                    }}
+                                    className="popup-btn"
+                                >
+                                    <AddBtn iconLable="Add Blocks" />
+                                </div>
+                            )}
+                        </div>
+                    )}
+                </div>
+            </div>
+        );
+    }
 };

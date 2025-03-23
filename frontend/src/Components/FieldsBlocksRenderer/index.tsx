@@ -132,6 +132,7 @@ export const FieldsBlocksRenderer = ({
                 openFieldPopup={openFieldPopup}
                 openBlockPopup={openBlockPopup}
                 itemType={itemType}
+                isVerbose={false}
             />
 
             {/* Popups */}
