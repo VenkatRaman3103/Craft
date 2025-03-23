@@ -124,15 +124,16 @@ export const FieldsBlocksRenderer = ({
                             onCancel={() => handleBlockPromptCancel(block)}
                         />
                     ))}
+
+                    {/* Add Buttons */}
                 </div>
             )}
 
-            {/* Add Buttons */}
             <AddPageItemsBtn
                 openFieldPopup={openFieldPopup}
                 openBlockPopup={openBlockPopup}
                 itemType={itemType}
-                isVerbose={false}
+                isVerbose={true}
             />
 
             {/* Popups */}
