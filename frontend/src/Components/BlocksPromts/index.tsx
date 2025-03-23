@@ -78,7 +78,7 @@ const createBlock = async (
         name: blockName,
         description: "",
         scope: itemType,
-        blocK_type: "normal_block",
+        blocK_type: "block",
         item_type: "block",
     };
 
