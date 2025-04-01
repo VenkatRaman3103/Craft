@@ -4,6 +4,7 @@ import { useFieldsBlocks } from "@/hooks/useFieldsBlocks";
 import { FieldsBlocksRenderer } from "../FieldsBlocksRenderer";
 import axios from "axios";
 import { backendUrl } from "@/config";
+import { ArrayBlockPrompt } from "../BlocksPromts/ArrayBlockPrompt";
 
 export const BlockPrompt = ({
     blockInputs,
@@ -15,7 +16,7 @@ export const BlockPrompt = ({
     localFields,
     parentBlockId,
     queryClient,
-    itemType = "block",
+    itemType,
 }: any) => {
     const [inputWidth, setInputWidth] = useState("auto");
     const inputRef = useRef(null);
@@ -69,6 +70,8 @@ export const BlockPrompt = ({
                 return "block";
         }
     }
+
+    console.log(itemType, "itemTypeItem");
 
     return (
         <div className="block-promt-item">

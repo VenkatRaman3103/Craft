@@ -48,10 +48,10 @@ export const blockItemsRelations = relations(block_items, ({ one }) => ({
 export const arrayBlocks = pgTable("array_blocks", {
     block_id: uuid("block_id").primaryKey().defaultRandom(),
     name: text("name").notNull(),
-    description: text("content").notNull(),
+    description: text("content"),
     scope: scopeEnum("scope").default("global"),
     block_type: text("block_type").default("array").notNull(),
-    reference_id: text("reference_id").default(null), // based on the scope
+    reference_id: text("reference_id"),
     createdAt: timestamp("created_at").defaultNow(),
     editedAt: timestamp("edited_at").defaultNow(),
 });

@@ -12,10 +12,10 @@ CREATE TABLE "array_block_items" (
 CREATE TABLE "array_blocks" (
 	"block_id" uuid PRIMARY KEY DEFAULT gen_random_uuid() NOT NULL,
 	"name" text NOT NULL,
-	"content" text NOT NULL,
+	"content" text,
 	"scope" "scope_enum" DEFAULT 'global',
 	"block_type" text DEFAULT 'array' NOT NULL,
-	"reference_id" text DEFAULT null,
+	"reference_id" text,
 	"created_at" timestamp DEFAULT now(),
 	"edited_at" timestamp DEFAULT now()
 );

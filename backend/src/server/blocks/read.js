@@ -62,7 +62,13 @@ export async function getBlockWithNestedContent(block_id) {
                         eq(textFields.field_id, item.reference_id),
                 });
                 return { item_type: "text_field", text_field: field };
-            } else if (item.item_type === "block") {
+            } else if (item.item_type === "textarea_field") {
+                const field = await db.query.textAreaFields.findFirst({
+                    where: (textAreaFields, { eq }) =>
+                        eq(textAreaFields.field_id, item.reference_id),
+                });
+                return { item_type: "textarea_field", textarea_field: field };
+            }else if (item.item_type === "block") {
                 const nestedContent = await getBlockWithNestedContent(
                     item.reference_id,
                 );

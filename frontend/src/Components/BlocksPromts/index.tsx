@@ -29,7 +29,7 @@ export const BlocksPropmts = ({
         },
     });
 
-    const handleCreateBlock = (block) => {
+    const handleCreateBlock = (block, itemType) => {
         if (!blockInput) return;
         console.log(block, blockInput, itemType, "blockInput");
         console.log(queryKey, "queryKey");
@@ -60,7 +60,7 @@ export const BlocksPropmts = ({
             handleBlockPromptCancel={onCancel}
             parentBlockId={block.block_id}
             queryClient={queryClient}
-            itemType="block"
+            itemType={block.blockType}
             localFields={localFields}
         />
     );
