@@ -37,3 +37,22 @@ arrayBlocksRouter.get("/arrayblock/:block_id", async (req, res) => {
         res.status(500).json(errorMessage);
     }
 });
+
+// CREATE
+arrayBlocksRouter.post("/arrayblock", async (req, res) => {
+    try {
+        const { name, description, block_type } = req.body;
+        const arrayBlockResponse = await db
+            .insert(arrayBlocks)
+            .values({ name, description, block_type })
+            .returning();
+        res.json(arrayBlockResponse);
+    } catch (error) {
+        const errorMessage = {
+            error: error.message,
+            origin: "backend/arrayBlocks/create/POST",
+        };
+        console.log(errorMessage);
+        res.status(500).json(errorMessage);
+    }
+});
