@@ -2,6 +2,8 @@ import express from "express";
 import { getArrayBlocks, getArrayBlocksById } from "./read.js";
 import { createArrayBlock, createArrayBlockByRef } from "./create.js";
 import { updateArrayBlock, updateNameArrayBlock } from "./update.js";
+import { deleteArrayBlock} from "./delete.js";
+
 
 export const arrayBlocksRouter = express.Router();
 
@@ -19,3 +21,6 @@ arrayBlocksRouter.patch(
     "/arrayblock/:block_id/name/:name",
     updateNameArrayBlock,
 ); // update array block by id
+
+// DELETE
+arrayBlocksRouter.delete("/arrayblock/:block_id", deleteArrayBlock);
