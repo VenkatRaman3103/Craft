@@ -21,11 +21,11 @@ Content-Type: application/json; charset=utf-8
 User-Agent: VRC
 
 # query
-GET  /arrayblocks
+PATCH  /arrayblock/60a07be1-8197-4e51-8a17-f06fcc5455fa/name/new_name
 
 # body
 # {
-#     "name": "block name",
-#     "description": "Hello world",
-#     "block_type": "normal_block"
+#     # "name": "block name",
+#     "description": "another new Name",
+#     # "block_type": "array"
 # }

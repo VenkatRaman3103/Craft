@@ -26,6 +26,6 @@ POST  /arrayblock
 # body
 {
     "name": "block name",
-    "description": "Hello world",
+    "description": "New array block",
     "block_type": "array"
 }

@@ -1,77 +1,21 @@
 import express from "express";
-import { db } from "../../server.js";
-import { arrayBlocks } from "../../../db/schema/blocks.js";
-import { eq } from "drizzle-orm";
+import { getArrayBlocks, getArrayBlocksById } from "./read.js";
+import { createArrayBlock, createArrayBlockByRef } from "./create.js";
+import { updateArrayBlock, updateNameArrayBlock } from "./update.js";
 
 export const arrayBlocksRouter = express.Router();
 
 // READ
-arrayBlocksRouter.get("/arrayblocks", async (req, res) => {
-    try {
-        const arrayBlocksResponse = await db.select().from(arrayBlocks);
-        res.json(arrayBlocksResponse);
-    } catch (error) {
-        const errorMessage = {
-            error: error.message,
-            origin: "backend/arrayBlocks/read/GET",
-        };
-        console.log(errorMessage);
-        res.status(500).json(errorMessage);
-    }
-});
-
-arrayBlocksRouter.get("/arrayblock/:block_id", async (req, res) => {
-    try {
-        const { block_id } = req.params;
-        const arrayBlockResponse = await db
-            .select()
-            .from(arrayBlocks)
-            .where(eq(arrayBlocks.block_id, block_id));
-        res.json(arrayBlockResponse);
-    } catch (error) {
-        const errorMessage = {
-            error: error.message,
-            origin: "backend/arrayBlocks/read/GET",
-        };
-        console.log(errorMessage);
-        res.status(500).json(errorMessage);
-    }
-});
+arrayBlocksRouter.get("/arrayblocks", getArrayBlocks); // get all array blocks
+arrayBlocksRouter.get("/arrayblock/:block_id", getArrayBlocksById); // get block by id
 
 // CREATE
-arrayBlocksRouter.post("/arrayblock", async (req, res) => {
-    try {
-        const { name, description, block_type } = req.body;
-        const arrayBlockResponse = await db
-            .insert(arrayBlocks)
-            .values({ name, description, block_type })
-            .returning();
-        res.json(arrayBlockResponse);
-    } catch (error) {
-        const errorMessage = {
-            error: error.message,
-            origin: "backend/arrayBlocks/create/POST",
-        };
-        console.log(errorMessage);
-        res.status(500).json(errorMessage);
-    }
-});
+arrayBlocksRouter.post("/arrayblock", createArrayBlock); // create array block
+arrayBlocksRouter.post("/arrayblock/:reference_id", createArrayBlockByRef); // create array block by reference
 
-arrayBlocksRouter.post("/arrayblock/:reference_id", async (req, res) => {
-    try {
-        const { reference_id } = req.params;
-        const { name, description, block_type } = req.body;
-        const arrayBlockResponse = await db
-            .insert(arrayBlocks)
-            .values({ reference_id, name, description, block_type })
-            .returning();
-        res.json(arrayBlockResponse);
-    } catch (error) {
-        const errorMessage = {
-            error: error.message,
-            origin: "backend/arrayBlocks/create/POST",
-        };
-        console.log(errorMessage);
-        res.status(500).json(errorMessage);
-    }
-});
+// UPDATE
+arrayBlocksRouter.put("/arrayblock/:block_id", updateArrayBlock); // update array block by id
+arrayBlocksRouter.patch(
+    "/arrayblock/:block_id/name/:name",
+    updateNameArrayBlock,
+); // update array block by id
