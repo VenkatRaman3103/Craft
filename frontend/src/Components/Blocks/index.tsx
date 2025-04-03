@@ -51,10 +51,21 @@ export const PageItems = ({
     }, [itemsList]);
 
     const blocksMutation = useMutation({
-        mutationFn: async (block_id: string, item_id: string) => {
+        mutationFn: async ({
+            block_id,
+            item_id,
+            block,
+        }: {
+            block_id: string;
+            item_id: string;
+            block: any;
+        }) => {
+            console.log(block, "onDelete"); // Should now log the correct value
+
             const responseBlock = await axios.delete(
-                `${backendUrl}/${itemType}/${block_id}`,
+                `${backendUrl}/${block.block_type}/${block_id}`,
             );
+
             if (itemType === "block" && item_id) {
                 const blockItemsResponse = await axios.delete(
                     `/block_items/${item_id}`,
@@ -70,8 +81,8 @@ export const PageItems = ({
         },
     });
 
-    async function onDelete(block_id: string, item_id: string) {
-        blocksMutation.mutate(block_id, item_id);
+    async function onDelete(block_id: string, item_id: string, block: any) {
+        blocksMutation.mutate({ block_id, item_id, block });
     }
 
     return (
@@ -217,7 +228,7 @@ export const Block = ({
 
     const handleDelete = () => {
         if (onDelete) {
-            onDelete(block.block_id, item_id);
+            onDelete(block.block_id, item_id, block);
         }
         setShowOptions(false);
     };
