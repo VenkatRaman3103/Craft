@@ -66,58 +66,91 @@ export const BlocksPropmts = ({
     );
 };
 
-// Placeholder for createBlock function if it's not defined elsewhere
+// note: create block
+interface Block {
+    blockType: "normal" | "array";
+}
+
+interface Payload {
+    name: string;
+    description: string;
+    scope: string;
+    blocK_type: string;
+    item_type: string;
+}
+
 const createBlock = async (
-    page_id,
-    itemType,
-    blockName,
-    parentBlockId,
-    block,
-) => {
-    let payload = {
+    page_id: string,
+    scope: "page" | "block",
+    blockName: string,
+    parentBlockId: string | null,
+    block: Block,
+): Promise<void> => {
+    console.log(block, scope, "createBlock");
+
+    const payload: Payload = {
         name: blockName,
         description: "",
-        scope: itemType,
+        scope,
         blocK_type: "block",
         item_type: "block",
     };
 
     try {
-        const blockResponse = await axios.post(`${backendUrl}/block`, payload);
+        const blockResponse = await axios.post(
+            `${backendUrl}/${block.blockType}`,
+            payload,
+        );
 
-        if (itemType === "page") {
-            const pageItemsResponse = await axios.post(
-                `${backendUrl}/page/${page_id}/page_items`,
-                { reference_id: blockResponse.data.block_id, type: "block" },
-            );
-        } else if (itemType == "block") {
-            const blockItemsResponse = await axios.post(
-                `${backendUrl}/block/${parentBlockId}/block_items`,
-                {
-                    reference_id: blockResponse.data.block_id,
-                    parent_block_id: block.block_id,
-                    type: itemType,
-                },
-            );
+        console.log(blockResponse, "blockResponse");
+
+        if (!blockResponse.data.block_id) {
+            throw new Error("Block creation failed, no block_id returned.");
         }
 
-        // if (itemType === "page") {
-        //     const pageItemsResponse = await axios.post(
-        //         `${backendUrl}/page/${pageId}/page_items`,
-        //         { reference_id: blockResponse.data.block_id, type: "block" },
-        //     );
-        // } else if (itemType == "block") {
-        //     const pageItemsResponse = await axios.post(
-        //         `${backendUrl}/page/${pageId}/page_items`,
-        //         { reference_id: blockResponse.data.block_id, type: "block" },
-        //     );
-        // }
+        const reference_id = blockResponse.data.block_id;
+
+        if (scope === "page") {
+            await createPageItem(page_id, reference_id);
+        } else if (scope === "block" && parentBlockId) {
+            await createBlockItem(parentBlockId, reference_id, block.blockType);
+        }
     } catch (error) {
-        const errorMessage = {
-            error: {
-                message: error,
-            },
-        };
-        console.error(errorMessage);
+        console.error("Error creating block:", error);
+    }
+};
+
+const createPageItem = async (page_id: string, reference_id: string) => {
+    try {
+        await axios.post(`${backendUrl}/page/${page_id}/page_items`, {
+            reference_id,
+            type: "block",
+        });
+    } catch (error) {
+        console.error("Error creating page item:", error);
+    }
+};
+
+const createBlockItem = async (
+    parentBlockId: string,
+    reference_id: string,
+    blockType: "normal" | "array",
+) => {
+    try {
+        if (blockType === "normal") {
+            console.log("Normal block selected");
+            await axios.post(
+                `${backendUrl}/block/${parentBlockId}/block_items`,
+                {
+                    reference_id,
+                    parent_block_id: parentBlockId,
+                    type: "block",
+                },
+            );
+        } else {
+            console.log("Array block selected (not yet implemented)");
+        }
+    } catch (error) {
+        console.error("Error creating block item:", error);
     }
 };

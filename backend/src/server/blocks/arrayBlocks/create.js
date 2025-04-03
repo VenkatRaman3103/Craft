@@ -8,7 +8,7 @@ export async function createArrayBlock(req, res) {
             .insert(arrayBlocks)
             .values({ name, description, block_type })
             .returning();
-        res.json(arrayBlockResponse);
+        res.json(arrayBlockResponse[0]);
     } catch (error) {
         const errorMessage = {
             error: error.message,
