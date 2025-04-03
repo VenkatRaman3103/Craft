@@ -25,7 +25,7 @@ export const BlockPrompt = ({
     useEffect(() => {
         async function fetchBlockItems() {
             const response = await axios.get(
-                `${backendUrl}/block/${parentBlockId}`,
+                `${backendUrl}/${block.block_type}/${parentBlockId}`,
             );
             setBlockItemsList(response.data);
         }

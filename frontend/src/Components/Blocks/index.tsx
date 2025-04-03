@@ -51,9 +51,9 @@ export const PageItems = ({
     }, [itemsList]);
 
     const blocksMutation = useMutation({
-        mutationFn: async (block_id, item_id) => {
+        mutationFn: async (block_id: string, item_id: string) => {
             const responseBlock = await axios.delete(
-                `${backendUrl}/block/${block_id}`,
+                `${backendUrl}/${itemType}/${block_id}`,
             );
             if (itemType === "block" && item_id) {
                 const blockItemsResponse = await axios.delete(
@@ -65,7 +65,7 @@ export const PageItems = ({
         onSuccess: () => {
             queryClient.invalidateQueries({ queryKey: queryKey });
         },
-        onError: (error) => {
+        onError: (error: any) => {
             console.error("Failed to create block:", error);
         },
     });
@@ -129,7 +129,7 @@ export const Block = ({
     onDelete,
     queryClient,
     onAddFields,
-    itemType = "block",
+    itemType,
     item_id,
     localFields,
 }: {
@@ -162,8 +162,10 @@ export const Block = ({
         queryKey: ["blockItems", block.block_id],
         queryFn: async function fetchBlockItems() {
             const response = await axios.get(
-                `${backendUrl}/block/${parentBlockId}`,
+                `${backendUrl}/${block.block_type}/${parentBlockId}`,
             );
+
+            console.log(response.data.block_items, "blockCheckCreation");
 
             return response.data.block_items;
         },
@@ -244,8 +246,6 @@ export const Block = ({
     useEffect(() => {
         setFields(block.fields);
     }, [block]);
-
-    console.log(block, "blockCheckCreation");
 
     return (
         <div className="block-container">

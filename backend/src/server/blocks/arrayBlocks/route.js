@@ -11,20 +11,20 @@ import { deleteArrayBlock } from "./delete.js";
 export const arrayBlocksRouter = express.Router();
 
 // READ
-arrayBlocksRouter.get("/arrayblocks", getArrayBlocks); // get all array blocks
-arrayBlocksRouter.get("/arrayblock/:block_id", getArrayBlocksById); // get block by id
-arrayBlocksRouter.get("/nested/arrayblock/:block_id", nestedArrayBlocks);
+arrayBlocksRouter.get("/array", getArrayBlocks); // get all array blocks
+arrayBlocksRouter.get("/array/:block_id/id", getArrayBlocksById); // get block by id
+arrayBlocksRouter.get("/array/:block_id", nestedArrayBlocks);
 
 // CREATE
 arrayBlocksRouter.post("/array", createArrayBlock); // create array block
-arrayBlocksRouter.post("/arrayblock/:reference_id", createArrayBlockByRef); // create array block by reference
+arrayBlocksRouter.post("/array/:reference_id", createArrayBlockByRef); // create array block by reference
 
 // UPDATE
-arrayBlocksRouter.put("/arrayblock/:block_id", updateArrayBlock); // update array block by id
+arrayBlocksRouter.put("/array/:block_id", updateArrayBlock); // update array block by id
 arrayBlocksRouter.patch(
     "/arrayblock/:block_id/name/:name",
     updateNameArrayBlock,
 ); // update array block by id
 
 // DELETE
-arrayBlocksRouter.delete("/arrayblock/:block_id", deleteArrayBlock);
+arrayBlocksRouter.delete("/array/:block_id", deleteArrayBlock);

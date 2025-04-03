@@ -13,7 +13,7 @@ export const blocksRouter = express.Router();
 // READ
 blocksRouter.get("/blocks", getAllBlocks);
 
-blocksRouter.get("/block/:block_id", async (req, res) => {
+blocksRouter.get("/normal/:block_id", async (req, res) => {
     try {
         const { block_id } = req.params;
 
@@ -34,15 +34,15 @@ blocksRouter.get("/block/:block_id", async (req, res) => {
     }
 });
 
-blocksRouter.get("/block/reference/:reference_id", getBlockByReference); // blcok by reference
+blocksRouter.get("/normal/reference/:reference_id", getBlockByReference); // blcok by reference
 
 // TODO: blocks update
 
 // TODO: blocks delete
-blocksRouter.delete("/block/:block_id", deleteBlockById);
+blocksRouter.delete("/normal/:block_id", deleteBlockById);
 blocksRouter.delete("/block_items/:reference_id", deleteBlockByReference);
 
 // CREATE
 blocksRouter.post("/normal", creatBlock);
-blocksRouter.post("/block/reference/:reference_id", createBlockOnRef); // block based on reference
-blocksRouter.post(`/block/:block_id/block_items`, creatBlockItem);
+blocksRouter.post("/normal/reference/:reference_id", createBlockOnRef); // block based on reference
+blocksRouter.post(`/normal/:block_id/block_items`, creatBlockItem);
