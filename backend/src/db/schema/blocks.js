@@ -68,3 +68,10 @@ export const arrayBlockItems = pgTable("array_block_items", {
     item_type: text("item_type").notNull(),
     reference_id: uuid("reference_id").notNull(), // connected to blocks table (based on the scope: global)
 });
+
+export const arrayBlocksRelations = relations(arrayBlocks, ({ one }) => ({
+    page_item: one(page_items, {
+        fields: [arrayBlocks.block_id],
+        references: [page_items.reference_id],
+    }),
+}));

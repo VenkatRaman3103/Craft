@@ -74,21 +74,20 @@ export const PageItems = ({
         blocksMutation.mutate(block_id, item_id);
     }
 
-    console.log(itemsList, itemType, "pageItemsList");
-
     return (
         <div className="blocks-container prior-drop">
             {pageItemsList?.map((item: any, index) => {
+                console.log(item, item[item.item_type], "pageItemsList");
                 if (
                     item?.item_type === "block" ||
                     item?.item_type === "array" ||
                     item?.item_type === "normal"
                 ) {
-                    if (item.block) {
+                    if (item[item.item_type]) {
                         return (
                             <Block
                                 key={item.item_id || index}
-                                block={item.block}
+                                block={item[item.item_type]}
                                 isSidebarOpen={isSidebarOpen}
                                 onScopeChange={onScopeChange}
                                 onDelete={onDelete}
@@ -245,6 +244,8 @@ export const Block = ({
     useEffect(() => {
         setFields(block.fields);
     }, [block]);
+
+    console.log(block, "blockCheckCreation");
 
     return (
         <div className="block-container">

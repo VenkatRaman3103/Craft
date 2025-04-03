@@ -1,7 +1,7 @@
 import { relations } from "drizzle-orm";
 import { pgTable, uuid, text, timestamp, pgEnum } from "drizzle-orm/pg-core";
 import { multiSelectFields, singleSelectFields, textFields } from "./fields.js";
-import { blocks } from "./blocks.js";
+import { arrayBlocks, blocks } from "./blocks.js";
 import { numberFields } from "./fields/number.js";
 import { emailFields } from "./fields/email.js";
 import { dateFields } from "./fields/date.js";
@@ -82,8 +82,12 @@ export const pageItemsRelation = relations(page_items, ({ one }) => ({
         fields: [page_items.reference_id],
         references: [urlFields.field_id],
     }),
-    block: one(blocks, {
+    normal: one(blocks, {
         fields: [page_items.reference_id],
         references: [blocks.block_id],
+    }),
+    array: one(arrayBlocks, {
+        fields: [page_items.reference_id],
+        references: [arrayBlocks.block_id],
     }),
 }));

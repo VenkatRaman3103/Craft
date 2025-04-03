@@ -11,6 +11,8 @@ export const fetchPageData = async (page_id) => {
 export const createBlock = async (page_id, blockData) => {
     if (!blockData.name) throw new Error("Block name is required");
 
+    console.log(blockData, "blockData");
+
     // Create the block
     const blocksResponse = await axios.post(
         `${backendUrl}/block/reference/${page_id}`,
@@ -21,7 +23,7 @@ export const createBlock = async (page_id, blockData) => {
     await axios.post(`${backendUrl}/page/${page_id}/page_items`, {
         page_id,
         reference_id: blocksResponse.data.block_id,
-        type: "block",
+        type: blockData.blockType,
     });
 
     return blocksResponse.data;

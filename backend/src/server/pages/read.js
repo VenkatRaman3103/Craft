@@ -28,7 +28,8 @@ export async function getPageById(req, res) {
                 page_items: {
                     with: {
                         text_field: true,
-                        block: true,
+                        normal: true,
+                        array: true,
                         multi_select_field: {
                             with: {
                                 options: true,
