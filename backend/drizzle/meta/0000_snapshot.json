@@ -1,5 +1,5 @@
 {
-  "id": "a5ae2699-b26d-4e21-936f-8f42753d1fbb",
+  "id": "bb7a5ee6-3db2-49aa-8b2d-386c7c10fab7",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "version": "7",
   "dialect": "postgresql",
@@ -1690,6 +1690,8 @@
       "schema": "public",
       "values": [
         "block",
+        "normal",
+        "array",
         "page",
         "text_field",
         "multi_select_field",

@@ -86,14 +86,14 @@ const createBlock = async (
     parentBlockId: string | null,
     block: Block,
 ): Promise<void> => {
-    console.log(block, scope, "createBlock");
+    console.log(block, "createBlock");
 
     const payload: Payload = {
         name: blockName,
         description: "",
         scope,
-        blocK_type: "block",
-        item_type: "block",
+        blocK_type: block.blockType,
+        item_type: block.blockType,
     };
 
     try {
@@ -111,7 +111,7 @@ const createBlock = async (
         const reference_id = blockResponse.data.block_id;
 
         if (scope === "page") {
-            await createPageItem(page_id, reference_id);
+            await createPageItem(page_id, reference_id, block.blockType);
         } else if (scope === "block" && parentBlockId) {
             await createBlockItem(parentBlockId, reference_id, block.blockType);
         }
@@ -120,11 +120,15 @@ const createBlock = async (
     }
 };
 
-const createPageItem = async (page_id: string, reference_id: string) => {
+const createPageItem = async (
+    page_id: string,
+    reference_id: string,
+    itemType: string,
+) => {
     try {
         await axios.post(`${backendUrl}/page/${page_id}/page_items`, {
             reference_id,
-            type: "block",
+            type: itemType,
         });
     } catch (error) {
         console.error("Error creating page item:", error);

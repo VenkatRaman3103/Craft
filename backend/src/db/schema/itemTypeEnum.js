@@ -2,6 +2,8 @@ import { pgEnum } from "drizzle-orm/pg-core";
 
 export const itemType = pgEnum("item_type", [
     "block",
+    "normal",
+    "array",
     "page",
     "text_field",
     "multi_select_field",

@@ -79,7 +79,11 @@ export const PageItems = ({
     return (
         <div className="blocks-container prior-drop">
             {pageItemsList?.map((item: any, index) => {
-                if (item?.item_type === "block") {
+                if (
+                    item?.item_type === "block" ||
+                    item?.item_type === "array" ||
+                    item?.item_type === "normal"
+                ) {
                     if (item.block) {
                         return (
                             <Block

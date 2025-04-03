@@ -1,7 +1,7 @@
 CREATE TYPE "public"."scope_enum" AS ENUM('global', 'page', 'collection');--> statement-breakpoint
 CREATE TYPE "public"."url_type_enum" AS ENUM('http', 'https');--> statement-breakpoint
 CREATE TYPE "public"."field_scope_enum" AS ENUM('global', 'collection', 'block', 'page');--> statement-breakpoint
-CREATE TYPE "public"."item_type" AS ENUM('block', 'page', 'text_field', 'multi_select_field', 'single_select_field', 'number_field', 'email_field', 'date_field', 'color_picker_field', 'textarea_field', 'json_field', 'url_field');--> statement-breakpoint
+CREATE TYPE "public"."item_type" AS ENUM('block', 'normal', 'array', 'page', 'text_field', 'multi_select_field', 'single_select_field', 'number_field', 'email_field', 'date_field', 'color_picker_field', 'textarea_field', 'json_field', 'url_field');--> statement-breakpoint
 CREATE TABLE "array_block_items" (
 	"item_id" uuid PRIMARY KEY DEFAULT gen_random_uuid() NOT NULL,
 	"array_block_ref_id" uuid,
