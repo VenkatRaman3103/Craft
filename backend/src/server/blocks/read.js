@@ -51,8 +51,9 @@ export async function getBlockWithNestedContent(block_id) {
 
     const items = await db.query.block_items.findMany({
         where: (blockItems, { eq }) => eq(blockItems.parent_block_id, block_id),
-        orderBy: (blockItems, { asc }) => asc(blockItems.order),
+        // orderBy: (blockItems, { asc }) => asc(blockItems.order),
     });
+    // console.log(block, items, "blockCheckNesting");
 
     const processedItems = await Promise.all(
         items.map(async (item) => {
@@ -68,11 +69,11 @@ export async function getBlockWithNestedContent(block_id) {
                         eq(textAreaFields.field_id, item.reference_id),
                 });
                 return { item_type: "textarea_field", textarea_field: field };
-            }else if (item.item_type === "block") {
+            } else if (item.item_type === "normal") {
                 const nestedContent = await getBlockWithNestedContent(
                     item.reference_id,
                 );
-                return { item_type: item.item_type, block: nestedContent };
+                return { item_type: item.item_type, normal: nestedContent };
             }
 
             return null;

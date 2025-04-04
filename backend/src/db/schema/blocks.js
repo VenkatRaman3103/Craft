@@ -16,7 +16,7 @@ export const blocks = pgTable("blocks", {
 });
 
 export const block_items = pgTable("block_items", {
-    item_id: uuid("item_id").primaryKey().defaultRandom(),
+    ntem_id: uuid("item_id").primaryKey().defaultRandom(),
     parent_block_id: uuid("parent_block_id")
         .references(() => blocks.block_id)
         .notNull(),
@@ -59,14 +59,14 @@ export const arrayBlocks = pgTable("array_blocks", {
 // array block items joint table
 export const arrayBlockItems = pgTable("array_block_items", {
     item_id: uuid("item_id").primaryKey().defaultRandom(),
-    array_block_ref_id: uuid("array_block_ref_id").references(
-        () => arrayBlocks.block_id,
-        {
-            onDelete: "cascade",
-        },
-    ),
+    parent_block_id: uuid("parent_block_id")
+        .references(() => blocks.block_id)
+        .notNull(),
     item_type: text("item_type").notNull(),
-    reference_id: uuid("reference_id").notNull(), // connected to blocks table (based on the scope: global)
+    reference_id: uuid("reference_id").notNull(),
+    order: text("order"),
+    created_at: timestamp("created_at").defaultNow(),
+    edited_at: timestamp("edited_at").defaultNow(),
 });
 
 export const arrayBlocksRelations = relations(arrayBlocks, ({ one }) => ({
@@ -75,3 +75,14 @@ export const arrayBlocksRelations = relations(arrayBlocks, ({ one }) => ({
         references: [page_items.reference_id],
     }),
 }));
+
+export const arrayBlockItemsRelations = relations(
+    arrayBlockItems,
+    ({ one }) => ({
+        // A block item belongs to a parent block
+        parent: one(arrayBlocks, {
+            fields: [arrayBlockItems.parent_block_id],
+            references: [arrayBlocks.block_id],
+        }),
+    }),
+);

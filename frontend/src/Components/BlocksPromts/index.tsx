@@ -140,19 +140,31 @@ const createBlockItem = async (
     reference_id: string,
     blockType: "normal" | "array",
 ) => {
+    console.log("entering into createBlockItem");
     try {
         if (blockType === "normal") {
+            console.log(
+                `${backendUrl}/${blockType}/${parentBlockId}/block_items`,
+                "Normal block selected",
+            );
+            await axios.post(
+                `${backendUrl}/${blockType}/${parentBlockId}/block_items`,
+                {
+                    reference_id,
+                    parent_block_id: parentBlockId,
+                    type: blockType,
+                },
+            );
+        } else if (blockType === "array") {
             console.log("Normal block selected");
             await axios.post(
                 `${backendUrl}/${blockType}/${parentBlockId}/block_items`,
                 {
                     reference_id,
                     parent_block_id: parentBlockId,
-                    type: "block",
+                    type: blockType,
                 },
             );
-        } else {
-            console.log("Array block selected (not yet implemented)");
         }
     } catch (error) {
         console.error("Error creating block item:", error);

@@ -176,7 +176,11 @@ export const Block = ({
                 `${backendUrl}/${block.block_type}/${parentBlockId}`,
             );
 
-            console.log(response.data.block_items, "blockCheckCreation");
+            console.log(
+                response.data.block_items,
+                response,
+                "blockCheckCreation",
+            );
 
             return response.data.block_items;
         },

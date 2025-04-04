@@ -4,9 +4,12 @@ CREATE TYPE "public"."field_scope_enum" AS ENUM('global', 'collection', 'block',
 CREATE TYPE "public"."item_type" AS ENUM('block', 'normal', 'array', 'page', 'text_field', 'multi_select_field', 'single_select_field', 'number_field', 'email_field', 'date_field', 'color_picker_field', 'textarea_field', 'json_field', 'url_field');--> statement-breakpoint
 CREATE TABLE "array_block_items" (
 	"item_id" uuid PRIMARY KEY DEFAULT gen_random_uuid() NOT NULL,
-	"array_block_ref_id" uuid,
+	"parent_block_id" uuid NOT NULL,
 	"item_type" text NOT NULL,
-	"reference_id" uuid NOT NULL
+	"reference_id" uuid NOT NULL,
+	"order" text,
+	"created_at" timestamp DEFAULT now(),
+	"edited_at" timestamp DEFAULT now()
 );
 --> statement-breakpoint
 CREATE TABLE "array_blocks" (
@@ -257,7 +260,7 @@ CREATE TABLE "parent" (
 	"created_at" timestamp DEFAULT now()
 );
 --> statement-breakpoint
-ALTER TABLE "array_block_items" ADD CONSTRAINT "array_block_items_array_block_ref_id_array_blocks_block_id_fk" FOREIGN KEY ("array_block_ref_id") REFERENCES "public"."array_blocks"("block_id") ON DELETE cascade ON UPDATE no action;--> statement-breakpoint
+ALTER TABLE "array_block_items" ADD CONSTRAINT "array_block_items_parent_block_id_blocks_block_id_fk" FOREIGN KEY ("parent_block_id") REFERENCES "public"."blocks"("block_id") ON DELETE no action ON UPDATE no action;--> statement-breakpoint
 ALTER TABLE "block_items" ADD CONSTRAINT "block_items_parent_block_id_blocks_block_id_fk" FOREIGN KEY ("parent_block_id") REFERENCES "public"."blocks"("block_id") ON DELETE no action ON UPDATE no action;--> statement-breakpoint
 ALTER TABLE "child" ADD CONSTRAINT "child_parent_ref_id_parent_parent_id_fk" FOREIGN KEY ("parent_ref_id") REFERENCES "public"."parent"("parent_id") ON DELETE no action ON UPDATE no action;--> statement-breakpoint
 ALTER TABLE "collection_pages" ADD CONSTRAINT "collection_pages_collection_ref_id_collections_collection_id_fk" FOREIGN KEY ("collection_ref_id") REFERENCES "public"."collections"("collection_id") ON DELETE restrict ON UPDATE no action;--> statement-breakpoint

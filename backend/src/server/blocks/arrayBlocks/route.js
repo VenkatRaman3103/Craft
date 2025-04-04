@@ -7,8 +7,12 @@ import {
 import { createArrayBlock, createArrayBlockByRef } from "./create.js";
 import { updateArrayBlock, updateNameArrayBlock } from "./update.js";
 import { deleteArrayBlock } from "./delete.js";
+import { arrayBlockItemsRoute } from "./arrayBlocksItems/route.js";
 
 export const arrayBlocksRouter = express.Router();
+
+// note: sub routes
+arrayBlocksRouter.use("/array", arrayBlockItemsRoute);
 
 // READ
 arrayBlocksRouter.get("/array", getArrayBlocks); // get all array blocks

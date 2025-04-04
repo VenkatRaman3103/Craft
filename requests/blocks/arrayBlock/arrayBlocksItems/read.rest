@@ -21,11 +21,12 @@ Content-Type: application/json; charset=utf-8
 User-Agent: VRC
 
 # query
-POST  /array
+GET  /array/block_items
 
 # body
-{
-    "name": "block name",
-    "description": "New array block",
-    "block_type": "array"
-}
+# {
+#     "name": "block name",
+#     "description": "Hello world",
+#     "block_type": "normal_block"
+# }
+

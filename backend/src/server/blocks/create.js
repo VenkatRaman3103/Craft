@@ -18,7 +18,7 @@ export async function creatBlock(req, res) {
         const errorMessage = {
             error,
             message: `Error in creating the block`,
-            origin: "backend/blocksRouter/POST",
+            origin: "backend/blocksRouter/creatBlock/POST",
         };
         res.status(500).json(errorMessage);
     }
@@ -50,7 +50,7 @@ export async function createBlockOnRef(req, res) {
         const errorMessage = {
             error,
             message: `Error in creating the block`,
-            origin: "backend/blocksRouter/POST",
+            origin: "backend/blocksRouter/createBlockOnRef/POST",
         };
         console.log(errorMessage);
         res.status(500).json(errorMessage);
@@ -77,7 +77,7 @@ export async function creatBlockItem(req, res) {
         const errorMessage = {
             error,
             message: `Error in creating the block`,
-            origin: "backend/blocksRouter/POST",
+            origin: "backend/blocksRouter/creatBlockItem/POST",
         };
         console.log(errorMessage);
         res.status(500).json(errorMessage);

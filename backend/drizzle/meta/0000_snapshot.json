@@ -1,5 +1,5 @@
 {
-  "id": "6a86be98-1088-48d9-8dbb-c2f17a35fe4c",
+  "id": "240d3ca3-c654-40ac-bf74-91cb5f32d4fb",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "version": "7",
   "dialect": "postgresql",
@@ -15,11 +15,11 @@
           "notNull": true,
           "default": "gen_random_uuid()"
         },
-        "array_block_ref_id": {
-          "name": "array_block_ref_id",
+        "parent_block_id": {
+          "name": "parent_block_id",
           "type": "uuid",
           "primaryKey": false,
-          "notNull": false
+          "notNull": true
         },
         "item_type": {
           "name": "item_type",
@@ -32,21 +32,41 @@
           "type": "uuid",
           "primaryKey": false,
           "notNull": true
+        },
+        "order": {
+          "name": "order",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": false,
+          "default": "now()"
+        },
+        "edited_at": {
+          "name": "edited_at",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": false,
+          "default": "now()"
         }
       },
       "indexes": {},
       "foreignKeys": {
-        "array_block_items_array_block_ref_id_array_blocks_block_id_fk": {
-          "name": "array_block_items_array_block_ref_id_array_blocks_block_id_fk",
+        "array_block_items_parent_block_id_blocks_block_id_fk": {
+          "name": "array_block_items_parent_block_id_blocks_block_id_fk",
           "tableFrom": "array_block_items",
-          "tableTo": "array_blocks",
+          "tableTo": "blocks",
           "columnsFrom": [
-            "array_block_ref_id"
+            "parent_block_id"
           ],
           "columnsTo": [
             "block_id"
           ],
-          "onDelete": "cascade",
+          "onDelete": "no action",
           "onUpdate": "no action"
         }
       },

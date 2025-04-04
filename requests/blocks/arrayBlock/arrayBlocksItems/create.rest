@@ -21,7 +21,7 @@ Content-Type: application/json; charset=utf-8
 User-Agent: VRC
 
 # query
-POST  /array
+POST  /4933b786-8b9a-41dd-8c34-6c077b340c8a/block_items
 
 # body
 {
@@ -29,3 +29,4 @@ POST  /array
     "description": "New array block",
     "block_type": "array"
 }
+
