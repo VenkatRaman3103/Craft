@@ -86,7 +86,7 @@ const createBlock = async (
     parentBlockId: string | null,
     block: Block,
 ): Promise<void> => {
-    console.log(block, "createBlock");
+    console.log(block, scope, "createBlock");
 
     const payload: Payload = {
         name: blockName,
@@ -144,7 +144,7 @@ const createBlockItem = async (
         if (blockType === "normal") {
             console.log("Normal block selected");
             await axios.post(
-                `${backendUrl}/block/${parentBlockId}/block_items`,
+                `${backendUrl}/${blockType}/${parentBlockId}/block_items`,
                 {
                     reference_id,
                     parent_block_id: parentBlockId,

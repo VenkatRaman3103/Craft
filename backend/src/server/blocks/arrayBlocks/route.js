@@ -17,7 +17,7 @@ arrayBlocksRouter.get("/array/:block_id", nestedArrayBlocks);
 
 // CREATE
 arrayBlocksRouter.post("/array", createArrayBlock); // create array block
-arrayBlocksRouter.post("/array/:reference_id", createArrayBlockByRef); // create array block by reference
+arrayBlocksRouter.post("/array/:reference_id/reference", createArrayBlockByRef); // create array block by reference
 
 // UPDATE
 arrayBlocksRouter.put("/array/:block_id", updateArrayBlock); // update array block by id

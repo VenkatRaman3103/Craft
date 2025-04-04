@@ -44,5 +44,5 @@ blocksRouter.delete("/block_items/:reference_id", deleteBlockByReference);
 
 // CREATE
 blocksRouter.post("/normal", creatBlock);
-blocksRouter.post("/normal/reference/:reference_id", createBlockOnRef); // block based on reference
+blocksRouter.post("/normal/:reference_id/reference", createBlockOnRef); // block based on reference
 blocksRouter.post(`/normal/:block_id/block_items`, creatBlockItem);
