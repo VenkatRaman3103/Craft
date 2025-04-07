@@ -31,7 +31,7 @@ export const createBlock = async (page_id, blockData) => {
 
 // create a new feild
 export const createField = async (field, parent_id, itemType) => {
-    console.log(parent_id, "parent_id");
+    console.log(parent_id, itemType, "parent_id");
 
     let response;
     const fieldEndpoints = {
@@ -83,6 +83,16 @@ export const createField = async (field, parent_id, itemType) => {
         },
         block: {
             endpoint: `/block/${parent_id}/block_items`,
+            idField: "block_id",
+        },
+
+        normal: {
+            endpoint: `/normal/${parent_id}/block_items`,
+            idField: "block_id",
+        },
+
+        array: {
+            endpoint: `/array/${parent_id}/block_items`,
             idField: "block_id",
         },
 

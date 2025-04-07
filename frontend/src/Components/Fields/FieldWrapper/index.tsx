@@ -25,6 +25,7 @@ export const FieldWrapper = ({
     queryKey,
     itemType,
     query_key_id,
+    parentBlockType,
     parentCollectionId,
 }: {
     data: any;
@@ -183,9 +184,9 @@ export const FieldWrapper = ({
                         collectionItemsResponse.data,
                         "Deleted",
                     );
-                } else if (itemType == "block") {
+                } else if (itemType == "normal" || itemType == "array") {
                     const collectionItemsResponse = await axios.delete(
-                        `${backendUrl}/block_items/${data.field_id}`,
+                        `${backendUrl}/${itemType}/block_items/${data.field_id}`,
                     );
 
                     console.log(

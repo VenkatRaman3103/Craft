@@ -40,7 +40,10 @@ blocksRouter.get("/normal/reference/:reference_id", getBlockByReference); // blc
 
 // TODO: blocks delete
 blocksRouter.delete("/normal/:block_id", deleteBlockById);
-blocksRouter.delete("/block_items/:reference_id", deleteBlockByReference);
+blocksRouter.delete(
+    "/normal/block_items/:reference_id",
+    deleteBlockByReference,
+);
 
 // CREATE
 blocksRouter.post("/normal", creatBlock);

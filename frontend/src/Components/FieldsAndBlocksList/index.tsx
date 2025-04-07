@@ -39,6 +39,7 @@ export const FieldsAndBlocksList = ({
                     query_key_id={query_key_id}
                     parentCollectionId={parentCollectionId}
                     itemType={itemType}
+                    parentBlockType={itemType}
                     queryKey={queryKey}
                     queryClient={queryClient}
                     localFields={localFields}

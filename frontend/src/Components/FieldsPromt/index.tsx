@@ -165,7 +165,10 @@ export const FieldsPromt = ({
     const fieldMutation = useMutation(
         () => {
             let payload;
-            let parent_id = itemType == "block" ? parentBlockId : query_key_id;
+            let parent_id =
+                itemType == "normal" || itemType == "array"
+                    ? parentBlockId
+                    : query_key_id;
 
             if (
                 field.type === "multi_select_field" ||

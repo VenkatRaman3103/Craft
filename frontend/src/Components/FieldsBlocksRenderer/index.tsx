@@ -20,6 +20,7 @@ interface FieldsBlocksRendererProps {
     localFields: any[];
 
     parentBlockId?: string | undefined;
+    parentBlockType?: string | undefined;
 
     // From the custom hook
     showFieldPromt: boolean;
@@ -74,7 +75,7 @@ export const FieldsBlocksRenderer = ({
     handleBlocksSelected,
     handleBlockPromptCancel,
 }: FieldsBlocksRendererProps) => {
-    console.log(itemsList, itemType, "itemsListpage");
+    console.log(itemsList, itemType, parentBlockType, "itemsListpageCheck");
     return (
         <div className="fields-blocks-renderer">
             {/* Page Items */}
@@ -83,7 +84,7 @@ export const FieldsBlocksRenderer = ({
                 itemsList={itemsList}
                 query_key_id={query_key_id}
                 parentCollectionId={parentCollectionId}
-                itemType={itemType}
+                itemType={parentBlockType}
                 localFields={localFields}
                 queryKey={queryKey}
             />
@@ -101,7 +102,7 @@ export const FieldsBlocksRenderer = ({
                                 fieldType={fieldType}
                                 parentBlockId={parentBlockId}
                                 queryKey={queryKey}
-                                itemType={itemType}
+                                itemType={parentBlockType}
                             />
                         </div>
                     ))}

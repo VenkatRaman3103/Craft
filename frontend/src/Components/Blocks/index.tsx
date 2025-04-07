@@ -30,6 +30,7 @@ type PageItemsType = {
     query_key_id: string | undefined;
     parentCollectionId: any;
     queryKey: [string, string | undefined];
+    localFields: any[];
 };
 
 export const PageItems = ({
@@ -68,7 +69,7 @@ export const PageItems = ({
 
             if (itemType === "block" && item_id) {
                 const blockItemsResponse = await axios.delete(
-                    `/block_items/${item_id}`,
+                    `${itemType}/block_items/${item_id}`,
                 );
             }
             return responseBlock;
