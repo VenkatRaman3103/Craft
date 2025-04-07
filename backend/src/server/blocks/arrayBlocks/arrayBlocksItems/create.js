@@ -12,7 +12,7 @@ export async function createArrayBlockItem(req, res) {
             .values({
                 parent_block_id: block_id,
                 item_type: type,
-                reference_id: reference_id,
+                reference_id,
                 order: "1",
             })
             .returning();

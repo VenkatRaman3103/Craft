@@ -4,8 +4,7 @@
     "main": "index.js",
     "scripts": {
         "test": "echo \"Error: no test specified\" && exit 1",
-        "dev": "nodemon ./src/server/server.js",
-        "db:seed": "node ./src/db/seed.js",
+        "dev": "nodemon --legacy-watch --watch src/ --ignore 'node_modules/**/*' --ignore '.git/**/*' ./src/server/server.js",
         "db:migrate": "drizzle-kit migrate",
         "db:generate": "drizzle-kit generate",
         "db:drop": "drizzle-kit drop",

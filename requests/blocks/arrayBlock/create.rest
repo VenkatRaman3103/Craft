@@ -26,6 +26,6 @@ POST  /array
 # body
 {
     "name": "block name",
-    "description": "New array block",
+    "description": "nested block",
     "block_type": "array"
 }

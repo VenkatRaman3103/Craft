@@ -1,5 +1,5 @@
 {
-  "id": "240d3ca3-c654-40ac-bf74-91cb5f32d4fb",
+  "id": "5c775b32-911e-469e-adac-78b7f3f39c55",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "version": "7",
   "dialect": "postgresql",
@@ -56,10 +56,10 @@
       },
       "indexes": {},
       "foreignKeys": {
-        "array_block_items_parent_block_id_blocks_block_id_fk": {
-          "name": "array_block_items_parent_block_id_blocks_block_id_fk",
+        "array_block_items_parent_block_id_array_blocks_block_id_fk": {
+          "name": "array_block_items_parent_block_id_array_blocks_block_id_fk",
           "tableFrom": "array_block_items",
-          "tableTo": "blocks",
+          "tableTo": "array_blocks",
           "columnsFrom": [
             "parent_block_id"
           ],

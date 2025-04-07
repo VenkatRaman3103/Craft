@@ -260,7 +260,7 @@ CREATE TABLE "parent" (
 	"created_at" timestamp DEFAULT now()
 );
 --> statement-breakpoint
-ALTER TABLE "array_block_items" ADD CONSTRAINT "array_block_items_parent_block_id_blocks_block_id_fk" FOREIGN KEY ("parent_block_id") REFERENCES "public"."blocks"("block_id") ON DELETE no action ON UPDATE no action;--> statement-breakpoint
+ALTER TABLE "array_block_items" ADD CONSTRAINT "array_block_items_parent_block_id_array_blocks_block_id_fk" FOREIGN KEY ("parent_block_id") REFERENCES "public"."array_blocks"("block_id") ON DELETE no action ON UPDATE no action;--> statement-breakpoint
 ALTER TABLE "block_items" ADD CONSTRAINT "block_items_parent_block_id_blocks_block_id_fk" FOREIGN KEY ("parent_block_id") REFERENCES "public"."blocks"("block_id") ON DELETE no action ON UPDATE no action;--> statement-breakpoint
 ALTER TABLE "child" ADD CONSTRAINT "child_parent_ref_id_parent_parent_id_fk" FOREIGN KEY ("parent_ref_id") REFERENCES "public"."parent"("parent_id") ON DELETE no action ON UPDATE no action;--> statement-breakpoint
 ALTER TABLE "collection_pages" ADD CONSTRAINT "collection_pages_collection_ref_id_collections_collection_id_fk" FOREIGN KEY ("collection_ref_id") REFERENCES "public"."collections"("collection_id") ON DELETE restrict ON UPDATE no action;--> statement-breakpoint

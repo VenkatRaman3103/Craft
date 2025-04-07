@@ -60,7 +60,7 @@ export const arrayBlocks = pgTable("array_blocks", {
 export const arrayBlockItems = pgTable("array_block_items", {
     item_id: uuid("item_id").primaryKey().defaultRandom(),
     parent_block_id: uuid("parent_block_id")
-        .references(() => blocks.block_id)
+        .references(() => arrayBlocks.block_id)
         .notNull(),
     item_type: text("item_type").notNull(),
     reference_id: uuid("reference_id").notNull(),
