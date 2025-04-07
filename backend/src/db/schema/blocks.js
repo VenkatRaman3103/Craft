@@ -17,9 +17,7 @@ export const blocks = pgTable("blocks", {
 
 export const block_items = pgTable("block_items", {
     ntem_id: uuid("item_id").primaryKey().defaultRandom(),
-    parent_block_id: uuid("parent_block_id")
-        .references(() => blocks.block_id)
-        .notNull(),
+    parent_block_id: uuid("parent_block_id").notNull(),
     item_type: text("item_type").notNull(),
     reference_id: uuid("reference_id").notNull(),
     order: text("order"),
@@ -59,9 +57,7 @@ export const arrayBlocks = pgTable("array_blocks", {
 // array block items joint table
 export const arrayBlockItems = pgTable("array_block_items", {
     item_id: uuid("item_id").primaryKey().defaultRandom(),
-    parent_block_id: uuid("parent_block_id")
-        .references(() => arrayBlocks.block_id)
-        .notNull(),
+    parent_block_id: uuid("parent_block_id").notNull(),
     item_type: text("item_type").notNull(),
     reference_id: uuid("reference_id").notNull(),
     order: text("order"),

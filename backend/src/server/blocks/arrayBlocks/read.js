@@ -1,6 +1,7 @@
 import { eq } from "drizzle-orm";
 import { arrayBlockItems, arrayBlocks } from "../../../db/schema/blocks.js";
 import { db } from "../../server.js";
+import { getBlockWithNestedContent } from "../read.js";
 
 export async function getArrayBlocks(req, res) {
     try {
@@ -67,9 +68,7 @@ export async function getArrayBlockWithNestedContent(block_id) {
     const items = await db.query.arrayBlockItems.findMany({
         where: (arrayBlockItems, { eq }) =>
             eq(arrayBlockItems.parent_block_id, block_id),
-        // orderBy: (blockItems, { asc }) => asc(blockItems.order),
     });
-    // console.log(block, items, "blockCheckNesting");
 
     const processedItems = await Promise.all(
         items.map(async (item) => {
@@ -86,7 +85,7 @@ export async function getArrayBlockWithNestedContent(block_id) {
                 });
                 return { item_type: "textarea_field", textarea_field: field };
             } else if (item.item_type === "normal") {
-                const nestedContent = await getArrayBlockWithNestedContent(
+                const nestedContent = await getBlockWithNestedContent(
                     item.reference_id,
                 );
                 return { item_type: item.item_type, normal: nestedContent };

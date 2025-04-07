@@ -1,5 +1,5 @@
 {
-  "id": "5c775b32-911e-469e-adac-78b7f3f39c55",
+  "id": "b8ca4272-57ed-468b-9d6e-4ef7c57628a9",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "version": "7",
   "dialect": "postgresql",
@@ -55,21 +55,7 @@
         }
       },
       "indexes": {},
-      "foreignKeys": {
-        "array_block_items_parent_block_id_array_blocks_block_id_fk": {
-          "name": "array_block_items_parent_block_id_array_blocks_block_id_fk",
-          "tableFrom": "array_block_items",
-          "tableTo": "array_blocks",
-          "columnsFrom": [
-            "parent_block_id"
-          ],
-          "columnsTo": [
-            "block_id"
-          ],
-          "onDelete": "no action",
-          "onUpdate": "no action"
-        }
-      },
+      "foreignKeys": {},
       "compositePrimaryKeys": {},
       "uniqueConstraints": {},
       "policies": {},
@@ -194,21 +180,7 @@
         }
       },
       "indexes": {},
-      "foreignKeys": {
-        "block_items_parent_block_id_blocks_block_id_fk": {
-          "name": "block_items_parent_block_id_blocks_block_id_fk",
-          "tableFrom": "block_items",
-          "tableTo": "blocks",
-          "columnsFrom": [
-            "parent_block_id"
-          ],
-          "columnsTo": [
-            "block_id"
-          ],
-          "onDelete": "no action",
-          "onUpdate": "no action"
-        }
-      },
+      "foreignKeys": {},
       "compositePrimaryKeys": {},
       "uniqueConstraints": {},
       "policies": {},

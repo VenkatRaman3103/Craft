@@ -15,12 +15,20 @@ export const BlocksPropmts = ({
     queryKey,
     localFields,
     parentBlockId,
+    parentBlockType,
 }: any) => {
     const [blockInput, setBlockInput] = useState("");
 
     const createBlockMutation = useMutation({
         mutationFn: (blockName) =>
-            createBlock(page_id, itemType, blockName, parentBlockId, block),
+            createBlock(
+                page_id,
+                itemType,
+                blockName,
+                parentBlockId,
+                block,
+                parentBlockType,
+            ),
         onSuccess: () => {
             queryClient.invalidateQueries({ queryKey: queryKey });
         },
@@ -85,8 +93,9 @@ const createBlock = async (
     blockName: string,
     parentBlockId: string | null,
     block: Block,
+    parentBlockType,
 ): Promise<void> => {
-    console.log(block, scope, "createBlock");
+    console.log(block, scope, parentBlockType, "createBlock");
 
     const payload: Payload = {
         name: blockName,
@@ -113,7 +122,12 @@ const createBlock = async (
         if (scope === "page") {
             await createPageItem(page_id, reference_id, block.blockType);
         } else if (scope === "block" && parentBlockId) {
-            await createBlockItem(parentBlockId, reference_id, block.blockType);
+            await createBlockItem(
+                parentBlockId,
+                reference_id,
+                block.blockType,
+                parentBlockType,
+            );
         }
     } catch (error) {
         console.error("Error creating block:", error);
@@ -139,6 +153,7 @@ const createBlockItem = async (
     parentBlockId: string,
     reference_id: string,
     blockType: "normal" | "array",
+    parentBlockType: string,
 ) => {
     console.log("entering into createBlockItem");
     try {
@@ -148,7 +163,7 @@ const createBlockItem = async (
                 "Normal block selected",
             );
             await axios.post(
-                `${backendUrl}/${blockType}/${parentBlockId}/block_items`,
+                `${backendUrl}/${parentBlockType}/${parentBlockId}/block_items`,
                 {
                     reference_id,
                     parent_block_id: parentBlockId,
@@ -158,7 +173,7 @@ const createBlockItem = async (
         } else if (blockType === "array") {
             console.log("Normal block selected");
             await axios.post(
-                `${backendUrl}/${blockType}/${parentBlockId}/block_items`,
+                `${backendUrl}/${parentBlockType}/${parentBlockId}/block_items`,
                 {
                     reference_id,
                     parent_block_id: parentBlockId,

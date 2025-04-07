@@ -54,6 +54,7 @@ export const FieldsBlocksRenderer = ({
     localFields,
 
     parentBlockId,
+    parentBlockType,
 
     // Hook-derived props
     showFieldPromt,
@@ -118,6 +119,7 @@ export const FieldsBlocksRenderer = ({
                             queryKey={queryKey}
                             block={block}
                             parentBlockId={parentBlockId}
+                            parentBlockType={parentBlockType}
                             page_id={query_key_id || ""}
                             itemType={itemType}
                             queryClient={queryClient}

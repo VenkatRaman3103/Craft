@@ -1,6 +1,7 @@
 import { eq } from "drizzle-orm";
 import { blocks } from "../../db/schema/blocks.js";
 import { db } from "../server.js";
+import { getArrayBlockWithNestedContent } from "./arrayBlocks/read.js";
 
 // get all blocks
 export async function getAllBlocks(req, res) {
@@ -74,6 +75,11 @@ export async function getBlockWithNestedContent(block_id) {
                     item.reference_id,
                 );
                 return { item_type: item.item_type, normal: nestedContent };
+            } else if (item.item_type === "array") {
+                const nestedContent = await getArrayBlockWithNestedContent(
+                    item.reference_id,
+                );
+                return { item_type: item.item_type, array: nestedContent };
             }
 
             return null;
