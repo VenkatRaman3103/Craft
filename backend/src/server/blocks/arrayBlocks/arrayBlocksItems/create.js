@@ -1,6 +1,7 @@
 import { arrayBlockItems } from "../../../../db/schema/blocks.js";
 import { db } from "../../../server.js";
 
+// TODO: change block_id to parent_block_id
 export async function createArrayBlockItem(req, res) {
     const { block_id } = req.params;
 

@@ -2,6 +2,7 @@ import express from "express";
 import {
     getArrayBlocks,
     getArrayBlocksById,
+    getArrayBlockWithNestedContent,
     nestedArrayBlocks,
 } from "./read.js";
 import { createArrayBlock, createArrayBlockByRef } from "./create.js";
@@ -17,7 +18,27 @@ arrayBlocksRouter.use("/array", arrayBlockItemsRoute);
 // READ
 arrayBlocksRouter.get("/array", getArrayBlocks); // get all array blocks
 arrayBlocksRouter.get("/array/:block_id/id", getArrayBlocksById); // get block by id
-arrayBlocksRouter.get("/array/:block_id", nestedArrayBlocks);
+
+arrayBlocksRouter.get("/array/:block_id", async (req, res) => {
+    try {
+        const { block_id } = req.params;
+
+        if (!block_id) {
+            return res.status(400).json({ error: "Block ID is required" });
+        }
+
+        const blockData = await getArrayBlockWithNestedContent(block_id);
+
+        if (!blockData) {
+            return res.status(404).json({ error: "Block not found" });
+        }
+
+        res.json(blockData);
+    } catch (error) {
+        console.error("Error fetching block:", error);
+        res.status(500).json({ error: "Internal server error" });
+    }
+});
 
 // CREATE
 arrayBlocksRouter.post("/array", createArrayBlock); // create array block
