@@ -1,5 +1,4 @@
 import { FieldsAndBlocksList } from "@/Components/FieldsAndBlocksList";
-import { FieldsBlocksRenderer } from "@/Components/FieldsBlocksRenderer";
 import { useState } from "react";
 
 export const ArrayBlockPrompt = ({ block }) => {

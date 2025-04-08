@@ -14,6 +14,7 @@ import { FieldWrapper } from "../Fields/FieldWrapper";
 import { FieldsBlocksRenderer } from "../FieldsBlocksRenderer";
 import { useFieldsBlocks } from "@/hooks/useFieldsBlocks";
 import { useMutation, useQuery } from "@tanstack/react-query";
+import { AddTemplate } from "../Buttons/AddTemplate";
 
 type PageItemsType = {
     itemsList: any;
@@ -263,6 +264,33 @@ export const Block = ({
         setFields(block.fields);
     }, [block]);
 
+    function renderBlock(blockType) {
+        switch (blockType) {
+            case "normal":
+                return (
+                    <NormalBlock
+                        blockItemsList={blockItemsList}
+                        block={block}
+                        queryClient={queryClient}
+                        localFields={localFields}
+                        fieldsBlocksProps={fieldsBlocksProps}
+                    />
+                );
+            case "array":
+                return (
+                    <ArrayBlock
+                        blockItemsList={blockItemsList}
+                        block={block}
+                        queryClient={queryClient}
+                        localFields={localFields}
+                        fieldsBlocksProps={fieldsBlocksProps}
+                    />
+                );
+            default:
+                return <h1>Hello world</h1>;
+        }
+    }
+
     return (
         <div className="block-container">
             <div className="block-wrapper">
@@ -306,6 +334,49 @@ export const Block = ({
                     <Fields fields={block.fields} />
                 </div>
 
+                {renderBlock(block.block_type)}
+            </div>
+        </div>
+    );
+};
+
+export const NormalBlock = ({
+    blockItemsList,
+    block,
+    queryClient,
+    localFields,
+    fieldsBlocksProps,
+}: any) => {
+    return (
+        <>
+            <FieldsBlocksRenderer
+                itemsList={blockItemsList}
+                query_key_id={""}
+                parentCollectionId={null}
+                itemType={"block"}
+                parentBlockId={block.block_id}
+                parentBlockType={block.block_type}
+                queryKey={["blockItems", block.block_id]}
+                queryClient={queryClient}
+                localFields={localFields}
+                {...fieldsBlocksProps}
+            />
+        </>
+    );
+};
+
+export const ArrayBlock = ({
+    blockItemsList,
+    block,
+    queryClient,
+    localFields,
+    fieldsBlocksProps,
+}: any) => {
+    const [templateList, setTemplateList] = useState([0, 0, 0, 0, 0]);
+
+    return (
+        <>
+            {templateList.map((template, index) => (
                 <FieldsBlocksRenderer
                     itemsList={blockItemsList}
                     query_key_id={""}
@@ -317,8 +388,13 @@ export const Block = ({
                     queryClient={queryClient}
                     localFields={localFields}
                     {...fieldsBlocksProps}
+                    key={index}
                 />
+            ))}
+
+            <div className="add-template-btn">
+                <AddTemplate iconLable="Add Template" />
             </div>
-        </div>
+        </>
     );
 };

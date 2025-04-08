@@ -1,3 +1,34 @@
-.fields-blocks-renderer {
+.fields-blocks-renderer-container {
     width: 100%;
+
+    &.array {
+        width: 97%;
+    }
+
+    .title {
+        width: calc(100% - 30px);
+        padding: 15px 15px 15px 15px;
+        margin-bottom: 20px;
+        background-color: var(--primary-color);
+
+        border-top-left-radius: 10px;
+        border-top-right-radius: 10px;
+    }
+
+    .fields-blocks-renderer-wrapper {
+
+        &.array {
+            background-color: #0d0d0e;
+            border-radius: 8px;
+
+            border: 1px solid var(--border-color);
+            margin-bottom: 20px;
+        }
+    }
+
+    .add-template-wrapper {
+        background-color: var(--primary-color);
+        border-radius: 10px;
+        margin-bottom: 20px;
+    }
 }

@@ -1,8 +1,8 @@
 import { useQueryClient } from "@tanstack/react-query";
 import { useFieldsBlocks } from "@/hooks/useFieldsBlocks";
-import { FieldsBlocksRenderer } from "../FieldsBlocksRenderer";
 import { AddBtn } from "../Buttons/AddBtn";
 import { useState } from "react";
+import { FieldsBlocksRenderer } from "../FieldsBlocksRenderer";
 
 interface FieldsAndBlocksListProps {
     itemsList: any[];

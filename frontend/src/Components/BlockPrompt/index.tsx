@@ -1,7 +1,6 @@
 import React, { useState, useRef, useEffect } from "react";
 import "./index.scss";
 import { useFieldsBlocks } from "@/hooks/useFieldsBlocks";
-import { FieldsBlocksRenderer } from "../FieldsBlocksRenderer";
 import axios from "axios";
 import { backendUrl } from "@/config";
 import { ArrayBlockPrompt } from "../BlocksPromts/ArrayBlockPrompt";

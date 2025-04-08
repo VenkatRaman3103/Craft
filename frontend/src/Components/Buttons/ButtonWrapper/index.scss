@@ -2,6 +2,7 @@
   display: flex;
   flex-direction: row;
   align-items: center;
+  justify-content: center;
   gap: 5px;
 
   border-radius: 10px;
@@ -10,7 +11,7 @@
 
   padding: 8px 12px;
   border: 1px solid transparent;
-  background-color: var(--white-color);
+  /* background-color: var(--white-color); */
 
   &:hover {
     background-color: var(--primary-color);
