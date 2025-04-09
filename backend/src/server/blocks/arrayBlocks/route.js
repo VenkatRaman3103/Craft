@@ -9,11 +9,13 @@ import { createArrayBlock, createArrayBlockByRef } from "./create.js";
 import { updateArrayBlock, updateNameArrayBlock } from "./update.js";
 import { deleteArrayBlock } from "./delete.js";
 import { arrayBlockItemsRoute } from "./arrayBlocksItems/route.js";
+import { arrayTemplateRoute } from "./arrayTemplate/route.js";
 
 export const arrayBlocksRouter = express.Router();
 
 // note: sub routes
 arrayBlocksRouter.use("/array", arrayBlockItemsRoute);
+arrayBlocksRouter.use("/array", arrayTemplateRoute);
 
 // READ
 arrayBlocksRouter.get("/array", getArrayBlocks); // get all array blocks
