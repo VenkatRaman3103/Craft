@@ -21,5 +21,5 @@ export * from "./blocks/arrayBlocks/schema.js";
 export * from "./blocks/arrayBlocks/relations.js";
 export * from "./blocks/arrayBlocks/arrayBlockItems/schema.js";
 export * from "./blocks/arrayBlocks/arrayBlockItems/relations.js";
-// export * from "./blocks/arrayBlocks/arrayTemplates/schema.js";
+export * from "./blocks/arrayBlocks/arrayTemplates/schema.js";
 // export * from "./blocks/arrayBlocks/arrayTemplates/relations.js";

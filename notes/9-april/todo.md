@@ -5,7 +5,7 @@
 ### db
 
 - [x] part `array_blocks` table from blocks
-- [ ] base schema for `array_templates`
+- [x] base schema for `array_templates`
 - [ ] one to many relation between `array_blocks` and `array_template`
 - [ ] many to one relation between `array_template` and `array_blocks`
 - [ ] one to one relation between `array_template` and `array_block_items`
