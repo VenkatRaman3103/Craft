@@ -264,10 +264,10 @@ CREATE TABLE "array_block_templates" (
 	"template_id" uuid PRIMARY KEY DEFAULT gen_random_uuid() NOT NULL,
 	"name" text NOT NULL,
 	"description" text,
-	"array_block_id" text,
-	"array_block_item_id" uuid,
 	"created_at" timestamp DEFAULT now(),
-	"edited_at" timestamp DEFAULT now()
+	"edited_at" timestamp DEFAULT now(),
+	"array_block_id" uuid NOT NULL,
+	"array_block_item_id" uuid NOT NULL
 );
 --> statement-breakpoint
 ALTER TABLE "child" ADD CONSTRAINT "child_parent_ref_id_parent_parent_id_fk" FOREIGN KEY ("parent_ref_id") REFERENCES "public"."parent"("parent_id") ON DELETE no action ON UPDATE no action;--> statement-breakpoint

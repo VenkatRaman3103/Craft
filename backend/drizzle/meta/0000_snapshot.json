@@ -1,5 +1,5 @@
 {
-  "id": "0fca7cc8-0846-4938-8bab-cd23e05deec2",
+  "id": "f84b483c-90bf-49e8-9303-1bfa95584d0a",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "version": "7",
   "dialect": "postgresql",
@@ -1671,18 +1671,6 @@
           "primaryKey": false,
           "notNull": false
         },
-        "array_block_id": {
-          "name": "array_block_id",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": false
-        },
-        "array_block_item_id": {
-          "name": "array_block_item_id",
-          "type": "uuid",
-          "primaryKey": false,
-          "notNull": false
-        },
         "created_at": {
           "name": "created_at",
           "type": "timestamp",
@@ -1696,6 +1684,18 @@
           "primaryKey": false,
           "notNull": false,
           "default": "now()"
+        },
+        "array_block_id": {
+          "name": "array_block_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "array_block_item_id": {
+          "name": "array_block_item_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": true
         }
       },
       "indexes": {},
