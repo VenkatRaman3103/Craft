@@ -1,7 +1,8 @@
 import { eq } from "drizzle-orm";
-import { arrayBlockItems, arrayBlocks } from "../../../db/schema/blocks.js";
 import { db } from "../../server.js";
 import { getBlockWithNestedContent } from "../read.js";
+import { arrayBlockItems } from "../../../db/schema/blocks/arrayBlocks/arrayBlockItems/schema.js";
+import { arrayBlocks } from "../../../db/schema/blocks/arrayBlocks/schema.js";
 
 export async function getArrayBlocks(req, res) {
     try {

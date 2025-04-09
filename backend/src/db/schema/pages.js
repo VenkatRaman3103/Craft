@@ -1,7 +1,6 @@
 import { relations } from "drizzle-orm";
-import { pgTable, uuid, text, timestamp, pgEnum } from "drizzle-orm/pg-core";
+import { pgTable, uuid, text, timestamp } from "drizzle-orm/pg-core";
 import { multiSelectFields, singleSelectFields, textFields } from "./fields.js";
-import { arrayBlocks, blocks } from "./blocks.js";
 import { numberFields } from "./fields/number.js";
 import { emailFields } from "./fields/email.js";
 import { dateFields } from "./fields/date.js";
@@ -11,6 +10,8 @@ import { jsonFields } from "./fields/jsonField.js";
 import { urlFields } from "./fields/urlField.js";
 import { collectionItems } from "./collections.js";
 import { itemType } from "./itemTypeEnum.js";
+import { blocks } from "./blocks.js";
+import { arrayBlocks } from "./blocks/arrayBlocks/schema.js";
 
 export const pages = pgTable("pages", {
     page_id: uuid("page_id").primaryKey().defaultRandom(),

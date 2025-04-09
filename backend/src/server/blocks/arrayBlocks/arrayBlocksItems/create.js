@@ -1,4 +1,4 @@
-import { arrayBlockItems } from "../../../../db/schema/blocks.js";
+import { arrayBlockItems } from "../../../../db/schema/blocks/arrayBlocks/arrayBlockItems/schema.js";
 import { db } from "../../../server.js";
 
 // TODO: change block_id to parent_block_id

@@ -1,6 +1,6 @@
 import { eq } from "drizzle-orm";
-import { arrayBlockItems } from "../../../../db/schema/blocks.js";
 import { db } from "../../../server.js";
+import { arrayBlockItems } from "../../../../db/schema/blocks/arrayBlocks/arrayBlockItems/schema.js";
 
 export async function readArrayBlockItems(req, res) {
     try {

@@ -15,3 +15,11 @@ export * from "./fields/colorPicker.js";
 export * from "./fields/textArea.js";
 export * from "./fields/jsonField.js";
 export * from "./fields/urlField.js";
+
+// blocks
+export * from "./blocks/arrayBlocks/schema.js";
+export * from "./blocks/arrayBlocks/relations.js";
+export * from "./blocks/arrayBlocks/arrayBlockItems/schema.js";
+export * from "./blocks/arrayBlocks/arrayBlockItems/relations.js";
+// export * from "./blocks/arrayBlocks/arrayTemplates/schema.js";
+// export * from "./blocks/arrayBlocks/arrayTemplates/relations.js";

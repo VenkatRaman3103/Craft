@@ -1,5 +1,5 @@
 import { db } from "../../../server/server.js";
-import { arrayBlocks } from "../../schema/blocks.js";
+import { arrayBlocks } from "../../schema/blocks/arrayBlocks/schema.js";
 
 export const createArrayBlocks = async () => {
     try {

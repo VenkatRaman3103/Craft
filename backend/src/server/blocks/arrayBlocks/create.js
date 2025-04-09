@@ -1,4 +1,4 @@
-import { arrayBlocks } from "../../../db/schema/blocks.js";
+import { arrayBlocks } from "../../../db/schema/blocks/arrayBlocks/schema.js";
 import { db } from "../../server.js";
 
 export async function createArrayBlock(req, res) {
@@ -36,4 +36,3 @@ export async function createArrayBlockByRef(req, res) {
         res.status(500).json(errorMessage);
     }
 }
-

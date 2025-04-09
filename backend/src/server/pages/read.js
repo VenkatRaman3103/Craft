@@ -56,7 +56,7 @@ export async function getPageById(req, res) {
         const errorMessage = {
             error,
             message: `Error in fetching the page: ${page_id}`,
-            origin: "backend/pagesRouter/GET",
+            origin: "backend/pagesRouter/getPageById/GET",
         };
         console.log(errorMessage);
         res.status(500).json(errorMessage);

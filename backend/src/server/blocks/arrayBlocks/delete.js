@@ -1,8 +1,8 @@
 import { eq } from "drizzle-orm";
-import { arrayBlocks } from "../../../db/schema/blocks.js";
+import { arrayBlocks } from "../../../db/schema/blocks/arrayBlocks/schema.js";
 import { db } from "../../server.js";
 
-export async function deleteArrayBlock(req, res){
+export async function deleteArrayBlock(req, res) {
     const { block_id } = req.params;
     try {
         const arrayBlockResponse = await db

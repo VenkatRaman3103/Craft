@@ -2,27 +2,6 @@ CREATE TYPE "public"."scope_enum" AS ENUM('global', 'page', 'collection');--> st
 CREATE TYPE "public"."url_type_enum" AS ENUM('http', 'https');--> statement-breakpoint
 CREATE TYPE "public"."field_scope_enum" AS ENUM('global', 'collection', 'block', 'page');--> statement-breakpoint
 CREATE TYPE "public"."item_type" AS ENUM('block', 'normal', 'array', 'page', 'text_field', 'multi_select_field', 'single_select_field', 'number_field', 'email_field', 'date_field', 'color_picker_field', 'textarea_field', 'json_field', 'url_field');--> statement-breakpoint
-CREATE TABLE "array_block_items" (
-	"item_id" uuid PRIMARY KEY DEFAULT gen_random_uuid() NOT NULL,
-	"parent_block_id" uuid NOT NULL,
-	"item_type" text NOT NULL,
-	"reference_id" uuid NOT NULL,
-	"order" text,
-	"created_at" timestamp DEFAULT now(),
-	"edited_at" timestamp DEFAULT now()
-);
---> statement-breakpoint
-CREATE TABLE "array_blocks" (
-	"block_id" uuid PRIMARY KEY DEFAULT gen_random_uuid() NOT NULL,
-	"name" text NOT NULL,
-	"content" text,
-	"scope" "scope_enum" DEFAULT 'global',
-	"block_type" text DEFAULT 'array' NOT NULL,
-	"reference_id" text,
-	"created_at" timestamp DEFAULT now(),
-	"edited_at" timestamp DEFAULT now()
-);
---> statement-breakpoint
 CREATE TABLE "block_items" (
 	"item_id" uuid PRIMARY KEY DEFAULT gen_random_uuid() NOT NULL,
 	"parent_block_id" uuid NOT NULL,
@@ -258,6 +237,27 @@ CREATE TABLE "parent" (
 	"parent_id" uuid PRIMARY KEY DEFAULT gen_random_uuid() NOT NULL,
 	"name" varchar NOT NULL,
 	"created_at" timestamp DEFAULT now()
+);
+--> statement-breakpoint
+CREATE TABLE "array_blocks" (
+	"block_id" uuid PRIMARY KEY DEFAULT gen_random_uuid() NOT NULL,
+	"name" text NOT NULL,
+	"content" text,
+	"scope" "scope_enum" DEFAULT 'global',
+	"block_type" text DEFAULT 'array' NOT NULL,
+	"reference_id" text,
+	"created_at" timestamp DEFAULT now(),
+	"edited_at" timestamp DEFAULT now()
+);
+--> statement-breakpoint
+CREATE TABLE "array_block_items" (
+	"item_id" uuid PRIMARY KEY DEFAULT gen_random_uuid() NOT NULL,
+	"parent_block_id" uuid NOT NULL,
+	"item_type" text NOT NULL,
+	"reference_id" uuid NOT NULL,
+	"order" text,
+	"created_at" timestamp DEFAULT now(),
+	"edited_at" timestamp DEFAULT now()
 );
 --> statement-breakpoint
 ALTER TABLE "child" ADD CONSTRAINT "child_parent_ref_id_parent_parent_id_fk" FOREIGN KEY ("parent_ref_id") REFERENCES "public"."parent"("parent_id") ON DELETE no action ON UPDATE no action;--> statement-breakpoint
