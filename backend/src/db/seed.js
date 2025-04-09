@@ -1,5 +1,8 @@
 import { db } from "../server/server.js";
-import { createArrayBlocks } from "./queries/arrayBlock/dummyData.js";
+import {
+    createArrayBlocks,
+    createArrayTemplate,
+} from "./queries/arrayBlock/dummyData.js";
 // import { sampleBlocks } from "./queries/blocks.js";
 // import { samplePages } from "./queries/pages.js";
 // import { sampleChild } from "./queries/test/child.js";
@@ -10,7 +13,8 @@ import { createArrayBlocks } from "./queries/arrayBlock/dummyData.js";
 // import { v4 as uuidv4 } from "uuid";
 
 async function seed() {
-    await createArrayBlocks();
+    await createArrayTemplate();
+    // await createArrayBlocks();
 
     // await db.delete(blocks);
     // await samplePages();
