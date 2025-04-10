@@ -1,6 +1,7 @@
 import express from "express";
 import { getArrayTemplate, getArrayTemplateById } from "./read.js";
 import { createArrayTemplate } from "./create.js";
+import { deleteArrayTemplate } from "./delete.js";
 
 export const arrayTemplateRoute = express.Router();
 
@@ -13,3 +14,4 @@ arrayTemplateRoute.post("/templates", createArrayTemplate);
 
 // UPDATE
 // DELETE
+arrayTemplateRoute.delete("/templates/:template_id", deleteArrayTemplate);

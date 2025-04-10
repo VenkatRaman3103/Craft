@@ -22,7 +22,7 @@ User-Agent: VRC
 
 # query
 
-DELETE /array/templates/0c5e06bf-0330-4acf-a4b9-a5f17665889d 
+DELETE /array/templates/72c39b68-6068-4df4-a39f-5638446b37bc 
 
 # body
 # {
