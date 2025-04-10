@@ -11,7 +11,8 @@
 ### api
 
 - [x] create route for `array_template`
-- [ ] update route for `array_template`
+- [x] update route for `array_template` to update name
+- [x] update route for `array_template` to update description
 - [x] delete route for `array_template`
 
 - [ ] read route to read all the blocks from the `array_block_items` via templates, an array that
