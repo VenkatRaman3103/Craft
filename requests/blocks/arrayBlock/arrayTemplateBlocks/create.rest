@@ -21,12 +21,11 @@ Content-Type: application/json; charset=utf-8
 User-Agent: VRC
 
 # query
-# GET  /array/templates
-GET  /array/templates/0c5e06bf-0330-4acf-a4b9-a5f17665889d
+POST  /array/templates
 
 # body
-# {
-#     "name": "block name",
-#     "description": "Hello world",
-#     "block_type": "normal_block"
-# }
+{
+    "name": "array template",
+    "array_block_id": "00c2460e-c20f-4f56-a3b9-4125ea06748a",
+    "array_block_item_id": "7aaad61d-3248-423c-8a6b-cc5bd28af3a6"
+}

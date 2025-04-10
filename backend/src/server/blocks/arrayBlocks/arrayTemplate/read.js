@@ -2,7 +2,7 @@ import { eq } from "drizzle-orm";
 import { arrayBlockTemplates } from "../../../../db/schema/blocks/arrayBlocks/arrayTemplates/schema.js";
 import { db } from "../../../server.js";
 
-export async function getArrayBlockTemplate(req, res) {
+export async function getArrayTemplate(req, res) {
     try {
         const response = await db.select().from(arrayBlockTemplates);
         res.json(response);
@@ -16,7 +16,7 @@ export async function getArrayBlockTemplate(req, res) {
     }
 }
 
-export async function getArrayBlockTemplateById(req, res) {
+export async function getArrayTemplateById(req, res) {
     const { template_id } = req.params;
 
     try {

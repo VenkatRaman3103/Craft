@@ -1,8 +1,15 @@
 import express from "express";
-import { getArrayBlockTemplate, getArrayBlockTemplateById } from "./read.js";
+import { getArrayTemplate, getArrayTemplateById } from "./read.js";
+import { createArrayTemplate } from "./create.js";
 
 export const arrayTemplateRoute = express.Router();
 
 // READ
-arrayTemplateRoute.get("/templates", getArrayBlockTemplate);
-arrayTemplateRoute.get("/templates/:template_id", getArrayBlockTemplateById);
+arrayTemplateRoute.get("/templates", getArrayTemplate);
+arrayTemplateRoute.get("/templates/:template_id", getArrayTemplateById);
+
+// CREATE
+arrayTemplateRoute.post("/templates", createArrayTemplate);
+
+// UPDATE
+// DELETE

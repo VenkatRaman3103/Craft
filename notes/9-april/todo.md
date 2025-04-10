@@ -11,8 +11,8 @@
 
 ### api
 
-- [ ] add `array_template` to api
+- [x] add `array_template` to api
 - [ ] create route for `array_template`
-- [ ] read route for `array_template`
+- [x] read route for `array_template`
 - [ ] update route for `array_template`
 - [ ] delete route for `array_template`
