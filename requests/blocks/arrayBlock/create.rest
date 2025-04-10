@@ -25,7 +25,7 @@ POST  /array
 
 # body
 {
-    "name": "block name",
+    "name": "nest nest",
     "description": "nested block",
     "block_type": "array"
 }

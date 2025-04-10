@@ -21,7 +21,8 @@ Content-Type: application/json; charset=utf-8
 User-Agent: VRC
 
 # query
-GET  /array/631d820d-be44-4085-8281-e83805bd662a
+# GET  /array/631d820d-be44-4085-8281-e83805bd662a
+GET  /array/c0667909-0121-4621-a44f-9a5e16b2bcd0/templates
 
 # body
 # {

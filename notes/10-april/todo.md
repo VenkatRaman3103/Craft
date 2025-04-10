@@ -15,7 +15,7 @@
 - [x] update route for `array_template` to update description
 - [x] delete route for `array_template`
 
-- [ ] read route to read all the blocks from the `array_block_items` via templates, an array that
+- [x] read route to read all the blocks from the `array_block_items` via templates, an array that
       has objects as the `array_block_items`
 
 ### nesting functionality

@@ -2,6 +2,7 @@ import express from "express";
 import {
     getArrayBlocks,
     getArrayBlocksById,
+    getArrayBlocksWithTemplates,
     getArrayBlockWithNestedContent,
     nestedArrayBlocks,
 } from "./read.js";
@@ -20,6 +21,10 @@ arrayBlocksRouter.use("/array", arrayTemplateRoute);
 // READ
 arrayBlocksRouter.get("/array", getArrayBlocks); // get all array blocks
 arrayBlocksRouter.get("/array/:block_id/id", getArrayBlocksById); // get block by id
+arrayBlocksRouter.get(
+    "/array/:block_id/templates",
+    getArrayBlocksWithTemplates,
+);
 
 arrayBlocksRouter.get("/array/:block_id", async (req, res) => {
     try {

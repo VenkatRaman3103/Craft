@@ -25,7 +25,7 @@ POST  /array/templates
 
 # body
 {
-    "name": "array template",
-    "array_block_id": "00c2460e-c20f-4f56-a3b9-4125ea06748a",
-    "array_block_item_id": "7aaad61d-3248-423c-8a6b-cc5bd28af3a6"
+    "name": "hello world",
+    "array_block_id": "c0667909-0121-4621-a44f-9a5e16b2bcd0",
+    "array_block_item_id": "c5d1dcaa-be8f-4e03-8900-247794f96a26"
 }

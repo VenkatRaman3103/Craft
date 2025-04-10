@@ -13,9 +13,8 @@ import {
 // import { v4 as uuidv4 } from "uuid";
 
 async function seed() {
-    await createArrayTemplate();
+    // await createArrayTemplate();
     // await createArrayBlocks();
-
     // await db.delete(blocks);
     // await samplePages();
     // await db.delete(pages);

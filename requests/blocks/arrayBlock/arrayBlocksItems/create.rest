@@ -21,11 +21,16 @@ Content-Type: application/json; charset=utf-8
 User-Agent: VRC
 
 # query
-POST  /array/719d16e8-3e03-44e8-88ec-9b7554317013/block_items
+POST  /array/260766da-b235-408f-879b-15d498e50301/block_items
 
 # body
+# {
+#     "name": "Template item 1 testing",
+#     "description": "array",
+#     "block_type": "array"
+# }
+
 {
-    "reference_id": "2583b71c-6336-47de-9ce6-eac8e39a83a9",
+    "reference_id": "700a1d94-8410-47b5-bc71-3b8881d29e7b",
     "type": "array"
 }
-
