@@ -4,7 +4,7 @@
 
 ### db
 
-- [ ] check the one to one relation between the `array_block_templates` and the `array_block_items`
+- [x] check the one to one relation between the `array_block_templates` and the `array_block_items`
     - `parent_block_id` from `array_block_items` should points to the `template_id` of `array_template`
     - `reference_id` from `array_block_items` should points to the `block_id` of `array_block`
 

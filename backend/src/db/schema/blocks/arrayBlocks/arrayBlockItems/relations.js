@@ -11,7 +11,7 @@ export const arrayBlockItemsRelations = relations(
         // }),
         template_id: one(arrayBlockTemplates, {
             fields: [arrayBlockItems.parent_block_id],
-            references: [arrayBlockTemplates.array_block_item_id],
+            references: [arrayBlockTemplates.template_id],
         }),
     }),
 );
