@@ -22,11 +22,12 @@ arrayBlocksRouter.use("/array", arrayTemplateRoute);
 arrayBlocksRouter.get("/array", getArrayBlocks); // get all array blocks
 arrayBlocksRouter.get("/array/:block_id/id", getArrayBlocksById); // get block by id
 arrayBlocksRouter.get(
-    "/array/:block_id/templates",
+    "/array/:block_id",
+    // "/array/:block_id",
     getArrayBlocksWithTemplates,
 );
 
-arrayBlocksRouter.get("/array/:block_id", async (req, res) => {
+arrayBlocksRouter.get("/array-drop/:block_id", async (req, res) => {
     try {
         const { block_id } = req.params;
 

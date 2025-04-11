@@ -31,6 +31,6 @@ POST  /array/260766da-b235-408f-879b-15d498e50301/block_items
 # }
 
 {
-    "reference_id": "700a1d94-8410-47b5-bc71-3b8881d29e7b",
+    "reference_id": "eb3f1e6b-9d93-4675-a04a-3d274cc35026",
     "type": "array"
 }

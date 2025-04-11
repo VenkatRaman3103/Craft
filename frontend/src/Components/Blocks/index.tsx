@@ -180,13 +180,17 @@ export const Block = ({
                 `${backendUrl}/${block.block_type}/${parentBlockId}`,
             );
 
+            // const templateResponse = await axios.get(
+            //     `${backendUrl}/${block.block_type}/${parentBlockId}/templates`,
+            // );
+
             console.log(
-                response.data.block_items,
-                response,
-                "blockCheckCreation",
+                // templateResponse.data[0].block_items,
+                response.data.length > 1 ? response.data[0].block_items : null,
+                "templateResponse",
             );
 
-            return response.data.block_items;
+            return response.data;
         },
     });
     const [parentBlockId, setParentBlockId] = useState(block.block_id);
@@ -266,12 +270,17 @@ export const Block = ({
         setFields(block.fields);
     }, [block]);
 
+    console.log(
+        blockItemsList ? blockItemsList[0]?.block_items : null,
+        "blockItemsList",
+    );
+
     function renderBlock(blockType) {
         switch (blockType) {
             case "normal":
                 return (
                     <NormalBlock
-                        blockItemsList={blockItemsList}
+                        blockItemsList={blockItemsList.block_items}
                         block={block}
                         queryClient={queryClient}
                         localFields={localFields}
@@ -281,7 +290,9 @@ export const Block = ({
             case "array":
                 return (
                     <ArrayBlock
-                        blockItemsList={blockItemsList}
+                        blockItemsList={
+                            blockItemsList ? blockItemsList[0]?.block_items : []
+                        }
                         block={block}
                         queryClient={queryClient}
                         localFields={localFields}

@@ -6,7 +6,7 @@
 
 - use react query for below operations
 
-- [ ] connect front-end with backend for the array blocks
+- [x] connect front-end with backend for the array blocks
 - [ ] create dummy templates in the backend and render it in the front-end
 - [ ] create actuall templates from the front-end, check backend is updating correctly and render it
 

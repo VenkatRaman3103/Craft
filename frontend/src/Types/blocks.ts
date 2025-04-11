@@ -6,6 +6,7 @@ export type blockType = {
     order: number;
     text: string;
     fields: fieldsType[];
+    block_type: string;
 };
 
 export type pageType = {
