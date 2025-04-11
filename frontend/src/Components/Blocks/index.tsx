@@ -186,7 +186,7 @@ export const Block = ({
 
             console.log(
                 // templateResponse.data[0].block_items,
-                response.data.length > 1 ? response.data[0].block_items : null,
+                response.data.length > 1 ? response.data : null,
                 "templateResponse",
             );
 
@@ -271,7 +271,7 @@ export const Block = ({
     }, [block]);
 
     console.log(
-        blockItemsList ? blockItemsList[0]?.block_items : null,
+        blockItemsList ? blockItemsList?.block_items : null,
         "blockItemsList",
     );
 
@@ -292,9 +292,7 @@ export const Block = ({
             case "array":
                 return (
                     <ArrayBlock
-                        blockItemsList={
-                            blockItemsList ? blockItemsList[0]?.block_items : []
-                        }
+                        blockItemsList={blockItemsList ? blockItemsList : []}
                         block={block}
                         queryClient={queryClient}
                         localFields={localFields}
