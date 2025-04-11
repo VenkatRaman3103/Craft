@@ -129,7 +129,7 @@ export const PageItems = ({
                             <Field data={item[item.item_type]} />
                         </FieldWrapper>
                     ) : (
-                        <p key={index}>Yet to be done</p>
+                        <p key={index}>Noting in here</p>
                     );
                 }
             })}

@@ -7,8 +7,8 @@
 - use react query for below operations
 
 - [x] connect front-end with backend for the array blocks
-- [ ] create dummy templates in the backend and render it in the front-end
-- [ ] create actuall templates from the front-end, check backend is updating correctly and render it
+- [x] create dummy templates in the backend and render it in the front-end
+- [x] create actuall templates from the front-end, check backend is updating correctly and render it
 
 - [x] make the array and normal block to render inside the template with nesting
 

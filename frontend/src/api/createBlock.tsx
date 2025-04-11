@@ -108,6 +108,7 @@ export const createBlockItem = async (
                 },
             );
 
+            // TODO: instead of create new template for each block get the appropriate template and update it
             await axios.post(`${backendUrl}/array/templates`, {
                 name: "hello world",
                 array_block_id: parentBlockId,
@@ -118,3 +119,15 @@ export const createBlockItem = async (
         console.error("Error creating block item:", error);
     }
 };
+
+export async function createArrayBlockTemplate(parentBlockId: string) {
+    try {
+        await axios.post(`${backendUrl}/array/templates`, {
+            name: "hello world",
+            array_block_id: parentBlockId,
+            array_block_item_id: parentBlockId,
+        });
+    } catch (error) {
+        console.log(error);
+    }
+}
