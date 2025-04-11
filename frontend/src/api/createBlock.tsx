@@ -107,6 +107,12 @@ export const createBlockItem = async (
                     type: blockType,
                 },
             );
+
+            await axios.post(`${backendUrl}/array/templates`, {
+                name: "hello world",
+                array_block_id: parentBlockId,
+                array_block_item_id: parentBlockId,
+            });
         }
     } catch (error) {
         console.error("Error creating block item:", error);

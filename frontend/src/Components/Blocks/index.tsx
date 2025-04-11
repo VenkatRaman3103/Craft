@@ -280,7 +280,9 @@ export const Block = ({
             case "normal":
                 return (
                     <NormalBlock
-                        blockItemsList={blockItemsList.block_items}
+                        blockItemsList={
+                            blockItemsList ? blockItemsList.block_items : null
+                        }
                         block={block}
                         queryClient={queryClient}
                         localFields={localFields}
