@@ -69,7 +69,7 @@ export const ArrayBlock = ({
                 onClick={() => createTemplate(block.block_id)}
             >
                 <AddTemplate
-                    iconLable={`${blockItemsList.length > 1 ? "Duplicate the Template" : "Create a New Template"}`}
+                    iconLable={`${blockItemsList.length > 0 ? "Duplicate the Template" : "Create a New Template"}`}
                 />
             </div>
         </>
