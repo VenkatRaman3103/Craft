@@ -65,6 +65,8 @@ export async function getArrayBlockWithNestedContent(block_id) {
         where: (blocks, { eq }) => eq(blocks.block_id, block_id),
     });
 
+    console.log(block_id, block, "<-----------------------");
+
     if (!block) return null;
 
     const items = await db.query.arrayBlockItems.findMany({
@@ -123,17 +125,32 @@ export async function getArrayBlocksWithTemplates(req, res) {
                         eq(arrayBlockItems.parent_template_id, template_id),
                 });
 
+                console.log(blockItems, "arrayBlockItems");
+
                 const nestedBlockItems = await Promise.all(
                     blockItems.map(async (item) => {
-                        const result = await getArrayBlockWithNestedContent(
-                            item.reference_id,
-                        );
+                        let some;
 
-                        const some = {
-                            item_type: result.block_type,
-                            item_id: result.block_id,
-                            array: result,
-                        };
+                        if (item.item_type == "array") {
+                            const result = await getArrayBlockWithNestedContent(
+                                item.reference_id,
+                            );
+                            some = {
+                                item_type: result?.block_type,
+                                item_id: result?.block_id,
+                                array: result,
+                            };
+                        } else if (item.item_type == "normal") {
+                            const result = await getBlockWithNestedContent(
+                                item.reference_id,
+                            );
+                            some = {
+                                item_type: result?.block_type,
+                                item_id: result?.block_id,
+                                normal: result,
+                            };
+                        }
+
                         return some;
                     }),
                 );
@@ -144,7 +161,6 @@ export async function getArrayBlocksWithTemplates(req, res) {
                 };
             }),
         );
-        // console.log(templatesItems, "arrayBlockItems");
 
         res.json(templatesItems);
     } catch (error) {
@@ -172,6 +188,8 @@ export async function getArrayBlocksWithTemplatesNested(block_id, template_id) {
     });
 
     console.log(block, "item");
+
+    // console.log(, "result");
 
     const processedItems = await Promise.all(
         items.map(async (item) => {

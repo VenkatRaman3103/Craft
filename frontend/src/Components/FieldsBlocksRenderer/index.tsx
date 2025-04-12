@@ -85,7 +85,6 @@ export const FieldsBlocksRenderer = ({
 }: FieldsBlocksRendererProps) => {
     const [updatedSampleteField, setUpdatedSampleteField] = useState([]);
 
-    // attach templateId to sample data for filtering block prompts for templates
     useEffect(() => {
         if (itemType == "array") {
             const updatedSelectedBlocks = sampleBlocks.map((block) => ({
@@ -99,25 +98,17 @@ export const FieldsBlocksRenderer = ({
         }
     }, [templateId, selectedBlocks, itemType]);
 
-    // Wrapper for openBlockPopup that includes templateId
     const handleOpenBlockPopup = useCallback(() => {
         if (templateId && openBlockPopup) {
-            // Pass the templateId to the openBlockPopup function
             openBlockPopup(templateId);
 
-            // If setActiveTemplateId is available, use it (for backward compatibility)
             if (setActiveTemplateId) {
                 setActiveTemplateId(templateId);
             }
         } else {
-            // Fallback to original behavior
             openBlockPopup();
         }
     }, [templateId, openBlockPopup, setActiveTemplateId]);
-
-    console.log(updatedSampleteField, selectedBlocks, "itemsListpageCheck");
-    console.log("Current template ID:", templateId);
-    console.log("Active template ID for popup:", activeTemplateId);
 
     return (
         <div className={`fields-blocks-renderer-container ${parentBlockType}`}>
@@ -191,12 +182,11 @@ export const FieldsBlocksRenderer = ({
 
                 <AddPageItemsBtn
                     openFieldPopup={openFieldPopup}
-                    openBlockPopup={handleOpenBlockPopup} // Use our wrapped version
+                    openBlockPopup={handleOpenBlockPopup}
                     itemType={itemType}
                     isVerbose={true}
                 />
 
-                {/* Only render popup when this is the active template */}
                 {(activeTemplateId === templateId || !activeTemplateId) && (
                     <>
                         <FieldSelectionPopup
@@ -212,7 +202,7 @@ export const FieldsBlocksRenderer = ({
                             onClose={closeBlockPopup}
                             availableBlocks={updatedSampleteField}
                             onBlocksSelected={handleBlocksSelected}
-                            templateId={templateId} // Use this component's templateId
+                            templateId={templateId}
                         />
                     </>
                 )}

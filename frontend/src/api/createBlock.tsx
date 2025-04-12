@@ -98,6 +98,7 @@ export const createBlockItem = async (
                     reference_id,
                     parent_block_id: parentBlockId,
                     type: blockType,
+                    parent_template_id: templateId ? templateId : "",
                 },
             );
         } else if (blockType === "array") {
