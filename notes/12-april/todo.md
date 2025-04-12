@@ -5,9 +5,9 @@
 ### front-end
 
 - bug
-    - [ ] blocks selection popup is closing after adding more than one template
+- [x] blocks selection popup is closing after adding more than one template
 
-<!---->
+- [x] deletetion functionality for `normal_block` inside the `array_block`
 
 #### Duplicatiing functionality for the array_template
 
