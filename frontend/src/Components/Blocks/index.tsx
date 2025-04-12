@@ -64,15 +64,21 @@ export const PageItems = ({
             item_id: string;
             block: any;
         }) => {
-            console.log(block, "onDelete"); // Should now log the correct value
+            console.log(block, itemType, item_id, "onDelete"); // Should now log the correct value
 
             const responseBlock = await axios.delete(
                 `${backendUrl}/${block.block_type}/${block_id}`,
             );
 
+            console.log(responseBlock, item_id, "responseDelete");
+
             if (itemType === "block" && item_id) {
                 const blockItemsResponse = await axios.delete(
-                    `${itemType}/block_items/${item_id}`,
+                    `${backendUrl}/${itemType}/block_items/${item_id}`,
+                );
+            } else if (itemType === "array" && item_id) {
+                const response = await axios.delete(
+                    `${backendUrl}/${itemType}/block_items/${item_id}`,
                 );
             }
             return responseBlock;
@@ -81,7 +87,7 @@ export const PageItems = ({
             queryClient.invalidateQueries({ queryKey: queryKey });
         },
         onError: (error: any) => {
-            console.error("Failed to create block:", error);
+            console.error("Failed to delete block:", error);
         },
     });
 
