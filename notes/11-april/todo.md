@@ -20,7 +20,7 @@
 #### Duplicatiing functionality for the array_template
 
 - [x] connect add template button with `array_block_templates`
-- [x] add a function in the backend to duplicate the content of template
+- [ ] add a function in the backend to duplicate the content of template
 - [ ] template the functionality
 
 ### db
