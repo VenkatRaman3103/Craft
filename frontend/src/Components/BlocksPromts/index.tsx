@@ -73,6 +73,7 @@ export const BlocksPropmts = ({
             queryClient={queryClient}
             itemType={block.blockType}
             localFields={localFields}
+            templateId={templateId}
         />
     );
 };

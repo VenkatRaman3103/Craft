@@ -23,6 +23,7 @@ interface BlockSelectionPopupProps {
     onClose: () => void;
     availableBlocks: BlockOption[];
     onBlocksSelected: (selectedBlocks: SelectedBlock[]) => void;
+    templateId?: string;
 }
 
 export const BlockSelectionPopup: React.FC<BlockSelectionPopupProps> = ({
@@ -30,6 +31,7 @@ export const BlockSelectionPopup: React.FC<BlockSelectionPopupProps> = ({
     onClose,
     availableBlocks,
     onBlocksSelected,
+    templateId,
 }) => {
     const popupRef = useRef<HTMLDivElement>(null);
     const [selectedBlocksType, setSelectedBlocksType] = useState("all-blocks");
@@ -37,6 +39,12 @@ export const BlockSelectionPopup: React.FC<BlockSelectionPopupProps> = ({
         SelectedBlock[]
     >([]);
     const [searchTerm, setSearchTerm] = useState("");
+
+    const [currentTemplateId, setCurrentTemplateId] = useState(templateId);
+
+    useEffect(() => {
+        setCurrentTemplateId(templateId);
+    }, [templateId]);
 
     useEffect(() => {
         const handleClickOutside = (event: MouseEvent) => {
@@ -48,14 +56,20 @@ export const BlockSelectionPopup: React.FC<BlockSelectionPopupProps> = ({
             }
         };
 
-        if (isOpen) {
-            document.addEventListener("mousedown", handleClickOutside);
-        }
+        // if (isOpen) {
+        //     document.addEventListener("mousedown", handleClickOutside);
+        // }
 
         return () => {
             document.removeEventListener("mousedown", handleClickOutside);
         };
     }, [isOpen, onClose]);
+
+    useEffect(() => {
+        if (isOpen) {
+            setLocalSelectedBlocks([]);
+        }
+    }, [isOpen]);
 
     const toggleBlockSelection = (block: BlockOption) => {
         setLocalSelectedBlocks((prev) => {
@@ -69,6 +83,7 @@ export const BlockSelectionPopup: React.FC<BlockSelectionPopupProps> = ({
                     {
                         blockId: block.id,
                         blockType: block.type,
+                        templateId: currentTemplateId,
                     },
                 ];
             }
@@ -115,6 +130,8 @@ export const BlockSelectionPopup: React.FC<BlockSelectionPopupProps> = ({
         { label: "Custom Blocks", value: "custom-blocks" },
         { label: "Template Blocks", value: "template-blocks" },
     ];
+
+    console.log(templateId, localSelectedBlocks, "isOpen");
 
     if (!isOpen) return null;
 
@@ -200,6 +217,8 @@ export const BlockSelectionPopup: React.FC<BlockSelectionPopupProps> = ({
                         </div>
                     ))}
                 </div>
+
+                <div>{currentTemplateId}</div>
 
                 <div className="block-selection-footer">
                     <div className="selection-count">

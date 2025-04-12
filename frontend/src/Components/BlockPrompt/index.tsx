@@ -16,6 +16,7 @@ export const BlockPrompt = ({
     parentBlockId,
     queryClient,
     itemType,
+    templateId,
 }: any) => {
     const [inputWidth, setInputWidth] = useState("auto");
     const inputRef = useRef(null);
@@ -74,6 +75,7 @@ export const BlockPrompt = ({
 
     return (
         <div className="block-promt-item">
+            <div>{templateId ? templateId : ""}</div>
             <div className="block-promt-container">
                 <div className="block-promt-wrapper">
                     <div className="block-promt-header-container">

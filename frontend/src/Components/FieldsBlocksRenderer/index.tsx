@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState, useCallback } from "react";
 import { QueryClient } from "@tanstack/react-query";
 import { PageItems } from "../Blocks";
 import { FieldsPromt } from "../FieldsPromt";
@@ -9,7 +9,6 @@ import { BlockSelectionPopup } from "../BlocksSelectionPopup";
 import { sampleBlocks } from "@/Data/blocks";
 import "./index.scss";
 import { sampleFields } from "@/Data/fields";
-import { AddTemplate } from "../Buttons/AddTemplate";
 
 interface FieldsBlocksRendererProps {
     itemsList: any[];
@@ -39,12 +38,14 @@ interface FieldsBlocksRendererProps {
     showBlockPrompt: boolean;
     selectedBlocks: any[];
     isBlockPopupOpen: boolean;
-    openBlockPopup: () => void;
+    openBlockPopup: (templateId?: string) => void; // Modified to accept templateId
     closeBlockPopup: () => void;
     handleBlocksSelected: (newSelectedBlocks: any[]) => void;
     handleBlockPromptCancel: (block: any) => void;
 
     templateId?: string;
+    activeTemplateId?: string; // New prop to track which template opened the popup
+    setActiveTemplateId?: (id: string) => void; // Function to set the active template
 }
 
 export const FieldsBlocksRenderer = ({
@@ -79,15 +80,52 @@ export const FieldsBlocksRenderer = ({
     handleBlockPromptCancel,
 
     templateId,
+    activeTemplateId,
+    setActiveTemplateId,
 }: FieldsBlocksRendererProps) => {
-    console.log(itemsList, "itemsListpageCheck");
+    const [updatedSampleteField, setUpdatedSampleteField] = useState([]);
+
+    // attach templateId to sample data for filtering block prompts for templates
+    useEffect(() => {
+        if (itemType == "array") {
+            const updatedSelectedBlocks = sampleBlocks.map((block) => ({
+                ...block,
+                parent_id: templateId,
+            }));
+
+            setUpdatedSampleteField(updatedSelectedBlocks);
+        } else {
+            setUpdatedSampleteField(sampleBlocks);
+        }
+    }, [templateId, selectedBlocks, itemType]);
+
+    // Wrapper for openBlockPopup that includes templateId
+    const handleOpenBlockPopup = useCallback(() => {
+        if (templateId && openBlockPopup) {
+            // Pass the templateId to the openBlockPopup function
+            openBlockPopup(templateId);
+
+            // If setActiveTemplateId is available, use it (for backward compatibility)
+            if (setActiveTemplateId) {
+                setActiveTemplateId(templateId);
+            }
+        } else {
+            // Fallback to original behavior
+            openBlockPopup();
+        }
+    }, [templateId, openBlockPopup, setActiveTemplateId]);
+
+    console.log(updatedSampleteField, selectedBlocks, "itemsListpageCheck");
+    console.log("Current template ID:", templateId);
+    console.log("Active template ID for popup:", activeTemplateId);
+
     return (
         <div className={`fields-blocks-renderer-container ${parentBlockType}`}>
             <div
                 className={`fields-blocks-renderer-wrapper ${parentBlockType}`}
             >
                 {parentBlockType == "array" && (
-                    <div className="title">Template</div>
+                    <div className="title">Template - {templateId}</div>
                 )}
 
                 {/* Page Items */}
@@ -124,55 +162,61 @@ export const FieldsBlocksRenderer = ({
                 {/* Blocks Prompts */}
                 {showBlockPrompt && (
                     <div className="blocks-prompt-container">
-                        {selectedBlocks.map((block: any) => (
-                            <BlocksPropmts
-                                key={block.instanceId || block.blockId}
-                                localFields={localFields}
-                                query_key_id={query_key_id}
-                                queryKey={queryKey}
-                                block={block}
-                                parentBlockId={parentBlockId}
-                                parentBlockType={parentBlockType}
-                                page_id={query_key_id || ""}
-                                itemType={itemType}
-                                queryClient={queryClient}
-                                onCancel={() => handleBlockPromptCancel(block)}
-                                templateId={templateId}
-                            />
-                        ))}
-
-                        {/* Add Buttons */}
+                        {selectedBlocks
+                            .filter(
+                                (block) =>
+                                    block.templateId == templateId ||
+                                    block.templateId == "",
+                            )
+                            .map((block: any) => (
+                                <BlocksPropmts
+                                    key={block.instanceId || block.blockId}
+                                    localFields={localFields}
+                                    query_key_id={query_key_id}
+                                    queryKey={queryKey}
+                                    block={block}
+                                    parentBlockId={parentBlockId}
+                                    parentBlockType={parentBlockType}
+                                    page_id={query_key_id || ""}
+                                    itemType={itemType}
+                                    queryClient={queryClient}
+                                    onCancel={() =>
+                                        handleBlockPromptCancel(block)
+                                    }
+                                    templateId={templateId}
+                                />
+                            ))}
                     </div>
                 )}
 
                 <AddPageItemsBtn
                     openFieldPopup={openFieldPopup}
-                    openBlockPopup={openBlockPopup}
+                    openBlockPopup={handleOpenBlockPopup} // Use our wrapped version
                     itemType={itemType}
                     isVerbose={true}
                 />
 
-                {/* Popups */}
-                <FieldSelectionPopup
-                    isOpen={isFieldPopupOpen}
-                    onClose={closeFieldPopup}
-                    onAddFields={handleAddSelectedFields}
-                    localFields={localFields}
-                    availableFields={sampleFields}
-                />
+                {/* Only render popup when this is the active template */}
+                {(activeTemplateId === templateId || !activeTemplateId) && (
+                    <>
+                        <FieldSelectionPopup
+                            isOpen={isFieldPopupOpen}
+                            onClose={closeFieldPopup}
+                            onAddFields={handleAddSelectedFields}
+                            localFields={localFields}
+                            availableFields={sampleFields}
+                        />
 
-                <BlockSelectionPopup
-                    isOpen={isBlockPopupOpen}
-                    onClose={closeBlockPopup}
-                    availableBlocks={sampleBlocks}
-                    onBlocksSelected={handleBlocksSelected}
-                />
+                        <BlockSelectionPopup
+                            isOpen={isBlockPopupOpen}
+                            onClose={closeBlockPopup}
+                            availableBlocks={updatedSampleteField}
+                            onBlocksSelected={handleBlocksSelected}
+                            templateId={templateId} // Use this component's templateId
+                        />
+                    </>
+                )}
             </div>
-            {/* {parentBlockType == "array" && ( */}
-            {/*     <div className="add-template-wrapper"> */}
-            {/*         <AddTemplate iconLable="Add Template" /> */}
-            {/*     </div> */}
-            {/* )} */}
         </div>
     );
 };
