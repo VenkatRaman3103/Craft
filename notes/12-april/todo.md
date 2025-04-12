@@ -12,18 +12,21 @@
 #### Duplicatiing functionality for the array_template
 
 - add a function in the backend to duplicate the content of template
-- [ ] create a special route for the `array_template` that has be called while duplication not
+- [x] create a special route for the `array_template` that has be called while duplication not
       on creation of template
-- [ ] the special route should create a new template
-- [ ] first get the `array_block_items` for the first template (which will act like a blueprint),
+- [x] the special route should create a new template
+- [x] first get the `array_block_items` for the first template (which will act like a blueprint),
       then create new `array_block_items` based on the collected blocks and change the `parent_block_id`
       to use newly create template using special route
-- [ ] test its responses
+- [x] based on the created `blocks` create `block_items`
+- [x] test its responses
 
 ### db
 
 - [ ] make one to one relation with the templates using parent_template_id
 
 ### api
+
+- [x] route for duplication
 
 <!---->

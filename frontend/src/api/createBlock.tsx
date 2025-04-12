@@ -118,13 +118,24 @@ export const createBlockItem = async (
     }
 };
 
-export async function createArrayBlockTemplate(parentBlockId: string) {
+export async function createArrayBlockTemplate(
+    parentBlockId: string,
+    forDuplication: boolean,
+    templateId: string,
+) {
     try {
-        await axios.post(`${backendUrl}/array/templates`, {
-            name: "hello world",
-            array_block_id: parentBlockId,
-            array_block_item_id: parentBlockId,
-        });
+        if (!forDuplication) {
+            await axios.post(`${backendUrl}/array/templates`, {
+                name: "hello world",
+                array_block_id: parentBlockId,
+                array_block_item_id: parentBlockId,
+            });
+        } else {
+            console.log(forDuplication, templateId, "forDuplication");
+            await axios.post(
+                `${backendUrl}/array/templates/duplication/${templateId}`,
+            );
+        }
     } catch (error) {
         console.log(error);
     }

@@ -28,8 +28,18 @@ export const ArrayBlock = ({
     };
 
     const arrayBlockMutation = useMutation({
-        mutationFn: async ({ parentBlockId }: { parentBlockId: string }) => {
-            createArrayBlockTemplate(parentBlockId);
+        mutationFn: async ({
+            parentBlockId,
+            isDuplication,
+        }: {
+            parentBlockId: string;
+            isDuplication: boolean;
+        }) => {
+            createArrayBlockTemplate(
+                parentBlockId,
+                isDuplication,
+                blockItemsList.length > 0 ? blockItemsList[0].templateId : "",
+            );
         },
         onSuccess: () => {
             queryClient.invalidateQueries(["blockItems", block.block_id]);
@@ -40,8 +50,8 @@ export const ArrayBlock = ({
         return <div>Loading...</div>;
     }
 
-    function createTemplate(parentBlockId: string) {
-        arrayBlockMutation.mutate({ parentBlockId });
+    function createTemplate(parentBlockId: string, isDuplication) {
+        arrayBlockMutation.mutate({ parentBlockId, isDuplication });
     }
 
     console.log(fieldsBlocksProps.selectedBlocks, "blockItemsListArray");
@@ -66,7 +76,9 @@ export const ArrayBlock = ({
             ))}
             <div
                 className="add-template-btn"
-                onClick={() => createTemplate(block.block_id)}
+                onClick={() =>
+                    createTemplate(block.block_id, blockItemsList.length > 0)
+                }
             >
                 <AddTemplate
                     iconLable={`${blockItemsList.length > 0 ? "Duplicate the Template" : "Create a New Template"}`}

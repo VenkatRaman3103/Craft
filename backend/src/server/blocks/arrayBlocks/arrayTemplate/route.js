@@ -1,6 +1,6 @@
 import express from "express";
 import { getArrayTemplate, getArrayTemplateById } from "./read.js";
-import { createArrayTemplate } from "./create.js";
+import { createArrayTemplate, duplicateTheTemplate } from "./create.js";
 import { deleteArrayTemplate } from "./delete.js";
 import {
     updateArrayTemplteDescription,
@@ -15,6 +15,10 @@ arrayTemplateRoute.get("/templates/:template_id", getArrayTemplateById);
 
 // CREATE
 arrayTemplateRoute.post("/templates", createArrayTemplate);
+arrayTemplateRoute.post(
+    "/templates/duplication/:template_id",
+    duplicateTheTemplate,
+); // for duplication functionality
 
 // UPDATE
 arrayTemplateRoute.patch(
