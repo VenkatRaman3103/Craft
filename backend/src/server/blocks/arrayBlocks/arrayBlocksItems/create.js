@@ -5,13 +5,15 @@ import { db } from "../../../server.js";
 export async function createArrayBlockItem(req, res) {
     const { block_id } = req.params;
 
-    const { reference_id, type } = req.body;
+    const { reference_id, parent_template_id, parent_block_id, type } =
+        req.body;
 
     try {
         const newBlock = await db
             .insert(arrayBlockItems)
             .values({
-                parent_block_id: block_id,
+                parent_block_id: parent_block_id,
+                parent_template_id,
                 item_type: type,
                 reference_id,
                 order: "1",

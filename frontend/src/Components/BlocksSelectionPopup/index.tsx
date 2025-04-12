@@ -38,15 +38,6 @@ export const BlockSelectionPopup: React.FC<BlockSelectionPopupProps> = ({
     >([]);
     const [searchTerm, setSearchTerm] = useState("");
 
-    // Reset state when popup opens
-    // useEffect(() => {
-    //     if (isOpen) {
-    //         setLocalSelectedBlocks([]);
-    //         setSearchTerm("");
-    //     }
-    // }, [isOpen]);
-
-    // Handle outside clicks to close the popup
     useEffect(() => {
         const handleClickOutside = (event: MouseEvent) => {
             if (
@@ -107,17 +98,13 @@ export const BlockSelectionPopup: React.FC<BlockSelectionPopupProps> = ({
         return true;
     });
 
-    // Filter blocks by type if needed
     const displayedBlocks =
         selectedBlocksType === "all-blocks"
             ? filteredBlocks
             : filteredBlocks.filter((block) => {
-                  // Add logic here to filter by custom or template blocks based on block properties
                   if (selectedBlocksType === "custom-blocks") {
-                      // Example filter condition for custom blocks
                       return block.type.includes("custom");
                   } else if (selectedBlocksType === "template-blocks") {
-                      // Example filter condition for template blocks
                       return block.type.includes("template");
                   }
                   return true;

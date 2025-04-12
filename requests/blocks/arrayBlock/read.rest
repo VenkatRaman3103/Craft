@@ -22,7 +22,7 @@ User-Agent: VRC
 
 # query
 # GET  /array/631d820d-be44-4085-8281-e83805bd662a
-GET  /array/9b8da32e-824c-4042-9900-e8c13e9fe8a5 
+GET  /array/eef2091b-6175-43ae-8cc5-5a437aaa966e
 
 # body
 # {

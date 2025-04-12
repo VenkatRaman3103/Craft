@@ -89,6 +89,8 @@ export const PageItems = ({
         blocksMutation.mutate({ block_id, item_id, block });
     }
 
+    console.log(itemsList, "itemsListPageItems");
+
     return (
         <div className="blocks-container prior-drop">
             {pageItemsList?.map((item: any, index) => {
@@ -102,6 +104,7 @@ export const PageItems = ({
                         return (
                             <Block
                                 key={item.item_id || index}
+                                // block={item[item.item_type]}
                                 block={item[item.item_type]}
                                 isSidebarOpen={isSidebarOpen}
                                 onScopeChange={onScopeChange}

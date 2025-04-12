@@ -12,22 +12,25 @@
 
 - [x] make the array and normal block to render inside the template with nesting
 
+- [x] update create block function to use template id or something so that the blocks will be
+      created within that template
+- [x] use template id to make the blocks render inside the template component
+- [x] use template id to make the blocks render inside the template component
+
 #### Duplicatiing functionality for the array_template
 
-- [ ] connect add template button with `array_block_templates`
-- [ ] add a function in the backend to duplicate the content of template
+- [x] connect add template button with `array_block_templates`
+- [x] add a function in the backend to duplicate the content of template
+- [ ] template the functionality
 
 ### db
 
-<!-- - [ ] creat route `/templates/:block_id` to create a `array_template` with `array_block_id` and `name` -->
-
-<!-- yet to update -->
+- [x] add a new column called `parent_template_id` in the `array_block_items` which will have the templates table's 'template_id'
+- [ ] make one to one relation with the templates using parent_template_id
 
 ### api
 
-<!-- yet to update -->
-
-### nesting functionality
-
-- [ ] creation of `array_template` from the frontend while creating the `array_block`
-- [ ] rendering of each blocks withing each template
+- [x] update the `getArrayBlocksWithTemplates` to get `array_block_items` with nesting for that template
+- [x] make the template into an object with `template_id` as `templateId` and all the `array_block_items` as `templateItems`
+- [x] use the newly created `parent_template_id` of the `array_block_items` to get for filtering the
+      `array_block_items`

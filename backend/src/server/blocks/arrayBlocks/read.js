@@ -109,27 +109,44 @@ export async function getArrayBlocksWithTemplates(req, res) {
     const { block_id } = req.params;
 
     try {
-        const response = await db.query.arrayBlockTemplates.findMany({
+        const templates = await db.query.arrayBlockTemplates.findMany({
             where: (arrayBlockTemplates, { eq }) =>
                 eq(arrayBlockTemplates.array_block_id, block_id),
         });
 
-        const templates = await Promise.all(
-            response.map((item) =>
-                getArrayBlocksWithTemplatesNested(
-                    item.array_block_id,
-                    item.template_id,
-                ),
-            ),
+        const templatesItems = await Promise.all(
+            templates.map(async (item) => {
+                const template_id = item.template_id;
+
+                const blockItems = await db.query.arrayBlockItems.findMany({
+                    where: (arrayBlockItems, { eq }) =>
+                        eq(arrayBlockItems.parent_template_id, template_id),
+                });
+
+                const nestedBlockItems = await Promise.all(
+                    blockItems.map(async (item) => {
+                        const result = await getArrayBlockWithNestedContent(
+                            item.reference_id,
+                        );
+
+                        const some = {
+                            item_type: result.block_type,
+                            item_id: result.block_id,
+                            array: result,
+                        };
+                        return some;
+                    }),
+                );
+
+                return {
+                    templateId: template_id,
+                    templateItems: nestedBlockItems,
+                };
+            }),
         );
+        // console.log(templatesItems, "arrayBlockItems");
 
-        // const data = await getArrayBlocksWithTemplatesNested(
-        //     response[0].array_block_id,
-        //     response[0].template_id,
-        // );
-        // console.log(data, "data");
-
-        res.json(templates);
+        res.json(templatesItems);
     } catch (error) {
         const errorMessage = {
             error: error.message,
@@ -153,6 +170,7 @@ export async function getArrayBlocksWithTemplatesNested(block_id, template_id) {
         where: (arrayBlockItems, { eq }) =>
             eq(arrayBlockItems.parent_block_id, block_id),
     });
+
     console.log(block, "item");
 
     const processedItems = await Promise.all(

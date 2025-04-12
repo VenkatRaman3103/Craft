@@ -17,6 +17,7 @@ export const BlocksPropmts = ({
     localFields,
     parentBlockId,
     parentBlockType,
+    templateId,
 }: any) => {
     const [blockInput, setBlockInput] = useState("");
 
@@ -29,6 +30,7 @@ export const BlocksPropmts = ({
                 parentBlockId,
                 block,
                 parentBlockType,
+                templateId,
             ),
         onSuccess: () => {
             queryClient.invalidateQueries({ queryKey: queryKey });
@@ -42,7 +44,7 @@ export const BlocksPropmts = ({
         if (!blockInput) return;
         console.log(block, blockInput, itemType, "blockInput");
         console.log(queryKey, "queryKey");
-        createBlockMutation.mutate(blockInput);
+        createBlockMutation.mutate(blockInput, templateId);
         onCancel();
     };
 

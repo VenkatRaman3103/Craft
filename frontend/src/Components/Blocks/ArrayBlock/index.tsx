@@ -34,10 +34,10 @@ export const ArrayBlock = ({
         <>
             {blockItemsList.map((template, index) => (
                 <FieldsBlocksRenderer
-                    itemsList={template.block_items}
+                    itemsList={template.templateItems}
                     query_key_id={""}
                     parentCollectionId={null}
-                    itemType={"block"}
+                    itemType={"array"}
                     parentBlockId={block.block_id}
                     parentBlockType={block.block_type}
                     queryKey={["blockItems", block.block_id]}
@@ -45,6 +45,7 @@ export const ArrayBlock = ({
                     localFields={localFields}
                     {...fieldsBlocksProps}
                     key={index}
+                    templateId={template.templateId}
                 />
             ))}
 

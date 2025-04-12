@@ -43,6 +43,8 @@ interface FieldsBlocksRendererProps {
     closeBlockPopup: () => void;
     handleBlocksSelected: (newSelectedBlocks: any[]) => void;
     handleBlockPromptCancel: (block: any) => void;
+
+    templateId?: string;
 }
 
 export const FieldsBlocksRenderer = ({
@@ -75,8 +77,10 @@ export const FieldsBlocksRenderer = ({
     closeBlockPopup,
     handleBlocksSelected,
     handleBlockPromptCancel,
+
+    templateId,
 }: FieldsBlocksRendererProps) => {
-    console.log(itemsList, itemType, parentBlockType, "itemsListpageCheck");
+    console.log(itemsList, "itemsListpageCheck");
     return (
         <div className={`fields-blocks-renderer-container ${parentBlockType}`}>
             <div
@@ -133,6 +137,7 @@ export const FieldsBlocksRenderer = ({
                                 itemType={itemType}
                                 queryClient={queryClient}
                                 onCancel={() => handleBlockPromptCancel(block)}
+                                templateId={templateId}
                             />
                         ))}
 
