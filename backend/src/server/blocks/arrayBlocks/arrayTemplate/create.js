@@ -2,7 +2,7 @@ import { response } from "express";
 import { arrayBlockItems } from "../../../../db/schema/blocks/arrayBlocks/arrayBlockItems/schema.js";
 import { arrayBlockTemplates } from "../../../../db/schema/blocks/arrayBlocks/arrayTemplates/schema.js";
 import { db } from "../../../server.js";
-import { blocks } from "../../../../db/schema/blocks.js";
+import { block_items, blocks } from "../../../../db/schema/blocks.js";
 
 export async function createArrayTemplate(req, res) {
     const { name, array_block_id, array_block_item_id } = req.body;
@@ -31,35 +31,118 @@ export async function duplicateTheTemplate(req, res) {
 
     async function duplicateBlockItems(newTemplate, blockItems) {
         const response = await Promise.all(
+            // blockItems.map(async (blockItem) => {
+            //     const blockTemplate = await db.query.blocks.findFirst({
+            //         where: (blocks, { eq }) =>
+            //             eq(blocks.block_id, blockItem.reference_id),
+            //     });
+            //
+            //     const [newBlock] = await db
+            //         .insert(blocks)
+            //         .values([
+            //             {
+            //                 name: blockTemplate.name,
+            //                 description: blockTemplate.description,
+            //                 scope: blockTemplate.scope,
+            //                 block_type: blockTemplate.block_type,
+            //             },
+            //         ])
+            //         .returning();
+            //
+            //     await db.insert(arrayBlockItems).values([
+            //         {
+            //             parent_block_id: newTemplate.array_block_id,
+            //             parent_template_id: newTemplate.template_id,
+            //             item_type: "normal",
+            //             reference_id: newBlock.block_id,
+            //             order: "1",
+            //         },
+            //     ]);
+            //
+            //     return newBlock;
+            // }),
+
             blockItems.map(async (blockItem) => {
-                const blockTemplate = await db.query.blocks.findFirst({
+                const parentBlock = await db.query.blocks.findFirst({
                     where: (blocks, { eq }) =>
                         eq(blocks.block_id, blockItem.reference_id),
                 });
 
-                const [newBlock] = await db
-                    .insert(blocks)
-                    .values([
+                const childrenBlockItems = await db.query.block_items.findMany({
+                    where: (block_items, { eq }) =>
+                        eq(block_items.parent_block_id, parentBlock.block_id),
+                });
+
+                const childrenBlocks = await Promise.all(
+                    childrenBlockItems.map(async (child) => {
+                        return await db.query.blocks.findFirst({
+                            where: (blocks, { eq }) =>
+                                eq(blocks.block_id, child.reference_id),
+                        });
+                    }),
+                );
+
+                if (parentBlock) {
+                    // clone the parent
+                    // creating a new block in blocks table
+                    const [newParent] = await db
+                        .insert(blocks)
+                        .values([
+                            {
+                                name: parentBlock.name,
+                                block_type: parentBlock.block_type,
+                                description: parentBlock.description,
+                            },
+                        ])
+                        .returning();
+
+                    // console.log(
+                    //     newParent,
+                    //     newTemplate.template_id,
+                    //     "newParent",
+                    // );
+
+                    // creating a new blockItem in arrayBlockItems
+                    await db.insert(arrayBlockItems).values([
                         {
-                            name: blockTemplate.name,
-                            description: blockTemplate.description,
-                            scope: blockTemplate.scope,
-                            block_type: blockTemplate.block_type,
+                            parent_block_id: newParent.block_id,
+                            parent_template_id: newTemplate.template_id,
+                            reference_id: newParent.block_id,
+                            item_type: newParent.block_type,
                         },
-                    ])
-                    .returning();
+                    ]);
 
-                await db.insert(arrayBlockItems).values([
-                    {
-                        parent_block_id: newTemplate.array_block_id,
-                        parent_template_id: newTemplate.template_id,
-                        item_type: "normal",
-                        reference_id: newBlock.block_id,
-                        order: "1",
-                    },
-                ]);
+                    // console.log(childrenBlocks, "childrenBlocks");
 
-                return newBlock;
+                    // clone the children
+                    const newChildrenBlocks = Promise.all(
+                        childrenBlocks.map(async (child) => {
+                            console.log(child, "child <---------");
+                            const [newChild] = await db
+                                .insert(blocks)
+                                .values([
+                                    {
+                                        name: child.name,
+                                        block_type: child.block_type,
+                                        description: child.description,
+                                    },
+                                ])
+                                .returning();
+                            console.log(newChild, newParent, "newChild");
+
+                            await db.insert(block_items).values([
+                                {
+                                    parent_block_id: newParent.block_id,
+                                    reference_id: newChild.block_id,
+                                    item_type: newChild.block_type,
+                                    // parent_template_id: newTemplate.template_id,
+                                },
+                            ]);
+                        }),
+                    );
+                }
+
+                // console.log(parentBlock, childrenBlocks, "childrenBlocks");
             }),
         );
 

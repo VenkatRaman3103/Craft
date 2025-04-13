@@ -21,7 +21,7 @@ Content-Type: application/json; charset=utf-8
 User-Agent: VRC
 
 # query
-POST  /array/templates/duplication/1cff74d3-6a95-4080-b4b1-0d7f685145eb
+POST  /array/templates/duplication/b9e82f2b-343a-47a3-89e3-2fa1315da493
 
 # body
 # {
