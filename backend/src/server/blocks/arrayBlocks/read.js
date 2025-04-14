@@ -65,8 +65,6 @@ export async function getArrayBlockWithNestedContent(block_id) {
         where: (blocks, { eq }) => eq(blocks.block_id, block_id),
     });
 
-    console.log(block_id, block, "<-----------------------");
-
     if (!block) return null;
 
     const items = await db.query.arrayBlockItems.findMany({
@@ -124,8 +122,6 @@ export async function getArrayBlocksWithTemplates(req, res) {
                     where: (arrayBlockItems, { eq }) =>
                         eq(arrayBlockItems.parent_template_id, template_id),
                 });
-
-                console.log(blockItems, "arrayBlockItems");
 
                 const nestedBlockItems = await Promise.all(
                     blockItems.map(async (item) => {

@@ -3,6 +3,7 @@ import { arrayBlockItems } from "../../../../db/schema/blocks/arrayBlocks/arrayB
 import { arrayBlockTemplates } from "../../../../db/schema/blocks/arrayBlocks/arrayTemplates/schema.js";
 import { db } from "../../../server.js";
 import { block_items, blocks } from "../../../../db/schema/blocks.js";
+import { arrayBlocks } from "../../../../db/schema/index.js";
 
 export async function createArrayTemplate(req, res) {
     const { name, array_block_id, array_block_item_id } = req.body;
@@ -31,118 +32,278 @@ export async function duplicateTheTemplate(req, res) {
 
     async function duplicateBlockItems(newTemplate, blockItems) {
         const response = await Promise.all(
-            // blockItems.map(async (blockItem) => {
-            //     const blockTemplate = await db.query.blocks.findFirst({
-            //         where: (blocks, { eq }) =>
-            //             eq(blocks.block_id, blockItem.reference_id),
-            //     });
-            //
-            //     const [newBlock] = await db
-            //         .insert(blocks)
-            //         .values([
-            //             {
-            //                 name: blockTemplate.name,
-            //                 description: blockTemplate.description,
-            //                 scope: blockTemplate.scope,
-            //                 block_type: blockTemplate.block_type,
-            //             },
-            //         ])
-            //         .returning();
-            //
-            //     await db.insert(arrayBlockItems).values([
-            //         {
-            //             parent_block_id: newTemplate.array_block_id,
-            //             parent_template_id: newTemplate.template_id,
-            //             item_type: "normal",
-            //             reference_id: newBlock.block_id,
-            //             order: "1",
-            //         },
-            //     ]);
-            //
-            //     return newBlock;
-            // }),
-
             blockItems.map(async (blockItem) => {
-                const parentBlock = await db.query.blocks.findFirst({
-                    where: (blocks, { eq }) =>
-                        eq(blocks.block_id, blockItem.reference_id),
-                });
+                console.log(blockItem, "blockItems");
 
-                const childrenBlockItems = await db.query.block_items.findMany({
-                    where: (block_items, { eq }) =>
-                        eq(block_items.parent_block_id, parentBlock.block_id),
-                });
+                let parentBlock;
 
-                const childrenBlocks = await Promise.all(
-                    childrenBlockItems.map(async (child) => {
-                        return await db.query.blocks.findFirst({
-                            where: (blocks, { eq }) =>
-                                eq(blocks.block_id, child.reference_id),
+                if (blockItem.item_type == "normal") {
+                    parentBlock = await db.query.blocks.findFirst({
+                        where: (blocks, { eq }) =>
+                            eq(blocks.block_id, blockItem.reference_id),
+                    });
+                } else if (blockItem.item_type == "array") {
+                    parentBlock = await db.query.arrayBlocks.findFirst({
+                        where: (arrayBlocks, { eq }) =>
+                            eq(arrayBlocks.block_id, blockItem.reference_id),
+                    });
+                }
+
+                console.log(parentBlock, "parentBlock");
+
+                let childrenBlockItems;
+
+                if (parentBlock.block_type == "normal") {
+                    childrenBlockItems = await db.query.block_items.findMany({
+                        where: (block_items, { eq }) =>
+                            eq(
+                                block_items.parent_block_id,
+                                parentBlock.block_id,
+                            ),
+                    });
+                } else if (parentBlock.block_type == "array") {
+                    childrenBlockItems =
+                        await db.query.arrayBlockItems.findMany({
+                            where: (arrayBlockItems, { eq }) =>
+                                eq(
+                                    arrayBlockItems.parent_block_id,
+                                    parentBlock.block_id,
+                                ),
                         });
-                    }),
-                );
+                }
 
-                if (parentBlock) {
-                    // clone the parent
-                    // creating a new block in blocks table
-                    const [newParent] = await db
-                        .insert(blocks)
-                        .values([
-                            {
-                                name: parentBlock.name,
-                                block_type: parentBlock.block_type,
-                                description: parentBlock.description,
-                            },
-                        ])
-                        .returning();
+                console.log(childrenBlockItems, "childrenBlockItems");
 
-                    // console.log(
-                    //     newParent,
-                    //     newTemplate.template_id,
-                    //     "newParent",
-                    // );
+                if (!childrenBlockItems) {
+                    return;
+                }
 
-                    // creating a new blockItem in arrayBlockItems
-                    await db.insert(arrayBlockItems).values([
-                        {
-                            parent_block_id: newParent.block_id,
-                            parent_template_id: newTemplate.template_id,
-                            reference_id: newParent.block_id,
-                            item_type: newParent.block_type,
-                        },
-                    ]);
+                let childrenBlocks;
 
-                    // console.log(childrenBlocks, "childrenBlocks");
-
-                    // clone the children
-                    const newChildrenBlocks = Promise.all(
-                        childrenBlocks.map(async (child) => {
-                            console.log(child, "child <---------");
-                            const [newChild] = await db
-                                .insert(blocks)
-                                .values([
-                                    {
-                                        name: child.name,
-                                        block_type: child.block_type,
-                                        description: child.description,
-                                    },
-                                ])
-                                .returning();
-                            console.log(newChild, newParent, "newChild");
-
-                            await db.insert(block_items).values([
-                                {
-                                    parent_block_id: newParent.block_id,
-                                    reference_id: newChild.block_id,
-                                    item_type: newChild.block_type,
-                                    // parent_template_id: newTemplate.template_id,
-                                },
-                            ]);
+                if (parentBlock.block_type == "normal") {
+                    childrenBlocks = await Promise.all(
+                        childrenBlockItems.map(async (child) => {
+                            return await db.query.blocks.findFirst({
+                                where: (blocks, { eq }) =>
+                                    eq(blocks.block_id, child.reference_id),
+                            });
+                        }),
+                    );
+                } else if (parentBlock.block_type == "array") {
+                    childrenBlocks = await Promise.all(
+                        childrenBlockItems.map(async (child) => {
+                            return await db.query.arrayBlocks.findFirst({
+                                where: (arrayBlocks, { eq }) =>
+                                    eq(
+                                        arrayBlocks.block_id,
+                                        child.reference_id,
+                                    ),
+                            });
                         }),
                     );
                 }
 
-                // console.log(parentBlock, childrenBlocks, "childrenBlocks");
+                console.log(childrenBlocks, "childrenBlocks-1");
+
+                if (parentBlock) {
+                    let newParent;
+
+                    if (parentBlock.block_type == "normal") {
+                        // clone the parent
+                        // creating a new block in blocks table
+                        const [temp] = await db
+                            .insert(blocks)
+                            .values([
+                                {
+                                    name: parentBlock.name,
+                                    block_type: parentBlock.block_type,
+                                    description: parentBlock.description,
+                                },
+                            ])
+                            .returning();
+                        newParent = temp;
+                    } else if (parentBlock.block_type == "array") {
+                        const [temp] = await db
+                            .insert(arrayBlocks)
+                            .values([
+                                {
+                                    name: parentBlock.name,
+                                    block_type: parentBlock.block_type,
+                                    description: parentBlock.description,
+                                },
+                            ])
+                            .returning();
+                        newParent = temp;
+                    }
+
+                    console.log(
+                        newParent,
+                        newTemplate.template_id,
+                        "newParent",
+                    );
+
+                    if (newParent.block_type == "normal") {
+                        // creating a new blockItem in arrayBlockItems
+                        await db.insert(arrayBlockItems).values([
+                            {
+                                parent_block_id: newParent.block_id,
+                                parent_template_id: newTemplate.template_id,
+                                reference_id: newParent.block_id,
+                                item_type: newParent.block_type,
+                            },
+                        ]);
+                    } else if (newParent.block_type == "array") {
+                        // creating a new blockItem in arrayBlockItems
+                        await db.insert(arrayBlockItems).values([
+                            {
+                                parent_block_id: newTemplate.array_block_id,
+                                parent_template_id: newTemplate.template_id,
+                                reference_id: newParent.block_id,
+                                item_type: newParent.block_type,
+                            },
+                        ]);
+                    }
+
+                    console.log(childrenBlocks[0], "childrenBlocks-2");
+
+                    const templateOfChild =
+                        await db.query.arrayBlockTemplates.findMany({
+                            where: (arrayBlockTemplates, { eq }) =>
+                                eq(
+                                    arrayBlockTemplates.array_block_id,
+                                    parentBlock.block_id,
+                                ),
+                        });
+
+                    console.log(templateOfChild, "templateOfChild");
+
+                    const uuidGen = "79adb833-5a0e-492a-8151-e5d77e07c445";
+
+                    // check
+                    const [createTemplates] = await Promise.all(
+                        templateOfChild.map(async (item) => {
+                            const [newTemplateRef] = await db
+                                .insert(arrayBlockTemplates)
+                                .values([
+                                    {
+                                        name: item.name,
+                                        array_block_item_id: uuidGen,
+                                        array_block_id: newParent.block_id,
+                                    },
+                                ])
+                                .returning();
+
+                            console.log(newTemplateRef, "newTemplateRef");
+
+                            const childrenBlockItems =
+                                await db.query.arrayBlockItems.findMany({
+                                    where: (arrayBlockItems, { eq }) =>
+                                        eq(
+                                            arrayBlockItems.parent_template_id,
+                                            item.template_id,
+                                        ),
+                                });
+
+                            const actualBlocksOfTemplates = [];
+
+                            await Promise.all(
+                                childrenBlockItems.map(async (item) => {
+                                    if (item.item_type == "normal") {
+                                        const temp =
+                                            await db.query.blocks.findFirst({
+                                                where: (blocks, { eq }) =>
+                                                    eq(
+                                                        blocks.block_id,
+                                                        item.reference_id,
+                                                    ),
+                                            });
+
+                                        console.log(temp, "temp <-----");
+                                        actualBlocksOfTemplates.push(temp);
+                                    } else if (item.item_type == "array") {
+                                        const temp =
+                                            await db.query.arrayBlocks.findFirst(
+                                                {
+                                                    where: (
+                                                        arrayBlocks,
+                                                        { eq },
+                                                    ) =>
+                                                        eq(
+                                                            arrayBlocks.block_id,
+                                                            item.reference_id,
+                                                        ),
+                                                },
+                                            );
+                                        console.log(temp, "temp <-----");
+                                        actualBlocksOfTemplates.push(temp);
+                                    }
+                                }),
+                            );
+
+                            await Promise.all(
+                                actualBlocksOfTemplates.map(async (child) => {
+                                    console.log(child, "child");
+                                    let newChild;
+
+                                    if (child.block_type == "normal") {
+                                        const [temp] = await db
+                                            .insert(blocks)
+                                            .values([
+                                                {
+                                                    name: child.name,
+                                                    block_type:
+                                                        child.block_type,
+                                                    description:
+                                                        child.description,
+                                                },
+                                            ])
+                                            .returning();
+                                        newChild = temp;
+
+                                        await db.insert(block_items).values([
+                                            {
+                                                parent_block_id:
+                                                    newParent.block_id,
+                                                reference_id: newChild.block_id,
+                                                item_type: newChild.block_type,
+                                            },
+                                        ]);
+                                    } else if (child.block_type == "array") {
+                                        const [temp] = await db
+                                            .insert(arrayBlocks)
+                                            .values([
+                                                {
+                                                    name: child.name,
+                                                    block_type:
+                                                        child.block_type,
+                                                    description:
+                                                        child.description,
+                                                },
+                                            ])
+                                            .returning();
+                                        newChild = temp;
+
+                                        const [arrayBlockItem] = await db
+                                            .insert(arrayBlockItems)
+                                            .values([
+                                                {
+                                                    parent_block_id:
+                                                        newTemplate.array_block_id,
+                                                    reference_id:
+                                                        newChild.block_id,
+                                                    item_type:
+                                                        newChild.block_type,
+                                                    parent_template_id:
+                                                        newTemplateRef.template_id,
+                                                },
+                                            ])
+                                            .returning();
+                                    }
+                                }),
+                            );
+                        }),
+                    );
+                }
             }),
         );
 
