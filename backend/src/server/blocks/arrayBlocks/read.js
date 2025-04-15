@@ -3,7 +3,7 @@ import { db } from "../../server.js";
 import { getBlockWithNestedContent } from "../read.js";
 import { arrayBlockItems } from "../../../db/schema/blocks/arrayBlocks/arrayBlockItems/schema.js";
 import { arrayBlocks } from "../../../db/schema/blocks/arrayBlocks/schema.js";
-import { arrayBlockTemplates } from "../../../db/schema/index.js";
+import { arrayBlockTemplates, textFields } from "../../../db/schema/index.js";
 
 export async function getArrayBlocks(req, res) {
     try {
@@ -59,6 +59,8 @@ export async function nestedArrayBlocks(req, res) {
 }
 
 export async function getArrayBlockWithNestedContent(block_id) {
+    console.log(block_id, "block_id_array");
+
     if (!block_id) return null;
 
     const block = await db.query.arrayBlocks.findFirst({
@@ -144,6 +146,22 @@ export async function getArrayBlocksWithTemplates(req, res) {
                                 item_type: result?.block_type,
                                 item_id: result?.block_id,
                                 normal: result,
+                            };
+                        } else if (item.item_type == "text_field") {
+                            // const result = await getArrayBlockWithNestedContent(
+                            //     item.reference_id,
+                            // );
+                            const result = await db.query.textFields.findFirst({
+                                where: (textFields, { eq }) =>
+                                    eq(textFields.field_id, item.reference_id),
+                            });
+
+                            console.log(item, result, "result");
+
+                            some = {
+                                item_type: result.type,
+                                item_id: result.field_id,
+                                text_field: result,
                             };
                         }
 

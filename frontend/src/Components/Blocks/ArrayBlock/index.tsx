@@ -35,7 +35,7 @@ export const ArrayBlock = ({
             parentBlockId: string;
             isDuplication: boolean;
         }) => {
-            createArrayBlockTemplate(
+            return createArrayBlockTemplate(
                 parentBlockId,
                 isDuplication,
                 blockItemsList.length > 0 ? blockItemsList[0].templateId : "",
@@ -54,7 +54,7 @@ export const ArrayBlock = ({
         arrayBlockMutation.mutate({ parentBlockId, isDuplication });
     }
 
-    console.log(fieldsBlocksProps.selectedBlocks, "blockItemsListArray");
+    console.log(block, blockItemsList, "blockItemsListArray");
 
     return (
         <>

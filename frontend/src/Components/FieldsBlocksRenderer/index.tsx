@@ -144,6 +144,7 @@ export const FieldsBlocksRenderer = ({
                                     parentBlockId={parentBlockId}
                                     queryKey={queryKey}
                                     itemType={parentBlockType}
+                                    templateId={templateId}
                                 />
                             </div>
                         ))}

@@ -54,7 +54,8 @@ export async function getBlockWithNestedContent(block_id) {
         where: (blockItems, { eq }) => eq(blockItems.parent_block_id, block_id),
         // orderBy: (blockItems, { asc }) => asc(blockItems.order),
     });
-    // console.log(block, items, "blockCheckNesting");
+
+    console.log(block, items, "blockCheckNesting<-----------------------");
 
     const processedItems = await Promise.all(
         items.map(async (item) => {

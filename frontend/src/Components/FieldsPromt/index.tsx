@@ -3,7 +3,6 @@ import "./index.scss";
 import { FieldPromtWrapper } from "./FiedsPromtWrapper";
 import { useEffect, useState } from "react";
 import { QueryClient, useMutation } from "@tanstack/react-query";
-import { createField } from "@/Pages/Page/api";
 import { MultiSelectPrompt } from "./MultiSelectPromt";
 import { SingleSelectPromt } from "./SingleSelectPromt";
 import React from "react";
@@ -16,6 +15,7 @@ import { TextareaFieldPrompt } from "./TextareaPrompt";
 import { JSONPromptField } from "./JsonPromptField";
 import { UrlPromt } from "./UrlPromptField";
 import { v4 as uuidv4 } from "uuid";
+import { createField } from "@/api/createField";
 
 type optType = { id: string; value: string | undefined };
 
@@ -28,6 +28,7 @@ export const FieldsPromt = ({
     itemType,
     parentBlockId,
     handleFieldsCancel,
+    templateId,
 }: {
     field: any;
     queryClient: QueryClient;
@@ -37,6 +38,8 @@ export const FieldsPromt = ({
     page_id?: string | undefined;
     handleFieldsCancel: (promtField: fieldPromt) => void;
     itemType: string;
+    parentBlockId: string | undefined;
+    templateId: string | undefined;
 }) => {
     const [fieldName, setFieldName] = useState("");
 
@@ -268,7 +271,7 @@ export const FieldsPromt = ({
                 };
             }
 
-            return createField(payload, parent_id, itemType);
+            return createField(payload, parent_id, itemType, templateId);
         },
         {
             onSuccess: () => {
