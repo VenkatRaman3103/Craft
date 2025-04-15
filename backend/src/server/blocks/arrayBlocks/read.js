@@ -148,12 +148,51 @@ export async function getArrayBlocksWithTemplates(req, res) {
                                 normal: result,
                             };
                         } else if (item.item_type == "text_field") {
-                            // const result = await getArrayBlockWithNestedContent(
-                            //     item.reference_id,
-                            // );
                             const result = await db.query.textFields.findFirst({
                                 where: (textFields, { eq }) =>
                                     eq(textFields.field_id, item.reference_id),
+                            });
+
+                            some = {
+                                item_type: result.type,
+                                item_id: result.field_id,
+                                text_field: result,
+                            };
+                        } else if (item.item_type == "textarea_field") {
+                            const result =
+                                await db.query.textAreaFields.findFirst({
+                                    where: (textAreaFields, { eq }) =>
+                                        eq(
+                                            textAreaFields.field_id,
+                                            item.reference_id,
+                                        ),
+                                });
+
+                            console.log(item, result, "result");
+
+                            some = {
+                                item_type: result.type,
+                                item_id: result.field_id,
+                                textarea_field: result,
+                            };
+                        } else if (item.item_type == "number_field") {
+                            const result =
+                                await db.query.numberFields.findFirst({
+                                    where: (field, { eq }) =>
+                                        eq(field.field_id, item.reference_id),
+                                });
+
+                            console.log(item, result, "result");
+
+                            some = {
+                                item_type: result.type,
+                                item_id: result.field_id,
+                                [item.item_type]: result,
+                            };
+                        } else if (item.item_type == "json_field") {
+                            const result = await db.query.jsonFields.findFirst({
+                                where: (jsonFields, { eq }) =>
+                                    eq(jsonFields.field_id, item.reference_id),
                             });
 
                             console.log(item, result, "result");
@@ -161,7 +200,96 @@ export async function getArrayBlocksWithTemplates(req, res) {
                             some = {
                                 item_type: result.type,
                                 item_id: result.field_id,
-                                text_field: result,
+                                [item.item_type]: result,
+                            };
+                        } else if (item.item_type == "email_field") {
+                            const result = await db.query.emailFields.findFirst(
+                                {
+                                    where: (emailFields, { eq }) =>
+                                        eq(
+                                            emailFields.field_id,
+                                            item.reference_id,
+                                        ),
+                                },
+                            );
+
+                            console.log(item, result, "result");
+
+                            some = {
+                                item_type: result.type,
+                                item_id: result.field_id,
+                                [item.item_type]: result,
+                            };
+                        } else if (item.item_type == "multi_select_field") {
+                            const result =
+                                await db.query.multiSelectFields.findFirst({
+                                    where: (multiSelectFields, { eq }) =>
+                                        eq(
+                                            multiSelectFields.field_id,
+                                            item.reference_id,
+                                        ),
+                                });
+
+                            console.log(item, result, "result");
+
+                            some = {
+                                item_type: result.type,
+                                item_id: result.field_id,
+                                multi_select: result,
+                            };
+                        } else if (item.item_type == "date_field") {
+                            const result = await db.query.dateFields.findFirst({
+                                where: (field, { eq }) =>
+                                    eq(field.field_id, item.reference_id),
+                            });
+
+                            console.log(item, result, "result");
+
+                            some = {
+                                item_type: result.type,
+                                item_id: result.field_id,
+                                [item.item_type]: result,
+                            };
+                        } else if (item.item_type == "color_picker_field") {
+                            const result =
+                                await db.query.colorPickerFields.findFirst({
+                                    where: (field, { eq }) =>
+                                        eq(field.field_id, item.reference_id),
+                                });
+
+                            console.log(item, result, "result");
+
+                            some = {
+                                item_type: result.type,
+                                item_id: result.field_id,
+                                [item.item_type]: result,
+                            };
+                        } else if (item.item_type == "url_field") {
+                            const result = await db.query.urlFields.findFirst({
+                                where: (field, { eq }) =>
+                                    eq(field.field_id, item.reference_id),
+                            });
+
+                            console.log(item, result, "result");
+
+                            some = {
+                                item_type: result.type,
+                                item_id: result.field_id,
+                                [item.item_type]: result,
+                            };
+                        } else if (item.item_type == "single_select_field") {
+                            const result =
+                                await db.query.singleSelectFields.findFirst({
+                                    where: (field, { eq }) =>
+                                        eq(field.field_id, item.reference_id),
+                                });
+
+                            console.log(item, result, "result");
+
+                            some = {
+                                item_type: result.type,
+                                item_id: result.field_id,
+                                [item.item_type]: result,
                             };
                         }
 
@@ -201,10 +329,6 @@ export async function getArrayBlocksWithTemplatesNested(block_id, template_id) {
             eq(arrayBlockItems.parent_block_id, block_id),
     });
 
-    console.log(block, "item");
-
-    // console.log(, "result");
-
     const processedItems = await Promise.all(
         items.map(async (item) => {
             if (item.item_type === "text_field") {
@@ -232,6 +356,63 @@ export async function getArrayBlocksWithTemplatesNested(block_id, template_id) {
                 );
                 // console.log(nestedContent, "nestedContent");
                 return { item_type: item.item_type, array: nestedContent };
+            } else if (item.item_type === "json_field") {
+                const field = await db.query.jsonFields.findFirst({
+                    where: (jsonFields, { eq }) =>
+                        eq(jsonFields.field_id, item.reference_id),
+                });
+                return { item_type: "json_field", json_field: field };
+            } else if (item.item_type === "number_field") {
+                const field = await db.query.numberFields.findFirst({
+                    where: (numberFields, { eq }) =>
+                        eq(numberFields.field_id, item.reference_id),
+                });
+                return { item_type: "number_field", number_field: field };
+            } else if (item.item_type === "email_field") {
+                const field = await db.query.emailFields.findFirst({
+                    where: (emailFields, { eq }) =>
+                        eq(emailFields.field_id, item.reference_id),
+                });
+                return { item_type: "email_field", email_field: field };
+            } else if (item.item_type === "multi_select") {
+                const field = await db.query.multiSelectFields.findFirst({
+                    where: (multiSelectFields, { eq }) =>
+                        eq(multiSelectFields.field_id, item.reference_id),
+                });
+                return {
+                    item_type: "multi_select",
+                    multi_select: field,
+                };
+            } else if (item.item_type === "date_field") {
+                const field = await db.query.dateFields.findFirst({
+                    where: (dateFields, { eq }) =>
+                        eq(dateFields.field_id, item.reference_id),
+                });
+                return { item_type: "date_field", date_field: field };
+            } else if (item.item_type === "color_picker_field") {
+                const field = await db.query.colorPickerFields.findFirst({
+                    where: (colorPickerFields, { eq }) =>
+                        eq(colorPickerFields.field_id, item.reference_id),
+                });
+                return {
+                    item_type: "color_picker_field",
+                    color_picker_field: field,
+                };
+            } else if (item.item_type === "url_field") {
+                const field = await db.query.urlFields.findFirst({
+                    where: (urlFields, { eq }) =>
+                        eq(urlFields.field_id, item.reference_id),
+                });
+                return { item_type: "url_field", url_field: field };
+            } else if (item.item_type === "single_select_field") {
+                const field = await db.query.singleSelectFields.findFirst({
+                    where: (singleSelectFields, { eq }) =>
+                        eq(singleSelectFields.field_id, item.reference_id),
+                });
+                return {
+                    item_type: "single_select_field",
+                    single_select_field: field,
+                };
             }
 
             return null;

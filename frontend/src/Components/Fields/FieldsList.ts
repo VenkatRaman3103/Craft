@@ -23,4 +23,6 @@ export const FieldsList: any = {
     json_field: JSONField,
     color_picker_field: ColorPicker,
     url_field: UrlField,
+    single_select: SingleSelect,
+    multi_select: MultiSelect,
 };
