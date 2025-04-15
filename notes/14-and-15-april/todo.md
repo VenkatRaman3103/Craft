@@ -25,3 +25,6 @@
         - [x] Insert the corresponding block items under the newly created template
 - [x] Return the duplicated structure as response
 - [x] Add error handling and logging
+- [x] add fields inside the arrayBlocks
+- [x] update the duplication function to handle the creation of fields and field entry in the
+      arrayBlockItem table
