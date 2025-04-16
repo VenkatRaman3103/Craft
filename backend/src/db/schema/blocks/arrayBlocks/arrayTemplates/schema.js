@@ -6,6 +6,7 @@ export const arrayBlockTemplates = pgTable("array_block_templates", {
     description: text("description"),
     createdAt: timestamp("created_at").defaultNow(),
     editedAt: timestamp("edited_at").defaultNow(),
+    block_type: text("block_type").default("array"),
     // for relations
     array_block_id: uuid("array_block_id").notNull(),
     array_block_item_id: uuid("array_block_item_id").notNull(),

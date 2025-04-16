@@ -5,13 +5,13 @@
 ### backend-end
 
 - [x] add a new route for returning the data in proper json format for the api
-- [ ] collect the data for the page for which need to part the logic from the route into individual
+- [x] collect the data for the page for which need to part the logic from the route into individual
       function
-    - [ ] use the newly created function instead of the logic block
-- [ ] after collecting the data pick the items from the `block_items` and make them as a new key
+    - [x] use the newly created function instead of the logic block
+- [x] after collecting the data pick the items from the `block_items` and make them as a new key
       pair value, where the key should be the name of the block or the field
-- [ ] use standardized names for the keys
-- [ ] use the payload api as the reference
+- [x] use standardized names for the keys
+- [x] use the payload api as the reference
 
 ### front-end
 
