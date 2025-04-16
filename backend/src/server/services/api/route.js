@@ -2,16 +2,13 @@ import express from "express";
 import { getPageDatById } from "../../pages/read.js";
 import { getBlockWithNestedContent } from "../../blocks/read.js";
 import { getArrayTemplates } from "../../blocks/arrayBlocks/read.js";
-import { block_items } from "../../../db/schema/blocks.js";
 export const apiService = express.Router();
 
-function formatData(block) {
+async function formatData(block) {
     if (!block) return null;
-
     const blockName = block.name;
     const blockType =
         block.block_type === "normal" ? "normal_block" : "array_block";
-
     const blockData = {
         description: block.description,
         created_at: block.createdAt,
@@ -22,13 +19,33 @@ function formatData(block) {
     if (block.block_items?.length > 0) {
         for (const item of block.block_items) {
             if (item.item_type === "normal") {
-                const nestedBlockData = formatData(item.normal);
+                const nestedBlockData = await formatData(item.normal);
                 if (nestedBlockData) {
                     const nestedBlockName = Object.keys(nestedBlockData)[0];
-
                     blockData[nestedBlockName] =
                         nestedBlockData[nestedBlockName];
                 }
+            } else if (item.item_type === "array") {
+                const templatesData = [];
+                const temp = await getArrayTemplates(item.array.block_id);
+                const templateArr = [];
+
+                temp.map((templateItem) => {
+                    templateArr.push({
+                        name: "template",
+                        block_items: templateItem.templateItems,
+                    });
+                });
+
+                for (const block of templateArr) {
+                    const formattedTemplate = await formatData(block);
+                    templatesData.push(formattedTemplate);
+                }
+
+                blockData[item.array.name] = {
+                    type: "array_block",
+                    items: templatesData,
+                };
             } else if (item.item_type === "text_field") {
                 blockData[item.name] = {
                     type: "text_field",
@@ -43,47 +60,42 @@ function formatData(block) {
             }
         }
     }
-
     return { [blockName]: blockData };
 }
 
 async function getPageItemsData(data) {
     const pageItems = data.page_items;
-    const blockPromises = await Promise.all(
-        pageItems.map(async (item) => {
-            let blocks;
-            if (item.item_type == "normal") {
-                const temp = await getBlockWithNestedContent(
-                    item.normal.block_id,
-                );
-                blocks = formatData(temp);
-            } else if (item.item_type == "array") {
-                const templatesData = [];
-                const temp = await getArrayTemplates(item.array.block_id);
+    const blockPromises = pageItems.map(async (item) => {
+        let blocks;
+        if (item.item_type === "normal") {
+            const temp = await getBlockWithNestedContent(item.normal.block_id);
+            blocks = await formatData(temp);
+        } else if (item.item_type === "array") {
+            const templatesData = [];
+            const temp = await getArrayTemplates(item.array.block_id);
+            const templateArr = [];
 
-                const templateArr = [];
-
-                temp.map((item) => {
-                    templateArr.push({
-                        name: "template",
-                        block_items: item.templateItems,
-                    });
+            temp.map((templateItem) => {
+                templateArr.push({
+                    name: "template",
+                    block_items: templateItem.templateItems,
                 });
+            });
 
-                templateArr.map((block) => {
-                    templatesData.push(formatData(block));
-                });
-
-                console.log(item[item.item_type].name, "temp");
-
-                blocks = {
-                    name: item[item.item_type].name,
-                    items: templatesData,
-                };
+            for (const block of templateArr) {
+                const formattedTemplate = await formatData(block);
+                templatesData.push(formattedTemplate);
             }
-            return blocks;
-        }),
-    );
+
+            blocks = {
+                [item.array.name]: {
+                    type: "array_block",
+                    items: templatesData,
+                },
+            };
+        }
+        return blocks;
+    });
 
     const blocks = await Promise.all(blockPromises);
     return blocks;

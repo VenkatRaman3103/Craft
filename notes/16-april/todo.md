@@ -12,6 +12,7 @@
       pair value, where the key should be the name of the block or the field
 - [x] use standardized names for the keys
 - [x] use the payload api as the reference
+- [x] handle array block for nesting the data
 
 ### front-end
 
