@@ -22,35 +22,7 @@ export async function getAllPages(req, res) {
 export async function getPageById(req, res) {
     const { page_id } = req.params;
     try {
-        const page = await db.query.pages.findFirst({
-            where: (page, { eq }) => eq(page.page_id, page_id),
-            with: {
-                page_items: {
-                    with: {
-                        text_field: true,
-                        normal: true,
-                        array: true,
-                        multi_select_field: {
-                            with: {
-                                options: true,
-                            },
-                        },
-                        single_select_field: {
-                            with: {
-                                options: true,
-                            },
-                        },
-                        number_field: true,
-                        email_field: true,
-                        date_field: true,
-                        json_field: true,
-                        color_picker_field: true,
-                        textarea_field: true,
-                        url_field: true,
-                    },
-                },
-            },
-        });
+        const page = await getPageDatById(page_id);
         res.status(200).json(page);
     } catch (error) {
         const errorMessage = {
@@ -61,4 +33,37 @@ export async function getPageById(req, res) {
         console.log(errorMessage);
         res.status(500).json(errorMessage);
     }
+}
+
+export async function getPageDatById(page_id) {
+    const page = await db.query.pages.findFirst({
+        where: (page, { eq }) => eq(page.page_id, page_id),
+        with: {
+            page_items: {
+                with: {
+                    text_field: true,
+                    normal: true,
+                    array: true,
+                    multi_select_field: {
+                        with: {
+                            options: true,
+                        },
+                    },
+                    single_select_field: {
+                        with: {
+                            options: true,
+                        },
+                    },
+                    number_field: true,
+                    email_field: true,
+                    date_field: true,
+                    json_field: true,
+                    color_picker_field: true,
+                    textarea_field: true,
+                    url_field: true,
+                },
+            },
+        },
+    });
+    return page;
 }

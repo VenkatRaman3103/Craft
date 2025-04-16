@@ -16,6 +16,7 @@ import { collectionItemsRouter } from "./collectionItems/route.js";
 import { move } from "./move/route.js";
 import { testRoute } from "./test/route.js";
 import { arrayBlocksRouter } from "./blocks/arrayBlocks/route.js";
+import { apiService } from "./services/api/route.js";
 
 dotenv.config();
 
@@ -91,6 +92,10 @@ app.use("/api", fieldRoute);
 
 // collectionItems
 app.use("/api", collectionItemsRouter);
+
+// services
+// api
+app.use("/services", apiService);
 
 app.get("/api/get/pages", async (req, res) => {
     try {

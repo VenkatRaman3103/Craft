@@ -12,11 +12,44 @@ export const PageIntro = ({
     data,
     openSideBar,
     setOpenSideBar,
+    setSideBarComponent,
+    sideBarComponent,
 }: {
     data: any | undefined;
     openSideBar: boolean;
     setOpenSideBar: React.Dispatch<React.SetStateAction<boolean>>;
+    setSideBarComponent: React.Dispatch<
+        React.SetStateAction<string | undefined>
+    >;
+    sideBarComponent: string | undefined;
 }) => {
+    function sideBarComponentSelection(type) {
+        setOpenSideBar(true);
+        setSideBarComponent(type);
+
+        if (sideBarComponent == type) {
+            setOpenSideBar(false);
+        }
+    }
+
+    const BtnWrapper = ({
+        children,
+        type,
+    }: {
+        children: React.ReactNode;
+        type: string | undefined;
+    }) => {
+        return (
+            <div
+                onClick={() => {
+                    sideBarComponentSelection(type);
+                }}
+            >
+                {children}
+            </div>
+        );
+    };
+
     return (
         <div className="page-intro-container">
             <div className="page-heading-slug-wrapper">
@@ -39,17 +72,83 @@ export const PageIntro = ({
                         </div>
                     </div>
                     <div className="utils-actions-btns">
-                        <ComponentsBtn />
-                        <Json />
-                        <SimpleTableBtn />
-                        <Save />
-                        <div onClick={() => setOpenSideBar(!openSideBar)}>
-                            <SideBarBtn
-                                isActive={openSideBar}
-                                iconColor={openSideBar ? darkFont : lightFont}
-                                labelColor={openSideBar ? darkFont : lightFont}
+                        <BtnWrapper type={"cmp"}>
+                            <ComponentsBtn
+                                isActive={sideBarComponent == "cmp"}
+                                iconColor={
+                                    sideBarComponent == "cmp"
+                                        ? darkFont
+                                        : lightFont
+                                }
+                                labelColor={
+                                    sideBarComponent == "cmp"
+                                        ? darkFont
+                                        : lightFont
+                                }
                             />
-                        </div>
+                        </BtnWrapper>
+
+                        <BtnWrapper type={"api"}>
+                            <Json
+                                isActive={sideBarComponent == "api"}
+                                iconColor={
+                                    sideBarComponent == "api"
+                                        ? darkFont
+                                        : lightFont
+                                }
+                                labelColor={
+                                    sideBarComponent == "api"
+                                        ? darkFont
+                                        : lightFont
+                                }
+                            />
+                        </BtnWrapper>
+
+                        <BtnWrapper type={"db"}>
+                            <SimpleTableBtn
+                                isActive={sideBarComponent == "db"}
+                                iconColor={
+                                    sideBarComponent == "db"
+                                        ? darkFont
+                                        : lightFont
+                                }
+                                labelColor={
+                                    sideBarComponent == "db"
+                                        ? darkFont
+                                        : lightFont
+                                }
+                            />
+                        </BtnWrapper>
+                        <BtnWrapper type={"save"}>
+                            <Save
+                                isActive={sideBarComponent == "save"}
+                                iconColor={
+                                    sideBarComponent == "save"
+                                        ? darkFont
+                                        : lightFont
+                                }
+                                labelColor={
+                                    sideBarComponent == "save"
+                                        ? darkFont
+                                        : lightFont
+                                }
+                            />
+                        </BtnWrapper>
+                        <BtnWrapper type={"tree"}>
+                            <SideBarBtn
+                                isActive={sideBarComponent == "tree"}
+                                iconColor={
+                                    sideBarComponent == "tree"
+                                        ? darkFont
+                                        : lightFont
+                                }
+                                labelColor={
+                                    sideBarComponent == "tree"
+                                        ? darkFont
+                                        : lightFont
+                                }
+                            />
+                        </BtnWrapper>
                     </div>
                 </div>
             </div>

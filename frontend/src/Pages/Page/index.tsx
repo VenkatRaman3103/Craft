@@ -7,6 +7,7 @@ import { fetchPageData } from "./api";
 import axios from "axios";
 import { backendUrl } from "@/config";
 import { FieldsAndBlocksList } from "@/Components/FieldsAndBlocksList";
+import { SideBar } from "@/Components/SideBar";
 
 // some
 export const Page = () => {
@@ -14,6 +15,10 @@ export const Page = () => {
     const [openSideBar, setOpenSideBar] = useState(false);
     const [parentCollectionId, setParentCollectionId] = useState(null);
     const [localFields, setLocalFields] = useState([]);
+
+    const [sideBarComponent, setSideBarComponent] = useState<
+        string | undefined
+    >();
 
     const { data: pageData } = useQuery({
         queryKey: ["pageData", page_id],
@@ -47,12 +52,16 @@ export const Page = () => {
         }
     }, [pageData, parentCollectionId]);
 
+    // to reset the SideBar component type when the side is closed
+    useEffect(() => {
+        if (!openSideBar) {
+            setSideBarComponent(undefined);
+        }
+    }, [openSideBar]);
+
     if (!pageData) {
         return <div>Loading...</div>;
     }
-
-    console.log("openSideBar", openSideBar);
-    console.log(pageData.page_items, "pageData");
 
     return (
         <div className="page-content-container">
@@ -60,6 +69,8 @@ export const Page = () => {
                 data={pageData}
                 openSideBar={openSideBar}
                 setOpenSideBar={setOpenSideBar}
+                setSideBarComponent={setSideBarComponent}
+                sideBarComponent={sideBarComponent}
             />
             <div className="wrapper">
                 <FieldsAndBlocksList
@@ -74,7 +85,11 @@ export const Page = () => {
                 <div
                     className={`sidebar-container ${openSideBar ? "open" : ""}`}
                 >
-                    <div className="sidebar-wrapper"></div>
+                    {openSideBar && (
+                        <div className="sidebar-wrapper">
+                            <SideBar type={sideBarComponent} />
+                        </div>
+                    )}
                 </div>
             </div>
         </div>
