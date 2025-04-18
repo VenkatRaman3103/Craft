@@ -39,7 +39,11 @@ async function formatData(block) {
 
                 for (const block of templateArr) {
                     const formattedTemplate = await formatData(block);
-                    templatesData.push(formattedTemplate);
+                    if (formattedTemplate && formattedTemplate.template) {
+                        templatesData.push(formattedTemplate.template);
+                    } else {
+                        templatesData.push(formattedTemplate);
+                    }
                 }
 
                 blockData[item.array.name] = {
@@ -47,16 +51,19 @@ async function formatData(block) {
                     items: templatesData,
                 };
             } else if (item.item_type === "text_field") {
-                blockData[item.name] = {
-                    type: "text_field",
-                    label: item.text_field.label,
-                    value: item.text_field.value,
-                    required: item.text_field.required,
-                    scope: item.text_field.scope,
-                    description: item.text_field.description,
-                    created_at: item.text_field.created_at,
-                    edited_at: item.text_field.edited_at,
-                };
+                const fieldName = item[item.item_type].name;
+                blockData[fieldName] = item.text_field.value;
+
+                // blockData[item.name] = {
+                //     type: "text_field",
+                //     label: item.text_field.label,
+                //     value: item.text_field.value,
+                //     required: item.text_field.required,
+                //     scope: item.text_field.scope,
+                //     description: item.text_field.description,
+                //     created_at: item.text_field.created_at,
+                //     edited_at: item.text_field.edited_at,
+                // };
             }
         }
     }
@@ -65,11 +72,17 @@ async function formatData(block) {
 
 async function getPageItemsData(data) {
     const pageItems = data.page_items;
-    const blockPromises = pageItems.map(async (item) => {
-        let blocks;
+    const result = {};
+
+    for (const item of pageItems) {
+        let blockData;
         if (item.item_type === "normal") {
             const temp = await getBlockWithNestedContent(item.normal.block_id);
-            blocks = await formatData(temp);
+            const formattedData = await formatData(temp);
+            if (formattedData) {
+                const blockName = Object.keys(formattedData)[0];
+                result[blockName] = formattedData[blockName];
+            }
         } else if (item.item_type === "array") {
             const templatesData = [];
             const temp = await getArrayTemplates(item.array.block_id);
@@ -84,29 +97,29 @@ async function getPageItemsData(data) {
 
             for (const block of templateArr) {
                 const formattedTemplate = await formatData(block);
-                templatesData.push(formattedTemplate);
+                if (formattedTemplate && formattedTemplate.template) {
+                    templatesData.push(formattedTemplate.template);
+                } else {
+                    templatesData.push(formattedTemplate);
+                }
             }
 
-            blocks = {
-                [item.array.name]: {
-                    type: "array_block",
-                    items: templatesData,
-                },
+            result[item.array.name] = {
+                type: "array_block",
+                items: templatesData,
             };
         }
-        return blocks;
-    });
+    }
 
-    const blocks = await Promise.all(blockPromises);
-    return blocks;
+    return result;
 }
 
 apiService.get("/api/page/:page_id", async (req, res) => {
     try {
         const { page_id } = req.params;
         const page = await getPageDatById(page_id);
-        const formattedItems = await getPageItemsData(page);
-        res.json(formattedItems);
+        const formattedData = await getPageItemsData(page);
+        res.json(formattedData);
     } catch (error) {
         console.error("Error fetching page data:", error);
         res.status(500).json({ error: "Failed to fetch page data" });
