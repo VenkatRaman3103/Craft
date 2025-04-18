@@ -19,6 +19,7 @@ export const Page = () => {
     const [sideBarComponent, setSideBarComponent] = useState<
         string | undefined
     >();
+    const [openApiPreview, setOpenApiPreview] = useState<boolean>(false);
 
     const { data: pageData } = useQuery({
         queryKey: ["pageData", page_id],
@@ -73,6 +74,8 @@ export const Page = () => {
                 setOpenSideBar={setOpenSideBar}
                 setSideBarComponent={setSideBarComponent}
                 sideBarComponent={sideBarComponent}
+                setOpenApiPreview={setOpenApiPreview}
+                openApiPreview={openApiPreview}
             />
             <div className="wrapper">
                 <FieldsAndBlocksList
@@ -91,6 +94,14 @@ export const Page = () => {
                         <div className="sidebar-wrapper">
                             <SideBar type={sideBarComponent} />
                         </div>
+                    )}
+                </div>
+
+                <div
+                    className={`api-container ${openApiPreview ? "expand" : ""}`}
+                >
+                    {openApiPreview && (
+                        <div className={`api-wrapper`}>some</div>
                     )}
                 </div>
             </div>

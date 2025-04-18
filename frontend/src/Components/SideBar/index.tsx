@@ -5,8 +5,8 @@ export const SideBar = ({ type }: { type: string | undefined }) => {
         switch (type) {
             case "cmp":
                 return <div>Cmpl</div>;
-            case "api":
-                return <div>api</div>;
+            // case "api":
+            //     return <div>api</div>;
             case "db":
                 return <div>DB</div>;
             case "save":

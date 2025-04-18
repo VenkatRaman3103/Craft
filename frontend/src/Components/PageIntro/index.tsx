@@ -14,6 +14,8 @@ export const PageIntro = ({
     setOpenSideBar,
     setSideBarComponent,
     sideBarComponent,
+    openApiPreview,
+    setOpenApiPreview,
 }: {
     data: any | undefined;
     openSideBar: boolean;
@@ -22,8 +24,10 @@ export const PageIntro = ({
         React.SetStateAction<string | undefined>
     >;
     sideBarComponent: string | undefined;
+    setOpenApiPreview: React.Dispatch<React.SetStateAction<boolean>>;
+    openApiPreview: boolean;
 }) => {
-    function sideBarComponentSelection(type) {
+    function sideBarComponentSelection(type: string | undefined) {
         setOpenSideBar(true);
         setSideBarComponent(type);
 
@@ -88,21 +92,19 @@ export const PageIntro = ({
                             />
                         </BtnWrapper>
 
-                        <BtnWrapper type={"api"}>
+                        {/* <BtnWrapper type={"api"}> */}
+                        <div onClick={() => setOpenApiPreview(!openApiPreview)}>
                             <Json
-                                isActive={sideBarComponent == "api"}
+                                isActive={openApiPreview}
                                 iconColor={
-                                    sideBarComponent == "api"
-                                        ? darkFont
-                                        : lightFont
+                                    openApiPreview ? darkFont : lightFont
                                 }
                                 labelColor={
-                                    sideBarComponent == "api"
-                                        ? darkFont
-                                        : lightFont
+                                    openApiPreview ? darkFont : lightFont
                                 }
                             />
-                        </BtnWrapper>
+                        </div>
+                        {/* </BtnWrapper> */}
 
                         <BtnWrapper type={"db"}>
                             <SimpleTableBtn
