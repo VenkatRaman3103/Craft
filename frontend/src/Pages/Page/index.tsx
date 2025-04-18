@@ -63,6 +63,8 @@ export const Page = () => {
         return <div>Loading...</div>;
     }
 
+    console.log(sideBarComponent, "sideBarComponent");
+
     return (
         <div className="page-content-container">
             <PageIntro
