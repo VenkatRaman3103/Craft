@@ -56,6 +56,9 @@
     border-bottom: 2px solid #494a4c;
     border-left: 2px solid #494a4c;
     margin-bottom: -20px;
+
+
+    /* z-index: 2; */
 }
 
 .node {
@@ -83,15 +86,21 @@
     width: 2px;
     background-color: #494a4c;
 
+    &.highlight {
+        background-color: #3498db;
+    }
+
     &.end {
-        height: 50px;
+        height: 70px;
         margin-top: 10px;
         display: block;
+        margin-top: -12px;
     }
 
     &.obj {
         //
     }
+
 }
 
 // New separate class for the before element
@@ -171,4 +180,30 @@
 
 .value {
     margin-bottom: -29px;
+}
+
+/* .highlighted.strip { */
+/*     background-color: var(--highlight-color, white); */
+/* } */
+
+.highlighted.branching {
+    border-bottom-color: var(--highlight-color, #3498db);
+    border-left-color: var(--highlight-color, #3498db);
+}
+
+.highlighted.circle {
+    border-color: var(--highlight-color, #3498db);
+    background-color: var(--highlight-color, #3498db);
+}
+
+.highlighted.marker {
+    border-color: var(--highlight-color, #3498db);
+}
+
+.value.highlighted {
+    color: var(--highlight-color, #3498db);
+}
+
+.access-key-indicator.highlighted .access-key-indicator-label {
+    color: var(--highlight-color, #3498db);
 }
