@@ -76,6 +76,17 @@ export const PageIntro = ({
                         </div>
                     </div>
                     <div className="utils-actions-btns">
+                        <div onClick={() => setOpenApiPreview(!openApiPreview)}>
+                            <Json
+                                isActive={openApiPreview}
+                                iconColor={
+                                    openApiPreview ? darkFont : lightFont
+                                }
+                                labelColor={
+                                    openApiPreview ? darkFont : lightFont
+                                }
+                            />
+                        </div>
                         <BtnWrapper type={"cmp"}>
                             <ComponentsBtn
                                 isActive={sideBarComponent == "cmp"}
@@ -93,17 +104,6 @@ export const PageIntro = ({
                         </BtnWrapper>
 
                         {/* <BtnWrapper type={"api"}> */}
-                        <div onClick={() => setOpenApiPreview(!openApiPreview)}>
-                            <Json
-                                isActive={openApiPreview}
-                                iconColor={
-                                    openApiPreview ? darkFont : lightFont
-                                }
-                                labelColor={
-                                    openApiPreview ? darkFont : lightFont
-                                }
-                            />
-                        </div>
                         {/* </BtnWrapper> */}
 
                         <BtnWrapper type={"db"}>

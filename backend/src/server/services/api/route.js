@@ -77,7 +77,7 @@ async function getPageItemsData(data) {
     for (const item of pageItems) {
         let blockData;
         if (item.item_type === "normal") {
-            const temp = await getBlockWithNestedContent(item.normal.block_id);
+            const temp = await getBlockWithNestedContent(item.normal?.block_id);
             const formattedData = await formatData(temp);
             if (formattedData) {
                 const blockName = Object.keys(formattedData)[0];
@@ -98,6 +98,7 @@ async function getPageItemsData(data) {
             for (const block of templateArr) {
                 const formattedTemplate = await formatData(block);
                 if (formattedTemplate && formattedTemplate.template) {
+                    // Extract the content from the template wrapper
                     templatesData.push(formattedTemplate.template);
                 } else {
                     templatesData.push(formattedTemplate);

@@ -8,6 +8,7 @@ import axios from "axios";
 import { backendUrl } from "@/config";
 import { FieldsAndBlocksList } from "@/Components/FieldsAndBlocksList";
 import { SideBar } from "@/Components/SideBar";
+import { ApiViewer } from "@/Components/ApiViewer";
 
 // some
 export const Page = () => {
@@ -101,7 +102,9 @@ export const Page = () => {
                     className={`api-container ${openApiPreview ? "expand" : ""}`}
                 >
                     {openApiPreview && (
-                        <div className={`api-wrapper`}>some</div>
+                        <div className={`api-wrapper`}>
+                            <ApiViewer />
+                        </div>
                     )}
                 </div>
             </div>
