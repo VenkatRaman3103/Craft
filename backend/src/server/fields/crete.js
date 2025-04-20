@@ -44,7 +44,16 @@ export async function createTextField(req, res) {
 // 🟢 Create multi-select field
 export async function createMultiSelectField(req, res) {
     try {
-        const { name, label, options, is_selected } = req.body;
+        const { name, label, options, field, selectedOptions } = req.body;
+
+        console.log(
+            name,
+            label,
+            options,
+            selectedOptions,
+            field,
+            "selectedOptions",
+        );
 
         const fieldResponse = await db
             .insert(multiSelectFields)
@@ -59,10 +68,11 @@ export async function createMultiSelectField(req, res) {
         if (Array.isArray(options) && options.length > 0) {
             const optionInserts = options.map((option, index) => ({
                 field_id: fieldId,
-                label: option,
-                value: option,
+                label: option.value,
+                value: option.value,
                 is_selected:
-                    Array.isArray(is_selected) && is_selected.includes(option),
+                    Array.isArray(selectedOptions) &&
+                    selectedOptions.includes(option.option_id),
                 order: index,
             }));
 

@@ -207,9 +207,7 @@ export const FieldsPromt = ({
                     name: fieldName,
                     label: fieldName,
                     type: "multi_select_field",
-                    options: multiSelectOptions.map(
-                        (opt: optType) => opt.value,
-                    ),
+                    options: multiSelectOptions,
                     selectedOptions,
                 };
             } else if (

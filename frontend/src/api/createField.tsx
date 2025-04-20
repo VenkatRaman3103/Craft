@@ -33,7 +33,8 @@ export const createField = async (field, parent_id, itemType, templateId) => {
             name: field.name,
             label: field.label,
             options: field.options,
-            is_selected: field.selectedOptions,
+            selectedOptions: field.selectedOptions,
+            field: field,
         };
     }
 
