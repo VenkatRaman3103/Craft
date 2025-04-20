@@ -301,10 +301,26 @@ const Entries = ({
         value.startsWith(highlightedPath + ".") &&
         value !== highlightedPath;
 
+    // Check if this is a direct child of the highlighted path
+    const isDirectChildOfHighlighted =
+        highlightedPath &&
+        value.startsWith(highlightedPath + ".") &&
+        value.split(".").length === highlightedPath.split(".").length + 1;
+
     const isHighlighted =
         isDirectlyHighlighted ||
         isAncestorOfHighlighted ||
         isDescendantOfHighlighted;
+
+    // Generate path segments for proper indentation highlighting
+    const valueParts = value.split(".");
+    const highlightedParts = highlightedPath ? highlightedPath.split(".") : [];
+
+    // Check if the branching should be highlighted
+    const shouldHighlightBranching =
+        isDirectChildOfHighlighted ||
+        (isDescendantOfHighlighted &&
+            valueParts.length === highlightedParts.length + 1);
 
     const handleMouseEnter = () => {
         setHighlightedPath(value);
@@ -365,26 +381,58 @@ const Entries = ({
             >
                 <div className="object-name-wrapper">
                     <div className="strips-container">
-                        {Array.from({ length: displayDepth }).map((_, ind) => (
-                            <div
-                                className={`strip 
-                                    ${ind + 1 == displayDepth ? "end" : ""} 
-                                    // ${ind + 1 >= highlightedPath.split(".").length ? "highlighted" : ""}
-                                    ${isHighlighted && ind + 1 >= highlightedPath.split(".").length ? "highlight" : ""}
-                                `}
-                                key={ind}
-                            >
-                                <div className="depth-indicator">
-                                    {/* {`${highlightedPath.split(".").length} ${ind + 1}`} */}
+                        {Array.from({ length: displayDepth }).map((_, ind) => {
+                            // Generate a path ID for this strip
+                            const stripPathId = valueParts
+                                .slice(0, ind + 1)
+                                .join(".");
+
+                            // Only highlight strips that are part of the ancestor path of highlightedPath
+                            // AND their positions match the path structure
+                            const isHighlightedPathAncestor =
+                                highlightedPath &&
+                                highlightedPath.startsWith(stripPathId + ".");
+
+                            // Check if this is a strip representing a node that's a descendant of the highlighted path
+                            const isDescendantStrip =
+                                highlightedPath &&
+                                stripPathId.startsWith(highlightedPath);
+
+                            // Highlight the strip if:
+                            // 1. It's a vertical line representing a child branch of the highlighted node
+                            const shouldHighlight =
+                                isDescendantStrip &&
+                                ind >= highlightedParts.length - 1;
+
+                            return (
+                                <div
+                                    className={`strip 
+                                        ${ind + 1 === displayDepth ? "end" : ""} 
+                                        ${ind + 1 === displayDepth ? "start" : ""}
+                                        ${shouldHighlight ? "highlight" : ""}
+                                    `}
+                                    key={ind}
+                                    data-path-id={stripPathId}
+                                    data-level={ind + 1}
+                                    data-parent-path={valueParts
+                                        .slice(0, ind)
+                                        .join(".")}
+                                >
+                                    <div className="depth-indicator"></div>
                                 </div>
-                            </div>
-                        ))}
+                            );
+                        })}
                     </div>
                     <div
-                        className={`branching ${isHighlighted ? "highlighted" : ""}`}
+                        className={`branching ${
+                            isDirectlyHighlighted || isDescendantOfHighlighted
+                                ? "highlighted"
+                                : ""
+                        }`}
                         style={{
                             zIndex: `${isHighlighted ? 2 : 0}`,
                         }}
+                        data-path={value}
                     ></div>
                     <div
                         className={`circle ${isDirectlyHighlighted ? "highlighted" : ""}`}
