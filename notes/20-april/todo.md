@@ -9,7 +9,15 @@
 
 #### page_items
 
-- [ ] creation of fields in page
+- [x] creation of fields in page
+
+### Multi-Select field
+
+- [ ] the selected option is not being highlighted
+
+- in edit mode
+- [ ] when an option is deleted then all the options are being deleted
+- [ ] when an option is selected then all the options are being selected
 
 ## refactor
 

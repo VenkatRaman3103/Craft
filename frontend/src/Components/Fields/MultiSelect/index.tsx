@@ -3,7 +3,6 @@ import "./index.scss";
 import { useEffect, useState } from "react";
 
 export const MultiSelect = ({ data }: { data: field }) => {
-    // Store the direct data since it already has the options
     const [fieldData, setFieldData] = useState<any>(data);
 
     useEffect(() => {
@@ -11,7 +10,7 @@ export const MultiSelect = ({ data }: { data: field }) => {
         setFieldData(data);
     }, [data]);
 
-    console.log("fieldData in MultiSelect:", fieldData);
+    console.log("MultiSelect:", fieldData);
 
     return (
         <div className="multi-select-field-container">
