@@ -38,14 +38,14 @@ interface FieldsBlocksRendererProps {
     showBlockPrompt: boolean;
     selectedBlocks: any[];
     isBlockPopupOpen: boolean;
-    openBlockPopup: (templateId?: string) => void; // Modified to accept templateId
+    openBlockPopup: (templateId?: string) => void;
     closeBlockPopup: () => void;
     handleBlocksSelected: (newSelectedBlocks: any[]) => void;
     handleBlockPromptCancel: (block: any) => void;
 
     templateId?: string;
-    activeTemplateId?: string; // New prop to track which template opened the popup
-    setActiveTemplateId?: (id: string) => void; // Function to set the active template
+    activeTemplateId?: string;
+    setActiveTemplateId?: (id: string) => void;
 }
 
 export const FieldsBlocksRenderer = ({

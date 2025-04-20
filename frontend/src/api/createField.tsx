@@ -3,7 +3,7 @@ import axios from "axios";
 
 // create a new feild
 export const createField = async (field, parent_id, itemType, templateId) => {
-    console.log(parent_id, itemType, "parent_id");
+    console.log("createField:", field, parent_id, itemType, templateId);
 
     let response;
     const fieldEndpoints = {
@@ -19,13 +19,11 @@ export const createField = async (field, parent_id, itemType, templateId) => {
         url_field: "/fields/url_field",
     };
 
-    // Create the field based on its type
     const endpoint = fieldEndpoints[field.type];
     if (!endpoint) {
         throw new Error(`Unsupported field type: ${field.type}`);
     }
 
-    // Prepare the field data based on field type
     let fieldData = field;
     if (
         field.type === "multi_select_field" ||
@@ -39,11 +37,9 @@ export const createField = async (field, parent_id, itemType, templateId) => {
         };
     }
 
-    // Create the field
     response = await axios.post(`${backendUrl}${endpoint}`, fieldData);
     const field_id = response.data[0].field_id;
 
-    // Determine which join table to update based on itemType
     const joinTableConfig = {
         collection: {
             endpoint: `/collection/${parent_id}/collection_items`,
@@ -57,7 +53,6 @@ export const createField = async (field, parent_id, itemType, templateId) => {
             endpoint: `/block/${parent_id}/block_items`,
             idField: "block_id",
         },
-
         normal: {
             endpoint: `/normal/${parent_id}/block_items`,
             idField: "block_id",
@@ -96,6 +91,11 @@ export const createField = async (field, parent_id, itemType, templateId) => {
     } else if (itemType == "normal") {
         await axios.post(`${backendUrl}${config.endpoint}`, {
             [config.idField]: parent_id,
+            reference_id: field_id,
+            type: field.type,
+        });
+    } else if (itemType == "page") {
+        await axios.post(`${backendUrl}${config.endpoint}`, {
             reference_id: field_id,
             type: field.type,
         });

@@ -23,7 +23,6 @@ export const FieldsAndBlocksList = ({
 }: FieldsAndBlocksListProps) => {
     const queryClient = useQueryClient();
 
-    // Use the custom hook to manage fields and blocks
     const fieldsBlocksProps = useFieldsBlocks({
         itemType,
         queryClient,
@@ -54,22 +53,20 @@ export const AddPageItemsBtn = ({
     openFieldPopup,
     openBlockPopup,
     itemType,
-    isVerbose = true, // New prop with default value true
+    isVerbose = true,
 }: {
     openFieldPopup: () => void;
     openBlockPopup: () => void;
     itemType: string;
-    isVerbose?: boolean; // Optional prop
+    isVerbose?: boolean;
 }) => {
     const [showOptions, setShowOptions] = useState(false);
 
-    // Function to handle clicking the plus button in minimal mode
     const handlePlusClick = () => {
         setShowOptions((prev) => !prev);
     };
 
     if (isVerbose) {
-        // Verbose mode - original UI
         return (
             <div className="add-button-wrapper">
                 <div onClick={openFieldPopup} className="btn">
@@ -84,7 +81,6 @@ export const AddPageItemsBtn = ({
             </div>
         );
     } else {
-        // Minimal mode - hidden until hover, with popup options
         return (
             <div className="add-button-wrapper minimal">
                 <div className="minimal-plus-container">
