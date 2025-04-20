@@ -110,6 +110,8 @@ export const FieldsBlocksRenderer = ({
         }
     }, [templateId, openBlockPopup, setActiveTemplateId]);
 
+    console.log(promtFields, "promtFields");
+
     return (
         <div className={`fields-blocks-renderer-container ${parentBlockType}`}>
             <div

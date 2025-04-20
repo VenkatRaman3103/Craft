@@ -83,6 +83,7 @@ export const FieldWrapper = ({
         [key: string]: boolean;
     }>(() => {
         const initialState: { [key: string]: boolean } = {};
+        console.log(data, "checkedMultiSelectItemsData");
         if (data?.selectedOptions && data?.options) {
             data.options.forEach((option: string, index: number) => {
                 initialState[index] = data.selectedOptions.includes(option);
@@ -120,6 +121,8 @@ export const FieldWrapper = ({
 
     const [inputWidth, setInputWidth] = useState("auto");
     const inputRef = useRef(null);
+
+    console.log(data, "dataMultiSelect");
 
     useEffect(() => {
         if (inputRef.current) {
@@ -220,7 +223,11 @@ export const FieldWrapper = ({
                     `${backendUrl}/fields/${updateData.type}/${updateData.field_id}`,
                     updateData,
                 );
-                console.log(response.data, "Updated");
+                console.log(
+                    response.data,
+                    `${backendUrl}/fields/${updateData.type}/${updateData.field_id}`,
+                    "Field Updated",
+                );
                 return response.data;
             } catch (error) {
                 const errorMessage = {
@@ -367,19 +374,28 @@ export const FieldWrapper = ({
 
         console.log(data, "data to be updated");
 
-        // Add value based on field type
         if (data.type === "text_field") {
             payload = {
                 ...payload,
                 value: text,
             };
-        } else if (data.type === "multi_select") {
+        } else if (
+            data.type === "multi_select" ||
+            data.type === "multi_select_field"
+        ) {
             const selectedOptions = multiSelectOptions
                 .filter(
-                    (opt: any, index: number) => checkedMultiSelectItems[index],
+                    (opt: any, index: number) =>
+                        checkedMultiSelectItems[opt.option_id],
                 )
-                .map((opt: any) => opt);
+                .map((opt: any) => opt.option_id);
 
+            console.log(
+                selectedOptions,
+                multiSelectOptions,
+                checkedMultiSelectItems,
+                "selectedOptionsMutation",
+            );
             payload = {
                 ...payload,
                 options: multiSelectOptions,
@@ -561,7 +577,10 @@ export const FieldWrapper = ({
             setText(data.value || "");
         } else if (data.type === "multi_select") {
             setMultiSelectOptions(data.options || []);
+
             const initialState: { [key: string]: boolean } = {};
+            console.log(data, initialState, "datamulti_select");
+
             if (data?.selectedOptions && data?.options) {
                 data.options.forEach((option: string, index: number) => {
                     initialState[index] = data.selectedOptions.includes(option);

@@ -17,7 +17,7 @@ import { UrlPromt } from "./UrlPromptField";
 import { v4 as uuidv4 } from "uuid";
 import { createField } from "@/api/createField";
 
-type optType = { id: string; value: string | undefined };
+type optType = { option_id: string; value: string | undefined };
 
 export const FieldsPromt = ({
     field,
@@ -58,7 +58,18 @@ export const FieldsPromt = ({
     );
     const [checkedMultiSelectItems, setCheckedMultiSelectItems] = useState<{
         [key: string]: boolean;
-    }>(field.value ? field.value : {});
+    }>(
+        field.options
+            ? field.options
+                  .filter((option: any) => option.is_selected)
+                  .reduce((acc, option) => {
+                      acc[option.option_id] = true;
+                      return acc;
+                  }, {})
+            : [],
+    );
+
+    console.log(field, "fieldBool");
 
     // single select field
     const [singleSelectOptions, setSingleSelectOptions] = useState(
@@ -172,17 +183,28 @@ export const FieldsPromt = ({
                 itemType == "normal" || itemType == "array"
                     ? parentBlockId
                     : query_key_id;
+            console.log("enterign in to mutation");
 
             if (
                 field.type === "multi_select_field" ||
                 field.type === "multi_select"
             ) {
                 const selectedOptions = multiSelectOptions
-                    .filter((opt: optType) => checkedMultiSelectItems[opt.id])
-                    .map((opt: optType) => opt.value);
+                    .filter(
+                        (opt: optType) =>
+                            checkedMultiSelectItems[opt.option_id],
+                    )
+                    .map((opt: optType) => opt.option_id);
+
+                console.log(
+                    selectedOptions,
+                    checkedMultiSelectItems,
+                    field,
+                    "selectedOptionsfield",
+                );
 
                 payload = {
-                    name: fieldName.split(" ").join("-").toLowerCase(),
+                    name: fieldName,
                     label: fieldName,
                     type: "multi_select_field",
                     options: multiSelectOptions.map(
@@ -306,7 +328,7 @@ export const FieldsPromt = ({
                         className="create-block-button"
                         onClick={handleCreteField}
                     >
-                        Create Block
+                        Create Field
                     </button>
 
                     {itemType}

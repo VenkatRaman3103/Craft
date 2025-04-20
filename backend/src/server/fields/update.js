@@ -46,9 +46,9 @@ export async function patchUpdateTextField(req, res) {
 export async function patchUpdateMultiSelectField(req, res) {
     const { field_id } = req.params;
     const { label, options, selectedOptions } = req.body;
+    console.log(selectedOptions, options, "selectedOptions");
 
     try {
-        // 1. Update the label in the main field table
         if (label) {
             await db
                 .update(multiSelectFields)
@@ -59,27 +59,22 @@ export async function patchUpdateMultiSelectField(req, res) {
                 .where(eq(multiSelectFields.field_id, field_id));
         }
 
-        // 2. If we have options to update
         if (Array.isArray(options) && options.length > 0) {
-            // First, delete existing options
             await db
                 .delete(multiSelectOptions)
                 .where(eq(multiSelectOptions.field_id, field_id));
 
-            // Prepare new options array
             const optionsToInsert = options
                 .map((option, index) => {
-                    // Handle both string and object options
                     let optionLabel, optionValue;
 
                     if (typeof option === "string") {
                         optionLabel = option;
                         optionValue = option;
                     } else if (option && typeof option === "object") {
-                        optionLabel = option.label || `Option ${index + 1}`; // Fallback value
+                        optionLabel = option.value;
                         optionValue = option.value || optionLabel;
                     } else {
-                        // Skip invalid options
                         return null;
                     }
 
@@ -89,20 +84,18 @@ export async function patchUpdateMultiSelectField(req, res) {
                         value: optionValue,
                         is_selected:
                             Array.isArray(selectedOptions) &&
-                            (selectedOptions.includes(optionLabel) ||
+                            (selectedOptions.includes(option.option_id) ||
                                 selectedOptions.includes(optionValue)),
                         order: index,
                     };
                 })
-                .filter((option) => option !== null); // Remove any null items
+                .filter((option) => option !== null);
 
-            // Insert the new options if we have any valid ones
             if (optionsToInsert.length > 0) {
                 await db.insert(multiSelectOptions).values(optionsToInsert);
             }
         }
 
-        // Fetch and return updated data
         const updatedField = await db.query.multiSelectFields.findFirst({
             where: eq(multiSelectFields.field_id, field_id),
             with: {
@@ -123,13 +116,11 @@ export async function patchUpdateMultiSelectField(req, res) {
     }
 }
 
-// Now, let's update the patchUpdateSingleSelectField function to mirror the multi-select behavior
 export async function patchUpdateSingleSelectField(req, res) {
     const { field_id } = req.params;
     const { label, options, selectedOption } = req.body;
 
     try {
-        // 1. Update the label in the main field table if provided
         if (label) {
             await db
                 .update(singleSelectFields)
@@ -140,17 +131,13 @@ export async function patchUpdateSingleSelectField(req, res) {
                 .where(eq(singleSelectFields.field_id, field_id));
         }
 
-        // 2. If we have options to update
         if (Array.isArray(options) && options.length > 0) {
-            // First, delete existing options
             await db
                 .delete(singleSelectOptions)
                 .where(eq(singleSelectOptions.field_id, field_id));
 
-            // Prepare new options array
             const optionsToInsert = options
                 .map((option, index) => {
-                    // Handle both string and object options
                     let optionLabel, optionValue;
                     if (typeof option === "string") {
                         optionLabel = option;
@@ -159,13 +146,11 @@ export async function patchUpdateSingleSelectField(req, res) {
                         optionLabel = option.label || `Option ${index + 1}`; // Fallback value
                         optionValue = option.value || optionLabel;
                     } else {
-                        // Skip invalid options
                         return null;
                     }
 
-                    // For single select, only one option should be selected
                     return {
-                        option_id: crypto.randomUUID(), // Generate new ID for each option
+                        option_id: crypto.randomUUID(),
                         field_id: field_id,
                         label: optionLabel,
                         value: optionValue,
@@ -177,15 +162,13 @@ export async function patchUpdateSingleSelectField(req, res) {
                         edited_at: new Date(),
                     };
                 })
-                .filter((option) => option !== null); // Remove any null items
+                .filter((option) => option !== null);
 
-            // Insert the new options if we have any valid ones
             if (optionsToInsert.length > 0) {
                 await db.insert(singleSelectOptions).values(optionsToInsert);
             }
         }
 
-        // Fetch and return updated data
         const updatedField = await db.query.singleSelectFields.findFirst({
             where: eq(singleSelectFields.field_id, field_id),
             with: {

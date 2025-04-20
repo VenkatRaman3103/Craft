@@ -1,6 +1,7 @@
 import { Trash2 } from "lucide-react";
 import "./index.scss";
-import React from "react";
+import React, { useEffect } from "react";
+import { v4 as uuidv4 } from "uuid";
 
 export const MultiSelectPrompt = ({
     options,
@@ -8,42 +9,66 @@ export const MultiSelectPrompt = ({
     checkedItems,
     setCheckedItems,
 }: {
-    options: { value: string; id: string }[];
+    options: { value: string; option_id: string; is_selected?: boolean }[];
     setOptions: React.Dispatch<
-        React.SetStateAction<{ value: string; id: string }[]>
+        React.SetStateAction<
+            { value: string; option_id: string; is_selected?: boolean }[]
+        >
     >;
     checkedItems: Record<string, boolean>;
     setCheckedItems: React.Dispatch<
         React.SetStateAction<Record<string, boolean>>
     >;
 }) => {
+    useEffect(() => {
+        const updatedCheckedItems = { ...checkedItems };
+        let needsUpdate = false;
+
+        options.forEach((option) => {
+            if (option.is_selected && !checkedItems[option.option_id]) {
+                updatedCheckedItems[option.option_id] = true;
+                needsUpdate = true;
+            }
+        });
+
+        if (needsUpdate) {
+            setCheckedItems(updatedCheckedItems);
+        }
+    }, [options]);
+
     function addOptions() {
-        const newId = `option-${Date.now()}`;
-        setOptions([...options, { id: newId, value: "" }]);
+        const newId = uuidv4();
+        setOptions([
+            ...options,
+            { option_id: newId, value: "", is_selected: false },
+        ]);
         setCheckedItems({ ...checkedItems, [newId]: false });
     }
 
     function handleTextChange(id: string, newValue: string) {
         setOptions(
-            options.map((opt: { value: string; id: string }) =>
-                opt.id === id ? { ...opt, value: newValue } : opt,
+            options.map((opt) =>
+                opt.option_id === id ? { ...opt, value: newValue } : opt,
             ),
         );
     }
 
-    function handleCheckboxChange(id: string) {
+    function handleCheckboxChange(option_id: string) {
         setCheckedItems({
             ...checkedItems,
-            [id]: !checkedItems[id],
+            [option_id]: !checkedItems[option_id],
         });
+        setOptions(
+            options.map((opt) =>
+                opt.option_id === option_id
+                    ? { ...opt, is_selected: !checkedItems[option_id] }
+                    : opt,
+            ),
+        );
     }
 
     function removeOption(id: string) {
-        setOptions(
-            options.filter(
-                (opt: { value: string; id: string }) => opt.id !== id,
-            ),
-        );
+        setOptions(options.filter((opt) => opt.option_id !== id));
         const updatedItems = {
             ...checkedItems,
         };
@@ -51,51 +76,47 @@ export const MultiSelectPrompt = ({
         setCheckedItems(updatedItems);
     }
 
-    console.log(options, "optionsMulti");
-
     return (
         <div className="multi-select-field-container">
             {options.length > 0 && (
                 <div className="multi-select-field-wrapper">
-                    {options.map(
-                        (item: { value: string; id: string }, ind: number) => (
+                    {options.map((item, ind) => (
+                        <div
+                            key={item.option_id}
+                            className={`multi-select-field ${options.length - 1 === ind ? "last" : ""}`}
+                        >
+                            <label>
+                                <input
+                                    type="checkbox"
+                                    checked={
+                                        checkedItems[item.option_id] ||
+                                        item.is_selected
+                                    }
+                                    onChange={() =>
+                                        handleCheckboxChange(item.option_id)
+                                    }
+                                />
+                                <input
+                                    className="multi-select-field-input"
+                                    type="text"
+                                    value={item.value}
+                                    onChange={(e) =>
+                                        handleTextChange(
+                                            item.option_id,
+                                            e.target.value,
+                                        )
+                                    }
+                                    placeholder="Enter option value"
+                                />
+                            </label>
                             <div
-                                key={item.id}
-                                className={`multi-select-field ${options.length - 1 === ind ? "last" : ""}`}
+                                className="remove-option-btn"
+                                onClick={() => removeOption(item.option_id)}
                             >
-                                <label>
-                                    <input
-                                        type="checkbox"
-                                        checked={checkedItems[item.id] || false}
-                                        onChange={() =>
-                                            handleCheckboxChange(item.id)
-                                        }
-                                    />
-                                    <input
-                                        className="multi-select-field-input"
-                                        type="text"
-                                        value={item.value}
-                                        onChange={(e) =>
-                                            handleTextChange(
-                                                item.id,
-                                                e.target.value,
-                                            )
-                                        }
-                                        placeholder="Enter option value"
-                                    />
-                                </label>
-                                <div
-                                    className="remove-option-btn"
-                                    onClick={() => removeOption(item.id)}
-                                >
-                                    <Trash2
-                                        size={18}
-                                        color="var(--light-font)"
-                                    />
-                                </div>
+                                <Trash2 size={18} color="var(--light-font)" />
                             </div>
-                        ),
-                    )}
+                        </div>
+                    ))}
                 </div>
             )}
             <div className="multi-select-field-btn" onClick={addOptions}>
