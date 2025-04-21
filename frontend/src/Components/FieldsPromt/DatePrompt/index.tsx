@@ -19,7 +19,6 @@ export const DatePrompt = ({ date, setDate }) => {
 
     console.log(date, "dateErroCheck");
 
-    // Format dates in various formats
     const formatDates = (date) => {
         if (!date)
             return {
@@ -34,19 +33,15 @@ export const DatePrompt = ({ date, setDate }) => {
         const month = date.toLocaleString("default", { month: "long" });
         const year = date.getFullYear();
 
-        // Format as MM/DD/YYYY
         const shortMonth = date.getMonth() + 1;
         const shortFormat = `${shortMonth}/${day}/${year}`;
 
-        // ISO format YYYY-MM-DD
         const isoMonth = (shortMonth < 10 ? "0" : "") + shortMonth;
         const isoDay = (day < 10 ? "0" : "") + day;
         const isoFormat = `${year}-${isoMonth}-${isoDay}`;
 
-        // Medium format: Month DD, YYYY
         const mediumFormat = `${month} ${day}, ${year}`;
 
-        // Long format: Day of week, Month DD, YYYY
         const weekday = date.toLocaleString("default", { weekday: "long" });
         const longFormat = `${weekday}, ${month} ${day}, ${year}`;
 
@@ -59,14 +54,12 @@ export const DatePrompt = ({ date, setDate }) => {
         };
     };
 
-    // Update date formats when date changes
     useEffect(() => {
         if (date) {
             setDateFormats(formatDates(date));
         }
     }, [date]);
 
-    // Generate days for the calendar
     const getDaysInMonth = (year, month) => {
         return new Date(year, month + 1, 0).getDate();
     };
@@ -75,7 +68,6 @@ export const DatePrompt = ({ date, setDate }) => {
         return new Date(year, month, 1).getDay();
     };
 
-    // Handle date selection
     const handleDateSelect = (day) => {
         const newDate = new Date(
             currentMonth.getFullYear(),
@@ -83,14 +75,13 @@ export const DatePrompt = ({ date, setDate }) => {
             day,
         );
 
-        // Set the complete date object and also update formats
         setDate(newDate);
         setDateFormats(formatDates(newDate));
         setIsOpen(false);
     };
 
-    // Navigate between months
-    const handlePrevMonth = () => {
+    const handlePrevMonth = (e) => {
+        e.stopPropagation();
         setCurrentMonth(
             new Date(
                 currentMonth.getFullYear(),
@@ -100,7 +91,8 @@ export const DatePrompt = ({ date, setDate }) => {
         );
     };
 
-    const handleNextMonth = () => {
+    const handleNextMonth = (e) => {
+        e.stopPropagation();
         setCurrentMonth(
             new Date(
                 currentMonth.getFullYear(),
@@ -110,7 +102,6 @@ export const DatePrompt = ({ date, setDate }) => {
         );
     };
 
-    // Close calendar when clicking outside
     useEffect(() => {
         const handleClickOutside = (event) => {
             if (
@@ -127,7 +118,6 @@ export const DatePrompt = ({ date, setDate }) => {
         };
     }, []);
 
-    // Render calendar days
     const renderCalendarDays = () => {
         const days = [];
         const daysInMonth = getDaysInMonth(
@@ -139,14 +129,12 @@ export const DatePrompt = ({ date, setDate }) => {
             currentMonth.getMonth(),
         );
 
-        // Add empty cells for days before the first day of the month
         for (let i = 0; i < firstDayOfMonth; i++) {
             days.push(
                 <div key={`empty-${i}`} className="calendar-day empty"></div>,
             );
         }
 
-        // Add days of the month
         for (let day = 1; day <= daysInMonth; day++) {
             const currentDate = new Date(
                 currentMonth.getFullYear(),

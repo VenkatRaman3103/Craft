@@ -23,6 +23,10 @@
 
 - [x] fix the issue, when color is selected the UI is closing suddenly
 
+### Date
+
+- [x] fix the issue, when months is change the ui is closing
+
 ## refactor
 
 - [ ] move all the logics related to fetching, updation and invalidation into separate folder in the

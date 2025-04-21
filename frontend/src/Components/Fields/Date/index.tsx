@@ -14,18 +14,14 @@ export const DateField = ({ data }: { data: field }) => {
     console.log(date, "date");
 
     useEffect(() => {
-        // Convert data.value to a Date object if it's not null
         setDate(data.value ? new Date(data.value) : null);
     }, [data.value]);
 
-    // Format date to display
     const formatDate = (date) => {
         if (!date) return "Select a date";
 
-        // Make sure date is a Date object
         if (!(date instanceof Date)) return "Select a date";
 
-        // Check if date is valid
         if (isNaN(date.getTime())) return "Select a date";
 
         const day = date.getDate();
@@ -35,7 +31,6 @@ export const DateField = ({ data }: { data: field }) => {
         return `${month} ${day}, ${year}`;
     };
 
-    // Generate days for the calendar
     const getDaysInMonth = (year, month) => {
         return new Date(year, month + 1, 0).getDate();
     };
@@ -44,12 +39,10 @@ export const DateField = ({ data }: { data: field }) => {
         return new Date(year, month, 1).getDay();
     };
 
-    // State for current month being viewed
     const [currentMonth, setCurrentMonth] = useState(
         date && date instanceof Date ? new Date(date) : new Date(),
     );
 
-    // Handle date selection
     const handleDateSelect = (day) => {
         const newDate = new Date(
             currentMonth.getFullYear(),
@@ -58,13 +51,10 @@ export const DateField = ({ data }: { data: field }) => {
         );
         setDate(newDate);
         setIsOpen(false);
-
-        // If you need to update the field value in your CMS
-        // You might want to call an update function here
     };
 
-    // Navigate between months
-    const handlePrevMonth = () => {
+    const handlePrevMonth = (e) => {
+        e.stopPropagation();
         setCurrentMonth(
             new Date(
                 currentMonth.getFullYear(),
@@ -74,7 +64,8 @@ export const DateField = ({ data }: { data: field }) => {
         );
     };
 
-    const handleNextMonth = () => {
+    const handleNextMonth = (e) => {
+        e.stopPropagation();
         setCurrentMonth(
             new Date(
                 currentMonth.getFullYear(),
@@ -84,7 +75,6 @@ export const DateField = ({ data }: { data: field }) => {
         );
     };
 
-    // Close calendar when clicking outside
     useEffect(() => {
         const handleClickOutside = (event) => {
             if (
@@ -101,7 +91,6 @@ export const DateField = ({ data }: { data: field }) => {
         };
     }, []);
 
-    // Render calendar days
     const renderCalendarDays = () => {
         const days = [];
         const daysInMonth = getDaysInMonth(
@@ -113,14 +102,12 @@ export const DateField = ({ data }: { data: field }) => {
             currentMonth.getMonth(),
         );
 
-        // Add empty cells for days before the first day of the month
         for (let i = 0; i < firstDayOfMonth; i++) {
             days.push(
                 <div key={`empty-${i}`} className="calendar-day empty"></div>,
             );
         }
 
-        // Add days of the month
         for (let day = 1; day <= daysInMonth; day++) {
             const currentDate = new Date(
                 currentMonth.getFullYear(),
