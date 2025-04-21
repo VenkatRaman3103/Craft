@@ -77,7 +77,16 @@ export const FieldsPromt = ({
     );
     const [checkedsingleSelectItems, setCheckedSingleSelectItems] = useState<{
         [key: string]: boolean;
-    }>(field.value ? field.value : {});
+    }>(
+        field.options
+            ? field.options
+                  .filter((option: any) => option.is_selected)
+                  .reduce((acc, option) => {
+                      acc[option.option_id] = true;
+                      return acc;
+                  }, {})
+            : [],
+    );
 
     // number
     const [number, setNumber] = useState<number>(field.value ? field.value : 0);
@@ -200,7 +209,7 @@ export const FieldsPromt = ({
                     selectedOptions,
                     checkedMultiSelectItems,
                     field,
-                    "selectedOptionsfield",
+                    "wselectedOptionsfield",
                 );
 
                 payload = {
@@ -215,16 +224,24 @@ export const FieldsPromt = ({
                 field.type === "single_select"
             ) {
                 const selectedOptions = singleSelectOptions
-                    .filter((opt: optType) => checkedsingleSelectItems[opt.id])
-                    .map((opt: optType) => opt.value);
+                    .filter(
+                        (opt: optType) =>
+                            checkedsingleSelectItems[opt.option_id],
+                    )
+                    .map((opt: optType) => opt.option_id);
+
+                console.log(
+                    selectedOptions,
+                    checkedsingleSelectItems,
+                    field,
+                    "wselectedOptionsfield",
+                );
 
                 payload = {
-                    name: fieldName.split(" ").join("-").toLowerCase(),
+                    name: fieldName,
                     label: fieldName,
                     type: "single_select_field",
-                    options: singleSelectOptions.map(
-                        (opt: optType) => opt.value,
-                    ),
+                    options: singleSelectOptions,
                     selectedOptions,
                 };
             } else if (field.type === "text_field") {

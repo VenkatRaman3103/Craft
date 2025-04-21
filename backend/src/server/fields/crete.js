@@ -89,7 +89,7 @@ export async function createMultiSelectField(req, res) {
 // 🟢 Create single-select field
 export async function createSingleSelectField(req, res) {
     try {
-        const { name, label, options, is_selected } = req.body;
+        const { name, label, options, field, selectedOptions } = req.body;
 
         const fieldResponse = await db
             .insert(singleSelectFields)
@@ -104,10 +104,11 @@ export async function createSingleSelectField(req, res) {
         if (Array.isArray(options) && options.length > 0) {
             const optionInserts = options.map((option, index) => ({
                 field_id: fieldId,
-                label: option,
-                value: option,
+                label: option.value,
+                value: option.value,
                 is_selected:
-                    Array.isArray(is_selected) && is_selected.includes(option),
+                    Array.isArray(selectedOptions) &&
+                    selectedOptions.includes(option.option_id),
                 order: index,
             }));
 

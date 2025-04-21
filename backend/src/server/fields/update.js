@@ -118,7 +118,7 @@ export async function patchUpdateMultiSelectField(req, res) {
 
 export async function patchUpdateSingleSelectField(req, res) {
     const { field_id } = req.params;
-    const { label, options, selectedOption } = req.body;
+    const { label, options, selectedOptions } = req.body;
 
     try {
         if (label) {
@@ -143,7 +143,10 @@ export async function patchUpdateSingleSelectField(req, res) {
                         optionLabel = option;
                         optionValue = option;
                     } else if (option && typeof option === "object") {
-                        optionLabel = option.label || `Option ${index + 1}`; // Fallback value
+                        optionLabel =
+                            option.label ||
+                            option.value ||
+                            `Option ${index + 1}`;
                         optionValue = option.value || optionLabel;
                     } else {
                         return null;
@@ -155,8 +158,9 @@ export async function patchUpdateSingleSelectField(req, res) {
                         label: optionLabel,
                         value: optionValue,
                         is_selected:
-                            selectedOption === optionValue ||
-                            selectedOption === optionLabel,
+                            Array.isArray(selectedOptions) &&
+                            (selectedOptions.includes(option.option_id) ||
+                                selectedOptions.includes(optionValue)),
                         order: index,
                         created_at: new Date(),
                         edited_at: new Date(),

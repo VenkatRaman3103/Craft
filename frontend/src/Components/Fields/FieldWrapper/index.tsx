@@ -404,10 +404,10 @@ export const FieldWrapper = ({
         } else if (data.type === "single_select") {
             const selectedOptions = singleSelectOptions
                 .filter(
-                    (opt: string, index: number) =>
-                        checkedSingleSelectItems[index],
+                    (opt: any, index: number) =>
+                        checkedSingleSelectItems[opt.option_id],
                 )
-                .map((opt: string) => opt);
+                .map((opt: any) => opt.option_id);
 
             payload = {
                 ...payload,

@@ -1,19 +1,51 @@
 import { Trash2 } from "lucide-react";
 import "./index.scss";
+import React, { useEffect } from "react";
+import { v4 as uuidv4 } from "uuid";
 
 export const SingleSelectPromt = ({
     options,
     setOptions,
     checkedItems,
     setCheckedItems,
-}: any) => {
+}: {
+    options: { value: string; option_id: string; is_selected?: boolean }[];
+    setOptions: React.Dispatch<
+        React.SetStateAction<
+            { value: string; option_id: string; is_selected?: boolean }[]
+        >
+    >;
+    checkedItems: Record<string, boolean>;
+    setCheckedItems: React.Dispatch<
+        React.SetStateAction<Record<string, boolean>>
+    >;
+}) => {
+    useEffect(() => {
+        const updatedCheckedItems = { ...checkedItems };
+        let needsUpdate = false;
+
+        options.forEach((option) => {
+            if (option.is_selected && !checkedItems[option.option_id]) {
+                updatedCheckedItems[option.option_id] = true;
+                needsUpdate = true;
+            }
+        });
+
+        if (needsUpdate) {
+            setCheckedItems(updatedCheckedItems);
+        }
+    }, [options]);
+
     function addOptions() {
-        const newId = `option-${Date.now()}`;
-        setOptions([...options, { option_id: newId, value: "" }]);
+        const newId = uuidv4();
+        setOptions([
+            ...options,
+            { option_id: newId, value: "", is_selected: false },
+        ]);
         setCheckedItems({ ...checkedItems, [newId]: false });
     }
 
-    function handleTextChange(id, newValue) {
+    function handleTextChange(id: string, newValue: string) {
         setOptions(
             options.map((opt) =>
                 opt.option_id === id ? { ...opt, value: newValue } : opt,
@@ -21,21 +53,28 @@ export const SingleSelectPromt = ({
         );
     }
 
-    function handleCheckboxChange(id) {
+    function handleCheckboxChange(option_id: string) {
         setCheckedItems({
             ...checkedItems,
-            [id]: !checkedItems[id],
+            [option_id]: !checkedItems[option_id],
         });
+        setOptions(
+            options.map((opt) =>
+                opt.option_id === option_id
+                    ? { ...opt, is_selected: !checkedItems[option_id] }
+                    : opt,
+            ),
+        );
     }
 
-    function removeOption(id) {
+    function removeOption(id: string) {
         setOptions(options.filter((opt) => opt.option_id !== id));
-        const updatedItems = { ...checkedItems };
+        const updatedItems = {
+            ...checkedItems,
+        };
         delete updatedItems[id];
         setCheckedItems(updatedItems);
     }
-
-    console.log(options, "options");
 
     return (
         <div className="single-select-field-container">
@@ -43,15 +82,18 @@ export const SingleSelectPromt = ({
                 <div className="single-select-field-wrapper">
                     {options.map((item, ind) => (
                         <div
-                            key={item.id}
+                            key={item.option_id}
                             className={`single-select-field ${options.length - 1 === ind ? "last" : ""}`}
                         >
                             <label>
                                 <input
                                     type="radio"
-                                    checked={checkedItems[item.id] || false}
+                                    checked={
+                                        checkedItems[item.option_id] ||
+                                        item.is_selected
+                                    }
                                     onChange={() =>
-                                        handleCheckboxChange(item.id)
+                                        handleCheckboxChange(item.option_id)
                                     }
                                 />
                                 <input

@@ -20,19 +20,16 @@ export const ColorPickerPrompt = ({
     });
     const [hue, setHue] = useState(0);
     const [saturation, setSaturation] = useState(0);
-    const [lightness, setLightness] = useState(0);
+    const [value, setValue] = useState(0);
     const [alpha, setAlpha] = useState(1);
     const [hexInput, setHexInput] = useState("#000000");
 
+    const userInteractionRef = useRef(false);
+
     const pickerRef = useRef<HTMLDivElement>(null);
+    const dropdownRef = useRef<HTMLDivElement>(null);
     const saturationRef = useRef<HTMLDivElement>(null);
 
-    // const handleColorChange = (colorData) => {
-    //     setSelectedColor(colorData);
-    //     console.log("Color changed:", colorData);
-    // };
-
-    // Convert RGB to HEX
     const rgbToHex = (r: number, g: number, b: number) => {
         const toHex = (c: number) => {
             const hex = Math.round(c).toString(16);
@@ -41,7 +38,6 @@ export const ColorPickerPrompt = ({
         return `#${toHex(r)}${toHex(g)}${toHex(b)}`;
     };
 
-    // Convert HEX to RGB
     const hexToRgb = (hex: string) => {
         const result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
         return result
@@ -53,24 +49,21 @@ export const ColorPickerPrompt = ({
             : { r: 0, g: 0, b: 0 };
     };
 
-    // Convert RGB to HSL
-    const rgbToHsl = (r: number, g: number, b: number) => {
+    const rgbToHsv = (r: number, g: number, b: number) => {
         r /= 255;
         g /= 255;
         b /= 255;
 
         const max = Math.max(r, g, b);
         const min = Math.min(r, g, b);
-        let h,
-            s,
-            l = (max + min) / 2;
+        let h = 0;
+        const v = max;
+        const d = max - min;
+        const s = max === 0 ? 0 : d / max;
 
         if (max === min) {
-            h = s = 0; // achromatic
+            h = 0;
         } else {
-            const d = max - min;
-            s = l > 0.5 ? d / (2 - max - min) : d / (max + min);
-
             switch (max) {
                 case r:
                     h = (g - b) / d + (g < b ? 6 : 0);
@@ -81,46 +74,65 @@ export const ColorPickerPrompt = ({
                 case b:
                     h = (r - g) / d + 4;
                     break;
-                default:
-                    h = 0;
             }
-
             h /= 6;
         }
 
         return {
             h: Math.round(h * 360),
             s: Math.round(s * 100),
-            l: Math.round(l * 100),
+            v: Math.round(v * 100),
         };
     };
 
-    // Convert HSL to RGB
-    const hslToRgb = (h: number, s: number, l: number) => {
+    const hsvToRgb = (h: number, s: number, v: number) => {
         h /= 360;
         s /= 100;
-        l /= 100;
+        v /= 100;
 
         let r, g, b;
 
-        if (s === 0) {
-            r = g = b = l; // achromatic
-        } else {
-            const hue2rgb = (p: number, q: number, t: number) => {
-                if (t < 0) t += 1;
-                if (t > 1) t -= 1;
-                if (t < 1 / 6) return p + (q - p) * 6 * t;
-                if (t < 1 / 2) return q;
-                if (t < 2 / 3) return p + (q - p) * (2 / 3 - t) * 6;
-                return p;
-            };
+        const i = Math.floor(h * 6);
+        const f = h * 6 - i;
+        const p = v * (1 - s);
+        const q = v * (1 - f * s);
+        const t = v * (1 - (1 - f) * s);
 
-            const q = l < 0.5 ? l * (1 + s) : l + s - l * s;
-            const p = 2 * l - q;
-
-            r = hue2rgb(p, q, h + 1 / 3);
-            g = hue2rgb(p, q, h);
-            b = hue2rgb(p, q, h - 1 / 3);
+        switch (i % 6) {
+            case 0:
+                r = v;
+                g = t;
+                b = p;
+                break;
+            case 1:
+                r = q;
+                g = v;
+                b = p;
+                break;
+            case 2:
+                r = p;
+                g = v;
+                b = t;
+                break;
+            case 3:
+                r = p;
+                g = q;
+                b = v;
+                break;
+            case 4:
+                r = t;
+                g = p;
+                b = v;
+                break;
+            case 5:
+                r = v;
+                g = p;
+                b = q;
+                break;
+            default:
+                r = v;
+                g = t;
+                b = p;
         }
 
         return {
@@ -130,17 +142,36 @@ export const ColorPickerPrompt = ({
         };
     };
 
-    // Update all color formats
-    const updateColorFormats = (h: number, s: number, l: number, a = 1) => {
-        // Convert HSL to RGB
-        const { r, g, b } = hslToRgb(h, s, l);
+    const hsvToHsl = (h: number, s: number, v: number) => {
+        s /= 100;
+        v /= 100;
 
-        // Generate all formats
+        const l = v * (1 - s / 2);
+        const s_hsl = l === 0 || l === 1 ? 0 : (v - l) / Math.min(l, 1 - l);
+
+        return {
+            h,
+            s: Math.round(s_hsl * 100),
+            l: Math.round(l * 100),
+        };
+    };
+
+    const updateColorFormats = (
+        h: number,
+        s: number,
+        v: number,
+        a = 1,
+        updateParent = false,
+    ) => {
+        const { r, g, b } = hsvToRgb(h, s, v);
+
+        const { s: s_hsl, l } = hsvToHsl(h, s, v);
+
         const hexValue = rgbToHex(r, g, b);
         const rgbValue = `rgb(${r}, ${g}, ${b})`;
         const rgbaValue = `rgba(${r}, ${g}, ${b}, ${a})`;
-        const hslValue = `hsl(${h}, ${s}%, ${l}%)`;
-        const hslaValue = `hsla(${h}, ${s}%, ${l}%, ${a})`;
+        const hslValue = `hsl(${h}, ${s_hsl}%, ${l}%)`;
+        const hslaValue = `hsla(${h}, ${s_hsl}%, ${l}%, ${a})`;
 
         setColorFormats({
             hex: hexValue,
@@ -150,179 +181,184 @@ export const ColorPickerPrompt = ({
             hsla: hslaValue,
         });
 
-        // Update the hex input value
         setHexInput(hexValue);
 
-        // Update the actual color state for parent component
-        setColor({
-            hex: hexValue,
-            rgb: { r, g, b },
-            rgba: { r, g, b, a },
-            hsl: { h, s, l },
-            hsla: { h, s, l, a },
-            value: hexValue, // For backward compatibility
-        });
+        if (updateParent) {
+            setColor({
+                hex: hexValue,
+                rgb: { r, g, b },
+                rgba: { r, g, b, a },
+                hsl: { h, s: s_hsl, l },
+                hsla: { h, s: s_hsl, l, a },
+                value: hexValue,
+            });
+        }
     };
 
-    // Initialize component with provided color
     useEffect(() => {
-        if (
-            JSON.stringify(color) ===
-            JSON.stringify({
-                hex: colorFormats.hex,
-                rgb: hexToRgb(colorFormats.hex),
-                rgba: { ...hexToRgb(colorFormats.hex), a: alpha },
-                hsl: { h: hue, s: saturation, l: lightness },
-                hsla: { h: hue, s: saturation, l: lightness, a: alpha },
-                value: colorFormats.hex,
-            })
-        ) {
+        if (userInteractionRef.current) {
+            userInteractionRef.current = false;
             return;
         }
+
         if (color) {
             let h = 0,
                 s = 0,
-                l = 0,
+                v = 0,
                 a = 1;
 
             if (typeof color === "string") {
-                // It's a hex color
                 const { r, g, b } = hexToRgb(color);
-                const hslValues = rgbToHsl(r, g, b);
-                h = hslValues.h;
-                s = hslValues.s;
-                l = hslValues.l;
+                const hsvValues = rgbToHsv(r, g, b);
+                h = hsvValues.h;
+                s = hsvValues.s;
+                v = hsvValues.v;
             } else {
-                // It's our color object
                 if (color.hex) {
                     const { r, g, b } = hexToRgb(color.hex);
-                    const hslValues = rgbToHsl(r, g, b);
-                    h = hslValues.h;
-                    s = hslValues.s;
-                    l = hslValues.l;
-                    // Check if hsla exists and has an alpha value
+                    const hsvValues = rgbToHsv(r, g, b);
+                    h = hsvValues.h;
+                    s = hsvValues.s;
+                    v = hsvValues.v;
                     a = color.hsla?.a ?? 1;
-                } else if (color.hsl) {
-                    // It's an HSL object
-                    h = color.hsl.h;
-                    s = color.hsl.s;
-                    l = color.hsl.l;
-                    // Check if hsla exists and has an alpha value
-                    a = color.hsla?.a ?? 1;
-                } else if (color.hsla) {
-                    // It's an HSLA object
-                    h = color.hsla.h;
-                    s = color.hsla.s;
-                    l = color.hsla.l;
-                    a = color.hsla.a ?? 1;
                 } else if (color.rgb) {
-                    // It's an RGB object
-                    const hslValues = rgbToHsl(
+                    const hsvValues = rgbToHsv(
                         color.rgb.r,
                         color.rgb.g,
                         color.rgb.b,
                     );
-                    h = hslValues.h;
-                    s = hslValues.s;
-                    l = hslValues.l;
-                    // Default alpha
+                    h = hsvValues.h;
+                    s = hsvValues.s;
+                    v = hsvValues.v;
                     a = 1;
                 } else if (color.rgba) {
-                    // It's an RGBA object
-                    const hslValues = rgbToHsl(
+                    const hsvValues = rgbToHsv(
                         color.rgba.r,
                         color.rgba.g,
                         color.rgba.b,
                     );
-                    h = hslValues.h;
-                    s = hslValues.s;
-                    l = hslValues.l;
+                    h = hsvValues.h;
+                    s = hsvValues.s;
+                    v = hsvValues.v;
                     a = color.rgba.a ?? 1;
+                } else if (color.hsl) {
+                    const l = color.hsl.l / 100;
+                    const s_hsl = color.hsl.s / 100;
+                    const h_hsl = color.hsl.h;
+
+                    const temp1 =
+                        l < 0.5 ? l * (1 + s_hsl) : l + s_hsl - l * s_hsl;
+                    const temp2 = 2 * l - temp1;
+
+                    const h_normalized = h_hsl / 360;
+
+                    const r = Math.round(
+                        hueToRgb(temp2, temp1, h_normalized + 1 / 3) * 255,
+                    );
+                    const g = Math.round(
+                        hueToRgb(temp2, temp1, h_normalized) * 255,
+                    );
+                    const b = Math.round(
+                        hueToRgb(temp2, temp1, h_normalized - 1 / 3) * 255,
+                    );
+
+                    const hsvValues = rgbToHsv(r, g, b);
+                    h = hsvValues.h;
+                    s = hsvValues.s;
+                    v = hsvValues.v;
+
+                    a = color.hsla?.a ?? 1;
                 }
             }
 
             setHue(h);
             setSaturation(s);
-            setLightness(l);
+            setValue(v);
             setAlpha(a);
-            updateColorFormats(h, s, l, a);
+            updateColorFormats(h, s, v, a, false);
         } else {
-            // Default black color
             setHue(0);
             setSaturation(0);
-            setLightness(0);
+            setValue(0);
             setAlpha(1);
-            updateColorFormats(0, 0, 0, 1);
+            updateColorFormats(0, 0, 0, 1, false);
         }
     }, [color]);
 
-    // Handle hue change
+    function hueToRgb(p: number, q: number, t: number) {
+        if (t < 0) t += 1;
+        if (t > 1) t -= 1;
+        if (t < 1 / 6) return p + (q - p) * 6 * t;
+        if (t < 1 / 2) return q;
+        if (t < 2 / 3) return p + (q - p) * (2 / 3 - t) * 6;
+        return p;
+    }
+
     const handleHueChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        userInteractionRef.current = true;
         const newHue = parseInt(e.target.value);
         setHue(newHue);
-        updateColorFormats(newHue, saturation, lightness, alpha);
+        updateColorFormats(newHue, saturation, value, alpha, true);
     };
 
-    // Handle saturation change
     const handleSaturationChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        userInteractionRef.current = true;
         const newSaturation = parseInt(e.target.value);
         setSaturation(newSaturation);
-        updateColorFormats(hue, newSaturation, lightness, alpha);
+        updateColorFormats(hue, newSaturation, value, alpha, true);
     };
 
-    // Handle lightness change
-    const handleLightnessChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        const newLightness = parseInt(e.target.value);
-        setLightness(newLightness);
-        updateColorFormats(hue, saturation, newLightness, alpha);
+    const handleValueChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        userInteractionRef.current = true;
+        const newValue = parseInt(e.target.value);
+        setValue(newValue);
+        updateColorFormats(hue, saturation, newValue, alpha, true);
     };
 
-    // Handle alpha change
     const handleAlphaChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        userInteractionRef.current = true;
         const newAlpha = parseFloat(e.target.value);
         setAlpha(newAlpha);
-        updateColorFormats(hue, saturation, lightness, newAlpha);
+        updateColorFormats(hue, saturation, value, newAlpha, true);
     };
 
-    // Handle hex input change
     const handleHexChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const value = e.target.value;
         setHexInput(value);
 
-        // Only update other values if it's a valid hex color
         if (/^#[0-9A-Fa-f]{6}$/i.test(value)) {
+            userInteractionRef.current = true;
             const { r, g, b } = hexToRgb(value);
-            const { h, s, l } = rgbToHsl(r, g, b);
+            const { h, s, v } = rgbToHsv(r, g, b);
+            const { s: s_hsl, l } = hsvToHsl(h, s, v);
 
             setHue(h);
             setSaturation(s);
-            setLightness(l);
+            setValue(v);
 
-            // Update all color formats
             setColorFormats({
                 hex: value,
                 rgb: `rgb(${r}, ${g}, ${b})`,
                 rgba: `rgba(${r}, ${g}, ${b}, ${alpha})`,
-                hsl: `hsl(${h}, ${s}%, ${l}%)`,
-                hsla: `hsla(${h}, ${s}%, ${l}%, ${alpha})`,
+                hsl: `hsl(${h}, ${s_hsl}%, ${l}%)`,
+                hsla: `hsla(${h}, ${s_hsl}%, ${l}%, ${alpha})`,
             });
 
-            // Update the parent color state
             setColor({
                 hex: value,
                 rgb: { r, g, b },
                 rgba: { r, g, b, a: alpha },
-                hsl: { h, s, l },
-                hsla: { h, s, l, a: alpha },
+                hsl: { h, s: s_hsl, l },
+                hsla: { h, s: s_hsl, l, a: alpha },
                 value: value,
             });
         }
     };
 
-    // Handle color picker click
-    const handleSaturationPickerClick = (
-        e: React.ChangeEvent<HTMLInputElement>,
-    ) => {
+    const handleSaturationPickerClick = (e: React.MouseEvent) => {
+        e.stopPropagation();
+        userInteractionRef.current = true;
+
         if (saturationRef.current) {
             const rect = saturationRef.current.getBoundingClientRect();
             const x = Math.max(
@@ -334,20 +370,30 @@ export const ColorPickerPrompt = ({
                 Math.min(1, (e.clientY - rect.top) / rect.height),
             );
 
-            // Calculate saturation and lightness from x,y
             const newSaturation = Math.round(x * 100);
-            const newLightness = Math.round((1 - y) * 100);
+            const newValue = Math.round((1 - y) * 100);
 
             setSaturation(newSaturation);
-            setLightness(newLightness);
-            updateColorFormats(hue, newSaturation, newLightness, alpha);
+            setValue(newValue);
+            updateColorFormats(hue, newSaturation, newValue, alpha, true);
         }
     };
 
-    // Handle document click to close dropdown
+    const toggleDropdown = (e: React.MouseEvent) => {
+        setIsOpen(!isOpen);
+        e.stopPropagation();
+    };
+
+    const handleDropdownClick = (e: React.MouseEvent) => {
+        e.stopPropagation();
+    };
+
     useEffect(() => {
-        const handleClickOutside = (e: React.ChangeEvent<HTMLInputElement>) => {
-            if (pickerRef.current && !pickerRef.current.contains(e.target)) {
+        const handleClickOutside = (e: MouseEvent) => {
+            if (
+                pickerRef.current &&
+                !pickerRef.current.contains(e.target as Node)
+            ) {
                 setIsOpen(false);
             }
         };
@@ -358,13 +404,11 @@ export const ColorPickerPrompt = ({
         };
     }, []);
 
-    // Handle copy format to clipboard
-    const copyToClipboard = (text: string) => {
+    const copyToClipboard = (text: string, e: React.MouseEvent) => {
         navigator.clipboard.writeText(text);
-        // You could add a temporary "Copied!" notification here
+        e.stopPropagation();
     };
 
-    // Create an array of hue colors for the slider background
     const generateHueColors = () => {
         const colors = [];
         for (let i = 0; i <= 360; i += 60) {
@@ -373,46 +417,38 @@ export const ColorPickerPrompt = ({
         return `linear-gradient(to right, ${colors.join(", ")})`;
     };
 
-    // Generate a background for the saturation slider
     const generateSaturationBackground = () => {
-        return `linear-gradient(to right, hsl(${hue}, 0%, ${lightness}%), hsl(${hue}, 100%, ${lightness}%))`;
+        return `linear-gradient(to right, hsl(${hue}, 0%, ${value / 2}%), hsl(${hue}, 100%, ${value / 2}%))`;
     };
 
-    // Generate a background for the lightness slider
-    const generateLightnessBackground = () => {
-        return `linear-gradient(to right, hsl(${hue}, ${saturation}%, 0%), hsl(${hue}, ${saturation}%, 50%), hsl(${hue}, ${saturation}%, 100%))`;
+    const generateValueBackground = () => {
+        return `linear-gradient(to right, hsl(${hue}, ${saturation}%, 0%), hsl(${hue}, ${saturation}%, 50%))`;
     };
 
-    // Generate a background for the alpha slider
     const generateAlphaBackground = () => {
         return `linear-gradient(to right, rgba(${hexToRgb(colorFormats.hex).r}, ${hexToRgb(colorFormats.hex).g}, ${hexToRgb(colorFormats.hex).b}, 0), rgba(${hexToRgb(colorFormats.hex).r}, ${hexToRgb(colorFormats.hex).g}, ${hexToRgb(colorFormats.hex).b}, 1))`;
     };
 
     return (
-        <div
-            className="color-picker-container"
-            onClick={() => setIsOpen(!isOpen)}
-            ref={pickerRef}
-        >
-            <div className="color-preview">
+        <div className="color-picker-container" ref={pickerRef}>
+            <div className="color-preview" onClick={toggleDropdown}>
                 <div
                     className="color-display"
                     style={{ backgroundColor: colorFormats.hex }}
-                >
-                    {/* <ChevronDown size={16} /> */}
-                </div>
+                />
             </div>
 
-            <div className="color-preview-text">{colorFormats.hex}</div>
+            <div className="color-preview-text" onClick={toggleDropdown}>
+                {colorFormats.hex}
+            </div>
 
             {isOpen && (
-                <div className="color-picker-dropdown">
-                    <div className="color-picker-header">
-                        {/* <div */}
-                        {/*     className="current-color-preview" */}
-                        {/*     style={{ backgroundColor: colorFormats.rgba }} */}
-                        {/* /> */}
-                    </div>
+                <div
+                    className="color-picker-dropdown"
+                    ref={dropdownRef}
+                    onClick={handleDropdownClick}
+                >
+                    <div className="color-picker-header">{/*  */}</div>
 
                     <div
                         className="saturation-picker"
@@ -428,7 +464,7 @@ export const ColorPickerPrompt = ({
                             className="saturation-picker-cursor"
                             style={{
                                 left: `${saturation}%`,
-                                bottom: `${lightness}%`,
+                                top: `${100 - value}%`,
                             }}
                         />
                     </div>
@@ -476,25 +512,24 @@ export const ColorPickerPrompt = ({
                         </div>
 
                         <div className="control-row">
-                            <label>Lightness</label>
+                            <label>Value</label>
                             <div className="slider-container">
                                 <div
                                     className="slider-background"
                                     style={{
-                                        background:
-                                            generateLightnessBackground(),
+                                        background: generateValueBackground(),
                                     }}
                                 />
                                 <input
                                     type="range"
                                     min="0"
                                     max="100"
-                                    value={lightness}
-                                    onChange={handleLightnessChange}
-                                    className="lightness-slider color-slider"
+                                    value={value}
+                                    onChange={handleValueChange}
+                                    className="value-slider color-slider"
                                 />
                             </div>
-                            <span>{lightness}%</span>
+                            <span>{value}%</span>
                         </div>
 
                         <div className="control-row">
@@ -548,9 +583,10 @@ export const ColorPickerPrompt = ({
                                     <td>
                                         <button
                                             className="copy-button"
-                                            onClick={() =>
+                                            onClick={(e) =>
                                                 copyToClipboard(
                                                     colorFormats.hex,
+                                                    e,
                                                 )
                                             }
                                         >
@@ -566,9 +602,10 @@ export const ColorPickerPrompt = ({
                                     <td>
                                         <button
                                             className="copy-button"
-                                            onClick={() =>
+                                            onClick={(e) =>
                                                 copyToClipboard(
                                                     colorFormats.rgb,
+                                                    e,
                                                 )
                                             }
                                         >
@@ -584,9 +621,10 @@ export const ColorPickerPrompt = ({
                                     <td>
                                         <button
                                             className="copy-button"
-                                            onClick={() =>
+                                            onClick={(e) =>
                                                 copyToClipboard(
                                                     colorFormats.rgba,
+                                                    e,
                                                 )
                                             }
                                         >
@@ -602,9 +640,10 @@ export const ColorPickerPrompt = ({
                                     <td>
                                         <button
                                             className="copy-button"
-                                            onClick={() =>
+                                            onClick={(e) =>
                                                 copyToClipboard(
                                                     colorFormats.hsl,
+                                                    e,
                                                 )
                                             }
                                         >
@@ -620,9 +659,10 @@ export const ColorPickerPrompt = ({
                                     <td>
                                         <button
                                             className="copy-button"
-                                            onClick={() =>
+                                            onClick={(e) =>
                                                 copyToClipboard(
                                                     colorFormats.hsla,
+                                                    e,
                                                 )
                                             }
                                         >

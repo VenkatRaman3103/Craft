@@ -13,6 +13,8 @@ export const SingleSelect = ({ data }: { data: field }) => {
         }
     }, [data]);
 
+    console.log(data, "dataForSingleSelect");
+
     return (
         <div className="single-select-field-container">
             <div className="single-select-field-wrapper">

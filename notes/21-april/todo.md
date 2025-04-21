@@ -11,13 +11,17 @@
 
 - [x] creation of fields in page
 
-### Multi-Select field
+### Single-Select field
 
 - [x] the selected option is not being highlighted
 
 - in edit mode
 - [x] when an option is deleted then all the options are being deleted
 - [x] when an option is selected then all the options are being selected
+
+### Color-Picker
+
+- [x] fix the issue, when color is selected the UI is closing suddenly
 
 ## refactor
 
