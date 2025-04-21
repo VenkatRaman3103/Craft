@@ -23,7 +23,7 @@ export const UrlPromt = ({
         setUrlString(event.target.value);
     }
 
-    console.log(url, "urlPrompt");
+    console.log(url, urlType, "urlPrompt");
 
     return (
         <div className="url-input-field-container">
@@ -33,8 +33,8 @@ export const UrlPromt = ({
                     value={urlType}
                     onChange={(e) => setUrlType(e.target.value)}
                 >
-                    <option value="https">https</option>
                     <option value="http">http</option>
+                    <option value="https">https</option>
                 </select>
             </div>
             <input

@@ -127,9 +127,11 @@ export const FieldsPromt = ({
             ? { value: field.value, url_type: field.url_type }
             : {
                   value: "",
-                  url_type: "https",
+                  url_type: "http",
               },
     );
+
+    console.log(field, "fieldForUrl");
 
     // TODO: move to render fields list
     function renderFieldsPromt(fieldType: string): React.JSX.Element {
@@ -304,7 +306,7 @@ export const FieldsPromt = ({
                     label: fieldName,
                     type: "url_field",
                     value: url.value,
-                    url_type: url.type,
+                    url_type: url.url_type,
                 };
             }
 

@@ -27,6 +27,10 @@
 
 - [x] fix the issue, when months is change the ui is closing
 
+### UrlField
+
+- [x] fix url type is not being correctly updated while creating the field
+
 ## refactor
 
 - [ ] move all the logics related to fetching, updation and invalidation into separate folder in the
