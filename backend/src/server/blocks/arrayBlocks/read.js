@@ -59,8 +59,6 @@ export async function nestedArrayBlocks(req, res) {
 }
 
 export async function getArrayBlockWithNestedContent(block_id) {
-    console.log(block_id, "block_id_array");
-
     if (!block_id) return null;
 
     const block = await db.query.arrayBlocks.findFirst({
@@ -88,6 +86,12 @@ export async function getArrayBlockWithNestedContent(block_id) {
                         eq(textAreaFields.field_id, item.reference_id),
                 });
                 return { item_type: "textarea_field", textarea_field: field };
+            } else if (item.item_type === "json_field") {
+                const field = await db.query.jsonFields.findFirst({
+                    where: (jsonFields, { eq }) =>
+                        eq(jsonFields.field_id, item.reference_id),
+                });
+                return { item_type: "json_field", json_field: field };
             } else if (item.item_type === "normal") {
                 const nestedContent = await getBlockWithNestedContent(
                     item.reference_id,
@@ -98,6 +102,88 @@ export async function getArrayBlockWithNestedContent(block_id) {
                     item.reference_id,
                 );
                 return { item_type: item.item_type, array: nestedContent };
+            } else if (item.item_type === "number_field") {
+                const field = await db.query.numberFields.findFirst({
+                    where: (numberFields, { eq }) =>
+                        eq(numberFields.field_id, item.reference_id),
+                });
+                return { item_type: "number_field", number_field: field };
+            } else if (item.item_type === "email_field") {
+                const field = await db.query.emailFields.findFirst({
+                    where: (emailFields, { eq }) =>
+                        eq(emailFields.field_id, item.reference_id),
+                });
+                return { item_type: "email_field", email_field: field };
+            } else if (item.item_type === "multi_select_field") {
+                const field = await db.query.multiSelectFields.findFirst({
+                    where: (multiSelectFields, { eq }) =>
+                        eq(multiSelectFields.field_id, item.reference_id),
+                });
+                const fieldOptions = await db.query.multiSelectOptions.findMany(
+                    {
+                        where: (multiSelectOptions, { eq }) =>
+                            eq(multiSelectOptions.field_id, field.field_id),
+                    },
+                );
+                console.log(fieldOptions, "fieldOptions");
+
+                const result = {
+                    ...field,
+                    options: fieldOptions,
+                };
+
+                return {
+                    item_type: "multi_select_field",
+                    multi_select_field: result,
+                };
+            } else if (item.item_type === "date_field") {
+                const field = await db.query.dateFields.findFirst({
+                    where: (dateFields, { eq }) =>
+                        eq(dateFields.field_id, item.reference_id),
+                });
+                return {
+                    item_type: "date_field",
+                    date_field: field,
+                };
+            } else if (item.item_type === "color_picker_field") {
+                const field = await db.query.colorPickerFields.findFirst({
+                    where: (colorPickerFields, { eq }) =>
+                        eq(colorPickerFields.field_id, item.reference_id),
+                });
+                return {
+                    item_type: "color_picker_field",
+                    color_picker_field: field,
+                };
+            } else if (item.item_type === "url_field") {
+                const field = await db.query.urlFields.findFirst({
+                    where: (urlFields, { eq }) =>
+                        eq(urlFields.field_id, item.reference_id),
+                });
+                return {
+                    item_type: "url_field",
+                    url_field: field,
+                };
+            } else if (item.item_type === "single_select_field") {
+                const field = await db.query.singleSelectFields.findFirst({
+                    where: (singleSelectFields, { eq }) =>
+                        eq(singleSelectFields.field_id, item.reference_id),
+                });
+
+                const fieldOptions =
+                    await db.query.singleSelectOptions.findMany({
+                        where: (singleSelectOptions, { eq }) =>
+                            eq(singleSelectOptions.field_id, field.field_id),
+                    });
+
+                const result = {
+                    ...field,
+                    options: fieldOptions,
+                };
+
+                return {
+                    item_type: "single_select_field",
+                    single_select_field: result,
+                };
             }
 
             return null;
@@ -126,88 +212,80 @@ export async function getArrayTemplates(block_id) {
                 blockItems.map(async (item) => {
                     let some;
 
-                    if (item.item_type == "array") {
+                    if (item.item_type === "array") {
                         const result = await getArrayBlockWithNestedContent(
                             item.reference_id,
                         );
                         some = {
-                            item_type: result?.block_type,
+                            item_type: "array",
                             item_id: result?.block_id,
                             array: result,
                         };
-                    } else if (item.item_type == "normal") {
+                    } else if (item.item_type === "normal") {
                         const result = await getBlockWithNestedContent(
                             item.reference_id,
                         );
                         some = {
-                            item_type: result?.block_type,
+                            item_type: "normal",
                             item_id: result?.block_id,
                             normal: result,
                         };
-                    } else if (item.item_type == "text_field") {
+                    } else if (item.item_type === "text_field") {
                         const result = await db.query.textFields.findFirst({
                             where: (textFields, { eq }) =>
                                 eq(textFields.field_id, item.reference_id),
                         });
 
                         some = {
-                            item_type: result.type,
+                            item_type: "text_field",
                             item_id: result.field_id,
                             text_field: result,
                         };
-                    } else if (item.item_type == "textarea_field") {
+                    } else if (item.item_type === "textarea_field") {
                         const result = await db.query.textAreaFields.findFirst({
                             where: (textAreaFields, { eq }) =>
                                 eq(textAreaFields.field_id, item.reference_id),
                         });
 
-                        console.log(item, result, "result");
-
                         some = {
-                            item_type: result.type,
+                            item_type: "textarea_field",
                             item_id: result.field_id,
                             textarea_field: result,
                         };
-                    } else if (item.item_type == "number_field") {
+                    } else if (item.item_type === "number_field") {
                         const result = await db.query.numberFields.findFirst({
                             where: (field, { eq }) =>
                                 eq(field.field_id, item.reference_id),
                         });
 
-                        console.log(item, result, "result");
-
                         some = {
-                            item_type: result.type,
+                            item_type: "number_field",
                             item_id: result.field_id,
-                            [item.item_type]: result,
+                            number_field: result,
                         };
-                    } else if (item.item_type == "json_field") {
+                    } else if (item.item_type === "json_field") {
                         const result = await db.query.jsonFields.findFirst({
                             where: (jsonFields, { eq }) =>
                                 eq(jsonFields.field_id, item.reference_id),
                         });
 
-                        console.log(item, result, "result");
-
                         some = {
-                            item_type: result.type,
+                            item_type: "json_field",
                             item_id: result.field_id,
-                            [item.item_type]: result,
+                            json_field: result,
                         };
-                    } else if (item.item_type == "email_field") {
+                    } else if (item.item_type === "email_field") {
                         const result = await db.query.emailFields.findFirst({
                             where: (emailFields, { eq }) =>
                                 eq(emailFields.field_id, item.reference_id),
                         });
 
-                        console.log(item, result, "result");
-
                         some = {
-                            item_type: result.type,
+                            item_type: "email_field",
                             item_id: result.field_id,
-                            [item.item_type]: result,
+                            email_field: result,
                         };
-                    } else if (item.item_type == "multi_select_field") {
+                    } else if (item.item_type === "multi_select_field") {
                         const result =
                             await db.query.multiSelectFields.findFirst({
                                 where: (multiSelectFields, { eq }) =>
@@ -217,66 +295,84 @@ export async function getArrayTemplates(block_id) {
                                     ),
                             });
 
-                        console.log(item, result, "result");
+                        const fieldOptions =
+                            await db.query.multiSelectOptions.findMany({
+                                where: (multiSelectOptions, { eq }) =>
+                                    eq(
+                                        multiSelectOptions.field_id,
+                                        result.field_id,
+                                    ),
+                            });
+
+                        const fieldWithOptions = {
+                            ...result,
+                            options: fieldOptions,
+                        };
 
                         some = {
-                            item_type: result.type,
+                            item_type: "multi_select_field",
                             item_id: result.field_id,
-                            multi_select: result,
+                            multi_select_field: fieldWithOptions,
                         };
-                    } else if (item.item_type == "date_field") {
+                    } else if (item.item_type === "date_field") {
                         const result = await db.query.dateFields.findFirst({
                             where: (field, { eq }) =>
                                 eq(field.field_id, item.reference_id),
                         });
 
-                        console.log(item, result, "result");
-
                         some = {
-                            item_type: result.type,
+                            item_type: "date_field",
                             item_id: result.field_id,
-                            [item.item_type]: result,
+                            date_field: result,
                         };
-                    } else if (item.item_type == "color_picker_field") {
+                    } else if (item.item_type === "color_picker_field") {
                         const result =
                             await db.query.colorPickerFields.findFirst({
                                 where: (field, { eq }) =>
                                     eq(field.field_id, item.reference_id),
                             });
 
-                        console.log(item, result, "result");
-
                         some = {
-                            item_type: result.type,
+                            item_type: "color_picker_field",
                             item_id: result.field_id,
-                            [item.item_type]: result,
+                            color_picker_field: result,
                         };
-                    } else if (item.item_type == "url_field") {
+                    } else if (item.item_type === "url_field") {
                         const result = await db.query.urlFields.findFirst({
                             where: (field, { eq }) =>
                                 eq(field.field_id, item.reference_id),
                         });
 
-                        console.log(item, result, "result");
-
                         some = {
-                            item_type: result.type,
+                            item_type: "url_field",
                             item_id: result.field_id,
-                            [item.item_type]: result,
+                            url_field: result,
                         };
-                    } else if (item.item_type == "single_select_field") {
+                    } else if (item.item_type === "single_select_field") {
                         const result =
                             await db.query.singleSelectFields.findFirst({
                                 where: (field, { eq }) =>
                                     eq(field.field_id, item.reference_id),
                             });
 
-                        console.log(item, result, "result");
+                        const fieldOptions =
+                            await db.query.singleSelectOptions.findMany({
+                                where: (singleSelectOptions, { eq }) =>
+                                    eq(
+                                        singleSelectOptions.field_id,
+                                        result.field_id,
+                                    ),
+                            });
+
+                        const fieldWithOptions = {
+                            ...result,
+                            options: fieldOptions,
+                        };
 
                         some = {
-                            item_type: result.type,
+                            item_type: "single_select_field",
                             item_id: result.field_id,
-                            [item.item_type]: result,
+                            single_select_field: fieldWithOptions,
                         };
                     }
 
@@ -286,7 +382,7 @@ export async function getArrayTemplates(block_id) {
 
             return {
                 templateId: template_id,
-                templateItems: nestedBlockItems,
+                templateItems: nestedBlockItems.filter(Boolean),
                 item_type: "array",
             };
         }),

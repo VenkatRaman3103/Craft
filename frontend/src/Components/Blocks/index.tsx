@@ -189,15 +189,7 @@ export const Block = ({
                 `${backendUrl}/${block.block_type}/${parentBlockId}`,
             );
 
-            // const templateResponse = await axios.get(
-            //     `${backendUrl}/${block.block_type}/${parentBlockId}/templates`,
-            // );
-
-            console.log(
-                // templateResponse.data[0].block_items,
-                response.data.length > 1 ? response.data : null,
-                "templateResponse",
-            );
+            console.log(response, "templateResponse");
 
             return response.data;
         },

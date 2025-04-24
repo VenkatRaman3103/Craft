@@ -62,7 +62,7 @@ export const multiSelectOptions = pgTable("multi_select_options", {
     label: varchar("label").notNull(),
     value: varchar("value").notNull(),
     is_selected: boolean("is_selected").default(false).notNull(),
-    order: integer("display_order").notNull(),
+    order: integer("display_order"),
     created_at: timestamp("created_at").defaultNow(),
     edited_at: timestamp("edited_at").defaultNow(),
 });
@@ -113,7 +113,7 @@ export const singleSelectOptions = pgTable("single_select_options", {
     label: varchar("label").notNull(),
     value: varchar("value").notNull(),
     is_selected: boolean("is_selected").default(false).notNull(),
-    order: integer("display_order").notNull(),
+    order: integer("display_order"),
     created_at: timestamp("created_at").defaultNow(),
     edited_at: timestamp("edited_at").defaultNow(),
 });

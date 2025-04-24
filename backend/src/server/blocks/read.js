@@ -96,15 +96,27 @@ export async function getBlockWithNestedContent(block_id) {
                     where: (emailFields, { eq }) =>
                         eq(emailFields.field_id, item.reference_id),
                 });
-                return { item_type: "textarea_field", textarea_field: field };
+                return { item_type: "email_field", email_field: field };
             } else if (item.item_type === "multi_select_field") {
                 const field = await db.query.multiSelectFields.findFirst({
                     where: (multiSelectFields, { eq }) =>
                         eq(multiSelectFields.field_id, item.reference_id),
                 });
+                const fieldOptions = await db.query.multiSelectOptions.findMany(
+                    {
+                        where: (multiSelectOptions, { eq }) =>
+                            eq(multiSelectOptions.field_id, field.field_id),
+                    },
+                );
+
+                const result = {
+                    ...field,
+                    options: fieldOptions,
+                };
+
                 return {
                     item_type: "multi_select",
-                    multi_select: field,
+                    multi_select: result,
                 };
             } else if (item.item_type === "date_field") {
                 const field = await db.query.dateFields.findFirst({
@@ -116,9 +128,9 @@ export async function getBlockWithNestedContent(block_id) {
                     date_field: field,
                 };
             } else if (item.item_type === "color_picker_field") {
-                const field = await db.query.dateFields.findFirst({
-                    where: (dateFields, { eq }) =>
-                        eq(dateFields.field_id, item.reference_id),
+                const field = await db.query.colorPickerFields.findFirst({
+                    where: (colorPickerFields, { eq }) =>
+                        eq(colorPickerFields.field_id, item.reference_id),
                 });
                 return {
                     item_type: "color_picker_field",
@@ -138,9 +150,21 @@ export async function getBlockWithNestedContent(block_id) {
                     where: (singleSelectFields, { eq }) =>
                         eq(singleSelectFields.field_id, item.reference_id),
                 });
+
+                const fieldOptions =
+                    await db.query.singleSelectOptions.findMany({
+                        where: (singleSelectOptions, { eq }) =>
+                            eq(singleSelectOptions.field_id, field.field_id),
+                    });
+
+                const result = {
+                    ...field,
+                    options: fieldOptions,
+                };
+
                 return {
-                    item_type: "single_select_field",
-                    single_select_field: field,
+                    item_type: "single_select",
+                    single_select: result,
                 };
             }
 

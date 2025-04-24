@@ -52,19 +52,19 @@ export const sampleFields: fieldPromt[] = [
         name: "Url Field",
         type: "url_field",
     },
-    {
-        id: "field9",
-        name: "Upload Field",
-        type: "upload",
-    },
-    {
-        id: "field10",
-        name: "Relation Field",
-        type: "relation",
-    },
-    {
-        id: "field6",
-        name: "Rich Text Field",
-        type: "rich-text",
-    },
+    // {
+    //     id: "field9",
+    //     name: "Upload Field",
+    //     type: "upload",
+    // },
+    // {
+    //     id: "field10",
+    //     name: "Relation Field",
+    //     type: "relation",
+    // },
+    // {
+    //     id: "field6",
+    //     name: "Rich Text Field",
+    //     type: "rich-text",
+    // },
 ];

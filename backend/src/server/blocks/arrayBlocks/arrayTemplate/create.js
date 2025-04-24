@@ -11,6 +11,11 @@ import {
     textAreaFields,
     textFields,
     urlFields,
+    colorPickerFields,
+    multiSelectFields,
+    multiSelectOptions,
+    singleSelectFields,
+    singleSelectOptions,
 } from "../../../../db/schema/index.js";
 import { eq } from "drizzle-orm";
 
@@ -427,80 +432,21 @@ async function duplicateBlockItemsRecursively(
                         }
                     }
                 }
-            } else if (blockItem.item_type === "text_field") {
-                // For array block items that are fields
-                await duplicateField(
-                    blockItem,
-                    parentBlockId || parentTemplate.array_block_id,
-                    parentTemplate,
-                    fieldMap,
-                );
-            } else if (blockItem.item_type === "textarea_field") {
-                // For array block items that are fields
-                await duplicateField(
-                    blockItem,
-                    parentBlockId || parentTemplate.array_block_id,
-                    parentTemplate,
-                    fieldMap,
-                );
-            } else if (blockItem.item_type === "json_field") {
-                // For array block items that are fields
-                await duplicateField(
-                    blockItem,
-                    parentBlockId || parentTemplate.array_block_id,
-                    parentTemplate,
-                    fieldMap,
-                );
-            } else if (blockItem.item_type === "number_field") {
-                // For array block items that are fields
-                await duplicateField(
-                    blockItem,
-                    parentBlockId || parentTemplate.array_block_id,
-                    parentTemplate,
-                    fieldMap,
-                );
-            } else if (blockItem.item_type === "email_field") {
-                // For array block items that are fields
-                await duplicateField(
-                    blockItem,
-                    parentBlockId || parentTemplate.array_block_id,
-                    parentTemplate,
-                    fieldMap,
-                );
-            } else if (blockItem.item_type === "multi_select_field") {
-                // For array block items that are fields
-                await duplicateField(
-                    blockItem,
-                    parentBlockId || parentTemplate.array_block_id,
-                    parentTemplate,
-                    fieldMap,
-                );
-            } else if (blockItem.item_type === "date_field") {
-                // For array block items that are fields
-                await duplicateField(
-                    blockItem,
-                    parentBlockId || parentTemplate.array_block_id,
-                    parentTemplate,
-                    fieldMap,
-                );
-            } else if (blockItem.item_type === "color_picker_field") {
-                // For array block items that are fields
-                await duplicateField(
-                    blockItem,
-                    parentBlockId || parentTemplate.array_block_id,
-                    parentTemplate,
-                    fieldMap,
-                );
-            } else if (blockItem.item_type === "url_field") {
-                // For array block items that are fields
-                await duplicateField(
-                    blockItem,
-                    parentBlockId || parentTemplate.array_block_id,
-                    parentTemplate,
-                    fieldMap,
-                );
-            } else if (blockItem.item_type === "single_select_field") {
-                // For array block items that are fields
+            } else if (
+                [
+                    "text_field",
+                    "textarea_field",
+                    "json_field",
+                    "number_field",
+                    "email_field",
+                    "multi_select_field",
+                    "date_field",
+                    "color_picker_field",
+                    "url_field",
+                    "single_select_field",
+                ].includes(blockItem.item_type)
+            ) {
+                // For any field type
                 await duplicateField(
                     blockItem,
                     parentBlockId || parentTemplate.array_block_id,
@@ -533,8 +479,8 @@ async function duplicateField(
     fieldMap,
 ) {
     try {
-        // Get the field type from the item_type (e.g., "text", "number", etc.)
-        const fieldType = fieldItem.item_type; // This would be "text", "number", etc. instead of "field"
+        // Get the field type from the item_type
+        const fieldType = fieldItem.item_type;
 
         // Get the original field from the appropriate table based on field type
         let originalField;
@@ -553,7 +499,6 @@ async function duplicateField(
             // Handle different field types with their own tables
             switch (fieldType) {
                 case "text_field":
-                    // Get the original text field
                     originalField = await db.query.textFields.findFirst({
                         where: (textFields, { eq }) =>
                             eq(textFields.field_id, fieldItem.reference_id),
@@ -566,7 +511,6 @@ async function duplicateField(
                         return null;
                     }
 
-                    // Create a new duplicate of the text field
                     [newField] = await db
                         .insert(textFields)
                         .values([
@@ -578,14 +522,41 @@ async function duplicateField(
                                 required: originalField.required,
                                 scope: originalField.scope,
                                 description: originalField.description,
-                                // Add any other text-specific properties
+                            },
+                        ])
+                        .returning();
+                    break;
+
+                case "textarea_field":
+                    originalField = await db.query.textAreaFields.findFirst({
+                        where: (field, { eq }) =>
+                            eq(field.field_id, fieldItem.reference_id),
+                    });
+
+                    if (!originalField) {
+                        console.log(
+                            `Original textarea field not found for item: ${fieldItem.item_id || "unknown"}`,
+                        );
+                        return null;
+                    }
+
+                    [newField] = await db
+                        .insert(textAreaFields)
+                        .values([
+                            {
+                                name: originalField.name,
+                                label: originalField.label,
+                                value: originalField.value,
+                                type: originalField.type,
+                                required: originalField.required,
+                                scope: originalField.scope,
+                                description: originalField.description,
                             },
                         ])
                         .returning();
                     break;
 
                 case "number_field":
-                    // Get the original number field
                     originalField = await db.query.numberFields.findFirst({
                         where: (numberFields, { eq }) =>
                             eq(numberFields.field_id, fieldItem.reference_id),
@@ -609,13 +580,12 @@ async function duplicateField(
                                 required: originalField.required,
                                 scope: originalField.scope,
                                 description: originalField.description,
-                                // Add any other number-specific properties
                             },
                         ])
                         .returning();
                     break;
+
                 case "json_field":
-                    // Get the original number field
                     originalField = await db.query.jsonFields.findFirst({
                         where: (jsonFields, { eq }) =>
                             eq(jsonFields.field_id, fieldItem.reference_id),
@@ -623,7 +593,7 @@ async function duplicateField(
 
                     if (!originalField) {
                         console.log(
-                            `Original number field not found for item: ${fieldItem.item_id || "unknown"}`,
+                            `Original json field not found for item: ${fieldItem.item_id || "unknown"}`,
                         );
                         return null;
                     }
@@ -639,45 +609,12 @@ async function duplicateField(
                                 required: originalField.required,
                                 scope: originalField.scope,
                                 description: originalField.description,
-                                // Add any other number-specific properties
-                            },
-                        ])
-                        .returning();
-                    break;
-
-                case "textarea_field":
-                    // Get the original number field
-                    originalField = await db.query.textAreaFields.findFirst({
-                        where: (field, { eq }) =>
-                            eq(field.field_id, fieldItem.reference_id),
-                    });
-
-                    if (!originalField) {
-                        console.log(
-                            `Original number field not found for item: ${fieldItem.item_id || "unknown"}`,
-                        );
-                        return null;
-                    }
-
-                    [newField] = await db
-                        .insert(textAreaFields)
-                        .values([
-                            {
-                                name: originalField.name,
-                                label: originalField.label,
-                                value: originalField.value,
-                                type: originalField.type,
-                                required: originalField.required,
-                                scope: originalField.scope,
-                                description: originalField.description,
-                                // Add any other number-specific properties
                             },
                         ])
                         .returning();
                     break;
 
                 case "email_field":
-                    // Get the original number field
                     originalField = await db.query.emailFields.findFirst({
                         where: (field, { eq }) =>
                             eq(field.field_id, fieldItem.reference_id),
@@ -685,7 +622,7 @@ async function duplicateField(
 
                     if (!originalField) {
                         console.log(
-                            `Original number field not found for item: ${fieldItem.item_id || "unknown"}`,
+                            `Original email field not found for item: ${fieldItem.item_id || "unknown"}`,
                         );
                         return null;
                     }
@@ -701,14 +638,73 @@ async function duplicateField(
                                 required: originalField.required,
                                 scope: originalField.scope,
                                 description: originalField.description,
-                                // Add any other number-specific properties
                             },
                         ])
                         .returning();
                     break;
 
+                case "multi_select_field":
+                    originalField = await db.query.multiSelectFields.findFirst({
+                        where: (field, { eq }) =>
+                            eq(field.field_id, fieldItem.reference_id),
+                    });
+
+                    if (!originalField) {
+                        console.log(
+                            `Original multi-select field not found for item: ${fieldItem.item_id || "unknown"}`,
+                        );
+                        return null;
+                    }
+
+                    // Create new field
+                    [newField] = await db
+                        .insert(multiSelectFields)
+                        .values([
+                            {
+                                name: originalField.name,
+                                label: originalField.label,
+                                value: originalField.value,
+                                type: originalField.type,
+                                required: originalField.required,
+                                scope: originalField.scope,
+                                description: originalField.description,
+                            },
+                        ])
+                        .returning();
+
+                    // Get options for the original field
+                    const originalOptions =
+                        await db.query.multiSelectOptions.findMany({
+                            where: (options, { eq }) =>
+                                eq(options.field_id, originalField.field_id),
+                        });
+
+                    console.log(
+                        originalOptions,
+                        "originalOptions<-------------",
+                    );
+
+                    // Duplicate the options for the new field
+                    if (originalOptions && originalOptions.length > 0) {
+                        await Promise.all(
+                            originalOptions.map(async (option, index) => {
+                                const some = await db
+                                    .insert(multiSelectOptions)
+                                    .values([
+                                        {
+                                            field_id: newField.field_id,
+                                            label: option.label,
+                                            value: option.value,
+                                            display_order: index,
+                                        },
+                                    ]);
+                                console.log(some, "newSome<----------");
+                            }),
+                        );
+                    }
+                    break;
+
                 case "date_field":
-                    // Get the original number field
                     originalField = await db.query.dateFields.findFirst({
                         where: (field, { eq }) =>
                             eq(field.field_id, fieldItem.reference_id),
@@ -716,7 +712,7 @@ async function duplicateField(
 
                     if (!originalField) {
                         console.log(
-                            `Original number field not found for item: ${fieldItem.item_id || "unknown"}`,
+                            `Original date field not found for item: ${fieldItem.item_id || "unknown"}`,
                         );
                         return null;
                     }
@@ -732,14 +728,41 @@ async function duplicateField(
                                 required: originalField.required,
                                 scope: originalField.scope,
                                 description: originalField.description,
-                                // Add any other number-specific properties
+                            },
+                        ])
+                        .returning();
+                    break;
+
+                case "color_picker_field":
+                    originalField = await db.query.colorPickerFields.findFirst({
+                        where: (field, { eq }) =>
+                            eq(field.field_id, fieldItem.reference_id),
+                    });
+
+                    if (!originalField) {
+                        console.log(
+                            `Original color picker field not found for item: ${fieldItem.item_id || "unknown"}`,
+                        );
+                        return null;
+                    }
+
+                    [newField] = await db
+                        .insert(colorPickerFields)
+                        .values([
+                            {
+                                name: originalField.name,
+                                label: originalField.label,
+                                value: originalField.value,
+                                type: originalField.type,
+                                required: originalField.required,
+                                scope: originalField.scope,
+                                description: originalField.description,
                             },
                         ])
                         .returning();
                     break;
 
                 case "url_field":
-                    // Get the original number field
                     originalField = await db.query.urlFields.findFirst({
                         where: (field, { eq }) =>
                             eq(field.field_id, fieldItem.reference_id),
@@ -747,7 +770,7 @@ async function duplicateField(
 
                     if (!originalField) {
                         console.log(
-                            `Original number field not found for item: ${fieldItem.item_id || "unknown"}`,
+                            `Original url field not found for item: ${fieldItem.item_id || "unknown"}`,
                         );
                         return null;
                     }
@@ -763,11 +786,69 @@ async function duplicateField(
                                 required: originalField.required,
                                 scope: originalField.scope,
                                 description: originalField.description,
-                                // Add any other number-specific properties
                             },
                         ])
                         .returning();
                     break;
+
+                case "single_select_field":
+                    originalField = await db.query.singleSelectFields.findFirst(
+                        {
+                            where: (field, { eq }) =>
+                                eq(field.field_id, fieldItem.reference_id),
+                        },
+                    );
+
+                    if (!originalField) {
+                        console.log(
+                            `Original single-select field not found for item: ${fieldItem.item_id || "unknown"}`,
+                        );
+                        return null;
+                    }
+
+                    // Create new field
+                    [newField] = await db
+                        .insert(singleSelectFields)
+                        .values([
+                            {
+                                name: originalField.name,
+                                label: originalField.label,
+                                value: originalField.value,
+                                type: originalField.type,
+                                required: originalField.required,
+                                scope: originalField.scope,
+                                description: originalField.description,
+                            },
+                        ])
+                        .returning();
+
+                    // Get options for the original field
+                    const originalSingleOptions =
+                        await db.query.singleSelectOptions.findMany({
+                            where: (options, { eq }) =>
+                                eq(options.field_id, originalField.field_id),
+                        });
+
+                    // Duplicate the options for the new field
+                    if (
+                        originalSingleOptions &&
+                        originalSingleOptions.length > 0
+                    ) {
+                        await Promise.all(
+                            originalSingleOptions.map(async (option) => {
+                                await db.insert(singleSelectOptions).values([
+                                    {
+                                        field_id: newField.field_id,
+                                        label: option.label,
+                                        value: option.value,
+                                        color: option.color,
+                                    },
+                                ]);
+                            }),
+                        );
+                    }
+                    break;
+
                 default:
                     console.log(`Unknown field type: ${fieldType}`);
                     return null;
