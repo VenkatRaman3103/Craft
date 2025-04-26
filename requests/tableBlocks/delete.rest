@@ -21,11 +21,14 @@ Content-Type: application/json; charset=utf-8
 User-Agent: VRC
 
 # query
-# GET /setup-test-data
-POST /table
+# GET /table
+DELETE /table/07c1df62-c0e0-45ec-925f-6d9ebd7642bb
 
 # body
-{
-    "name": "table name 3"
-}
+# {
+#     "name": "block name",
+#     "description": "Hello world",
+#     "block_type": "normal_block"
+# }
+
 

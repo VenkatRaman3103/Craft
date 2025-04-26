@@ -2,6 +2,7 @@ import express from "express";
 import { getAllTables, getTableById } from "./read.js";
 import { createNewTable } from "./create.js";
 import { updateTableName } from "./update.js";
+import { deleteTable } from "./delete.js";
 
 export const tableRouter = express.Router();
 
@@ -14,3 +15,5 @@ tableRouter.post("/table", createNewTable);
 
 // update the table with new name
 tableRouter.patch("/table/:block_id/name", updateTableName);
+
+tableRouter.delete("/table/:block_id", deleteTable);
