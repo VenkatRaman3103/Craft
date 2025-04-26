@@ -19,6 +19,25 @@ export const sampleBlocks = [
         description: "Parent block that can hold and organize other blocks",
     },
     {
+        id: "block10",
+        name: "Table Block",
+        type: "table",
+        description: "Structured data with customizable rows and columns",
+    },
+    {
+        id: "block13",
+        name: "Upload Block",
+        type: "upload",
+        description: "Upload and manage documents, images, or other file types",
+    },
+    {
+        id: "block9",
+        name: "Icon Block",
+        type: "icon",
+        description:
+            "Choose from a library of vector icons with customization options",
+    },
+    {
         id: "block4",
         name: "Reference Block",
         type: "reference",
@@ -51,19 +70,6 @@ export const sampleBlocks = [
         description: "Formatted code blocks with syntax highlighting",
     },
     {
-        id: "block9",
-        name: "Icon Block",
-        type: "icon",
-        description:
-            "Choose from a library of vector icons with customization options",
-    },
-    {
-        id: "block10",
-        name: "Data Block",
-        type: "table",
-        description: "Structured data with customizable rows and columns",
-    },
-    {
         id: "block11",
         name: "List Block",
         type: "list",
@@ -75,12 +81,6 @@ export const sampleBlocks = [
         name: "Link Block",
         type: "link",
         description: "Hyperlink with customizable text, target and action type",
-    },
-    {
-        id: "block13",
-        name: "Upload Block",
-        type: "upload",
-        description: "Upload and manage documents, images, or other file types",
     },
     {
         id: "block14",

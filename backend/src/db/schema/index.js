@@ -23,3 +23,6 @@ export * from "./blocks/arrayBlocks/arrayBlockItems/schema.js";
 export * from "./blocks/arrayBlocks/arrayBlockItems/relations.js";
 export * from "./blocks/arrayBlocks/arrayTemplates/schema.js";
 export * from "./blocks/arrayBlocks/arrayTemplates/relations.js";
+export * from "./blocks/tableBlocks/schema.js";
+export * from "./blocks/tableBlocks/tableColumns/schema.js";
+export * from "./blocks/tableBlocks/tableRows/schema.js";
