@@ -21,8 +21,8 @@ Content-Type: application/json; charset=utf-8
 User-Agent: VRC
 
 # query
-# GET /setup-test-data
-GET /table
+# GET /table
+GET /table/4e55c201-4b18-4d2d-ab28-e4a22e103d17
 
 # body
 # {
