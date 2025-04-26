@@ -1,5 +1,5 @@
 import { pgTable, text, timestamp, uuid } from "drizzle-orm/pg-core";
-import { scopeEnum } from "../../enums/scopeEnum";
+import { scopeEnum } from "../../enums/scopeEnum.js";
 
 export const tableBlocks = pgTable("table_blocks", {
     block_id: uuid("block_id").primaryKey().defaultRandom(),

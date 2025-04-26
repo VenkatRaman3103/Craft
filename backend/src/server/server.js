@@ -17,6 +17,7 @@ import { move } from "./move/route.js";
 import { testRoute } from "./test/route.js";
 import { arrayBlocksRouter } from "./blocks/arrayBlocks/route.js";
 import { apiService } from "./services/api/route.js";
+import { tableRouter } from "./blocks/tableBlocks/route.js";
 
 dotenv.config();
 
@@ -86,6 +87,7 @@ app.use("/api", pagesRoute);
 // blocks
 app.use("/api", blocksRouter);
 app.use("/api", arrayBlocksRouter);
+app.use("/api", tableRouter);
 
 // field
 app.use("/api", fieldRoute);
