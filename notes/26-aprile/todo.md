@@ -4,9 +4,9 @@
 
 ### db
 
-- [ ] create base scheme for table block
-- [ ] create base schema for columns
-- [ ] create base schema for rows
+- [x] create base scheme for table block
+- [x] create base schema for columns
+- [x] create base schema for rows
 
 ### api
 
