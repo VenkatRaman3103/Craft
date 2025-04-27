@@ -11,11 +11,11 @@
 ### api
 
 - table
-- [ ] create operation route for table
-- [ ] read all operation route for table
-- [ ] read by id operation route for table
-- [ ] delete operation route for table
-- [ ] update operation route for table
+- [x] create operation route for table
+- [x] read all operation route for table
+- [x] read by id operation route for table
+- [x] delete operation route for table
+- [x] update operation route for table
 
 - columns
 - [ ] create operation route for columns
