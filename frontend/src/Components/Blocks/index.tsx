@@ -17,6 +17,7 @@ import { useMutation, useQuery } from "@tanstack/react-query";
 import { AddTemplate } from "../Buttons/AddTemplate";
 import { NormalBlock } from "./NormalBlocks";
 import { ArrayBlock } from "./ArrayBlock";
+import { TableBlock } from "./TableBlocks";
 
 type PageItemsType = {
     itemsList: any;
@@ -104,6 +105,7 @@ export const PageItems = ({
                 if (
                     item?.item_type === "block" ||
                     item?.item_type === "array" ||
+                    item?.item_type === "table" ||
                     item?.item_type === "normal"
                 ) {
                     if (item[item.item_type]) {
@@ -300,8 +302,10 @@ export const Block = ({
                         fieldsBlocksProps={fieldsBlocksProps}
                     />
                 );
+            case "table":
+                return <TableBlock block={block} />;
             default:
-                return <h1>Hello world</h1>;
+                return <h1>New block has to be added</h1>;
         }
     }
 

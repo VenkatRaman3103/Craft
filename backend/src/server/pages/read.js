@@ -44,6 +44,7 @@ export async function getPageDatById(page_id) {
                     text_field: true,
                     normal: true,
                     array: true,
+                    table: true,
                     multi_select_field: {
                         with: {
                             options: true,

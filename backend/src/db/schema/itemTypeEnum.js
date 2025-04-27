@@ -5,6 +5,7 @@ export const itemType = pgEnum("item_type", [
     "normal",
     "array",
     "page",
+    "table",
     "text_field",
     "multi_select_field",
     "single_select_field",
