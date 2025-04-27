@@ -1,52 +1,61 @@
 import { useQuery } from "@tanstack/react-query";
 import { getColumns, getTableData } from "./api";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 export const TableBlock = ({ block }: any) => {
-    const { data: tableData, isLoading } = useQuery({
+    // const [columns, setColumns] = useState();
+    // const [rows, setRows] = useState();
+    const [height, setHeight] = useState();
+    const { data: tableData } = useQuery({
         queryFn: () => getTableData(block.block_id),
         queryKey: ["tableBlock", block.block_id],
     });
 
-    const allRowIds = Array.from(
-        new Set(
-            tableData.flatMap((column) => column.rows.map((row) => row.row_id)),
-        ),
-    );
+    useEffect(() => {
+        const getHeight = (data) => {
+            let height = 0;
 
+            data.map((colum) => {
+                let tempHeight = 0;
+                colum.rows.map((row) => {
+                    tempHeight = tempHeight + 1;
+                });
+                if (tempHeight > height) {
+                    height = tempHeight;
+                }
+            });
+            return height;
+        };
+
+        setHeight(getHeight(tableData));
+    }, [tableData]);
+
+    console.log(tableData, "blockTable");
     return (
         <div>
             <table>
                 <thead>
-                    <tr>
-                        {tableData.map((column, index) => (
-                            <th key={column.column_id}>{column.value}</th>
-                        ))}
-                    </tr>
+                    {tableData?.map((item, ind) => (
+                        <th key={ind}>{item.value}</th>
+                    ))}
                 </thead>
                 <tbody>
-                    {allRowIds.length > 0 ? (
-                        allRowIds.map((rowId) => (
-                            <tr key={rowId}>
-                                {tableData.map((column) => {
-                                    const rowData = column.rows.find(
-                                        (row) => row.row_id === rowId,
-                                    );
-                                    return (
-                                        <td
-                                            key={`${rowId}-${column.column_id}`}
-                                        >
-                                            {rowData ? rowData.value : ""}
-                                        </td>
-                                    );
-                                })}
-                            </tr>
-                        ))
-                    ) : (
-                        <tr>
-                            <td colSpan={tableData.length}>No rows found</td>
-                        </tr>
-                    )}
+                    {Array.from({ length: height }).map((item) => {
+                        return <tr>{}</tr>;
+                    })}
+                    {tableData?.map((item, ind) => {
+                        return (
+                            <>
+                                {item.rows.length > 0 ? (
+                                    item.rows.map((row) => {
+                                        return <tr key={ind}>{row.value}</tr>;
+                                    })
+                                ) : (
+                                    <tr>Hello world</tr>
+                                )}
+                            </>
+                        );
+                    })}
                 </tbody>
             </table>
         </div>
