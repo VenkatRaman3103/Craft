@@ -8,3 +8,26 @@ export const getColumns = async (table_id: string) => {
 
     return columnsResponse.data;
 };
+
+export const getRows = async (column_id: string) => {
+    const rowResponse = await axios.get(
+        `${backendUrl}/table/rows/${column_id}`,
+    );
+
+    return rowResponse.data;
+};
+
+export const getTableData = async (block_id) => {
+    const columns = await getColumns(block_id);
+
+    const tableData = Promise.all(
+        columns.map(async (column) => {
+            const rows = await getRows(column.column_id);
+            return {
+                ...column,
+                rows: rows,
+            };
+        }),
+    );
+    return tableData;
+};

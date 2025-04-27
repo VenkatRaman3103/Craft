@@ -30,3 +30,4 @@
 - [x] connect the block prompt component with the backend for the table
 - [x] create a table block from frontend
 - [x] use reatct query to get the column first
+- [x] create a table component and connect the rows and columns from the api data
