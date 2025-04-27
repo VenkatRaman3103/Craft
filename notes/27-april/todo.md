@@ -12,8 +12,8 @@
 - [x] add a `PATCH` route to update column based on the `table_id` and `column_id`
 
 - rows
-- [ ] create operation route for rows
-- [ ] read all operation route for rows
-- [ ] read by id operation route for rows
-- [ ] delete operation route for rows
-- [ ] update operation route for rows
+- [x] base route for the rows
+- [ ] add a `GET` route to read all rows based on the `table_id`
+- [ ] add a `POST` route to create a new column based on the `table_id`
+- [ ] add a `DELETE` route to delete all rows based on the `table_id`
+- [ ] add a `PATCH` route to update column based on the `table_id` and `column_id`
