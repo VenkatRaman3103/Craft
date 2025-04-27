@@ -21,14 +21,13 @@ Content-Type: application/json; charset=utf-8
 User-Agent: VRC
 
 # query
-# GET /setup-test-data
-POST /table/rows/3a9b9253-950f-4348-801d-6a6105331b26
-#57d2d22d-1220-4d5e-81c3-4f924afb09f4
+PATCH /table/row/57d2d22d-1220-4d5e-81c3-4f924afb09f4/value
 
 # body
 {
-    "value": "New Row 3"
+    "value": "Hello world"
 }
+
 
 
 
