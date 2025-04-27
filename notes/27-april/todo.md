@@ -6,7 +6,7 @@
 
 - columns
 - [x] base route for the columns
-- [ ] create operation route for columns
+- [x] create a `POST` route to create a new column based on the `table_id`
 - [ ] read all operation route for columns
 - [ ] read by id operation route for columns
 - [ ] delete operation route for columns
