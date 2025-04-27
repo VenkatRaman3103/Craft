@@ -3,8 +3,11 @@ import { getAllTables, getTableById } from "./read.js";
 import { createNewTable } from "./create.js";
 import { updateTableName } from "./update.js";
 import { deleteTable } from "./delete.js";
+import { tableColumsRoute } from "./tableColumns/route.js";
 
 export const tableRouter = express.Router();
+
+tableRouter.use("/table", tableColumsRoute);
 
 // read all tables
 tableRouter.get("/table", getAllTables);
