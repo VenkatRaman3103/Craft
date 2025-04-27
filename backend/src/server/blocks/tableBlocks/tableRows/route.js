@@ -1,7 +1,8 @@
 import express from "express";
+import { createNewRow } from "./create.js";
 
 export const tableRowsRoute = express.Router();
 
-tableRowsRoute.get("/rows/test", async (req, res) => {
-    res.json("Hello world");
-});
+// create a row for the given column_id
+
+tableRowsRoute.post("/rows/:column_id", createNewRow);
