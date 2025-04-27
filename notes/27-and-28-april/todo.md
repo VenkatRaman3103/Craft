@@ -18,6 +18,15 @@
 - [x] add a `DELETE` route to delete all rows based on the `column_id`
 - [x] add a `PATCH` route to update column based on the `column_id` and `column_id`
 
+- [ ] reststructed the rows to use the table_id instead of column_id
+
+- entries
+- [x] base route for the entries
+- [x] add a `GET` route to read all entries based on the `column_id`
+- [ ] add a `POST` route to create a new column based on the `column_id`
+- [ ] add a `DELETE` route to delete all entries based on the `column_id`
+- [ ] add a `PATCH` route to update entries based on the `column_id` and `column_id`
+
 ### db
 
 - [x] update the realtion between `page_items` and `table_blocks`

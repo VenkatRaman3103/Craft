@@ -5,11 +5,13 @@ import { updateTableName } from "./update.js";
 import { deleteTable } from "./delete.js";
 import { tableColumsRoute } from "./tableColumns/route.js";
 import { tableRowsRoute } from "./tableRows/route.js";
+import { tableEntriesRoute } from "./tableEntries/route.js";
 
 export const tableRouter = express.Router();
 
 tableRouter.use("/table", tableColumsRoute);
 tableRouter.use("/table", tableRowsRoute);
+tableRouter.use("/table", tableEntriesRoute);
 
 // read all tables
 tableRouter.get("/table", getAllTables);

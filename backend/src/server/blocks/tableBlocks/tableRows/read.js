@@ -1,10 +1,10 @@
 import { db } from "../../../server.js";
 
 export const getRows = async (req, res) => {
-    const { column_id } = req.params;
+    const { table_id } = req.params;
     try {
         const rowsResponse = await db.query.tableRows.findMany({
-            where: (tableRows, { eq }) => eq(tableRows.column_id, column_id),
+            where: (tableRows, { eq }) => eq(tableRows.table_id, table_id),
         });
 
         res.json(rowsResponse);

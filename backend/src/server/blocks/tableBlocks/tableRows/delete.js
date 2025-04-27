@@ -3,12 +3,12 @@ import { tableRows } from "../../../../db/schema/blocks/tableBlocks/tableRows/sc
 import { db } from "../../../server.js";
 
 export const deleteRows = async (req, res) => {
-    const { column_id } = req.params;
+    const { table_id } = req.params;
 
     try {
         const deletedRows = await db
             .delete(tableRows)
-            .where(eq(tableRows.column_id, column_id))
+            .where(eq(tableRows.table_id, table_id))
             .returning();
 
         const cleanedRows = deletedRows.map((row) => ({

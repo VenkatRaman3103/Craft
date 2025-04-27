@@ -2,7 +2,7 @@ import { tableRows } from "../../../../db/schema/blocks/tableBlocks/tableRows/sc
 import { db } from "../../../server.js";
 
 export const createNewRow = async (req, res) => {
-    const { column_id } = req.params;
+    const { table_id } = req.params;
     const { value } = req.body;
 
     try {
@@ -10,7 +10,7 @@ export const createNewRow = async (req, res) => {
             .insert(tableRows)
             .values([
                 {
-                    column_id,
+                    table_id,
                     value,
                 },
             ])

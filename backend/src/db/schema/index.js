@@ -26,3 +26,4 @@ export * from "./blocks/arrayBlocks/arrayTemplates/relations.js";
 export * from "./blocks/tableBlocks/schema.js";
 export * from "./blocks/tableBlocks/tableColumns/schema.js";
 export * from "./blocks/tableBlocks/tableRows/schema.js";
+export * from "./blocks/tableBlocks/tableEntries/schema.js";
