@@ -13,7 +13,7 @@
 
 - rows
 - [x] base route for the rows
-- [x] add a `GET` route to read all rows based on the `column_id`
-- [ ] add a `POST` route to create a new column based on the `column_id`
+- [ ] add a `GET` route to read all rows based on the `column_id`
+- [x] add a `POST` route to create a new column based on the `column_id`
 - [ ] add a `DELETE` route to delete all rows based on the `column_id`
 - [ ] add a `PATCH` route to update column based on the `column_id` and `column_id`
