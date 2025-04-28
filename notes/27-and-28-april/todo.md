@@ -25,11 +25,11 @@
 - [x] add a `GET` route to read all entries based on the `column_id`
 - [x] add a `GET` route to read all entries based on the `row_id`
 - [x] add a `GET` route to read all entries based on the `column_id` and `row_id`
-- [ ] add a `POST` route to create a new column based on the `column_id`
-- [ ] add a `DELETE` route to delete all entries based on the `column_id`
-- [ ] add a `DELETE` route to delete all entries based on the `row_id`
-- [ ] add a `DELETE` route to delete all entries based on both `row_id` and `column_id`
-- [ ] add a `PATCH` route to update entries based on the `column_id` and `column_id`
+- [x] add a `POST` route to create a new column based on the `column_id`
+- [x] add a `DELETE` route to delete all entries based on the `column_id`
+- [x] add a `DELETE` route to delete all entries based on the `row_id`
+- [x] add a `DELETE` route to delete all entries based on both `row_id` and `column_id`
+- [x] add a `PATCH` route to update entries based on the `column_id` and `column_id`
 
 ### db
 
