@@ -26,6 +26,6 @@ POST /table
 
 # body
 {
-    "name": "table name 3"
+    "name": "new table for entries"
 }
 

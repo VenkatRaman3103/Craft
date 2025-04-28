@@ -1,0 +1,205 @@
+table,
+th,
+tr,
+td {
+  border: 1px solid var(--border-color);
+  border-collapse: collapse;
+}
+
+.table-container {
+  width: 100%;
+  position: relative;
+  overflow-x: auto;
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 20px;
+}
+
+.table-wrapper {
+  display: flex;
+  width: 100%;
+  overflow-x: auto;
+}
+
+.data-table {
+  min-width: 100%;
+  border: 1px solid var(--border-color);
+  border-collapse: collapse;
+}
+
+.table-header {
+  border: 1px solid var(--border-color);
+  padding: 8px 16px;
+  min-width: 100px;
+}
+
+.row-header-cell {
+  min-width: 120px;
+  padding: 8px 16px;
+}
+
+.table-cell {
+  border: 1px solid var(--border-color);
+  padding: 8px 16px;
+  min-width: 100px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+
+  input {
+    background-color: transparent;
+    color: white;
+    width: 100%;
+    border: none;
+    outline: none;
+    padding: 2px;
+
+    &:focus {
+      border-bottom: 1px dashed var(--primary-color);
+    }
+  }
+}
+
+.column-spacer {
+  padding: 0;
+  width: 40px;
+  min-width: 40px;
+  max-width: 40px;
+}
+
+.add-column-cell {
+  width: 40px;
+  min-width: 40px;
+  max-width: 40px;
+  text-align: center;
+  vertical-align: middle;
+  padding: 0;
+  border: 1px solid var(--border-color);
+  position: relative;
+
+  .add-button,
+  .cancel-button {
+    display: block;
+    width: 100%;
+    height: 100%;
+    padding: 8px 0;
+    background-color: transparent;
+    border: none;
+    cursor: pointer;
+    font-size: 16px;
+  }
+
+  .add-button {
+    color: var(--primary-color);
+
+    &:hover {
+      background-color: rgba(var(--primary-color-rgb), 0.1);
+    }
+  }
+
+  .cancel-button {
+    color: var(--danger-color, #ff4d4f);
+
+    &:hover {
+      background-color: rgba(255, 77, 79, 0.1);
+    }
+  }
+}
+
+.add-row-row {
+  height: 40px;
+}
+
+.add-row-cell {
+  text-align: center;
+  vertical-align: middle;
+  padding: 0;
+  height: 40px;
+  border: 1px solid var(--border-color);
+
+  .add-button,
+  .save-button {
+    display: block;
+    width: 100%;
+    height: 100%;
+    padding: 8px 0;
+    border: none;
+    cursor: pointer;
+    font-size: 14px;
+  }
+
+  .add-button {
+    background-color: transparent;
+    color: var(--primary-color);
+
+    &:hover {
+      background-color: rgba(var(--primary-color-rgb), 0.1);
+    }
+  }
+
+  .save-button {
+    background-color: var(--primary-color);
+    color: white;
+
+    &:hover {
+      background-color: var(--primary-color-dark, #096dd9);
+    }
+  }
+}
+
+.save-column-container {
+  margin-top: 12px;
+  display: flex;
+  justify-content: flex-end;
+  width: 100%;
+
+  .save-button {
+    padding: 8px 16px;
+    background-color: var(--primary-color);
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 14px;
+    color: white;
+
+    &:hover {
+      background-color: var(--primary-color-dark, #096dd9);
+    }
+  }
+}
+
+.cancel-button {
+  background-color: transparent;
+  border: none;
+  cursor: pointer;
+  font-size: 16px;
+  color: var(--danger-color, #ff4d4f);
+
+  &:hover {
+    color: var(--danger-color-dark, #ff7875);
+  }
+}
+
+/* // Responsive styles for small screens */
+/* @media screen and (max-width: 768px) { */
+/*   .table-container { */
+/*     overflow-x: auto; */
+/*   } */
+/* } */
+
+.add-column-cell {
+  vertical-align: middle;
+  position: relative;
+  min-width: 40px;
+}
+
+.column-controls {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.add-button,
+.save-button,
+.cancel-button {
+  width: 100%;
+}

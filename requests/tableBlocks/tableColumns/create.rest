@@ -22,11 +22,11 @@ User-Agent: VRC
 
 # query
 # GET /setup-test-data
-POST /table/columns/a4cc6692-4e1a-4191-a9ab-d5b9aec026de
+POST /table/columns/0dff5e9e-02b4-4f75-adbf-49874a6c6710
 
 # body
 {
-    "value": "Column 3"
+    "value": "Column 3 front"
 }
 
 

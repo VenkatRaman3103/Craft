@@ -21,12 +21,17 @@ Content-Type: application/json; charset=utf-8
 User-Agent: VRC
 
 # query
-# GET /setup-test-data
-POST /table/entries/60fd3537-79f9-4c06-b713-567f8f7dc724/508a2cc2-a07a-42a5-8fba-0a69145b2e0a
+# DELETE /table/entries/de1cde93-73b6-4659-bc7d-e7ef0b4ae8e1/row
+DELETE /table/entries/f2db08ef-b2c7-4c47-adb2-167b576e15d2/column
+
 
 # body
-{
-    "value": "front-end new"
-}
+# {
+#     "name": "block name",
+#     "description": "Hello world",
+#     "block_type": "normal_block"
+# }
+
+
 
 
