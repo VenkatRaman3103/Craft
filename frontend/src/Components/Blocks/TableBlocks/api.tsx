@@ -109,3 +109,12 @@ export const createNewColumnWithEntries = async (
 
     return columnResponse.data;
 };
+
+export const deleteRow = async (rowId: string) => {
+    const rowResponse = await axios.delete(
+        `${backendUrl}/table/rows/${rowId}/row`,
+    );
+    const entriesResponse = await axios.delete(
+        `${backendUrl}/table/entries/${rowId}/row`,
+    );
+};

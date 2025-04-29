@@ -3,9 +3,11 @@ import {
     createNewRowWithEntries,
     createNewColumnWithEntries,
     getTableData,
+    deleteRow,
 } from "./api";
 import "./index.scss";
 import { useEffect, useState } from "react";
+import { Trash2 } from "lucide-react";
 
 export const TableBlock = ({ block }: any) => {
     const [tableWidth, setTableWidth] = useState(1);
@@ -17,6 +19,8 @@ export const TableBlock = ({ block }: any) => {
         entries: [],
     });
 
+    const [activeRowId, setActiveRowId] = useState(false);
+
     const {
         data: tableData,
         isLoading,
@@ -26,8 +30,6 @@ export const TableBlock = ({ block }: any) => {
         queryKey: ["tableBlock", block.block_id],
     });
     const queryClient = useQueryClient();
-
-    // hello world
 
     const saveRow = useMutation({
         mutationFn: () => {
@@ -57,6 +59,11 @@ export const TableBlock = ({ block }: any) => {
             setAddColumn(false);
             setNewColumnData({ name: "", entries: [] });
         },
+    });
+
+    const deleteRowMutation = useMutation({
+        mutationFn: (row_id) => deleteRow(row_id),
+        onSuccess: () => queryClient.invalidateQueries(["tableBlock"]),
     });
 
     useEffect(() => {
@@ -142,6 +149,10 @@ export const TableBlock = ({ block }: any) => {
         setNewRowData([]);
     }
 
+    function handleRowDelete(row_id: string) {
+        deleteRowMutation.mutate(row_id);
+    }
+
     return (
         <div className="table-container">
             <div className="table-wrapper">
@@ -191,9 +202,34 @@ export const TableBlock = ({ block }: any) => {
                     <tbody>
                         {tableData.grid.map((row, rowIndex) => (
                             <tr key={row.row_id}>
-                                <td className="row-name-cell table-cell">
+                                <td
+                                    className="row-name-cell table-cell"
+                                    onMouseEnter={() =>
+                                        setActiveRowId(
+                                            tableData.rows[rowIndex].row_id,
+                                        )
+                                    }
+                                    onMouseLeave={() =>
+                                        setActiveRowId(
+                                            tableData.rows[rowIndex].row_id,
+                                        )
+                                    }
+                                >
                                     {tableData.rows[rowIndex].name ||
                                         `Row ${rowIndex + 1}`}
+                                    {activeRowId ==
+                                        tableData.rows[rowIndex].row_id && (
+                                        <Trash2
+                                            size={14}
+                                            className="trash"
+                                            onClick={() =>
+                                                handleRowDelete(
+                                                    tableData.rows[rowIndex]
+                                                        .row_id,
+                                                )
+                                            }
+                                        />
+                                    )}
                                 </td>
                                 {row.cells.map((cell, cellIndex) => (
                                     <td
