@@ -27,6 +27,8 @@ export const TableBlock = ({ block }: any) => {
     });
     const queryClient = useQueryClient();
 
+    // hello world
+
     const saveRow = useMutation({
         mutationFn: () => {
             return createNewRowWithEntries(
@@ -180,7 +182,7 @@ export const TableBlock = ({ block }: any) => {
                                         onClick={handleAddColumn}
                                         title="Add Column"
                                     >
-                                        ＋
+                                        +
                                     </button>
                                 )}
                             </th>
@@ -279,7 +281,7 @@ export const TableBlock = ({ block }: any) => {
                                         className="add-button"
                                         onClick={handleAddRow}
                                     >
-                                        ＋
+                                        +
                                     </button>
                                 )}
                             </td>

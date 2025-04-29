@@ -86,10 +86,12 @@ td {
     border: none;
     cursor: pointer;
     font-size: 16px;
+    color: #ffffff;
   }
 
   .add-button {
-    color: var(--primary-color);
+    /* color: var(--primary-color); */
+    color: #ffffff;
 
     &:hover {
       background-color: rgba(var(--primary-color-rgb), 0.1);
@@ -125,11 +127,12 @@ td {
     border: none;
     cursor: pointer;
     font-size: 14px;
+    color: #ffffff;
   }
 
   .add-button {
     background-color: transparent;
-    color: var(--primary-color);
+    /* color: var(--primary-color); */
 
     &:hover {
       background-color: rgba(var(--primary-color-rgb), 0.1);
