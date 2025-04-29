@@ -14,6 +14,8 @@ tableRowsRoute.get("/rows/:table_id", getRows);
 
 // delete all the rows for given column_id
 tableRowsRoute.delete("/rows/:table_id", deleteRows);
+
+// delete the row for the given column_id
 tableRowsRoute.delete("/rows/:row_id/row", deleteRow);
 
 // hello world

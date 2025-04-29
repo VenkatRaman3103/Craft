@@ -13,7 +13,8 @@ tableColumsRoute.post("/columns/:table_id", createNewColumn);
 tableColumsRoute.get("/columns/:table_id", getColumns);
 
 // delete a colum based on the column_id
-tableColumsRoute.delete("/columns/:column_id", deleteColumn);
+tableColumsRoute.delete("/columns/:column_id/column", deleteColumn);
+// tableColumsRoute.delete("/columns/:column_id/column", deleteColumn);
 
 // update the column value based on the column_id
 tableColumsRoute.patch("/columns/:column_id/value", updateColumnValue);

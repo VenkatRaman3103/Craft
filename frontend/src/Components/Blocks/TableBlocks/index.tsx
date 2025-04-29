@@ -4,6 +4,7 @@ import {
     createNewColumnWithEntries,
     getTableData,
     deleteRow,
+    deleteColumn,
 } from "./api";
 import "./index.scss";
 import { useEffect, useState } from "react";
@@ -20,6 +21,7 @@ export const TableBlock = ({ block }: any) => {
     });
 
     const [activeRowId, setActiveRowId] = useState(false);
+    const [activeColumnId, setActiveColumnId] = useState(false);
 
     const {
         data: tableData,
@@ -63,6 +65,11 @@ export const TableBlock = ({ block }: any) => {
 
     const deleteRowMutation = useMutation({
         mutationFn: (row_id) => deleteRow(row_id),
+        onSuccess: () => queryClient.invalidateQueries(["tableBlock"]),
+    });
+
+    const deleteColumnMutation = useMutation({
+        mutationFn: (column_id) => deleteColumn(column_id),
         onSuccess: () => queryClient.invalidateQueries(["tableBlock"]),
     });
 
@@ -153,6 +160,10 @@ export const TableBlock = ({ block }: any) => {
         deleteRowMutation.mutate(row_id);
     }
 
+    function handleColumnDelete(column_id: string) {
+        deleteColumnMutation.mutate(column_id);
+    }
+
     return (
         <div className="table-container">
             <div className="table-wrapper">
@@ -160,12 +171,32 @@ export const TableBlock = ({ block }: any) => {
                     <thead>
                         <tr>
                             <th className="row-header-cell">Row Name</th>
-                            {tableData.columns.map((column) => (
+                            {tableData.columns.map((column, columnIndex) => (
                                 <th
                                     key={column.column_id}
-                                    className="table-header"
+                                    className="table-header  table-cell"
+                                    onMouseEnter={() =>
+                                        setActiveColumnId(column.column_id)
+                                    }
+                                    onMouseLeave={() =>
+                                        setActiveColumnId(false)
+                                    }
                                 >
-                                    {column.value}
+                                    <div className="column-header-content">
+                                        {column.value}
+                                        {activeColumnId ===
+                                            column.column_id && (
+                                            <Trash2
+                                                size={14}
+                                                className="trash"
+                                                onClick={() =>
+                                                    handleColumnDelete(
+                                                        column.column_id,
+                                                    )
+                                                }
+                                            />
+                                        )}
+                                    </div>
                                 </th>
                             ))}
                             {addColumn && (
@@ -209,15 +240,11 @@ export const TableBlock = ({ block }: any) => {
                                             tableData.rows[rowIndex].row_id,
                                         )
                                     }
-                                    onMouseLeave={() =>
-                                        setActiveRowId(
-                                            tableData.rows[rowIndex].row_id,
-                                        )
-                                    }
+                                    onMouseLeave={() => setActiveRowId(false)}
                                 >
                                     {tableData.rows[rowIndex].name ||
                                         `Row ${rowIndex + 1}`}
-                                    {activeRowId ==
+                                    {activeRowId ===
                                         tableData.rows[rowIndex].row_id && (
                                         <Trash2
                                             size={14}

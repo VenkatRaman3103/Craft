@@ -118,3 +118,12 @@ export const deleteRow = async (rowId: string) => {
         `${backendUrl}/table/entries/${rowId}/row`,
     );
 };
+
+export const deleteColumn = async (columnId: string) => {
+    const columnResponse = await axios.delete(
+        `${backendUrl}/table/columns/${columnId}/column`,
+    );
+    const entriesResponse = await axios.delete(
+        `${backendUrl}/table/entries/${columnId}/column`,
+    );
+};

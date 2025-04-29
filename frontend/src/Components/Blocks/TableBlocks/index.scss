@@ -216,6 +216,12 @@ td {
   border: 0px;
 }
 
+.column-header-content {
+  display: flex;
+  justify-content: space-between;
+  border: 0px;
+}
+
 .trash {
 
   /* padding: 5px; */
