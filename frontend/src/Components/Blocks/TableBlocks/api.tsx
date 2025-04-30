@@ -136,8 +136,21 @@ export const updateRowName = async (
 };
 
 export const updateColumnName = async (
-    row_id: string | undefined,
+    column_id: string | undefined,
     value: string | number | undefined,
 ) => {
-    await axios.patch(`${backendUrl}/table/column/${row_id}/value`, { value });
+    await axios.patch(`${backendUrl}/table/column/${column_id}/value`, {
+        value,
+    });
+};
+
+export const updateEntryValue = async (
+    row_id: string,
+    column_id: string,
+    value: string | number,
+) => {
+    await axios.patch(
+        `${backendUrl}/table/entries/${row_id}/${column_id}/value`,
+        { value },
+    );
 };

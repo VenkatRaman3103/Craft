@@ -244,3 +244,8 @@ td {
   display: flex;
   gap: 10px;
 }
+
+.cell-content {
+  display: flex;
+  justify-content: space-between;
+}

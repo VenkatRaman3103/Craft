@@ -13,8 +13,7 @@
 - [x] add edit save to the column
 
 - entries
-- [ ] add edit icon to the row
-- [ ] add edit icon to the column
+- [x] add edit icon to the entries
 
 ### functionality
 
@@ -29,5 +28,5 @@
       the columns should not change
 
 - entries
-- [ ] while saving (clicking the save icon) the new entry name has to be updated, note the order of
+- [x] while saving (clicking the save icon) the new entry name has to be updated, note the order of
       the entries should not change

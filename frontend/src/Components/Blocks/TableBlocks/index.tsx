@@ -7,6 +7,7 @@ import {
     deleteColumn,
     updateRowName,
     updateColumnName,
+    updateEntryValue,
 } from "./api";
 import "./index.scss";
 import { useEffect, useState } from "react";
@@ -24,12 +25,22 @@ export const TableBlock = ({ block }: any) => {
 
     const [activeRowId, setActiveRowId] = useState(false);
     const [activeColumnId, setActiveColumnId] = useState(false);
+    const [activeCellPosition, setActiveCellPosition] = useState({
+        rowIndex: null,
+        cellIndex: null,
+    });
 
     const [editableRow, setEditableRow] = useState<string>();
     const [editableRowName, setEditableRowName] = useState<string>();
 
     const [editableColumn, setEditableColumn] = useState<string>();
     const [editableColumnName, setEditableColumnName] = useState<string>();
+
+    const [editableCell, setEditableCell] = useState<{
+        rowId: string;
+        columnId: string;
+    }>();
+    const [editableCellValue, setEditableCellValue] = useState<string>("");
 
     const queryClient = useQueryClient();
     const queryKey = ["tableBlock", block.block_id];
@@ -92,6 +103,44 @@ export const TableBlock = ({ block }: any) => {
 
             setEditableColumn("");
             setEditableColumnName("");
+        },
+    });
+
+    const updateCellValueMutation = useMutation({
+        mutationFn: () => {
+            return updateEntryValue(
+                editableCell.rowId,
+                editableCell.columnId,
+                editableCellValue,
+            );
+        },
+        onSuccess: () => {
+            const previousData = queryClient.getQueryData(queryKey);
+            if (previousData) {
+                const updatedData = JSON.parse(JSON.stringify(previousData));
+
+                const rowIndex = updatedData.grid.findIndex(
+                    (row) => row.row_id === editableCell.rowId,
+                );
+
+                if (rowIndex !== -1) {
+                    const columnIndex = updatedData.columns.findIndex(
+                        (column) => column.column_id === editableCell.columnId,
+                    );
+
+                    if (columnIndex !== -1) {
+                        updatedData.grid[rowIndex].cells[columnIndex] =
+                            editableCellValue;
+                    }
+                }
+
+                queryClient.setQueryData(queryKey, updatedData);
+            } else {
+                queryClient.invalidateQueries(queryKey);
+            }
+
+            setEditableCell(undefined);
+            setEditableCellValue("");
         },
     });
 
@@ -236,12 +285,21 @@ export const TableBlock = ({ block }: any) => {
         setEditableColumnName(e.target.value);
     }
 
+    function handleCellValueChange(e) {
+        e.preventDefault();
+        setEditableCellValue(e.target.value);
+    }
+
     function saveNewRowName() {
         newRowNameMutation.mutate();
     }
 
     function saveNewColumnName() {
         newColumnNameMutation.mutate();
+    }
+
+    function saveNewCellValue() {
+        updateCellValueMutation.mutate();
     }
 
     return (
@@ -423,8 +481,69 @@ export const TableBlock = ({ block }: any) => {
                                     <td
                                         key={`${row.row_id}-${tableData.columns[cellIndex].column_id}`}
                                         className="table-cell"
+                                        onMouseEnter={() =>
+                                            setActiveCellPosition({
+                                                rowIndex,
+                                                cellIndex,
+                                            })
+                                        }
+                                        onMouseLeave={() =>
+                                            setActiveCellPosition({
+                                                rowIndex: null,
+                                                cellIndex: null,
+                                            })
+                                        }
                                     >
-                                        {cell || ""}
+                                        {editableCell &&
+                                        editableCell.rowId === row.row_id &&
+                                        editableCell.columnId ===
+                                            tableData.columns[cellIndex]
+                                                .column_id ? (
+                                            <div className="cell-edit-container">
+                                                <input
+                                                    value={editableCellValue}
+                                                    onChange={(e) =>
+                                                        handleCellValueChange(e)
+                                                    }
+                                                    className="cell-edit-input"
+                                                />
+                                                <Check
+                                                    size={16}
+                                                    className="edit-icon"
+                                                    onClick={saveNewCellValue}
+                                                />
+                                            </div>
+                                        ) : (
+                                            <div className="cell-content">
+                                                <span>{cell || ""}</span>
+
+                                                {activeCellPosition.rowIndex ===
+                                                    rowIndex &&
+                                                    activeCellPosition.cellIndex ===
+                                                        cellIndex && (
+                                                        <Pencil
+                                                            size={14}
+                                                            className="edit-icon cell-edit-icon"
+                                                            onClick={() => {
+                                                                setEditableCell(
+                                                                    {
+                                                                        rowId: row.row_id,
+                                                                        columnId:
+                                                                            tableData
+                                                                                .columns[
+                                                                                cellIndex
+                                                                            ]
+                                                                                .column_id,
+                                                                    },
+                                                                );
+                                                                setEditableCellValue(
+                                                                    cell || "",
+                                                                );
+                                                            }}
+                                                        />
+                                                    )}
+                                            </div>
+                                        )}
                                     </td>
                                 ))}
                                 {addColumn && (
