@@ -17,4 +17,4 @@ tableColumsRoute.delete("/columns/:column_id/column", deleteColumn);
 // tableColumsRoute.delete("/columns/:column_id/column", deleteColumn);
 
 // update the column value based on the column_id
-tableColumsRoute.patch("/columns/:column_id/value", updateColumnValue);
+tableColumsRoute.patch("/column/:column_id/value", updateColumnValue);

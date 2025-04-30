@@ -127,3 +127,17 @@ export const deleteColumn = async (columnId: string) => {
         `${backendUrl}/table/entries/${columnId}/column`,
     );
 };
+
+export const updateRowName = async (
+    row_id: string | undefined,
+    value: string | number | undefined,
+) => {
+    await axios.patch(`${backendUrl}/table/row/${row_id}/value`, { value });
+};
+
+export const updateColumnName = async (
+    row_id: string | undefined,
+    value: string | number | undefined,
+) => {
+    await axios.patch(`${backendUrl}/table/column/${row_id}/value`, { value });
+};

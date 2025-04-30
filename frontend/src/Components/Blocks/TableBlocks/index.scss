@@ -231,3 +231,16 @@ td {
     cursor: pointer;
   }
 }
+
+.edit-icon {
+
+  &:hover {
+    color: #096dd9;
+    cursor: pointer;
+  }
+}
+
+.action-icons {
+  display: flex;
+  gap: 10px;
+}
