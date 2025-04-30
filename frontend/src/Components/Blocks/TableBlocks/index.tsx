@@ -206,6 +206,7 @@ export const TableBlock = ({ block }: any) => {
                                         value={newColumnData.name}
                                         onChange={handleNewColumnName}
                                         placeholder="Column Name"
+                                        className="column-input"
                                     />
                                 </th>
                             )}

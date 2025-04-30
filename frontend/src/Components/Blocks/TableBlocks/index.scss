@@ -7,7 +7,8 @@ td {
 }
 
 .table-container {
-  width: 100%;
+  /* width: 100%; */
+  width: auto;
   position: relative;
   overflow-x: auto;
   display: flex;
@@ -31,6 +32,15 @@ td {
   border: 1px solid var(--border-color);
   padding: 8px 16px;
   min-width: 100px;
+
+  .column-input {
+    color: white;
+    background-color: transparent;
+  }
+
+  input {
+    color: white;
+  }
 }
 
 .row-header-cell {
