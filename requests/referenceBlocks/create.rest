@@ -26,7 +26,7 @@ POST /reference
 
 # body
 {
-    "name": "new reference block",
+    "name": "another new reference block",
     "reference_type": "all",
     "collection_id": "aede9957-7260-42d8-91fa-fb76e9ae91a5"
 }
