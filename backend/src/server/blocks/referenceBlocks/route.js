@@ -28,11 +28,13 @@ referenceBlockRouter.patch(
     updateNameReferenceBlock,
 );
 
+// update a collection_id for the reference block
 referenceBlockRouter.patch(
     "/reference/:block_id/collection_id",
     updateCollectionIdReferenceBlock,
 );
 
+// update a reference_type for the reference block
 referenceBlockRouter.patch(
     "/reference/:block_id/reference_type",
     updateTypeReferenceBlock,
