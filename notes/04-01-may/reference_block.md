@@ -21,7 +21,7 @@
 - [x] create route to create a new referece block
 - [x] read route to read all referece blocks
 - [x] read route to read a referece block based on the given block_id
-- [ ] delete route to delete a referece block based on the given block_id
+- [x] delete route to delete a referece block based on the given block_id
 - [ ] update route to update the name of a referece block based on the given block_id
 - [ ] update route to update the collection_id of a referece block based on the given block_id
 - [ ] update route to update the referece_type of a referece block based on the given block_id
