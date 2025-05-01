@@ -27,3 +27,4 @@ export * from "./blocks/tableBlocks/schema.js";
 export * from "./blocks/tableBlocks/tableColumns/schema.js";
 export * from "./blocks/tableBlocks/tableRows/schema.js";
 export * from "./blocks/tableBlocks/tableEntries/schema.js";
+export * from "./blocks/referenceBlock/schema.js";
