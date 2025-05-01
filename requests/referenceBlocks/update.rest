@@ -21,15 +21,22 @@ Content-Type: application/json; charset=utf-8
 User-Agent: VRC
 
 # query
-# GET /table
-GET /reference
-# GET /reference/64a0f7a7-149b-4d16-b2a4-10f25de5ed70
+# PATCH /reference/c0968422-f97c-4394-b2cd-1595625fd0ef/name
+# PATCH /reference/c0968422-f97c-4394-b2cd-1595625fd0ef/reference_type
+PATCH /reference/c0968422-f97c-4394-b2cd-1595625fd0ef/collection_id
 
 # body
 # {
-#     "name": "block name",
-#     "description": "Hello world",
-#     "block_type": "normal_block"
+#     "name": "new reference block name"
 # }
+
+# {
+#     "reference_type": "123"
+# }
+ 
+{
+    "collection_id": "123"
+}
+
 
 

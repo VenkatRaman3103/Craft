@@ -22,8 +22,8 @@
 - [x] read route to read all referece blocks
 - [x] read route to read a referece block based on the given block_id
 - [x] delete route to delete a referece block based on the given block_id
-- [ ] update route to update the name of a referece block based on the given block_id
-- [ ] update route to update the collection_id of a referece block based on the given block_id
-- [ ] update route to update the referece_type of a referece block based on the given block_id
+- [x] update route to update the name of a referece block based on the given block_id
+- [x] update route to update the collection_id of a referece block based on the given block_id
+- [x] update route to update the referece_type of a referece block based on the given block_id
 
 - [ ] referesh the referece block items while changing the collection_id and referece_type
