@@ -66,6 +66,7 @@ export const Page = () => {
     }
 
     console.log(sideBarComponent, "sideBarComponent");
+    console.log(pageData, "pageData");
 
     return (
         <div className="page-content-container">

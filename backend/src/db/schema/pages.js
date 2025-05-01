@@ -13,6 +13,7 @@ import { itemType } from "./itemTypeEnum.js";
 import { blocks } from "./blocks.js";
 import { arrayBlocks } from "./blocks/arrayBlocks/schema.js";
 import { tableBlocks } from "./blocks/tableBlocks/schema.js";
+import { referenceBlock } from "./blocks/referenceBlock/schema.js";
 
 export const pages = pgTable("pages", {
     page_id: uuid("page_id").primaryKey().defaultRandom(),
@@ -95,5 +96,9 @@ export const pageItemsRelation = relations(page_items, ({ one }) => ({
     table: one(tableBlocks, {
         fields: [page_items.reference_id],
         references: [tableBlocks.block_id],
+    }),
+    reference: one(referenceBlock, {
+        fields: [page_items.reference_id],
+        references: [referenceBlock.block_id],
     }),
 }));

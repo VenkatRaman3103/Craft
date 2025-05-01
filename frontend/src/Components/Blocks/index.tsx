@@ -18,6 +18,7 @@ import { AddTemplate } from "../Buttons/AddTemplate";
 import { NormalBlock } from "./NormalBlocks";
 import { ArrayBlock } from "./ArrayBlock";
 import { TableBlock } from "./TableBlocks";
+import { ReferenceBlocks } from "./ReferenceBlocks";
 
 type PageItemsType = {
     itemsList: any;
@@ -106,13 +107,13 @@ export const PageItems = ({
                     item?.item_type === "block" ||
                     item?.item_type === "array" ||
                     item?.item_type === "table" ||
+                    item?.item_type === "reference" ||
                     item?.item_type === "normal"
                 ) {
                     if (item[item.item_type]) {
                         return (
                             <Block
                                 key={item.item_id || index}
-                                // block={item[item.item_type]}
                                 block={item[item.item_type]}
                                 isSidebarOpen={isSidebarOpen}
                                 onScopeChange={onScopeChange}
@@ -202,7 +203,6 @@ export const Block = ({
         itemType,
     });
 
-    // Apply animations to fields container
     useEffect(() => {
         if (fieldsContainerRef.current) {
             autoAnimate(fieldsContainerRef.current);
@@ -279,6 +279,7 @@ export const Block = ({
     );
 
     function renderBlock(blockType) {
+        console.log(blockType, "blockType");
         switch (blockType) {
             case "normal":
                 return (
@@ -304,10 +305,14 @@ export const Block = ({
                 );
             case "table":
                 return <TableBlock block={block} />;
+            case "reference":
+                return <ReferenceBlocks block={block} />;
             default:
                 return <h1>New block has to be added</h1>;
         }
     }
+
+    console.log();
 
     return (
         <div className="block-container">
