@@ -8,7 +8,7 @@
     - referece_type
     - collection_id
 
-- [ ] base schema for referece block items
+- [x] base schema for referece block items
 
     - item_id
     - block_id
