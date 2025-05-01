@@ -28,5 +28,5 @@
       the columns should not change
 
 - entries
-- [x] while saving (clicking the save icon) the new entry name has to be updated, note the order of
+- [ ] while saving (clicking the save icon) the new entry name has to be updated, note the order of
       the entries should not change

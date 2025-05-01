@@ -29,7 +29,7 @@ export const BlocksIons = {
     list: <List size={iconSize} color={iconColor} />,
     link: <Link size={iconSize} color={iconColor} />,
     reference: <CircleArrowOutDownLeft size={iconSize} color={iconColor} />,
-    dynamic: <CircleArrowOutUpRight size={iconSize} color={iconColor} />,
+    external: <CircleArrowOutUpRight size={iconSize} color={iconColor} />,
     upload: <Upload size={iconSize} color={iconColor} />,
     richtext: <Heading1 size={iconSize} color={iconColor} />,
     nested: <SquareStack size={iconSize} color={iconColor} />,
