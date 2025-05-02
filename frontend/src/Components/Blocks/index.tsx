@@ -19,6 +19,7 @@ import { NormalBlock } from "./NormalBlocks";
 import { ArrayBlock } from "./ArrayBlock";
 import { TableBlock } from "./TableBlocks";
 import { ReferenceBlocks } from "./ReferenceBlocks";
+import { ApiBlock } from "./ApiBlocks";
 
 type PageItemsType = {
     itemsList: any;
@@ -108,7 +109,8 @@ export const PageItems = ({
                     item?.item_type === "array" ||
                     item?.item_type === "table" ||
                     item?.item_type === "reference" ||
-                    item?.item_type === "normal"
+                    item?.item_type === "normal" ||
+                    item?.item_type === "api"
                 ) {
                     if (item[item.item_type]) {
                         return (
@@ -307,12 +309,14 @@ export const Block = ({
                 return <TableBlock block={block} />;
             case "reference":
                 return <ReferenceBlocks block={block} />;
+            case "api":
+                return <ApiBlock block={block} />;
             default:
                 return <h1>New block has to be added</h1>;
         }
     }
 
-    console.log();
+    console.log(block.block_type, "block_type<---");
 
     return (
         <div className="block-container">

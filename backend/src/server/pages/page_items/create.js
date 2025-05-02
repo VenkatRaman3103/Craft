@@ -22,6 +22,7 @@ export async function createPageItem(req, res) {
                         normal: true,
                         table: true,
                         reference: true,
+                        api: true,
                         multi_select_field: {
                             with: {
                                 options: true,

@@ -6,6 +6,7 @@ export const apiBlocks = pgTable("api_block", {
     name: text("name").notNull(),
     description: text("description"),
     url: text("url"),
+    response: text("response"),
     scope: scopeEnum("scope").default("global"),
     block_type: text("block_type").default("api").notNull(),
     createdAt: timestamp("created_at").defaultNow(),

@@ -27,7 +27,7 @@ export const sampleBlocks = [
     {
         id: "block6",
         name: "External reference Block",
-        type: "external",
+        type: "api",
         description: "Content that updates automatically based on external API",
     },
     {

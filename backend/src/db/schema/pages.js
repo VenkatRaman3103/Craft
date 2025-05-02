@@ -14,6 +14,7 @@ import { blocks } from "./blocks.js";
 import { arrayBlocks } from "./blocks/arrayBlocks/schema.js";
 import { tableBlocks } from "./blocks/tableBlocks/schema.js";
 import { referenceBlock } from "./blocks/referenceBlock/schema.js";
+import { apiBlocks } from "./blocks/apiBlocks/schema.js";
 
 export const pages = pgTable("pages", {
     page_id: uuid("page_id").primaryKey().defaultRandom(),
@@ -100,5 +101,9 @@ export const pageItemsRelation = relations(page_items, ({ one }) => ({
     reference: one(referenceBlock, {
         fields: [page_items.reference_id],
         references: [referenceBlock.block_id],
+    }),
+    api: one(apiBlocks, {
+        fields: [page_items.reference_id],
+        references: [apiBlocks.block_id],
     }),
 }));

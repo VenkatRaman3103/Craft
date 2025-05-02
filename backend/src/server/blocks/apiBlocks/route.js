@@ -2,7 +2,6 @@ import express from "express";
 import { db } from "../../server.js";
 import { apiBlocks } from "../../../db/schema/blocks/apiBlocks/schema.js";
 import { eq } from "drizzle-orm";
-
 export const apiBlockRouter = express.Router();
 
 apiBlockRouter.post("/api", async (req, res) => {
@@ -38,8 +37,8 @@ apiBlockRouter.get("/api/:block_id", async (req, res) => {
     } catch (error) {
         const errorMessage = {
             error,
-            message: `Error in creating the block`,
-            origin: "backend/apiBlock/POST",
+            message: `Error in fetching the block`,
+            origin: "backend/apiBlock/GET",
         };
         res.status(500).json(errorMessage);
     }
@@ -52,8 +51,8 @@ apiBlockRouter.get("/api", async (req, res) => {
     } catch (error) {
         const errorMessage = {
             error,
-            message: `Error in creating the block`,
-            origin: "backend/apiBlock/POST",
+            message: `Error in fetching all blocks`,
+            origin: "backend/apiBlock/GET_ALL",
         };
         res.status(500).json(errorMessage);
     }
@@ -70,8 +69,8 @@ apiBlockRouter.delete("/api/:block_id", async (req, res) => {
     } catch (error) {
         const errorMessage = {
             error,
-            message: `Error in creating the block`,
-            origin: "backend/apiBlock/POST",
+            message: `Error in deleting the block`,
+            origin: "backend/apiBlock/DELETE",
         };
         res.status(500).json(errorMessage);
     }
@@ -88,13 +87,12 @@ apiBlockRouter.patch("/api/:block_id/name", async (req, res) => {
             })
             .where(eq(apiBlocks.block_id, block_id))
             .returning();
-
         res.json(newApiBlock);
     } catch (error) {
         const errorMessage = {
             error,
-            message: `Error in creating the block`,
-            origin: "backend/apiBlock/POST",
+            message: `Error in updating the block name`,
+            origin: "backend/apiBlock/PATCH_NAME",
         };
         res.status(500).json(errorMessage);
     }
@@ -111,13 +109,34 @@ apiBlockRouter.patch("/api/:block_id/url", async (req, res) => {
             })
             .where(eq(apiBlocks.block_id, block_id))
             .returning();
-
         res.json(newApiBlock);
     } catch (error) {
         const errorMessage = {
             error,
-            message: `Error in creating the block`,
-            origin: "backend/apiBlock/POST",
+            message: `Error in updating the block URL`,
+            origin: "backend/apiBlock/PATCH_URL",
+        };
+        res.status(500).json(errorMessage);
+    }
+});
+
+apiBlockRouter.patch("/api/:block_id/response", async (req, res) => {
+    const { block_id } = req.params;
+    const { response } = req.body;
+    try {
+        const newApiBlock = await db
+            .update(apiBlocks)
+            .set({
+                response,
+            })
+            .where(eq(apiBlocks.block_id, block_id))
+            .returning();
+        res.json(newApiBlock);
+    } catch (error) {
+        const errorMessage = {
+            error,
+            message: `Error in updating the block response`,
+            origin: "backend/apiBlock/PATCH_RESPONSE",
         };
         res.status(500).json(errorMessage);
     }
