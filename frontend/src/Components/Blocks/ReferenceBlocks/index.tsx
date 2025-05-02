@@ -1,12 +1,18 @@
 import React, { useEffect, useState } from "react";
 import "./index.scss";
-import { useQuery } from "@tanstack/react-query";
-import { getReferenceBlock } from "./api";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { getReferenceBlock, getBlockItems, saveBlock } from "./api";
+import { JSONField } from "@/Components/Fields/JsonField";
 
 export const ReferenceBlocks = ({ block }: any) => {
-    const { data: refenceBlockdata } = useQuery({
+    const { data: referenceBlockData } = useQuery({
         queryFn: () => getReferenceBlock(block.block_id),
-        queryKey: () => ["referenceBlock", block.block_id],
+        queryKey: ["referenceBlock", block.block_id],
+    });
+
+    const { data: blockItems } = useQuery({
+        queryFn: () => getBlockItems(block.block_id),
+        queryKey: ["blockItems", block.block_id],
     });
 
     const [selectedCollection, setSelectedCollection] = useState(
@@ -18,24 +24,41 @@ export const ReferenceBlocks = ({ block }: any) => {
     const [searchText, setSearchText] = useState("");
     const [selectedItems, setSelectedItems] = useState([]);
     const [viewMode, setViewMode] = useState("list");
+    const [editMode, setEditMode] = useState(false);
+    const [isSaving, setIsSaving] = useState(false);
 
     const [pagesList, setPagesList] = useState();
 
+    const queryClient = useQueryClient();
+
+    const referenceBlockMutate = useMutation({
+        mutationFn: (payload) => saveBlock(payload),
+        onSuccess: () => {
+            queryClient.invalidateQueries(["referenceBlock"]);
+            queryClient.invalidateQueries(["blockItems"]);
+            setIsSaving(true);
+            setTimeout(() => {
+                setIsSaving(false);
+                setEditMode(false);
+            }, 1500);
+        },
+    });
+
     useEffect(() => {
-        const pages = refenceBlockdata?.collectionsList.filter(
+        const pages = referenceBlockData?.collectionsList?.filter(
             (collection) => collection.collection_id == selectedCollection,
         );
-        console.log(pages ? pages : "", "pagesOSmenkbb");
-        setPagesList(pages[0]?.pages);
-    }, [refenceBlockdata, selectedCollection]);
+        if (pages && pages.length > 0) {
+            setPagesList(pages[0].pages);
+        }
+    }, [referenceBlockData, selectedCollection]);
 
-    const items = [
-        { id: 1, name: "Item One" },
-        { id: 2, name: "Item Two" },
-        { id: 3, name: "Item Three" },
-        { id: 4, name: "Item Four" },
-        { id: 5, name: "Item Five" },
-    ];
+    useEffect(() => {
+        if (blockItems && blockItems.length > 0) {
+            const selectedIds = blockItems.map((item) => item.item_id);
+            setSelectedItems(selectedIds);
+        }
+    }, [blockItems]);
 
     const handleFirstDropdownChange = (e) => {
         setSelectedCollection(e.target.value);
@@ -75,19 +98,33 @@ export const ReferenceBlocks = ({ block }: any) => {
         setViewMode(viewMode === "list" ? "json" : "list");
     };
 
-    // const filteredItems = items.filter((item) =>
-    //     item.name.toLowerCase().includes(searchText.toLowerCase()),
-    // );
-
     function handleSave() {
         const payload = {
             pagesList: selectedItems,
             reference_type: secondDropdownValue,
+            block_id: block.block_id,
         };
+        setIsSaving(true);
+        referenceBlockMutate.mutate(payload);
     }
 
-    console.log(pagesList, "blockReferenceData");
-    console.log(selectedItems, "selectedItems");
+    function toggleEditMode() {
+        setEditMode(!editMode);
+    }
+
+    const jsonData = {
+        value: pagesList || [],
+    };
+
+    const fullJsonData = {
+        value: {
+            block_id: block.block_id,
+            reference_type: secondDropdownValue,
+            selectedItems: selectedItems,
+            collection_id: selectedCollection,
+            pagesList: pagesList || [],
+        },
+    };
 
     return (
         <div className="reference-blocks-container">
@@ -98,8 +135,9 @@ export const ReferenceBlocks = ({ block }: any) => {
                             value={selectedCollection}
                             onChange={handleFirstDropdownChange}
                             className="dropdown"
+                            disabled={!editMode}
                         >
-                            {refenceBlockdata?.collectionsList?.map(
+                            {referenceBlockData?.collectionsList?.map(
                                 (collection, ind) => (
                                     <option
                                         key={ind}
@@ -111,7 +149,11 @@ export const ReferenceBlocks = ({ block }: any) => {
                             )}
                         </select>
                     </div>
-                    <button onClick={handleGetClick} className="get-button">
+                    <button
+                        onClick={handleGetClick}
+                        className="get-button"
+                        disabled={!editMode}
+                    >
                         Get
                     </button>
                 </div>
@@ -121,6 +163,7 @@ export const ReferenceBlocks = ({ block }: any) => {
                         value={secondDropdownValue}
                         onChange={handleSecondDropdownChange}
                         className="dropdown"
+                        disabled={!editMode}
                     >
                         <option value="all">all</option>
                         <option value="one">one</option>
@@ -128,17 +171,6 @@ export const ReferenceBlocks = ({ block }: any) => {
                         <option value="conditional">conditional</option>
                     </select>
                 </div>
-
-                {/* <div className="search-container"> */}
-                {/*     <input */}
-                {/*         type="text" */}
-                {/*         value={searchText} */}
-                {/*         onChange={handleSearchChange} */}
-                {/*         placeholder="something" */}
-                {/*         className="search-input" */}
-                {/*     /> */}
-                {/*     <button className="get-button">Save</button> */}
-                {/* </div> */}
 
                 <div className="view-toggle-container">
                     <button
@@ -153,7 +185,10 @@ export const ReferenceBlocks = ({ block }: any) => {
                     {viewMode === "list" ? (
                         <ul className="items-list">
                             {pagesList?.map((item) => (
-                                <li key={item.id} className="item">
+                                <li
+                                    key={item.id || item.page_id}
+                                    className="item"
+                                >
                                     {secondDropdownValue === "one" && (
                                         <input
                                             type="radio"
@@ -165,6 +200,7 @@ export const ReferenceBlocks = ({ block }: any) => {
                                                 handleItemSelect(item.page_id)
                                             }
                                             className="radio-input"
+                                            disabled={!editMode}
                                         />
                                     )}
                                     {secondDropdownValue === "many" && (
@@ -177,6 +213,7 @@ export const ReferenceBlocks = ({ block }: any) => {
                                                 handleItemSelect(item.page_id)
                                             }
                                             className="checkbox-input"
+                                            disabled={!editMode}
                                         />
                                     )}
                                     <span className="item-name">
@@ -187,13 +224,19 @@ export const ReferenceBlocks = ({ block }: any) => {
                         </ul>
                     ) : (
                         <div className="json-view">
-                            <p>json</p>
+                            <JSONField data={jsonData} />
+                            {/* <JSONField data={fullJsonData} /> */}
                         </div>
                     )}
                 </div>
-                {secondDropdownValue != "all" && (
-                    <button className="save-button">Save</button>
-                )}
+
+                <button
+                    className={`action-button ${editMode ? "save-button" : "edit-button"}`}
+                    onClick={editMode ? handleSave : toggleEditMode}
+                    disabled={isSaving}
+                >
+                    {isSaving ? "Saved!" : editMode ? "Save" : "Edit"}
+                </button>
             </div>
         </div>
     );

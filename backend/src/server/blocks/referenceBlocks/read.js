@@ -29,7 +29,7 @@ export const getReferenceBlock = async (req, res) => {
         const collectionWithPages = await Promise.all(
             collectionsList.map(async (collection) => {
                 const pages = await getPages(collection.collection_id);
-                console.log(pages, "pages");
+                // console.log(pages, "pages");
                 return {
                     ...collection,
                     pages: pages.map((page) => page.pages),
@@ -37,7 +37,7 @@ export const getReferenceBlock = async (req, res) => {
             }),
         );
 
-        console.log(collectionWithPages, "collectionWithPages");
+        // console.log(collectionWithPages, "collectionWithPages");
 
         res.json({ ...referenceBlock, collectionsList: collectionWithPages });
     } catch (error) {
