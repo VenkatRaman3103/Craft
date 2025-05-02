@@ -19,6 +19,7 @@ import { arrayBlocksRouter } from "./blocks/arrayBlocks/route.js";
 import { apiService } from "./services/api/route.js";
 import { tableRouter } from "./blocks/tableBlocks/route.js";
 import { referenceBlockRouter } from "./blocks/referenceBlocks/route.js";
+import { apiBlockRouter } from "./blocks/apiBlocks/route.js";
 
 dotenv.config();
 
@@ -90,6 +91,7 @@ app.use("/api", blocksRouter);
 app.use("/api", arrayBlocksRouter);
 app.use("/api", tableRouter);
 app.use("/api", referenceBlockRouter);
+app.use("/api", apiBlockRouter);
 
 // field
 app.use("/api", fieldRoute);
