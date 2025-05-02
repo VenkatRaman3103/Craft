@@ -1,14 +1,33 @@
-import React, { useState } from "react";
-import "./index.scss"; // Import the SCSS file
+import React, { useEffect, useState } from "react";
+import "./index.scss";
+import { useQuery } from "@tanstack/react-query";
+import { getReferenceBlock } from "./api";
 
-export const ReferenceBlocks = ({ block }) => {
-    console.log(block, "blockReferenceData");
+export const ReferenceBlocks = ({ block }: any) => {
+    const { data: refenceBlockdata } = useQuery({
+        queryFn: () => getReferenceBlock(block.block_id),
+        queryKey: () => ["referenceBlock", block.block_id],
+    });
 
-    const [firstDropdownValue, setFirstDropdownValue] = useState("1");
-    const [secondDropdownValue, setSecondDropdownValue] = useState("all");
+    const [selectedCollection, setSelectedCollection] = useState(
+        block.collection_id,
+    );
+    const [secondDropdownValue, setSecondDropdownValue] = useState(
+        block.reference_type,
+    );
     const [searchText, setSearchText] = useState("");
     const [selectedItems, setSelectedItems] = useState([]);
     const [viewMode, setViewMode] = useState("list");
+
+    const [pagesList, setPagesList] = useState();
+
+    useEffect(() => {
+        const pages = refenceBlockdata?.collectionsList.filter(
+            (collection) => collection.collection_id == selectedCollection,
+        );
+        console.log(pages ? pages : "", "pagesOSmenkbb");
+        setPagesList(pages[0]?.pages);
+    }, [refenceBlockdata, selectedCollection]);
 
     const items = [
         { id: 1, name: "Item One" },
@@ -19,7 +38,7 @@ export const ReferenceBlocks = ({ block }) => {
     ];
 
     const handleFirstDropdownChange = (e) => {
-        setFirstDropdownValue(e.target.value);
+        setSelectedCollection(e.target.value);
     };
 
     const handleSecondDropdownChange = (e) => {
@@ -45,7 +64,7 @@ export const ReferenceBlocks = ({ block }) => {
 
     const handleGetClick = () => {
         console.log("Get button clicked", {
-            firstDropdownValue,
+            firstDropdownValue: selectedCollection,
             secondDropdownValue,
             searchText,
             selectedItems,
@@ -56,9 +75,19 @@ export const ReferenceBlocks = ({ block }) => {
         setViewMode(viewMode === "list" ? "json" : "list");
     };
 
-    const filteredItems = items.filter((item) =>
-        item.name.toLowerCase().includes(searchText.toLowerCase()),
-    );
+    // const filteredItems = items.filter((item) =>
+    //     item.name.toLowerCase().includes(searchText.toLowerCase()),
+    // );
+
+    function handleSave() {
+        const payload = {
+            pagesList: selectedItems,
+            reference_type: secondDropdownValue,
+        };
+    }
+
+    console.log(pagesList, "blockReferenceData");
+    console.log(selectedItems, "selectedItems");
 
     return (
         <div className="reference-blocks-container">
@@ -66,13 +95,20 @@ export const ReferenceBlocks = ({ block }) => {
                 <div className="dropdown-row">
                     <div className="dropdown-container">
                         <select
-                            value={firstDropdownValue}
+                            value={selectedCollection}
                             onChange={handleFirstDropdownChange}
                             className="dropdown"
                         >
-                            <option value="1">1</option>
-                            <option value="2">2</option>
-                            <option value="3">3</option>
+                            {refenceBlockdata?.collectionsList?.map(
+                                (collection, ind) => (
+                                    <option
+                                        key={ind}
+                                        value={collection.collection_id}
+                                    >
+                                        {collection.name}
+                                    </option>
+                                ),
+                            )}
                         </select>
                     </div>
                     <button onClick={handleGetClick} className="get-button">
@@ -93,15 +129,16 @@ export const ReferenceBlocks = ({ block }) => {
                     </select>
                 </div>
 
-                <div className="search-container">
-                    <input
-                        type="text"
-                        value={searchText}
-                        onChange={handleSearchChange}
-                        placeholder="something"
-                        className="search-input"
-                    />
-                </div>
+                {/* <div className="search-container"> */}
+                {/*     <input */}
+                {/*         type="text" */}
+                {/*         value={searchText} */}
+                {/*         onChange={handleSearchChange} */}
+                {/*         placeholder="something" */}
+                {/*         className="search-input" */}
+                {/*     /> */}
+                {/*     <button className="get-button">Save</button> */}
+                {/* </div> */}
 
                 <div className="view-toggle-container">
                     <button
@@ -115,17 +152,17 @@ export const ReferenceBlocks = ({ block }) => {
                 <div className="items-container">
                     {viewMode === "list" ? (
                         <ul className="items-list">
-                            {filteredItems.map((item) => (
+                            {pagesList?.map((item) => (
                                 <li key={item.id} className="item">
                                     {secondDropdownValue === "one" && (
                                         <input
                                             type="radio"
                                             name="itemSelection"
                                             checked={selectedItems.includes(
-                                                item.id,
+                                                item.page_id,
                                             )}
                                             onChange={() =>
-                                                handleItemSelect(item.id)
+                                                handleItemSelect(item.page_id)
                                             }
                                             className="radio-input"
                                         />
@@ -134,16 +171,16 @@ export const ReferenceBlocks = ({ block }) => {
                                         <input
                                             type="checkbox"
                                             checked={selectedItems.includes(
-                                                item.id,
+                                                item.page_id,
                                             )}
                                             onChange={() =>
-                                                handleItemSelect(item.id)
+                                                handleItemSelect(item.page_id)
                                             }
                                             className="checkbox-input"
                                         />
                                     )}
                                     <span className="item-name">
-                                        {item.name}
+                                        {item.title}
                                     </span>
                                 </li>
                             ))}
@@ -154,6 +191,9 @@ export const ReferenceBlocks = ({ block }) => {
                         </div>
                     )}
                 </div>
+                {secondDropdownValue != "all" && (
+                    <button className="save-button">Save</button>
+                )}
             </div>
         </div>
     );

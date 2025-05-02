@@ -23,7 +23,7 @@ User-Agent: VRC
 # query
 # GET /table
 # GET /reference
-GET /reference/f543f50c-3214-4965-b5bd-e8014afe59d5
+GET /reference/test-route
 
 # body
 # {

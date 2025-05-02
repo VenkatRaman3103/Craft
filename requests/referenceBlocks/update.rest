@@ -22,8 +22,8 @@ User-Agent: VRC
 
 # query
 # PATCH /reference/c0968422-f97c-4394-b2cd-1595625fd0ef/name
-# PATCH /reference/c0968422-f97c-4394-b2cd-1595625fd0ef/reference_type
-PATCH /reference/c0968422-f97c-4394-b2cd-1595625fd0ef/collection_id
+# PATCH /reference/f543f50c-3214-4965-b5bd-e8014afe59d5/reference_type
+PATCH /reference/f543f50c-3214-4965-b5bd-e8014afe59d5/collection_id
 
 # body
 # {
@@ -31,11 +31,11 @@ PATCH /reference/c0968422-f97c-4394-b2cd-1595625fd0ef/collection_id
 # }
 
 # {
-#     "reference_type": "123"
+#     "reference_type": "all"
 # }
  
 {
-    "collection_id": "123"
+    "collection_id": "aede9957-7260-42d8-91fa-fb76e9ae91a5"
 }
 
 

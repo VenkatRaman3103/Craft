@@ -7,8 +7,11 @@ import {
     updateNameReferenceBlock,
     updateTypeReferenceBlock,
 } from "./update.js";
+import { referenceBlockItemsRouter } from "./referenceBlockItems/route.js";
 
 export const referenceBlockRouter = express.Router();
+
+referenceBlockRouter.use("/reference", referenceBlockItemsRouter);
 
 // create new reference block
 referenceBlockRouter.post("/reference", createReferenceBlock);
