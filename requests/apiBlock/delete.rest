@@ -21,10 +21,15 @@ Content-Type: application/json; charset=utf-8
 User-Agent: VRC
 
 # query
-# GET /setup-test-data
-POST /api
+# GET /table
+DELETE /api/240363c5-e0b1-46e8-a380-8ca1cfb6aea7
 
 # body
-{
-    "name": "drop api block"
-}
+# {
+#     "name": "block name",
+#     "description": "Hello world",
+#     "block_type": "normal_block"
+# }
+
+
+

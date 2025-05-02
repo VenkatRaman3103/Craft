@@ -21,10 +21,14 @@ Content-Type: application/json; charset=utf-8
 User-Agent: VRC
 
 # query
-# GET /setup-test-data
-POST /api
+# PATCH /api/83a8738e-f851-4ad6-9ac6-3792410829af/name
+PATCH /api/83a8738e-f851-4ad6-9ac6-3792410829af/url
 
 # body
+# {
+#     "name": "batman"
+# }
+
 {
-    "name": "drop api block"
+    "url": "gotham/batman"
 }

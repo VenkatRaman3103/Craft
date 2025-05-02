@@ -1,6 +1,7 @@
 import express from "express";
 import { db } from "../../server.js";
 import { apiBlocks } from "../../../db/schema/blocks/apiBlocks/schema.js";
+import { eq } from "drizzle-orm";
 
 export const apiBlockRouter = express.Router();
 
@@ -47,6 +48,70 @@ apiBlockRouter.get("/api/:block_id", async (req, res) => {
 apiBlockRouter.get("/api", async (req, res) => {
     try {
         const newApiBlock = await db.select().from(apiBlocks);
+        res.json(newApiBlock);
+    } catch (error) {
+        const errorMessage = {
+            error,
+            message: `Error in creating the block`,
+            origin: "backend/apiBlock/POST",
+        };
+        res.status(500).json(errorMessage);
+    }
+});
+
+apiBlockRouter.delete("/api/:block_id", async (req, res) => {
+    const { block_id } = req.params;
+    try {
+        const newApiBlock = await db
+            .delete(apiBlocks)
+            .where(eq(apiBlocks.block_id, block_id))
+            .returning();
+        res.json(newApiBlock);
+    } catch (error) {
+        const errorMessage = {
+            error,
+            message: `Error in creating the block`,
+            origin: "backend/apiBlock/POST",
+        };
+        res.status(500).json(errorMessage);
+    }
+});
+
+apiBlockRouter.patch("/api/:block_id/name", async (req, res) => {
+    const { block_id } = req.params;
+    const { name } = req.body;
+    try {
+        const newApiBlock = await db
+            .update(apiBlocks)
+            .set({
+                name,
+            })
+            .where(eq(apiBlocks.block_id, block_id))
+            .returning();
+
+        res.json(newApiBlock);
+    } catch (error) {
+        const errorMessage = {
+            error,
+            message: `Error in creating the block`,
+            origin: "backend/apiBlock/POST",
+        };
+        res.status(500).json(errorMessage);
+    }
+});
+
+apiBlockRouter.patch("/api/:block_id/url", async (req, res) => {
+    const { block_id } = req.params;
+    const { url } = req.body;
+    try {
+        const newApiBlock = await db
+            .update(apiBlocks)
+            .set({
+                url,
+            })
+            .where(eq(apiBlocks.block_id, block_id))
+            .returning();
+
         res.json(newApiBlock);
     } catch (error) {
         const errorMessage = {
