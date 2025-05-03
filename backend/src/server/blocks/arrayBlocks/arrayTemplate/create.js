@@ -16,6 +16,13 @@ import {
     multiSelectOptions,
     singleSelectFields,
     singleSelectOptions,
+    apiBlocks,
+    referenceBlock,
+    referenceBlockItems,
+    tableBlocks,
+    tableRows,
+    tableColumns,
+    tableEntries,
 } from "../../../../db/schema/index.js";
 import { eq } from "drizzle-orm";
 
@@ -76,6 +83,8 @@ export async function duplicateTheTemplate(req, res) {
         const blockMap = new Map();
         const templateMap = new Map();
         const fieldMap = new Map();
+        const tableRowMap = new Map();
+        const tableColumnMap = new Map();
 
         // Recursively duplicate the block items and their children
         const result = await duplicateBlockItemsRecursively(
@@ -85,6 +94,8 @@ export async function duplicateTheTemplate(req, res) {
             blockMap,
             templateMap,
             fieldMap,
+            tableRowMap,
+            tableColumnMap,
         );
 
         res.json({
@@ -93,6 +104,8 @@ export async function duplicateTheTemplate(req, res) {
             blockMap: Object.fromEntries(blockMap),
             templateMap: Object.fromEntries(templateMap),
             fieldMap: Object.fromEntries(fieldMap),
+            tableRowMap: Object.fromEntries(tableRowMap),
+            tableColumnMap: Object.fromEntries(tableColumnMap),
         });
     } catch (error) {
         const errorMessage = {
@@ -112,6 +125,8 @@ export async function duplicateTheTemplate(req, res) {
  * @param {Map} blockMap - Map of original block IDs to duplicated block IDs
  * @param {Map} templateMap - Map of original template IDs to duplicated template IDs
  * @param {Map} fieldMap - Map of original field IDs to duplicated field IDs
+ * @param {Map} tableRowMap - Map of original table row IDs to duplicated row IDs
+ * @param {Map} tableColumnMap - Map of original table column IDs to duplicated column IDs
  * @returns {Promise<Array>} - Array of duplicated items
  */
 async function duplicateBlockItemsRecursively(
@@ -121,6 +136,8 @@ async function duplicateBlockItemsRecursively(
     blockMap = new Map(),
     templateMap = new Map(),
     fieldMap = new Map(),
+    tableRowMap = new Map(),
+    tableColumnMap = new Map(),
 ) {
     if (!blockItems || blockItems.length === 0) {
         return [];
@@ -130,23 +147,59 @@ async function duplicateBlockItemsRecursively(
 
     for (const blockItem of blockItems) {
         try {
-            // Handle different item types: normal block, array block, or field
+            // Handle different item types: normal block, array block, api block, reference block, table block, or field
             if (
                 blockItem.item_type === "normal" ||
-                blockItem.item_type === "array"
+                blockItem.item_type === "array" ||
+                blockItem.item_type === "api" ||
+                blockItem.item_type === "reference" ||
+                blockItem.item_type === "table"
             ) {
-                // Get the original block (could be normal or array)
+                // Get the original block based on type
                 let originalBlock;
-                if (blockItem.item_type === "normal") {
-                    originalBlock = await db.query.blocks.findFirst({
-                        where: (blocks, { eq }) =>
-                            eq(blocks.block_id, blockItem.reference_id),
-                    });
-                } else if (blockItem.item_type === "array") {
-                    originalBlock = await db.query.arrayBlocks.findFirst({
-                        where: (arrayBlocks, { eq }) =>
-                            eq(arrayBlocks.block_id, blockItem.reference_id),
-                    });
+
+                switch (blockItem.item_type) {
+                    case "normal":
+                        originalBlock = await db.query.blocks.findFirst({
+                            where: (blocks, { eq }) =>
+                                eq(blocks.block_id, blockItem.reference_id),
+                        });
+                        break;
+                    case "array":
+                        originalBlock = await db.query.arrayBlocks.findFirst({
+                            where: (arrayBlocks, { eq }) =>
+                                eq(
+                                    arrayBlocks.block_id,
+                                    blockItem.reference_id,
+                                ),
+                        });
+                        break;
+                    case "api":
+                        originalBlock = await db.query.apiBlocks.findFirst({
+                            where: (apiBlocks, { eq }) =>
+                                eq(apiBlocks.block_id, blockItem.reference_id),
+                        });
+                        break;
+                    case "reference":
+                        originalBlock = await db.query.referenceBlock.findFirst(
+                            {
+                                where: (referenceBlock, { eq }) =>
+                                    eq(
+                                        referenceBlock.block_id,
+                                        blockItem.reference_id,
+                                    ),
+                            },
+                        );
+                        break;
+                    case "table":
+                        originalBlock = await db.query.tableBlocks.findFirst({
+                            where: (tableBlocks, { eq }) =>
+                                eq(
+                                    tableBlocks.block_id,
+                                    blockItem.reference_id,
+                                ),
+                        });
+                        break;
                 }
 
                 if (!originalBlock) {
@@ -163,46 +216,144 @@ async function duplicateBlockItemsRecursively(
                     const duplicatedBlockId = blockMap.get(
                         originalBlock.block_id,
                     );
-                    if (originalBlock.block_type === "normal") {
-                        newBlock = await db.query.blocks.findFirst({
-                            where: (blocks, { eq }) =>
-                                eq(blocks.block_id, duplicatedBlockId),
-                        });
-                    } else if (originalBlock.block_type === "array") {
-                        newBlock = await db.query.arrayBlocks.findFirst({
-                            where: (arrayBlocks, { eq }) =>
-                                eq(arrayBlocks.block_id, duplicatedBlockId),
-                        });
+
+                    switch (blockItem.item_type) {
+                        case "normal":
+                            newBlock = await db.query.blocks.findFirst({
+                                where: (blocks, { eq }) =>
+                                    eq(blocks.block_id, duplicatedBlockId),
+                            });
+                            break;
+                        case "array":
+                            newBlock = await db.query.arrayBlocks.findFirst({
+                                where: (arrayBlocks, { eq }) =>
+                                    eq(arrayBlocks.block_id, duplicatedBlockId),
+                            });
+                            break;
+                        case "api":
+                            newBlock = await db.query.apiBlocks.findFirst({
+                                where: (apiBlocks, { eq }) =>
+                                    eq(apiBlocks.block_id, duplicatedBlockId),
+                            });
+                            break;
+                        case "reference":
+                            newBlock = await db.query.referenceBlock.findFirst({
+                                where: (referenceBlock, { eq }) =>
+                                    eq(
+                                        referenceBlock.block_id,
+                                        duplicatedBlockId,
+                                    ),
+                            });
+                            break;
+                        case "table":
+                            newBlock = await db.query.tableBlocks.findFirst({
+                                where: (tableBlocks, { eq }) =>
+                                    eq(tableBlocks.block_id, duplicatedBlockId),
+                            });
+                            break;
                     }
+
                     console.log(
                         `Reusing existing duplicate of ${originalBlock.block_id} -> ${duplicatedBlockId}`,
                     );
                 } else {
-                    // Create a new duplicate
-                    if (originalBlock.block_type === "normal") {
-                        const [duplicatedBlock] = await db
-                            .insert(blocks)
-                            .values([
-                                {
-                                    name: originalBlock.name,
-                                    block_type: originalBlock.block_type,
-                                    description: originalBlock.description,
-                                },
-                            ])
-                            .returning();
-                        newBlock = duplicatedBlock;
-                    } else if (originalBlock.block_type === "array") {
-                        const [duplicatedBlock] = await db
-                            .insert(arrayBlocks)
-                            .values([
-                                {
-                                    name: originalBlock.name,
-                                    block_type: originalBlock.block_type,
-                                    description: originalBlock.description,
-                                },
-                            ])
-                            .returning();
-                        newBlock = duplicatedBlock;
+                    // Create a new duplicate based on block type
+                    switch (blockItem.item_type) {
+                        case "normal":
+                            [newBlock] = await db
+                                .insert(blocks)
+                                .values([
+                                    {
+                                        name: originalBlock.name,
+                                        block_type: originalBlock.block_type,
+                                        description: originalBlock.description,
+                                    },
+                                ])
+                                .returning();
+                            break;
+                        case "array":
+                            [newBlock] = await db
+                                .insert(arrayBlocks)
+                                .values([
+                                    {
+                                        name: originalBlock.name,
+                                        block_type: originalBlock.block_type,
+                                        description: originalBlock.description,
+                                    },
+                                ])
+                                .returning();
+                            break;
+                        case "api":
+                            [newBlock] = await db
+                                .insert(apiBlocks)
+                                .values([
+                                    {
+                                        name: originalBlock.name,
+                                        block_type: originalBlock.block_type,
+                                        description: originalBlock.description,
+                                        url: originalBlock.url,
+                                        response: originalBlock.response,
+                                        scope: originalBlock.scope,
+                                    },
+                                ])
+                                .returning();
+                            break;
+                        case "reference":
+                            [newBlock] = await db
+                                .insert(referenceBlock)
+                                .values([
+                                    {
+                                        name: originalBlock.name,
+                                        block_type: originalBlock.block_type,
+                                        description: originalBlock.description,
+                                        reference_type:
+                                            originalBlock.reference_type,
+                                        collection_id:
+                                            originalBlock.collection_id,
+                                        scope: originalBlock.scope,
+                                    },
+                                ])
+                                .returning();
+
+                            // Also duplicate reference block items if any
+                            const referenceItems =
+                                await db.query.referenceBlockItems.findMany({
+                                    where: (referenceBlockItems, { eq }) =>
+                                        eq(
+                                            referenceBlockItems.block_id,
+                                            originalBlock.block_id,
+                                        ),
+                                });
+
+                            for (const refItem of referenceItems) {
+                                await db.insert(referenceBlockItems).values([
+                                    {
+                                        block_id: newBlock.block_id,
+                                    },
+                                ]);
+                            }
+                            break;
+                        case "table":
+                            [newBlock] = await db
+                                .insert(tableBlocks)
+                                .values([
+                                    {
+                                        name: originalBlock.name,
+                                        block_type: originalBlock.block_type,
+                                        description: originalBlock.description,
+                                        scope: originalBlock.scope,
+                                    },
+                                ])
+                                .returning();
+
+                            // Duplicate table structure (rows and columns) and data
+                            await duplicateTableStructure(
+                                originalBlock.block_id,
+                                newBlock.block_id,
+                                tableRowMap,
+                                tableColumnMap,
+                            );
+                            break;
                     }
 
                     // Store the mapping for future reference
@@ -300,12 +451,14 @@ async function duplicateBlockItemsRecursively(
                                 blockMap,
                                 templateMap,
                                 fieldMap,
+                                tableRowMap,
+                                tableColumnMap,
                             );
                         }
                     }
                 }
 
-                // For both normal and array blocks, find and duplicate their children
+                // For normal blocks, find and duplicate their children
                 if (originalBlock.block_type === "normal") {
                     // Find all child items of the original block (including fields)
                     const childItems = await db.query.block_items.findMany({
@@ -327,25 +480,64 @@ async function duplicateBlockItemsRecursively(
                                 fieldMap,
                             );
                         } else {
-                            // Handle block or array block
+                            // Handle block or array block or other block types
                             let childBlock;
-                            if (childItem.item_type === "normal") {
-                                childBlock = await db.query.blocks.findFirst({
-                                    where: (blocks, { eq }) =>
-                                        eq(
-                                            blocks.block_id,
-                                            childItem.reference_id,
-                                        ),
-                                });
-                            } else if (childItem.item_type === "array") {
-                                childBlock =
-                                    await db.query.arrayBlocks.findFirst({
-                                        where: (arrayBlocks, { eq }) =>
-                                            eq(
-                                                arrayBlocks.block_id,
-                                                childItem.reference_id,
-                                            ),
-                                    });
+                            switch (childItem.item_type) {
+                                case "normal":
+                                    childBlock =
+                                        await db.query.blocks.findFirst({
+                                            where: (blocks, { eq }) =>
+                                                eq(
+                                                    blocks.block_id,
+                                                    childItem.reference_id,
+                                                ),
+                                        });
+                                    break;
+                                case "array":
+                                    childBlock =
+                                        await db.query.arrayBlocks.findFirst({
+                                            where: (arrayBlocks, { eq }) =>
+                                                eq(
+                                                    arrayBlocks.block_id,
+                                                    childItem.reference_id,
+                                                ),
+                                        });
+                                    break;
+                                case "api":
+                                    childBlock =
+                                        await db.query.apiBlocks.findFirst({
+                                            where: (apiBlocks, { eq }) =>
+                                                eq(
+                                                    apiBlocks.block_id,
+                                                    childItem.reference_id,
+                                                ),
+                                        });
+                                    break;
+                                case "reference":
+                                    childBlock =
+                                        await db.query.referenceBlock.findFirst(
+                                            {
+                                                where: (
+                                                    referenceBlock,
+                                                    { eq },
+                                                ) =>
+                                                    eq(
+                                                        referenceBlock.block_id,
+                                                        childItem.reference_id,
+                                                    ),
+                                            },
+                                        );
+                                    break;
+                                case "table":
+                                    childBlock =
+                                        await db.query.tableBlocks.findFirst({
+                                            where: (tableBlocks, { eq }) =>
+                                                eq(
+                                                    tableBlocks.block_id,
+                                                    childItem.reference_id,
+                                                ),
+                                        });
+                                    break;
                             }
 
                             if (childBlock) {
@@ -391,6 +583,8 @@ async function duplicateBlockItemsRecursively(
                                             blockMap,
                                             templateMap,
                                             fieldMap,
+                                            tableRowMap,
+                                            tableColumnMap,
                                         );
 
                                     duplicatedChildId =
@@ -463,6 +657,89 @@ async function duplicateBlockItemsRecursively(
     }
 
     return results;
+}
+
+/**
+ * Duplicates the structure and data of a table
+ * @param {string} originalTableId - The original table ID
+ * @param {string} newTableId - The new table ID
+ * @param {Map} tableRowMap - Map to track row mappings
+ * @param {Map} tableColumnMap - Map to track column mappings
+ */
+async function duplicateTableStructure(
+    originalTableId,
+    newTableId,
+    tableRowMap,
+    tableColumnMap,
+) {
+    try {
+        // 1. Duplicate columns
+        const originalColumns = await db.query.tableColumns.findMany({
+            where: (tableColumns, { eq }) =>
+                eq(tableColumns.table_id, originalTableId),
+        });
+
+        for (const originalColumn of originalColumns) {
+            const [newColumn] = await db
+                .insert(tableColumns)
+                .values([
+                    {
+                        value: originalColumn.value,
+                        table_id: newTableId,
+                    },
+                ])
+                .returning();
+
+            tableColumnMap.set(originalColumn.column_id, newColumn.column_id);
+        }
+
+        // 2. Duplicate rows
+        const originalRows = await db.query.tableRows.findMany({
+            where: (tableRows, { eq }) =>
+                eq(tableRows.table_id, originalTableId),
+        });
+
+        for (const originalRow of originalRows) {
+            const [newRow] = await db
+                .insert(tableRows)
+                .values([
+                    {
+                        value: originalRow.value,
+                        table_id: newTableId,
+                    },
+                ])
+                .returning();
+
+            tableRowMap.set(originalRow.row_id, newRow.row_id);
+
+            // 3. Duplicate entries for this row
+            const entries = await db.query.tableEntries.findMany({
+                where: (tableEntries, { eq }) =>
+                    eq(tableEntries.row_id, originalRow.row_id),
+            });
+
+            for (const entry of entries) {
+                const newColumnId = tableColumnMap.get(entry.column_id);
+
+                if (newColumnId) {
+                    await db.insert(tableEntries).values([
+                        {
+                            value: entry.value,
+                            row_id: newRow.row_id,
+                            column_id: newColumnId,
+                        },
+                    ]);
+                }
+            }
+        }
+
+        console.log(
+            `Duplicated table structure for ${originalTableId} -> ${newTableId}`,
+        );
+    } catch (error) {
+        console.error(`Error duplicating table structure: ${error.message}`);
+        console.error(error.stack);
+    }
 }
 
 /**
