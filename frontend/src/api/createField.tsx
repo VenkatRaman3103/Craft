@@ -3,11 +3,11 @@ import axios from "axios";
 
 // create a new feild
 export const createField = async (field, parent_id, itemType, templateId) => {
-    console.log("createField:", field, parent_id, itemType, templateId);
+    console.log("createField:", field, parent_id, itemType);
 
     let response;
     const fieldEndpoints = {
-        multi_select_field: "/fields/mutli_select", // Note: there's a typo in 'mutli_select'
+        multi_select_field: "/fields/mutli_select",
         single_select_field: "/fields/single_select",
         text_field: "/fields/text",
         number_field: "/fields/number",
@@ -95,6 +95,11 @@ export const createField = async (field, parent_id, itemType, templateId) => {
             type: field.type,
         });
     } else if (itemType == "page") {
+        await axios.post(`${backendUrl}${config.endpoint}`, {
+            reference_id: field_id,
+            type: field.type,
+        });
+    } else if (itemType == "collection") {
         await axios.post(`${backendUrl}${config.endpoint}`, {
             reference_id: field_id,
             type: field.type,

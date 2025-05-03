@@ -48,15 +48,15 @@ export const Collection = () => {
         deleteMutation.mutate(page_id);
     }
 
-    // Handle loading state
     if (isLoading) {
         return <div>Collection Loading...</div>;
     }
 
-    // Handle case when data is not available
     if (!collectionData) {
         return <div>Collection not found</div>;
     }
+
+    console.log(collectionData, "collectionData");
 
     return (
         <div className="collection-pages-container">

@@ -44,18 +44,30 @@ export async function getCollectionByCollectionId(req, res) {
 }
 
 function reorganizeCollectionData(collection) {
+    if (!collection) {
+        return null;
+    }
+
     const { collection_items, ...collectionInfo } = collection;
 
     const pages = [];
     const nonPageItems = [];
 
-    collection_items.forEach((item) => {
-        if (item.item_type === "page") {
-            pages.push(item.page);
-        } else {
-            nonPageItems.push(item);
-        }
-    });
+    if (collection_items && Array.isArray(collection_items)) {
+        collection_items.forEach((item) => {
+            if (item.item_type === "page") {
+                // Only push the reference_id as we don't have actual page data
+                pages.push({
+                    reference_id: item.reference_id,
+                    item_id: item.item_id,
+                    createdAt: item.createdAt,
+                    editedAt: item.editedAt,
+                });
+            } else {
+                nonPageItems.push(item);
+            }
+        });
+    }
 
     return {
         ...collectionInfo,
@@ -67,14 +79,31 @@ function reorganizeCollectionData(collection) {
 export async function getCollectionItemsByCollectionId(req, res) {
     const { collection_id } = req.params;
     try {
+        const test = await db.query.collections.findFirst({
+            where: (collection, { eq }) =>
+                eq(collection.collection_id, collection_id),
+            with: {
+                collection_items: {
+                    with: {
+                        textarea_field: true,
+                    },
+                },
+            },
+        });
+        console.log(test, "collectionData");
+
         const collectionData = await db.query.collections.findFirst({
             where: (collection, { eq }) =>
                 eq(collection.collection_id, collection_id),
             with: {
                 collection_items: {
                     with: {
-                        page: true,
                         text_field: true,
+                        // normal: true,
+                        // array: true,
+                        // table: true,
+                        // reference: true,
+                        // api: true,
                         multi_select_field: {
                             with: {
                                 options: true,
@@ -97,13 +126,20 @@ export async function getCollectionItemsByCollectionId(req, res) {
             },
         });
 
+        if (!collectionData) {
+            return res.status(404).json({ error: "Collection not found" });
+        }
+
         const reorganizedData = reorganizeCollectionData(collectionData);
 
         res.status(200).json(reorganizedData);
     } catch (error) {
-        console.log(
+        console.error(
             `Error in fetching the collection items by Id: ${collection_id}`,
+            error,
         );
-        res.status(500).json({ error: error });
+        res.status(500).json({
+            error: error.message || "Internal Server Error",
+        });
     }
 }
