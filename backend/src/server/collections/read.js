@@ -43,7 +43,7 @@ export async function getCollectionByCollectionId(req, res) {
     }
 }
 
-function reorganizeCollectionData(collection) {
+async function reorganizeCollectionData(collection) {
     if (!collection) {
         return null;
     }
@@ -54,20 +54,32 @@ function reorganizeCollectionData(collection) {
     const nonPageItems = [];
 
     if (collection_items && Array.isArray(collection_items)) {
-        collection_items.forEach((item) => {
-            if (item.item_type === "page") {
-                // Only push the reference_id as we don't have actual page data
-                pages.push({
-                    reference_id: item.reference_id,
-                    item_id: item.item_id,
-                    createdAt: item.createdAt,
-                    editedAt: item.editedAt,
-                });
-            } else {
-                nonPageItems.push(item);
-            }
-        });
+        await Promise.all(
+            collection_items.map(async (item) => {
+                if (item.item_type === "page") {
+                    const page = await db.query.pages.findFirst({
+                        where: (pages, { eq }) =>
+                            eq(pages.page_id, item.reference_id),
+                    });
+
+                    if (page) {
+                        pages.push({
+                            page_id: page.page_id,
+                            title: page.title,
+                            reference_id: item.reference_id,
+                            item_id: item.item_id,
+                            createdAt: item.createdAt,
+                            editedAt: item.editedAt,
+                        });
+                    }
+                } else {
+                    nonPageItems.push(item);
+                }
+            }),
+        );
     }
+
+    console.log(pages, "pageIndividual");
 
     return {
         ...collectionInfo,
@@ -130,7 +142,7 @@ export async function getCollectionItemsByCollectionId(req, res) {
             return res.status(404).json({ error: "Collection not found" });
         }
 
-        const reorganizedData = reorganizeCollectionData(collectionData);
+        const reorganizedData = await reorganizeCollectionData(collectionData);
 
         res.status(200).json(reorganizedData);
     } catch (error) {

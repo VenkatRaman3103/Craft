@@ -227,6 +227,8 @@ export const PagePreview = ({
         navigate(`/pages/${page_id}`);
     }
 
+    console.log(page, "pageItemsLis");
+
     return (
         <div className="page-container">
             <div className="page-wrapper">
