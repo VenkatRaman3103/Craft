@@ -278,7 +278,6 @@
   }
 }
 
-// Add explorer-header class styles
 .explorer-header {
   display: flex;
   flex-direction: column;
@@ -286,7 +285,6 @@
   width: 100%;
 }
 
-// Update the selected-indicator to show the label instead of actionKey
 .selected-indicator {
   white-space: nowrap;
   width: fit-content;
@@ -299,7 +297,6 @@
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
-// Animation for content appearance
 @keyframes fadeInContent {
   from {
     opacity: 0;
@@ -311,5 +308,3 @@
     transform: translateY(0);
   }
 }
-
-//}//}//}//}

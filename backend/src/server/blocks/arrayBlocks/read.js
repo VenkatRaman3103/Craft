@@ -108,6 +108,24 @@ export async function getArrayBlockWithNestedContent(block_id) {
                         eq(numberFields.field_id, item.reference_id),
                 });
                 return { item_type: "number_field", number_field: field };
+            } else if (item.item_type === "api") {
+                const block = await db.query.apiBlocks.findFirst({
+                    where: (apiBlocks, { eq }) =>
+                        eq(apiBlocks.block_id, item.reference_id),
+                });
+                return { item_type: "api", api: block };
+            } else if (item.item_type === "reference") {
+                const block = await db.query.referenceBlock.findFirst({
+                    where: (referenceBlock, { eq }) =>
+                        eq(referenceBlock.block_id, item.reference_id),
+                });
+                return { item_type: "reference", reference: block };
+            } else if (item.item_type === "table") {
+                const block = await db.query.tableBlocks.findFirst({
+                    where: (tableBlocks, { eq }) =>
+                        eq(tableBlocks.block_id, item.reference_id),
+                });
+                return { item_type: "table", table: block };
             } else if (item.item_type === "email_field") {
                 const field = await db.query.emailFields.findFirst({
                     where: (emailFields, { eq }) =>
@@ -285,6 +303,41 @@ export async function getArrayTemplates(block_id) {
                             item_id: result.field_id,
                             email_field: result,
                         };
+                    } else if (item.item_type === "api") {
+                        const result = await db.query.apiBlocks.findFirst({
+                            where: (apiBlocks, { eq }) =>
+                                eq(apiBlocks.block_id, item.reference_id),
+                        });
+
+                        some = {
+                            item_type: "api",
+                            item_id: result.block_id,
+                            api: result,
+                        };
+                    } else if (item.item_type === "reference") {
+                        const result = await db.query.referenceBlock.findFirst({
+                            where: (referenceBlock, { eq }) =>
+                                eq(referenceBlock.block_id, item.reference_id),
+                        });
+
+                        some = {
+                            item_type: "reference",
+                            item_id: result.block_id,
+                            reference: result,
+                        };
+                    } else if (item.item_type === "table") {
+                        const result = await db.query.tableBlocks.findFirst({
+                            where: (tableBlocks, { eq }) =>
+                                eq(tableBlocks.block_id, item.reference_id),
+                        });
+
+                        console.log(result, item, item.reference_id);
+
+                        some = {
+                            item_type: "table",
+                            item_id: result.block_id,
+                            table: result,
+                        };
                     } else if (item.item_type === "multi_select_field") {
                         const result =
                             await db.query.multiSelectFields.findFirst({
@@ -447,6 +500,30 @@ export async function getArrayBlocksWithTemplatesNested(block_id, template_id) {
                 );
                 // console.log(nestedContent, "nestedContent");
                 return { item_type: item.item_type, array: nestedContent };
+            } else if (item.item_type === "api") {
+                const block = await db.query.apiBlocks.findFirst({
+                    where: (apiBlocks, { eq }) =>
+                        eq(apiBlocks.block_id, item.reference_id),
+                });
+                return { item_type: "api", api: block };
+            } else if (item.item_type === "reference") {
+                const block = await db.query.referenceBlock.findFirst({
+                    where: (referenceBlock, { eq }) =>
+                        eq(referenceBlock.block_id, item.reference_id),
+                });
+                return { item_type: "reference", reference: block };
+            } else if (item.item_type === "table") {
+                const block = await db.query.tableBlocks.findFirst({
+                    where: (tableBlocks, { eq }) =>
+                        eq(tableBlocks.block_id, item.reference_id),
+                });
+                return { item_type: "table", table: block };
+            } else if (item.item_type === "email_field") {
+                const field = await db.query.emailFields.findFirst({
+                    where: (emailFields, { eq }) =>
+                        eq(emailFields.field_id, item.reference_id),
+                });
+                return { item_type: "email_field", email_field: field };
             } else if (item.item_type === "json_field") {
                 const field = await db.query.jsonFields.findFirst({
                     where: (jsonFields, { eq }) =>
@@ -459,12 +536,6 @@ export async function getArrayBlocksWithTemplatesNested(block_id, template_id) {
                         eq(numberFields.field_id, item.reference_id),
                 });
                 return { item_type: "number_field", number_field: field };
-            } else if (item.item_type === "email_field") {
-                const field = await db.query.emailFields.findFirst({
-                    where: (emailFields, { eq }) =>
-                        eq(emailFields.field_id, item.reference_id),
-                });
-                return { item_type: "email_field", email_field: field };
             } else if (item.item_type === "multi_select") {
                 const field = await db.query.multiSelectFields.findFirst({
                     where: (multiSelectFields, { eq }) =>

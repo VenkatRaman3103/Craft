@@ -27,6 +27,7 @@ async function formatData(block) {
                 }
             } else if (item.item_type === "array") {
                 const templatesData = [];
+                console.log(item.array.block_id, "-------------");
                 const temp = await getArrayTemplates(item.array.block_id);
                 const templateArr = [];
 
@@ -85,6 +86,7 @@ async function getPageItemsData(data) {
             }
         } else if (item.item_type === "array") {
             const templatesData = [];
+            console.log(item.array.block_id, "==========");
             const temp = await getArrayTemplates(item.array.block_id);
             const templateArr = [];
 

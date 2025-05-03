@@ -10,7 +10,6 @@ import { FieldsAndBlocksList } from "@/Components/FieldsAndBlocksList";
 import { SideBar } from "@/Components/SideBar";
 import { ApiViewer } from "@/Components/ApiViewer";
 
-// some
 export const Page = () => {
     const { page_id } = useParams();
     const [openSideBar, setOpenSideBar] = useState(false);
@@ -54,7 +53,6 @@ export const Page = () => {
         }
     }, [pageData, parentCollectionId]);
 
-    // to reset the SideBar component type when the side is closed
     useEffect(() => {
         if (!openSideBar) {
             setSideBarComponent(undefined);

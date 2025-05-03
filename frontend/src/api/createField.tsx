@@ -62,7 +62,6 @@ export const createField = async (field, parent_id, itemType, templateId) => {
             endpoint: `/array/${parent_id}/block_items`,
             idField: "parent_block_id",
         },
-
         // page: {
         //     endpoint: `/page/${parent_id}/page_items`,
         //     idField: "page_id",

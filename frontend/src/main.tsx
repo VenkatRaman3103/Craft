@@ -6,6 +6,7 @@ import { Collection } from "./Pages/Collection/index.tsx";
 import { Page } from "./Pages/Page/index.tsx";
 import { Explorer } from "./Components/Explorer";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { TestPage } from "./Pages/TestPage/index.tsx";
 
 const rootElement = document.getElementById("root");
 

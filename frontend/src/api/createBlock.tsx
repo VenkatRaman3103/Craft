@@ -3,7 +3,7 @@ import axios from "axios";
 
 // note: create block
 interface Block {
-    blockType: "normal" | "array";
+    blockType: "normal" | "array" | "api" | "table";
 }
 
 interface Payload {
@@ -49,7 +49,13 @@ export const createBlock = async (
 
         if (scope === "page") {
             await createPageItem(page_id, reference_id, block.blockType);
-        } else if (scope === "block" || scope === "array") {
+        } else if (
+            scope === "block" ||
+            scope === "array" ||
+            scope === "api" ||
+            scope === "referene" ||
+            scope === "table"
+        ) {
             await createBlockItem(
                 parentBlockId,
                 reference_id,
@@ -81,11 +87,11 @@ export const createPageItem = async (
 export const createBlockItem = async (
     parentBlockId: string,
     reference_id: string,
-    blockType: "normal" | "array",
+    blockType: "normal" | "array" | "api" | "table" | "reference",
     parentBlockType: string,
     templateId?: string,
 ) => {
-    console.log("entering into createBlockItem");
+    console.log(blockType, "entering into createBlockItem");
     try {
         if (blockType === "normal") {
             console.log(
@@ -110,6 +116,48 @@ export const createBlockItem = async (
                     parent_block_id: parentBlockId,
                     parent_template_id: templateId,
                     type: blockType,
+                },
+            );
+        } else if (blockType === "api") {
+            console.log(
+                `${backendUrl}/${blockType}/${parentBlockId}/block_items`,
+                "api block selected",
+            );
+            await axios.post(
+                `${backendUrl}/${parentBlockType}/${parentBlockId}/block_items`,
+                {
+                    reference_id,
+                    parent_block_id: parentBlockId,
+                    type: blockType,
+                    parent_template_id: templateId ? templateId : "",
+                },
+            );
+        } else if (blockType === "reference") {
+            console.log(
+                `${backendUrl}/${blockType}/${parentBlockId}/block_items`,
+                "api block selected",
+            );
+            await axios.post(
+                `${backendUrl}/${parentBlockType}/${parentBlockId}/block_items`,
+                {
+                    reference_id,
+                    parent_block_id: parentBlockId,
+                    type: blockType,
+                    parent_template_id: templateId ? templateId : "",
+                },
+            );
+        } else if (blockType === "table") {
+            console.log(
+                `${backendUrl}/${blockType}/${parentBlockId}/block_items`,
+                "table block selected",
+            );
+            await axios.post(
+                `${backendUrl}/${parentBlockType}/${parentBlockId}/block_items`,
+                {
+                    reference_id,
+                    parent_block_id: parentBlockId,
+                    type: blockType,
+                    parent_template_id: templateId ? templateId : "",
                 },
             );
         }

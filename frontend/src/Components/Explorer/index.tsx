@@ -85,7 +85,6 @@ const ExplorerSection = ({
     );
 };
 
-// Dummy content components for each section
 const DesignContent = () => (
     <div className="section-content">
         <h3>Design Tools</h3>
@@ -250,23 +249,19 @@ export const Explorer = ({ children }: { children: React.ReactNode }) => {
                 setSelectedAction(null);
             }
         } else if (action === "gallery") {
-            // Close the explorer panel and enable gallery mode
             setExpanded(false);
             setSelectedAction(null);
             setGalleryMode(!galleryMode);
         } else if (action === selectedAction) {
-            // If clicking the same action, close the panel
             setSelectedAction(null);
             setExpanded(false);
         } else {
-            // If clicking a different action, select it and ensure panel is expanded
             setSelectedAction(action);
             setExpanded(true);
             setGalleryMode(false);
         }
     };
 
-    // Define icon configurations with labels
     const headerIcons = [
         {
             Icon: PanelLeftOpen,
@@ -278,8 +273,8 @@ export const Explorer = ({ children }: { children: React.ReactNode }) => {
     const actionIcons = [
         { Icon: PencilRuler, actionKey: "design", label: "Design" },
         { Icon: DraftingCompass, actionKey: "edit", label: "Edit" },
-        { Icon: Folder, actionKey: "folder", label: "Projects" },
-        { Icon: FolderOpen, actionKey: "open-folder", label: "Open Project" },
+        { Icon: Folder, actionKey: "folder", label: "CMS" },
+        // { Icon: FolderOpen, actionKey: "open-folder", label: "Open Project" },
         { Icon: Database, actionKey: "database", label: "Database" },
         { Icon: ListChecks, actionKey: "checklist", label: "Checklists" },
     ];
@@ -290,7 +285,6 @@ export const Explorer = ({ children }: { children: React.ReactNode }) => {
         { Icon: GalleryVerticalEnd, actionKey: "gallery", label: "Gallery" },
     ];
 
-    // Render content based on selected action
     const renderContent = (actionKey: string) => {
         switch (actionKey) {
             case "design":
@@ -325,7 +319,6 @@ export const Explorer = ({ children }: { children: React.ReactNode }) => {
                     <div
                         className={`explorer-options-wrapper ${selectedAction === "folder" ? "folder" : ""}`}
                     >
-                        {/* Header Section */}
                         <div className="explorer-header">
                             <ExplorerSection
                                 icons={headerIcons}
@@ -335,7 +328,6 @@ export const Explorer = ({ children }: { children: React.ReactNode }) => {
                                 renderSelectedContent={renderContent}
                             />
 
-                            {/* Actions Section */}
                             <ExplorerSection
                                 icons={actionIcons}
                                 selectedAction={selectedAction}
@@ -345,7 +337,6 @@ export const Explorer = ({ children }: { children: React.ReactNode }) => {
                             />
                         </div>
 
-                        {/* Settings Section */}
                         <ExplorerSection
                             icons={settingsIcons}
                             selectedAction={selectedAction}
@@ -356,7 +347,6 @@ export const Explorer = ({ children }: { children: React.ReactNode }) => {
                     </div>
                 </div>
                 <div className="content-container">
-                    {/* Remove the explorer-panel since content will be shown within the sidebar */}
                     <div
                         className={`content-wrapper ${galleryMode ? "gallery-mode" : ""}`}
                     >

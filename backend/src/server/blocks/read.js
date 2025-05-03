@@ -91,6 +91,24 @@ export async function getBlockWithNestedContent(block_id) {
                         eq(numberFields.field_id, item.reference_id),
                 });
                 return { item_type: "number_field", number_field: field };
+            } else if (item.item_type === "table") {
+                const block = await db.query.tableBlocks.findFirst({
+                    where: (tableBlocks, { eq }) =>
+                        eq(tableBlocks.block_id, item.reference_id),
+                });
+                return { item_type: "table", table: block };
+            } else if (item.item_type === "api") {
+                const block = await db.query.apiBlocks.findFirst({
+                    where: (apiBlocks, { eq }) =>
+                        eq(apiBlocks.block_id, item.reference_id),
+                });
+                return { item_type: "api", api: block };
+            } else if (item.item_type === "reference") {
+                const block = await db.query.referenceBlock.findFirst({
+                    where: (referenceBlock, { eq }) =>
+                        eq(referenceBlock.block_id, item.reference_id),
+                });
+                return { item_type: "reference", reference: block };
             } else if (item.item_type === "email_field") {
                 const field = await db.query.emailFields.findFirst({
                     where: (emailFields, { eq }) =>
