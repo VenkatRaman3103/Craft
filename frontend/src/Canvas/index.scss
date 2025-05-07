@@ -55,19 +55,6 @@
                     }
                 }
 
-                .delete-button {
-                    @extend .tool-button;
-                    background-color: #d32f2f;
-
-                    &:hover {
-                        background-color: #f44336;
-                    }
-
-                    &:disabled {
-                        background-color: #aaa;
-                        cursor: not-allowed;
-                    }
-                }
             }
         }
 
@@ -123,19 +110,50 @@
 
 }
 
-.status-bar {
+.status-bar-container {
     width: 71.4vw;
-    /* background-color: var(--primary-color); */
     background-color: var(--white-color);
     padding: 8px 10px;
     font-size: 14px;
     color: var(--light-font);
     position: absolute;
     bottom: 8px;
-    left: 1px;
+    left: 57px;
 
 
     border-top: 1px solid var(--border-color);
-
     border-bottom-left-radius: 10px;
+
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.delete-button {
+    background-color: var(--secondary-color);
+    background-color: #d32f2f;
+    border: none;
+    color: white;
+    padding: 5px 10px;
+    border-radius: 2px;
+
+    &:hover {
+        background-color: #f44336;
+    }
+
+    &:disabled {
+        background-color: var(--secondary-color);
+        cursor: not-allowed;
+    }
+}
+
+.box-model-container {
+    width: 100%;
+    height: auto;
+
+    .box-model {
+        width: 100%;
+        height: 180px;
+        background-color: red;
+    }
 }

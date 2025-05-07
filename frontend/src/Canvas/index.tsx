@@ -151,16 +151,26 @@ export const Canvas: React.FC = () => {
                 </div>
             </div>
 
-            <div className="status-bar">
-                {selectedId
-                    ? `Selected element ID: ${selectedId}`
-                    : "Click to select an element. Drag to move."}
+            <div className="status-bar-container">
+                <div className="selected-item-info">
+                    {selectedId
+                        ? `Selected element ID: ${selectedId}`
+                        : "Click to select an element. Drag to move."}
+                </div>
+
+                <button
+                    className="delete-button"
+                    onClick={deleteSelected}
+                    disabled={selectedId === null}
+                >
+                    Delete
+                </button>
             </div>
 
             <div className="toolbar-container">
                 <div className="toolbar">
                     <div className="elements-container">
-                        <div className="heading">element</div>
+                        <div className="heading">general elements</div>
                         <div className="elements">
                             <button
                                 className="tool-button"
@@ -186,19 +196,11 @@ export const Canvas: React.FC = () => {
                             >
                                 Image
                             </button>
-                            <button
-                                className="delete-button"
-                                onClick={deleteSelected}
-                                disabled={selectedId === null}
-                            >
-                                Delete
-                            </button>
                         </div>
                     </div>
-                    <div className="box-model-container"></div>
 
                     <div className="elements-container">
-                        <div className="heading">element</div>
+                        <div className="heading">input elements</div>
                         <div className="elements">
                             <button
                                 className="tool-button"
@@ -206,6 +208,19 @@ export const Canvas: React.FC = () => {
                             >
                                 text
                             </button>
+                        </div>
+                    </div>
+
+                    <div className="box-model-container">
+                        <div className="heading">box model</div>
+                        <div className="box-model">
+                            <div className="margin">
+                                <div className="border">
+                                    <div className="padding">
+                                        <div className="content"></div>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
