@@ -3,7 +3,7 @@ import "./index.scss";
 
 type CanvasElement = {
     id: number;
-    type: "rectangle" | "circle" | "text" | "image";
+    type: "rectangle" | "circle" | "text" | "image" | "text_input";
     x: number;
     y: number;
     width: number;
@@ -145,15 +145,16 @@ export const Canvas: React.FC = () => {
                 onMouseMove={handleMouseMove}
                 onClick={handleCanvasClick}
             >
-                <div className="status-bar">
-                    {selectedId
-                        ? `Selected element ID: ${selectedId}`
-                        : "Click to select an element. Drag to move."}
-                </div>
-
                 <div className="canvas" style={{ position: "relative" }}>
+                    some
                     {elements.map(renderElement)}
                 </div>
+            </div>
+
+            <div className="status-bar">
+                {selectedId
+                    ? `Selected element ID: ${selectedId}`
+                    : "Click to select an element. Drag to move."}
             </div>
 
             <div className="toolbar-container">
@@ -195,6 +196,18 @@ export const Canvas: React.FC = () => {
                         </div>
                     </div>
                     <div className="box-model-container"></div>
+
+                    <div className="elements-container">
+                        <div className="heading">element</div>
+                        <div className="elements">
+                            <button
+                                className="tool-button"
+                                onClick={() => addElement("text_input")}
+                            >
+                                text
+                            </button>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
