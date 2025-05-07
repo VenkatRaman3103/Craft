@@ -213,12 +213,10 @@ export const Canvas: React.FC = () => {
 
                     <div className="box-model-container">
                         <div className="heading">box model</div>
-                        <div className="box-model">
-                            <div className="margin">
-                                <div className="border">
-                                    <div className="padding">
-                                        <div className="content"></div>
-                                    </div>
+                        <div className="margin">
+                            <div className="border">
+                                <div className="padding">
+                                    <div className="content"></div>
                                 </div>
                             </div>
                         </div>
