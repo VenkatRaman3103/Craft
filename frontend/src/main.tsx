@@ -6,7 +6,7 @@ import { Collection } from "./Pages/Collection/index.tsx";
 import { Page } from "./Pages/Page/index.tsx";
 import { Explorer } from "./Components/Explorer";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { TestPage } from "./Pages/TestPage/index.tsx";
+import { Canvas } from "./Canvas/index.tsx";
 
 const rootElement = document.getElementById("root");
 
@@ -33,6 +33,7 @@ createRoot(rootElement).render(
                         element={<Collection />}
                     />
                     <Route path="/pages/:page_id" element={<Page />} />
+                    <Route path="/canvas" element={<Canvas />} />
                 </Routes>
             </Explorer>
         </QueryClientProvider>
