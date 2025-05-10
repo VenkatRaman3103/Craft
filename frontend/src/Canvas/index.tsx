@@ -211,6 +211,7 @@ export const Canvas: React.FC = () => {
                         </div>
                     </div>
 
+                    <AlignmentControlPanel />
                     <div className="box-model-container">
                         <div className="heading">box model</div>
                         <div className="margin">
@@ -226,3 +227,156 @@ export const Canvas: React.FC = () => {
         </div>
     );
 };
+
+export default function AlignmentControlPanel() {
+    const [layoutType, setLayoutType] = useState("flex");
+    const [direction, setDirection] = useState("row");
+    const [reverse, setReverse] = useState(false);
+    const [gap, setGap] = useState(10);
+    const [justifyContent, setJustifyContent] = useState("flex-start");
+    const [alignItems, setAlignItems] = useState("flex-start");
+
+    const getFlexDirection = () => {
+        if (direction === "row") {
+            return reverse ? "row-reverse" : "row";
+        } else {
+            return reverse ? "column-reverse" : "column";
+        }
+    };
+
+    const boxStyle = {
+        width: "50px",
+        height: "50px",
+        display: "flex",
+        justifyContent: "center",
+        alignItems: "center",
+        border: "1px solid #ccc",
+        margin: "5px",
+    };
+
+    return (
+        <div className="alignment-container">
+            <div className="heading">Alignment</div>
+            <select
+                className="alignment-select"
+                value={layoutType}
+                onChange={(e) => setLayoutType(e.target.value)}
+            >
+                <option value="flex">flex</option>
+                <option value="grid">grid</option>
+            </select>
+
+            <div className="flex-alignment-preview">
+                <div className="direction-wrapper">
+                    <div className="direction-selector">
+                        <button
+                            className={`row ${direction === "row" ? "active" : ""}`}
+                            onClick={() => setDirection("row")}
+                        >
+                            Row
+                        </button>
+                        <button
+                            className={`column ${direction === "column" ? "active" : ""}`}
+                            onClick={() => setDirection("column")}
+                        >
+                            Column
+                        </button>
+
+                        <div className="reverse-selection">
+                            <input
+                                type="checkbox"
+                                id="reverse"
+                                checked={reverse}
+                                onChange={() => setReverse(!reverse)}
+                            />
+                            <label htmlFor="reverse">reverse</label>
+                        </div>
+                    </div>
+                </div>
+
+                <div className="gap-wrapper">
+                    <div className="gap-icon">Gap:</div>
+                    <div className="gap-value">
+                        <input
+                            type="range"
+                            min="0"
+                            max="50"
+                            value={gap}
+                            onChange={(e) => setGap(parseInt(e.target.value))}
+                        />
+                        <span>{gap}px</span>
+                    </div>
+                </div>
+
+                <div
+                    className="preiview-wrapper"
+                    style={{
+                        display: layoutType === "flex" ? "flex" : "grid",
+                        flexDirection:
+                            layoutType === "flex"
+                                ? getFlexDirection()
+                                : undefined,
+                        gridTemplateColumns:
+                            layoutType === "grid" ? "1fr 1fr 1fr" : undefined,
+                        gap: `${gap}px`,
+                        justifyContent,
+                        alignItems:
+                            layoutType === "flex" ? alignItems : undefined,
+                        alignContent:
+                            layoutType === "grid" ? alignItems : undefined,
+                    }}
+                >
+                    <div className="box"></div>
+                    <div className="box"></div>
+                    <div className="box"></div>
+                </div>
+
+                <div className="jc-wrapper">
+                    <div className="jc-options">
+                        <button
+                            className={`start-option ${justifyContent === "flex-start" ? "active" : ""}`}
+                            onClick={() => setJustifyContent("flex-start")}
+                        >
+                            Start
+                        </button>
+                        <button
+                            className={`center-option ${justifyContent === "center" ? "active" : ""}`}
+                            onClick={() => setJustifyContent("center")}
+                        >
+                            Center
+                        </button>
+                        <button
+                            className={`end-option ${justifyContent === "flex-end" ? "active" : ""}`}
+                            onClick={() => setJustifyContent("flex-end")}
+                        >
+                            End
+                        </button>
+                    </div>
+                </div>
+
+                <div className="ai-wrapper">
+                    <div className="ai-options">
+                        <button
+                            className={`start-option ${alignItems === "flex-start" ? "active" : ""}`}
+                            onClick={() => setAlignItems("flex-start")}
+                        >
+                            Start
+                        </button>
+                        <button
+                            className={`center-option ${alignItems === "center" ? "active" : ""}`}
+                            onClick={() => setAlignItems("center")}
+                        >
+                            Center
+                        </button>
+                        <button
+                            className={`end-option ${alignItems === "flex-end" ? "active" : ""}`}
+                            onClick={() => setAlignItems("flex-end")}
+                        >
+                            End
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    );
+}
