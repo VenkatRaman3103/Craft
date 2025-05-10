@@ -167,6 +167,38 @@ export const Canvas: React.FC = () => {
                 </button>
             </div>
 
+            <div className="element-picker">
+                <div className="elements-container">
+                    <div className="heading">general elements</div>
+                    <div className="elements">
+                        <button
+                            className="tool-button"
+                            onClick={() => addElement("rectangle")}
+                        >
+                            Rectangle
+                        </button>
+                        <button
+                            className="tool-button"
+                            onClick={() => addElement("circle")}
+                        >
+                            Circle
+                        </button>
+                        <button
+                            className="tool-button"
+                            onClick={() => addElement("text")}
+                        >
+                            Text
+                        </button>
+                        <button
+                            className="tool-button"
+                            onClick={() => addElement("image")}
+                        >
+                            Image
+                        </button>
+                    </div>
+                </div>
+            </div>
+
             <div className="toolbar-container">
                 <div className="toolbar">
                     <div className="elements-container">

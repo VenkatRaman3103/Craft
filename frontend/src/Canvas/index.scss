@@ -132,6 +132,26 @@
     align-items: center;
 }
 
+.element-picker {
+    width: 50vw;
+    background-color: var(--white-color);
+    padding: 8px 10px;
+    font-size: 14px;
+    color: var(--light-font);
+    position: absolute;
+    bottom: 15px;
+    /* left: 57px; */
+    left: 50%;
+    transform: translateX(-50%);
+    transform: translateX(-35vw);
+
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+    border-radius: 20px;
+}
+
 .delete-button {
     background-color: var(--secondary-color);
     background-color: #d32f2f;
