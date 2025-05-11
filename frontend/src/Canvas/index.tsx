@@ -184,29 +184,36 @@ export const Canvas: React.FC = () => {
 
             <div className="toolbar-container">
                 <div className="toolbar">
-                    <div className="dimenstion-cotainer">
-                        <div className="heading">dimensions</div>
-                        <div className="element-height">
-                            <input
-                                value={elementHeight}
-                                type="number"
-                                onChange={(e) =>
-                                    setElementHeight(Number(e.target.value))
-                                }
-                            />
-                        </div>
-                        <div className="element-widt">
-                            <input
-                                value={elementWidth}
-                                type="number"
-                                onChange={(e) =>
-                                    setElementWidth(Number(e.target.value))
-                                }
-                            />
+                    <div className="dimenstion-cotainer toolbar-section">
+                        <div className="heading">Dimensions</div>
+                        <div className="dimensions">
+                            <div className="element-height dimension">
+                                <label>H</label>
+                                <input
+                                    value={elementHeight}
+                                    type="number"
+                                    className="dimension-field"
+                                    onChange={(e) =>
+                                        setElementHeight(Number(e.target.value))
+                                    }
+                                />
+                            </div>
+                            <div className="element-width dimension">
+                                <label>W</label>
+                                <input
+                                    value={elementWidth}
+                                    type="number"
+                                    className="dimension-field"
+                                    onChange={(e) =>
+                                        setElementWidth(Number(e.target.value))
+                                    }
+                                />
+                            </div>
+                            <div className="dimension">0</div>
                         </div>
                     </div>
                     <AlignmentControlPanel />
-                    <div className="box-model-container">
+                    <div className="box-model-container toolbar-section">
                         <div className="heading">box model</div>
                         <div className="margin">
                             <div className="border">
@@ -249,7 +256,7 @@ export default function AlignmentControlPanel() {
     };
 
     return (
-        <div className="alignment-container">
+        <div className="alignment-container  toolbar-section">
             <div className="heading">Alignment</div>
             <select
                 className="alignment-select"
