@@ -1,5 +1,6 @@
 import React, { useState, useRef, useEffect } from "react";
 import "./index.scss";
+import { ElementPicker } from "./ElementPicker";
 
 type CanvasElement = {
     id: number;
@@ -167,82 +168,10 @@ export const Canvas: React.FC = () => {
                 </button>
             </div>
 
-            <div className="element-picker">
-                <div className="elements-container">
-                    <div className="heading">general elements</div>
-                    <div className="elements">
-                        <button
-                            className="tool-button"
-                            onClick={() => addElement("rectangle")}
-                        >
-                            Rectangle
-                        </button>
-                        <button
-                            className="tool-button"
-                            onClick={() => addElement("circle")}
-                        >
-                            Circle
-                        </button>
-                        <button
-                            className="tool-button"
-                            onClick={() => addElement("text")}
-                        >
-                            Text
-                        </button>
-                        <button
-                            className="tool-button"
-                            onClick={() => addElement("image")}
-                        >
-                            Image
-                        </button>
-                    </div>
-                </div>
-            </div>
+            <ElementPicker addElement={addElement} />
 
             <div className="toolbar-container">
                 <div className="toolbar">
-                    <div className="elements-container">
-                        <div className="heading">general elements</div>
-                        <div className="elements">
-                            <button
-                                className="tool-button"
-                                onClick={() => addElement("rectangle")}
-                            >
-                                Rectangle
-                            </button>
-                            <button
-                                className="tool-button"
-                                onClick={() => addElement("circle")}
-                            >
-                                Circle
-                            </button>
-                            <button
-                                className="tool-button"
-                                onClick={() => addElement("text")}
-                            >
-                                Text
-                            </button>
-                            <button
-                                className="tool-button"
-                                onClick={() => addElement("image")}
-                            >
-                                Image
-                            </button>
-                        </div>
-                    </div>
-
-                    <div className="elements-container">
-                        <div className="heading">input elements</div>
-                        <div className="elements">
-                            <button
-                                className="tool-button"
-                                onClick={() => addElement("text_input")}
-                            >
-                                text
-                            </button>
-                        </div>
-                    </div>
-
                     <AlignmentControlPanel />
                     <div className="box-model-container">
                         <div className="heading">box model</div>
