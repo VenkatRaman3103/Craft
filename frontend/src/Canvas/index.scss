@@ -476,26 +476,28 @@
         gap: 5px;
 
         .dimension {
-            background-color: var(--secondary-color);
+            background-color: var(--white-color);
             display: flex;
             flex-direction: row;
             justify-content: space-between;
             align-items: center;
             border-radius: 5px;
             height: 28px;
+            border: 1px solid var(--border-color);
 
             label {
                 font-size: 12px;
-                width: 30%;
-                padding: 2px 5px;
+                width: 10%;
+                padding: 0 7px;
             }
 
             input {
-                width: 70%;
-                background-color: var(--secondary-color);
+                width: 90%;
+                background-color: var(--white-color);
                 color: white;
                 border-radius: 5px;
                 font-size: 12px;
+                padding: 0 7px;
             }
         }
     }
@@ -546,4 +548,46 @@
     &.active {
         background-color: var(--secondary-color);
     }
+}
+
+.metric-selection {
+    position: relative;
+    font-size: 14px;
+
+    .metric-selection-popup {
+        background-color: var(--white-color);
+        position: absolute;
+        top: 35px;
+        right: 0px;
+        border-radius: 4px;
+        padding: 4px;
+        border: 1px solid var(--secondary-color);
+
+        .metric-option {
+            padding: 4px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            &:hover {
+                background-color: var(--secondary-color);
+                border-radius: 2px;
+            }
+        }
+    }
+
+    .metric-display {
+        padding: 0 7px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin-top: -4px;
+    }
+}
+
+.divider {
+    height: 100%;
+    width: 2px;
+    background-color: var(--secondary-color);
+    /* background-color: white; */
 }

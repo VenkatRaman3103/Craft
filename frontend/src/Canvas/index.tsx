@@ -202,6 +202,8 @@ export const Canvas: React.FC = () => {
                         <div className="dimensions">
                             <div className="element-height dimension">
                                 <label>H</label>
+
+                                <div className="divider"></div>
                                 <input
                                     value={elementHeight}
                                     type="number"
@@ -210,9 +212,13 @@ export const Canvas: React.FC = () => {
                                         setElementHeight(Number(e.target.value))
                                     }
                                 />
+
+                                <div className="divider"></div>
+                                <MetricSelection />
                             </div>
                             <div className="element-width dimension">
                                 <label>W</label>
+                                <div className="divider"></div>
                                 <input
                                     value={elementWidth}
                                     type="number"
@@ -221,6 +227,8 @@ export const Canvas: React.FC = () => {
                                         setElementWidth(Number(e.target.value))
                                     }
                                 />
+                                <div className="divider"></div>
+                                <MetricSelection />
                             </div>
                             <div className="dimension">0</div>
                         </div>
@@ -401,3 +409,29 @@ export default function AlignmentControlPanel() {
         </div>
     );
 }
+
+const MetricSelection = () => {
+    const [selectedMetric, setSelectedMetric] = useState<
+        "px" | "%" | "vw" | "vh"
+    >("px");
+    const [showMetricPopup, setShowMetricPopup] = useState(false);
+
+    return (
+        <div className="metric-selection">
+            {showMetricPopup && (
+                <div className="metric-selection-popup">
+                    <div className="metric-option">px</div>
+                    <div className="metric-option">%</div>
+                    <div className="metric-option">vw</div>
+                </div>
+            )}
+            <div className="divider"></div>
+            <div
+                className="metric-display"
+                onClick={() => setShowMetricPopup(!showMetricPopup)}
+            >
+                {selectedMetric}
+            </div>
+        </div>
+    );
+};
