@@ -2,6 +2,7 @@ import React, { useState, useRef, useEffect } from "react";
 import "./index.scss";
 import { ElementPicker } from "./ElementPicker";
 import { elementType } from "@/Types/canvas/elementsType";
+import { PublishFeature } from "./PublishFeature";
 
 type CanvasElement = {
     id: number;
@@ -17,6 +18,11 @@ type CanvasElement = {
 export const Canvas: React.FC = () => {
     const [elements, setElements] = useState<CanvasElement[]>([]);
     const [selectedId, setSelectedId] = useState<number | null>(null);
+
+    // dimensions
+    const [elementHeight, setElementHeight] = useState(100);
+    const [elementWidth, setElementWidth] = useState(100);
+
     const [dragging, setDragging] = useState(false);
     const [dragOffset, setDragOffset] = useState({ x: 0, y: 0 });
 
@@ -28,8 +34,8 @@ export const Canvas: React.FC = () => {
             type,
             x: 100,
             y: 100,
-            width: 100,
-            height: 100,
+            width: elementWidth,
+            height: elementHeight,
             text: type === "text" ? "Text element" : "",
             color: getRandomColor(),
         };
@@ -113,8 +119,8 @@ export const Canvas: React.FC = () => {
         const elementStyle: React.CSSProperties = {
             left: `${element.x}px`,
             top: `${element.y}px`,
-            width: `${element.width}px`,
-            height: `${element.height}px`,
+            width: `${elementWidth}px`,
+            height: `${elementHeight}px`,
             backgroundColor: element.color,
             position: "absolute",
         };
@@ -146,7 +152,6 @@ export const Canvas: React.FC = () => {
                 onClick={handleCanvasClick}
             >
                 <div className="canvas" style={{ position: "relative" }}>
-                    some
                     {elements.map(renderElement)}
                 </div>
             </div>
@@ -156,6 +161,14 @@ export const Canvas: React.FC = () => {
                     {selectedId
                         ? `Selected element ID: ${selectedId}`
                         : "Click to select an element. Drag to move."}
+                </div>
+
+                <div className="publish-container">
+                    <PublishFeature
+                        elements={elements}
+                        elementWidth={elementWidth}
+                        elementHeight={elementHeight}
+                    />
                 </div>
 
                 <button
@@ -171,6 +184,27 @@ export const Canvas: React.FC = () => {
 
             <div className="toolbar-container">
                 <div className="toolbar">
+                    <div className="dimenstion-cotainer">
+                        <div className="heading">dimensions</div>
+                        <div className="element-height">
+                            <input
+                                value={elementHeight}
+                                type="number"
+                                onChange={(e) =>
+                                    setElementHeight(Number(e.target.value))
+                                }
+                            />
+                        </div>
+                        <div className="element-widt">
+                            <input
+                                value={elementWidth}
+                                type="number"
+                                onChange={(e) =>
+                                    setElementWidth(Number(e.target.value))
+                                }
+                            />
+                        </div>
+                    </div>
                     <AlignmentControlPanel />
                     <div className="box-model-container">
                         <div className="heading">box model</div>

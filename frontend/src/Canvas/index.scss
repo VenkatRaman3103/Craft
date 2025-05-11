@@ -85,24 +85,24 @@
 }
 
 .status-bar-container {
-    width: 71.4vw;
+    width: 70.6vw;
     background-color: var(--white-color);
     padding: 8px 10px;
     font-size: 14px;
     color: var(--light-font);
     position: absolute;
-    /* bottom: 8px; */
     top: 7px;
     left: 57px;
 
 
-    /* border-top: 1px solid var(--border-color); */
     border-bottom: 1px solid var(--border-color);
     border-top-left-radius: 10px;
 
     display: flex;
     justify-content: space-between;
     align-items: center;
+    padding: 8px 15px;
+    font-size: 14px;
 }
 
 
@@ -334,4 +334,103 @@
     align-items: center;
     border: 1px solid #ccc;
     margin: 5px,
+}
+
+
+
+/* Publish feature in status bar */
+.publish-container {
+    display: flex;
+    align-items: center;
+}
+
+.publish-button {
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    padding: 6px 15px;
+    border-radius: 4px;
+    font-size: 14px;
+    cursor: pointer;
+    transition: background-color 0.2s;
+}
+
+.publish-button:hover {
+    background-color: #45a049;
+}
+
+.publish-button:disabled {
+    background-color: #cccccc;
+    cursor: not-allowed;
+}
+
+.publish-actions {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.published-status {
+    display: flex;
+    align-items: center;
+}
+
+.check-icon {
+    background-color: #4CAF50;
+    color: white;
+    width: 18px;
+    height: 18px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 12px;
+}
+
+.view-button,
+.republish-button {
+    background-color: #2196F3;
+    color: white;
+    border: none;
+    padding: 6px 12px;
+    border-radius: 4px;
+    font-size: 13px;
+    cursor: pointer;
+    transition: background-color 0.2s;
+}
+
+.view-button:hover {
+    background-color: #0b7dda;
+}
+
+.republish-button {
+    background-color: #f1f1f1;
+    color: #333;
+    border: 1px solid #ddd;
+}
+
+.republish-button:hover {
+    background-color: #e5e5e5;
+}
+
+/* Delete button styling */
+.delete-button {
+    background-color: #f44336;
+    color: white;
+    border: none;
+    padding: 6px 15px;
+    border-radius: 4px;
+    font-size: 14px;
+    cursor: pointer;
+    transition: background-color 0.2s;
+}
+
+.delete-button:hover {
+    background-color: #d32f2f;
+}
+
+.delete-button:disabled {
+    background-color: #ffcdd2;
+    color: #b71c1c;
+    cursor: not-allowed;
 }
