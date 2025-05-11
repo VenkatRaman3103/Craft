@@ -1,83 +1,186 @@
-.element-picker {
-    width: 50vw;
-    height: 35px;
-    background-color: var(--primary-color);
-    border: 1px solid var(--border-color);
-    padding: 8px 10px;
-    font-size: 14px;
-    color: var(--light-font);
+.element-picker-container {
+    width: auto;
+    /* height: 45%; */
     position: absolute;
     bottom: 15px;
     left: 50%;
-    transform: translateX(-50%);
-    transform: translateX(-35vw);
+    /* transform: translateX(-50%); */
+    transform: translateX(-64%);
 
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-
-    border-radius: 15px;
-
-    .elements-container {
+    .element-picker {
+        width: auto;
+        height: 45px;
+        background-color: var(--primary-color);
+        border: 1px solid var(--border-color);
+        font-size: 14px;
+        color: var(--light-font);
         display: flex;
-        flex-direction: column;
-        gap: 16px;
+        justify-content: space-between;
+        align-items: center;
+        border-radius: 15px;
 
-        .elements {
+        .elements-container {
             display: flex;
-            align-items: center;
-            flex-wrap: wrap;
-            gap: 10px;
+            flex-direction: row;
+            justify-content: space-between;
+            height: 100%;
+            width: 100%;
+            overflow-x: auto;
 
-            .tool-button {
-                background-color: #555;
-                color: white;
-                padding: 8px;
-                border: none;
-                border-radius: 4px;
-                cursor: pointer;
+            &::-webkit-scrollbar {
+                height: 0;
+                width: 0;
+                background: transparent;
+            }
+
+            .elements {
+                height: 100%;
                 display: flex;
                 align-items: center;
-                gap: 8px;
+                justify-content: space-between;
+                min-width: fit-content;
 
-                &:hover {
-                    background-color: #666;
+                .elements-type {
+                    display: flex;
+                    align-items: center;
+                    gap: 5px;
+                    cursor: pointer;
+                    padding: 5px 8px;
+                    border-radius: 4px;
+
+                    &:hover {
+                        background-color: var(--secondary-color);
+                    }
+
+                    &.active {
+                        color: white;
+                        background-color: var(--secondary-color);
+                    }
+
+                    .type-icon {
+                        display: flex;
+                        align-items: center;
+                    }
+                }
+
+                .tools {
+                    height: 100%;
+                    display: flex;
+                    align-items: center;
+                    flex-wrap: nowrap;
+                    gap: 10px;
+                    overflow-x: auto;
+
+                    &::-webkit-scrollbar {
+                        height: 0;
+                        width: 0;
+                        background: transparent;
+                    }
+                }
+
+                .tool-button {
+                    height: 70%;
+                    min-width: fit-content;
+                    padding: 0 8px;
+                    border: none;
+                    border-radius: 4px;
+                    cursor: pointer;
+                    display: flex;
+                    align-items: center;
+                    gap: 8px;
+                    white-space: nowrap;
+
+                    &:hover {
+                        background-color: #666;
+                    }
                 }
             }
         }
-
     }
+
+    .elements-type-selector {
+        min-height: 100px;
+        width: 200px;
+        background-color: var(--primary-color);
+        border: 1px solid var(--border-color);
+        border-radius: 15px;
+        font-size: 14px;
+        position: absolute;
+        bottom: 60px;
+        left: 0px;
+        z-index: 100;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        padding: 10px;
+
+        .elements-type-option {
+            height: 40px;
+            display: flex;
+            align-items: center;
+            padding: 0 10px;
+            border-radius: 5px;
+            font-size: 14px;
+            gap: 10px;
+
+            .type-icon {
+                display: flex;
+                align-items: center;
+            }
+
+            &:hover {
+                background-color: var(--secondary-color);
+                cursor: pointer;
+            }
+
+            &.active {
+                color: white;
+                background-color: rgba(255, 255, 255, 0.1);
+            }
+        }
+    }
+
+    .divider {
+        height: 60%;
+        width: 1px;
+        background-color: var(--secondary-color);
+    }
+
+    .divider-full {
+        height: 100%;
+        width: 2px;
+        background-color: var(--secondary-color);
+    }
+
+    .section {
+        height: 100%;
+        width: fit-content;
+        border-right: 1px solid var(--border-color);
+        display: flex;
+        gap: 15px;
+        align-items: center;
+        padding: 0px 15px;
+        flex-shrink: 0;
+
+        &.element-type-section {
+            flex-grow: 1;
+            overflow-x: auto;
+
+            &::-webkit-scrollbar {
+                height: 0;
+                width: 0;
+                background: transparent;
+            }
+        }
+
+        &:last-child {
+            border: none;
+            padding: 0px 15px 0px 15px;
+        }
+    }
+
 }
 
-.elements-type-selector {
-    min-height: 100px;
-    max-width: auto;
-    width: 200px;
-    background-color: var(--primary-color);
-    border: 1px solid var(--border-color);
-    border-radius: 15px;
-    font-size: 14px;
-
-    position: absolute;
-    bottom: 60px;
-    left: 0px;
-    padding: 10px;
-
-    .elements-type-option {
-        height: 40px;
-        display: flex;
-        align-items: center;
-        padding-left: 10px;
-        border-radius: 5px;
-        font-size: 14px;
-
-        &:hover {
-            background-color: var(--secondary-color);
-            cursor: pointer;
-        }
-
-        &.active {
-            color: white;
-        }
-    }
+button {
+    background-color: var(--secondary-color);
+    color: white;
+    border: none;
 }

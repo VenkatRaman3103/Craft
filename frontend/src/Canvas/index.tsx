@@ -1,10 +1,11 @@
 import React, { useState, useRef, useEffect } from "react";
 import "./index.scss";
 import { ElementPicker } from "./ElementPicker";
+import { elementType } from "@/Types/canvas/elementsType";
 
 type CanvasElement = {
     id: number;
-    type: "rectangle" | "circle" | "text" | "image" | "text_input";
+    type: elementType;
     x: number;
     y: number;
     width: number;
@@ -105,7 +106,7 @@ export const Canvas: React.FC = () => {
         };
     }, []);
 
-    const renderElement = (element: CanvasElement) => {
+    const renderElement = (element) => {
         const isSelected = element.id === selectedId;
 
         const elementClassNames = `canvas-element ${isSelected ? "selected" : ""}`;
@@ -127,9 +128,7 @@ export const Canvas: React.FC = () => {
             >
                 {element.type === "text" ? (
                     element.text
-                ) : element.type === "image" ? (
-                    <div>Image</div>
-                ) : element.type === "rectangle" ? (
+                ) : element.type === "div" ? (
                     <div className="element-content rectangle"></div>
                 ) : (
                     <div className="element-content circle"></div>
