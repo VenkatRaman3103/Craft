@@ -282,17 +282,14 @@ export default function AlignmentControlPanel() {
                         >
                             Column
                         </button>
-
-                        <div className="reverse-selection">
-                            <input
-                                type="checkbox"
-                                id="reverse"
-                                checked={reverse}
-                                onChange={() => setReverse(!reverse)}
-                            />
-                            <label htmlFor="reverse">reverse</label>
-                        </div>
                     </div>
+
+                    <button
+                        onClick={() => setReverse(!reverse)}
+                        className={`reverse-selection ${reverse ? "active" : ""}`}
+                    >
+                        reverce
+                    </button>
                 </div>
 
                 <div className="gap-wrapper">
