@@ -3,6 +3,19 @@ import "./index.scss";
 import { ElementPicker } from "./ElementPicker";
 import { elementType } from "@/Types/canvas/elementsType";
 import { PublishFeature } from "./PublishFeature";
+import {
+    AlignCenterHorizontal,
+    AlignCenterVertical,
+    AlignEndHorizontal,
+    AlignEndVertical,
+    AlignStartHorizontal,
+    AlignStartVertical,
+    AlignVerticalJustifyEnd,
+    AlignVerticalJustifyStart,
+    ArrowDown,
+    ArrowLeft,
+    ArrowUp,
+} from "lucide-react";
 
 type CanvasElement = {
     id: number;
@@ -288,7 +301,11 @@ export default function AlignmentControlPanel() {
                         onClick={() => setReverse(!reverse)}
                         className={`reverse-selection ${reverse ? "active" : ""}`}
                     >
-                        reverce
+                        {direction == "row" ? (
+                            <ArrowLeft size={20} strokeWidth={1.25} />
+                        ) : (
+                            <ArrowUp size={20} strokeWidth={1.25} />
+                        )}
                     </button>
                 </div>
 
@@ -335,19 +352,19 @@ export default function AlignmentControlPanel() {
                             className={`start-option ${justifyContent === "flex-start" ? "active" : ""}`}
                             onClick={() => setJustifyContent("flex-start")}
                         >
-                            Start
+                            <AlignStartVertical size={20} strokeWidth={1.25} />
                         </button>
                         <button
                             className={`center-option ${justifyContent === "center" ? "active" : ""}`}
                             onClick={() => setJustifyContent("center")}
                         >
-                            Center
+                            <AlignCenterVertical size={20} strokeWidth={1.25} />
                         </button>
                         <button
                             className={`end-option ${justifyContent === "flex-end" ? "active" : ""}`}
                             onClick={() => setJustifyContent("flex-end")}
                         >
-                            End
+                            <AlignEndVertical size={20} strokeWidth={1.25} />
                         </button>
                     </div>
                 </div>
@@ -358,19 +375,25 @@ export default function AlignmentControlPanel() {
                             className={`start-option ${alignItems === "flex-start" ? "active" : ""}`}
                             onClick={() => setAlignItems("flex-start")}
                         >
-                            Start
+                            <AlignStartHorizontal
+                                size={20}
+                                strokeWidth={1.25}
+                            />
                         </button>
                         <button
                             className={`center-option ${alignItems === "center" ? "active" : ""}`}
                             onClick={() => setAlignItems("center")}
                         >
-                            Center
+                            <AlignCenterHorizontal
+                                size={20}
+                                strokeWidth={1.25}
+                            />
                         </button>
                         <button
                             className={`end-option ${alignItems === "flex-end" ? "active" : ""}`}
                             onClick={() => setAlignItems("flex-end")}
                         >
-                            End
+                            <AlignEndHorizontal size={20} strokeWidth={1.25} />
                         </button>
                     </div>
                 </div>
