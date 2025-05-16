@@ -1,6 +1,6 @@
 import React, { useState, useRef, useEffect } from "react";
 import "./index.scss";
-import { ElementPicker } from "./ElementPicker";
+import { ElementPicker, iconStrockWidth } from "./ElementPicker";
 import { elementType } from "@/Types/canvas/elementsType";
 import { PublishFeature } from "./PublishFeature";
 import {
@@ -16,6 +16,7 @@ import {
     ArrowLeft,
     ArrowUp,
     Monitor,
+    Settings,
     Smartphone,
     Tablet,
 } from "lucide-react";
@@ -448,27 +449,88 @@ const MetricSelection = () => {
 };
 
 export const ScreenSizeSwitcher = ({ screen, setScreen }: any) => {
+    const [showScreenSetting, setShowScreenSetting] = useState<boolean>(false);
+
     const screenIconsSize = 14;
 
     return (
-        <div className="device-size-switcher">
-            <div
-                className={`mobile-screen screen-btn ${screen == "mobile" ? "active" : ""}`}
-                onClick={() => setScreen("mobile")}
-            >
-                <Smartphone size={screenIconsSize} />
+        <div className="device-size-switcher-container">
+            <div className="device-size-switcher">
+                <div
+                    className={`mobile-screen screen-btn ${screen == "mobile" ? "active" : ""}`}
+                    onClick={() => setScreen("mobile")}
+                >
+                    <Smartphone size={screenIconsSize} />
+                </div>
+                <div
+                    className={`desktop-screen screen-btn ${screen == "desktop" ? "active" : ""}`}
+                    onClick={() => setScreen("desktop")}
+                >
+                    <Monitor size={screenIconsSize} />
+                </div>
+                <div
+                    className={`tablet-screen screen-btn ${screen == "tablet" ? "active" : ""}`}
+                    onClick={() => setScreen("tablet")}
+                >
+                    <Tablet size={screenIconsSize} />
+                </div>
             </div>
+            {showScreenSetting && (
+                <div className="settings-drop-down-container">
+                    <div className="settings-drop-down-wrapper">
+                        <div className="settings-heading">{screen}</div>
+
+                        {/* list */}
+                        <div className="setting-option-container">
+                            <div className="screen-heading-wrapper">
+                                <div className="screen-heading">Name</div>
+                                <div className="select-toggle-button">
+                                    <div className="toggle-button"></div>
+                                </div>
+                            </div>
+                            <div className="screen-size-contianer">
+                                <div className="screen-width">
+                                    <label>W</label>
+                                    <input type="number" />
+                                </div>
+                                <div className="screen-height">
+                                    <label>W</label>
+                                    <input type="number" />
+                                </div>
+                            </div>
+                        </div>
+                        <div className="setting-option-container">
+                            <div className="screen-heading-wrapper">
+                                <div className="screen-heading">Name</div>
+                                <div className="select-toggle-button">
+                                    <div className="toggle-button"></div>
+                                </div>
+                            </div>
+                            <div className="screen-size-contianer">
+                                <div className="screen-width">
+                                    <label>W</label>
+                                    <input type="number" />
+                                </div>
+                                <div className="screen-height">
+                                    <label>W</label>
+                                    <input type="number" />
+                                </div>
+                            </div>
+                        </div>
+
+                        <div className="add-option">add</div>
+                    </div>
+                </div>
+            )}
             <div
-                className={`desktop-screen screen-btn ${screen == "desktop" ? "active" : ""}`}
-                onClick={() => setScreen("desktop")}
+                className="screen-settings"
+                onClick={() => setShowScreenSetting(!showScreenSetting)}
             >
-                <Monitor size={screenIconsSize} />
-            </div>
-            <div
-                className={`tablet-screen screen-btn ${screen == "tablet" ? "active" : ""}`}
-                onClick={() => setScreen("tablet")}
-            >
-                <Tablet size={screenIconsSize} />
+                <div
+                    className={`seetings-btn ${showScreenSetting ? "active" : ""}`}
+                >
+                    <Settings size={screenIconsSize} />
+                </div>
             </div>
         </div>
     );

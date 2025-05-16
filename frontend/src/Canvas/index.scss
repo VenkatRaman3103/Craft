@@ -620,18 +620,30 @@
     /* background-color: white; */
 }
 
-.device-size-switcher {
+.device-size-switcher-container {
     width: auto;
     height: 25px;
-    background-color: var(--base-color);
-
-    border-radius: 100px;
-    padding: 3px;
 
     display: flex;
     flex-direction: row;
+    align-items: center;
     justify-content: space-between;
-    gap: 2px;
+    gap: 3px;
+
+    position: relative;
+
+    .device-size-switcher {
+        height: 100%;
+        background-color: var(--base-color);
+        border-radius: 100px;
+        padding: 3px;
+
+        display: flex;
+        flex-direction: row;
+        justify-content: space-between;
+        gap: 2px;
+
+    }
 
     .screen-btn {
         height: 100%;
@@ -652,6 +664,152 @@
         &.active {
             background-color: var(--secondary-color);
             color: #cccccc;
+        }
+    }
+
+    .settings-drop-down-container {
+        height: auto;
+        width: 200px;
+        border-radius: 10px;
+        border: 1px solid var(--border-color);
+        background-color: var(--base-color);
+
+        position: absolute;
+        top: 45px;
+
+        padding: 10px;
+
+        .settings-drop-down-wrapper {
+            width: 100%;
+            height: 100%;
+
+            display: flex;
+            flex-direction: column;
+
+            .settings-heading {
+                font-size: 18px;
+                color: #cccccc;
+                padding-left: 10px;
+                padding-bottom: 8px;
+                margin-bottom: 8px;
+                border-bottom: 1px solid var(--secondary-color);
+            }
+
+            .setting-option-container {
+                width: 100%;
+                height: auto;
+                padding: 10px;
+
+                display: flex;
+                flex-direction: column;
+                gap: 10px;
+
+                .screen-heading-wrapper {
+                    width: 95%;
+                    display: flex;
+                    justify-content: space-between;
+
+                    .screen-heading {
+                        color: #cccccc;
+                    }
+
+                    .select-toggle-button {
+                        width: 30px;
+                        height: 15px;
+                        background-color: var(--secondary-color);
+                        border-radius: 100px;
+
+                        display: flex;
+                        align-items: center;
+                        padding: 2px;
+
+                        .toggle-button {
+                            height: 14px;
+                            width: 14px;
+                            background-color: #cccccc;
+                            border-radius: 100px;
+                        }
+                    }
+                }
+
+                .screen-size-contianer {
+                    width: auto;
+                    height: 100%;
+                    display: flex;
+                    justify-content: space-between;
+
+                    .screen-width {
+                        width: 50%;
+                        display: flex;
+                        gap: 10px;
+
+                        input {
+                            width: 50%;
+                        }
+                    }
+
+                    .screen-height {
+                        width: 50%;
+                        display: flex;
+                        gap: 10px;
+
+                        input {
+                            width: 50%;
+                        }
+                    }
+                }
+            }
+
+            .add-option {
+                width: auto;
+                height: auto;
+                padding: 10px;
+
+                display: flex;
+                align-items: center;
+                justify-content: center;
+
+                /* border: 1px solid var(--border-color); */
+                background-color: var(--primary-color);
+                border-radius: 7px;
+                margin-top: 8px;
+
+                &:hover {
+                    background-color: var(--secondary-color);
+                }
+            }
+        }
+    }
+
+    .screen-settings {
+        height: 27px;
+        width: 28px;
+        background-color: var(--base-color);
+        border-radius: 100px;
+        cursor: pointer;
+
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 3px;
+
+        .seetings-btn {
+            height: 27px;
+            width: 27px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background-color: var(--base-color);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            border-radius: 100px;
+
+            &.active {
+                background-color: var(--secondary-color);
+                color: #cccccc;
+            }
         }
     }
 }
