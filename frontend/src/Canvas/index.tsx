@@ -15,6 +15,9 @@ import {
     ArrowDown,
     ArrowLeft,
     ArrowUp,
+    Monitor,
+    Smartphone,
+    Tablet,
 } from "lucide-react";
 
 type CanvasElement = {
@@ -31,6 +34,9 @@ type CanvasElement = {
 export const Canvas: React.FC = () => {
     const [elements, setElements] = useState<CanvasElement[]>([]);
     const [selectedId, setSelectedId] = useState<number | null>(null);
+    const [screen, setScreen] = useState<"mobile" | "desktop" | "tablet">(
+        "desktop",
+    );
 
     // dimensions
     const [elementHeight, setElementHeight] = useState(100);
@@ -164,17 +170,22 @@ export const Canvas: React.FC = () => {
                 onMouseMove={handleMouseMove}
                 onClick={handleCanvasClick}
             >
-                <div className="canvas" style={{ position: "relative" }}>
+                <div
+                    className={`canvas ${screen}`}
+                    style={{ position: "relative" }}
+                >
                     {elements.map(renderElement)}
                 </div>
             </div>
 
             <div className="status-bar-container">
-                <div className="selected-item-info">
-                    {selectedId
-                        ? `Selected element ID: ${selectedId}`
-                        : "Click to select an element. Drag to move."}
-                </div>
+                {/* <div className="selected-item-info"> */}
+                {/*     {selectedId */}
+                {/*         ? `Selected element ID: ${selectedId}` */}
+                {/*         : "Click to select an element. Drag to move."} */}
+                {/* </div> */}
+
+                <ScreenSizeSwitcher screen={screen} setScreen={setScreen} />
 
                 <div className="publish-container">
                     <PublishFeature
@@ -431,6 +442,33 @@ const MetricSelection = () => {
                 onClick={() => setShowMetricPopup(!showMetricPopup)}
             >
                 {selectedMetric}
+            </div>
+        </div>
+    );
+};
+
+export const ScreenSizeSwitcher = ({ screen, setScreen }: any) => {
+    const screenIconsSize = 14;
+
+    return (
+        <div className="device-size-switcher">
+            <div
+                className={`mobile-screen screen-btn ${screen == "mobile" ? "active" : ""}`}
+                onClick={() => setScreen("mobile")}
+            >
+                <Smartphone size={screenIconsSize} />
+            </div>
+            <div
+                className={`desktop-screen screen-btn ${screen == "desktop" ? "active" : ""}`}
+                onClick={() => setScreen("desktop")}
+            >
+                <Monitor size={screenIconsSize} />
+            </div>
+            <div
+                className={`tablet-screen screen-btn ${screen == "tablet" ? "active" : ""}`}
+                onClick={() => setScreen("tablet")}
+            >
+                <Tablet size={screenIconsSize} />
             </div>
         </div>
     );

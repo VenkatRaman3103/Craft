@@ -36,6 +36,18 @@
             margin: 60px 16px 16px 16px;
             border-radius: 4px;
             overflow: hidden;
+
+            &.mobile {
+                width: 50%;
+            }
+
+            &.tablet {
+                width: 70%;
+            }
+
+            &.desktop {
+                width: 90%;
+            }
         }
     }
 
@@ -96,7 +108,7 @@
     grid-area: status;
 
     width: 74.6vw;
-    background-color: var(--white-color);
+    background-color: var(--primary-color);
     padding: 8px 10px;
     font-size: 14px;
     color: var(--light-font);
@@ -606,4 +618,40 @@
     width: 2px;
     background-color: var(--secondary-color);
     /* background-color: white; */
+}
+
+.device-size-switcher {
+    width: auto;
+    height: 25px;
+    background-color: var(--base-color);
+
+    border-radius: 100px;
+    padding: 3px;
+
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    gap: 2px;
+
+    .screen-btn {
+        height: 100%;
+        min-width: 25px;
+        max-width: auto;
+        background-color: var(--base-color);
+        border-radius: 100px;
+        cursor: pointer;
+
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 5px;
+
+        padding: 0px 5px;
+
+
+        &.active {
+            background-color: var(--secondary-color);
+            color: #cccccc;
+        }
+    }
 }
