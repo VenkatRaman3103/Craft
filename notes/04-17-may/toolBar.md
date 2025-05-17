@@ -20,9 +20,12 @@
 
 - [x] create a base route for canvas
 - [x] create a base route for screen size and connect it with canvas route
-- [ ] create a POST route to create a new screen size
-- [ ] create a GET route to read a all screen sizes
-- [ ] create a GET route to read a specific screen sizes based on id
+
+- [x] create a POST route to create a new screen size
+
+- [x] create a GET route to read a all screen sizes
+- [x] create a GET route to read a specific screen sizes based on id
+
 - [ ] create a DELETE route to delete a screen size
 - [ ] create a PATCH route to update a screen size's width
 - [ ] create a PATCH route to update a screen size's height

@@ -5,6 +5,7 @@ export const screenSizes = pgTable("screen_size", {
     name: text("name").notNull(),
     heigth: text("heigth").notNull(),
     width: text("width").notNull(),
+    screenType: text("screen_type").default("desktop"),
     created_at: timestamp("created_at").defaultNow(),
     edited_at: timestamp("edited_at").defaultNow(),
 });
