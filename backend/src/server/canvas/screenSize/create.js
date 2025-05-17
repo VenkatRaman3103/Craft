@@ -2,14 +2,14 @@ import { screenSizes } from "../../../db/schema/canvas/screenSizes.js";
 import { db } from "../../server.js";
 
 export const createScreenSize = async (req, res) => {
-    const { type, width, heigth, name } = req.body;
+    const { screenType, width, heigth, name } = req.body;
     try {
         const response = await db
             .insert(screenSizes)
             .values([
                 {
                     name,
-                    type,
+                    screenType,
                     width,
                     heigth,
                 },

@@ -8,19 +8,22 @@
 - [x] create a mobile, desktop and tablet size view switcher
 - [x] connect the mobile, desktop and tablet size view switcher with canvas
 
-- [ ] custom screen size functionlity
-- [ ] drop down ui to add, edit, save and delete screen size
-- [ ] connect the backend with frontend
+- [x] custom screen size functionlity
+- [x] drop down ui to add, edit, save and delete screen size
+- [x] connect the backend with frontend
 
 ## frontend
 
 - [x] added prompt UI to add new screen size
 - [x] connect the prompt with backend
 - [x] manage state, invalidation, api and UI changes for creating new screensize
+- [x] add prompt UI to updat the values
+- [x] add edit functionality to edit the name, width and the height
 
 ## db
 
 - [x] create a backend schema
+- [x] add a new route to update all the values
 
 ## api
 

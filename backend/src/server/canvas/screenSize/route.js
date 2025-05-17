@@ -6,6 +6,7 @@ import {
     updateScreenSizeHeight,
     updateScreenSizeName,
     updateScreenSizeWidth,
+    updateScreenSize,
 } from "./update.js";
 
 export const screenSizeRouter = express.Router();
@@ -21,6 +22,9 @@ screenSizeRouter.get("/screen-size/:id", getScreenSizesById); // based on id
 screenSizeRouter.delete("/screen-size/:id", deleteScreenSize);
 
 // update screen size based on the id
+screenSizeRouter.patch("/screen-size/:id", updateScreenSize);
+
+// keeping individual endpoints for backward compatibility
 screenSizeRouter.patch("/screen-size/:id/name", updateScreenSizeName);
 screenSizeRouter.patch("/screen-size/:id/width", updateScreenSizeWidth);
 screenSizeRouter.patch("/screen-size/:id/heigth", updateScreenSizeHeight);

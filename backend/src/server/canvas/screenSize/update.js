@@ -79,3 +79,41 @@ export const updateScreenSizeHeight = async (req, res) => {
         res.status(500).json(errorMessage);
     }
 };
+
+export const updateScreenSize = async (req, res) => {
+    const { id } = req.params;
+    const { name, width, heigth } = req.body;
+
+    const updates = {};
+    if (name !== undefined) updates.name = name;
+    if (width !== undefined) updates.width = width;
+    if (heigth !== undefined) updates.heigth = heigth;
+
+    try {
+        if (Object.keys(updates).length === 0) {
+            return res.status(400).json({
+                error: "No valid update fields provided",
+                message:
+                    "At least one of name, width, or heigth must be provided",
+                origin: "backend/updateScreenSize/PATCH",
+            });
+        }
+
+        const response = await db
+            .update(screenSizes)
+            .set(updates)
+            .where(eq(screenSizes.id, id))
+            .returning();
+
+        console.log("Updated screen size:", response[0]);
+        res.json(response[0]);
+    } catch (error) {
+        const errorMessage = {
+            error: error.toString(),
+            message: `Error updating the screen size`,
+            origin: "backend/updateScreenSize/PATCH",
+        };
+        console.log(errorMessage);
+        res.status(500).json(errorMessage);
+    }
+};

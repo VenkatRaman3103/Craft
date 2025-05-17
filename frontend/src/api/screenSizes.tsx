@@ -13,3 +13,11 @@ export const getScreenSizes = async () => {
 export const createNewScreen = async (payload) => {
     await axios.post(`${backendUrl}/canvas/screen-size`, payload);
 };
+
+export const deleteScreenSize = async (id) => {
+    await axios.delete(`${backendUrl}/canvas/screen-size/${id}`);
+};
+
+export const updateScreenSize = async (id, updates) => {
+    await axios.patch(`${backendUrl}/canvas/screen-size/${id}`, updates);
+};
