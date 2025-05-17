@@ -30,3 +30,6 @@ export * from "./blocks/tableBlocks/tableEntries/schema.js";
 export * from "./blocks/referenceBlock/schema.js";
 export * from "./blocks/referenceBlock/referenceBlockItems/schema.js";
 export * from "./blocks/apiBlocks/schema.js";
+
+// canvas
+export * from "./canvas/screenSizes.js";

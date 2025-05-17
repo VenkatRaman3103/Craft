@@ -9,7 +9,7 @@
 - [x] connect the mobile, desktop and tablet size view switcher with canvas
 
 - [ ] custom screen size functionlity
-- [ ] create a backend schema
+- [x] create a backend schema
 - [ ] CRUD operation on the screen size table with appropriate routes
 - [ ] drop down ui to add, edit, save and delete screen size
 - [ ] connect the backend with frontend
