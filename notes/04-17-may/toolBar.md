@@ -26,7 +26,8 @@
 - [x] create a GET route to read a all screen sizes
 - [x] create a GET route to read a specific screen sizes based on id
 
-- [ ] create a DELETE route to delete a screen size
+- [x] create a DELETE route to delete a screen size
+
 - [ ] create a PATCH route to update a screen size's width
 - [ ] create a PATCH route to update a screen size's height
 - [ ] create a PATCH route to update a screen size's name
