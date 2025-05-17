@@ -9,3 +9,7 @@ export const getScreenSizes = async () => {
         console.log(error);
     }
 };
+
+export const createNewScreen = async (payload) => {
+    await axios.post(`${backendUrl}/canvas/screen-size`, payload);
+};

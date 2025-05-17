@@ -20,8 +20,8 @@ import {
     Smartphone,
     Tablet,
 } from "lucide-react";
-import { useQuery } from "@tanstack/react-query";
-import { getScreenSizes } from "@/api/screenSizes";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { createNewScreen, getScreenSizes } from "@/api/screenSizes";
 
 type CanvasElement = {
     id: number;
@@ -453,12 +453,53 @@ const MetricSelection = () => {
 export const ScreenSizeSwitcher = ({ screen, setScreen }: any) => {
     const [showScreenSetting, setShowScreenSetting] = useState<boolean>(false);
     const [activeOptionId, setActiveOptionId] = useState<null | string>(null);
+    const [showScreenPrompt, setShowScreenPrompt] = useState(false);
     const [selectedOption, setSelectedOption] = useState<null | string>(null);
+    const [listOfScreens, setListOfScreens] = useState([]);
+    const [newName, setNewName] = useState("");
+    const [newWidth, setNewWidth] = useState("");
+    const [newHeight, setNewHeight] = useState("");
 
+    const screenSizeDropRef = useRef(null);
+
+    const queryClient = useQueryClient();
     const { data } = useQuery({
         queryFn: () => getScreenSizes(),
         queryKey: ["screen-size"],
     });
+
+    const createNewScreenMutatio = useMutation({
+        mutationFn: (payload) => createNewScreen(payload),
+        onSuccess: () => {
+            setNewWidth("");
+            setNewHeight("");
+            setNewName("");
+            setShowScreenPrompt(false);
+            setSelectedOption(null);
+
+            queryClient.invalidateQueries(["screen-size"]);
+        },
+    });
+
+    useEffect(() => {
+        setListOfScreens(data);
+    }, [data]);
+
+    useEffect(() => {
+        function handleClickOutSide(event) {
+            if (
+                screenSizeDropRef.current &&
+                !screenSizeDropRef.current.contains(event.target)
+            ) {
+                setShowScreenSetting(false);
+            }
+        }
+
+        document.addEventListener("mousedown", handleClickOutSide);
+        return () => {
+            document.removeEventListener("mousedown", handleClickOutSide);
+        };
+    }, []);
 
     const screenIconsSize = 14;
     console.log(data, "dataScreenSizeSwitcher");
@@ -468,8 +509,32 @@ export const ScreenSizeSwitcher = ({ screen, setScreen }: any) => {
     };
 
     const handleSave = () => {
-        // Save logic would go here
         setSelectedOption(null);
+    };
+
+    const handleNewName = (e) => {
+        e.preventDefault();
+        setNewName(e.target.value);
+    };
+
+    const handleNewWidth = (e) => {
+        e.preventDefault();
+        setNewWidth(e.target.value);
+    };
+
+    const handleNewHeight = (e) => {
+        e.preventDefault();
+        setNewHeight(e.target.value);
+    };
+
+    const handleNewScreenSize = () => {
+        const payload = {
+            name: newName,
+            heigth: newHeight,
+            width: newHeight,
+        };
+
+        createNewScreenMutatio.mutate(payload);
     };
 
     return (
@@ -495,12 +560,15 @@ export const ScreenSizeSwitcher = ({ screen, setScreen }: any) => {
                 </div>
             </div>
             {showScreenSetting && (
-                <div className="settings-drop-down-container">
+                <div
+                    className="settings-drop-down-container"
+                    ref={screenSizeDropRef}
+                >
                     <div className="settings-drop-down-wrapper">
                         <div className="settings-heading">{screen}</div>
 
                         {/* list */}
-                        {data.map((item) => (
+                        {listOfScreens?.map((item) => (
                             <div
                                 key={item.id}
                                 className="setting-option-container"
@@ -563,7 +631,54 @@ export const ScreenSizeSwitcher = ({ screen, setScreen }: any) => {
                             </div>
                         ))}
 
-                        <div className="add-option">add</div>
+                        {showScreenPrompt && (
+                            <div className="setting-option-container">
+                                <div className="screen-heading-wrapper">
+                                    <input
+                                        className="screen-heading"
+                                        placeholder="Enter value..."
+                                        value={newName}
+                                        onChange={(e) => handleNewName(e)}
+                                    />
+                                </div>
+                                <div className="screen-size-contianer">
+                                    <div className="screen-width">
+                                        <label>W</label>
+                                        <input
+                                            type="number"
+                                            placeholder="width"
+                                            value={newWidth}
+                                            onChange={(e) => handleNewWidth(e)}
+                                        />
+                                    </div>
+                                    <div className="screen-height">
+                                        <label>H</label>
+                                        <input
+                                            type="number"
+                                            value={newHeight}
+                                            placeholder="height"
+                                            onChange={(e) => handleNewHeight(e)}
+                                        />
+                                    </div>
+                                </div>
+
+                                <div
+                                    className="screen-size-save edit"
+                                    onClick={handleNewScreenSize}
+                                >
+                                    save
+                                </div>
+                            </div>
+                        )}
+
+                        <div
+                            className="add-option"
+                            onClick={() =>
+                                setShowScreenPrompt(!showScreenPrompt)
+                            }
+                        >
+                            {showScreenPrompt ? "cancel" : "add"}
+                        </div>
                     </div>
                 </div>
             )}

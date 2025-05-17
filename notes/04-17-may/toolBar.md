@@ -12,6 +12,12 @@
 - [ ] drop down ui to add, edit, save and delete screen size
 - [ ] connect the backend with frontend
 
+## frontend
+
+- [x] added prompt UI to add new screen size
+- [x] connect the prompt with backend
+- [x] manage state, invalidation, api and UI changes for creating new screensize
+
 ## db
 
 - [x] create a backend schema
