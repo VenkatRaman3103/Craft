@@ -567,13 +567,15 @@ export const ScreenSizeSwitcher = ({ screen, setScreen }: any) => {
                     <div className="settings-drop-down-wrapper">
                         <div className="settings-heading">{screen}</div>
 
-                        {/* list */}
                         {listOfScreens?.map((item) => (
                             <div
                                 key={item.id}
                                 className="setting-option-container"
-                                onMouseEnter={() => setActiveOptionId(item.id)}
-                                onMouseLeave={() => setActiveOptionId(null)}
+                                onClick={() => {
+                                    setActiveOptionId(
+                                        activeOptionId == null ? item.id : null,
+                                    );
+                                }}
                             >
                                 <div className="screen-heading-wrapper">
                                     <input
