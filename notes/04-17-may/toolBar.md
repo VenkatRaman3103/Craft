@@ -28,6 +28,6 @@
 
 - [x] create a DELETE route to delete a screen size
 
-- [ ] create a PATCH route to update a screen size's width
-- [ ] create a PATCH route to update a screen size's height
-- [ ] create a PATCH route to update a screen size's name
+- [x] create a PATCH route to update a screen size's width
+- [x] create a PATCH route to update a screen size's height
+- [x] create a PATCH route to update a screen size's name
