@@ -25,10 +25,10 @@ POST /canvas/screen-size
 
 # body
 {
-    "name": "test screen-size 1",
+    "name": "test screen-size 2",
     "type": "mobile",
-    "width": "100px",
-    "heigth": "100px"
+    "width": "100",
+    "heigth": "100"
 }
 
 

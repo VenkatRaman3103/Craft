@@ -23,14 +23,14 @@ User-Agent: VRC
 # query
 # GET /canvas/screen-size
 # PATCH /canvas/screen-size/e4b5fa76-b077-4a6a-89c9-58e6e2cd101b/name
-# PATCH /canvas/screen-size/e4b5fa76-b077-4a6a-89c9-58e6e2cd101b/width
-PATCH /canvas/screen-size/e4b5fa76-b077-4a6a-89c9-58e6e2cd101b/heigth
+PATCH /canvas/screen-size/e4b5fa76-b077-4a6a-89c9-58e6e2cd101b/width
+# PATCH /canvas/screen-size/e4b5fa76-b077-4a6a-89c9-58e6e2cd101b/heigth
 
 # body
 {
     # "name": "new name"
-    # "width": "new width"
-    "heigth": "new heigth"
+    "width": "10"
+    # "heigth": "10"
 }
 
 

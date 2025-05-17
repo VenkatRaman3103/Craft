@@ -20,6 +20,8 @@ import {
     Smartphone,
     Tablet,
 } from "lucide-react";
+import { useQuery } from "@tanstack/react-query";
+import { getScreenSizes } from "@/api/screenSizes";
 
 type CanvasElement = {
     id: number;
@@ -450,8 +452,25 @@ const MetricSelection = () => {
 
 export const ScreenSizeSwitcher = ({ screen, setScreen }: any) => {
     const [showScreenSetting, setShowScreenSetting] = useState<boolean>(false);
+    const [activeOptionId, setActiveOptionId] = useState<null | string>(null);
+    const [selectedOption, setSelectedOption] = useState<null | string>(null);
+
+    const { data } = useQuery({
+        queryFn: () => getScreenSizes(),
+        queryKey: ["screen-size"],
+    });
 
     const screenIconsSize = 14;
+    console.log(data, "dataScreenSizeSwitcher");
+
+    const handleCancel = () => {
+        setSelectedOption(null);
+    };
+
+    const handleSave = () => {
+        // Save logic would go here
+        setSelectedOption(null);
+    };
 
     return (
         <div className="device-size-switcher-container">
@@ -481,42 +500,68 @@ export const ScreenSizeSwitcher = ({ screen, setScreen }: any) => {
                         <div className="settings-heading">{screen}</div>
 
                         {/* list */}
-                        <div className="setting-option-container">
-                            <div className="screen-heading-wrapper">
-                                <div className="screen-heading">Name</div>
-                                <div className="select-toggle-button">
-                                    <div className="toggle-button"></div>
+                        {data.map((item) => (
+                            <div
+                                key={item.id}
+                                className="setting-option-container"
+                                onMouseEnter={() => setActiveOptionId(item.id)}
+                                onMouseLeave={() => setActiveOptionId(null)}
+                            >
+                                <div className="screen-heading-wrapper">
+                                    <input
+                                        className="screen-heading"
+                                        value={item.name}
+                                    />
+
+                                    <div className="select-toggle-button">
+                                        <div className="toggle-button"></div>
+                                    </div>
                                 </div>
+                                <div className="screen-size-contianer">
+                                    <div className="screen-width">
+                                        <label>W</label>
+                                        <input
+                                            type="number"
+                                            value={Number(item.width)}
+                                        />
+                                    </div>
+                                    <div className="screen-height">
+                                        <label>H</label>
+                                        <input
+                                            type="number"
+                                            value={Number(item.heigth)}
+                                        />
+                                    </div>
+                                </div>
+                                {selectedOption == item.id ? (
+                                    <div className="screen-size-actions">
+                                        <div
+                                            className="screen-size-save"
+                                            onClick={handleSave}
+                                        >
+                                            save
+                                        </div>
+                                        <div
+                                            className="screen-size-cancel"
+                                            onClick={handleCancel}
+                                        >
+                                            cancel
+                                        </div>
+                                    </div>
+                                ) : (
+                                    activeOptionId == item.id && (
+                                        <div
+                                            className="screen-size-edit"
+                                            onClick={() =>
+                                                setSelectedOption(item.id)
+                                            }
+                                        >
+                                            edit
+                                        </div>
+                                    )
+                                )}
                             </div>
-                            <div className="screen-size-contianer">
-                                <div className="screen-width">
-                                    <label>W</label>
-                                    <input type="number" />
-                                </div>
-                                <div className="screen-height">
-                                    <label>W</label>
-                                    <input type="number" />
-                                </div>
-                            </div>
-                        </div>
-                        <div className="setting-option-container">
-                            <div className="screen-heading-wrapper">
-                                <div className="screen-heading">Name</div>
-                                <div className="select-toggle-button">
-                                    <div className="toggle-button"></div>
-                                </div>
-                            </div>
-                            <div className="screen-size-contianer">
-                                <div className="screen-width">
-                                    <label>W</label>
-                                    <input type="number" />
-                                </div>
-                                <div className="screen-height">
-                                    <label>W</label>
-                                    <input type="number" />
-                                </div>
-                            </div>
-                        </div>
+                        ))}
 
                         <div className="add-option">add</div>
                     </div>
