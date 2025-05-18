@@ -25,8 +25,8 @@ POST /canvas/screen-size
 
 # body
 {
-    "name": "test screen-size 2",
-    "type": "mobile",
+    "name": "test screen-size 6",
+    "type": "desktop",
     "width": "100",
     "heigth": "100"
 }

@@ -726,6 +726,10 @@
                         align-items: center;
                         padding: 2px;
 
+                        &.active {
+                            background-color: green;
+                        }
+
                         .toggle-button {
                             height: 11px;
                             width: 11px;

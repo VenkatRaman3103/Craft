@@ -25,6 +25,7 @@ import {
     createNewScreen,
     deleteScreenSize,
     getScreenSizes,
+    udpateScreenSizeStatus,
     updateScreenSize,
 } from "@/api/screenSizes";
 
@@ -468,6 +469,8 @@ export const ScreenSizeSwitcher = ({ screen, setScreen }: any) => {
     const [editWidth, setEditWidth] = useState("");
     const [editHeight, setEditHeight] = useState("");
 
+    const [activeScreenToggle, setActiveScreenToggle] = useState("");
+
     const screenSizeDropRef = useRef(null);
 
     const queryClient = useQueryClient();
@@ -508,6 +511,12 @@ export const ScreenSizeSwitcher = ({ screen, setScreen }: any) => {
         onError: (error) => {
             console.error("Screen size update failed:", error);
         },
+    });
+
+    const toggleActiveScreenMutation = useMutation({
+        mutationFn: ({ id, screenType, status }) =>
+            udpateScreenSizeStatus(id, screenType, status),
+        onSuccess: () => queryClient.invalidateQueries(["screen-size"]),
     });
 
     useEffect(() => {
@@ -621,6 +630,11 @@ export const ScreenSizeSwitcher = ({ screen, setScreen }: any) => {
         deleteScreenMutation.mutate(id);
     };
 
+    const handleToggleActiveScreen = (id) => {
+        const temp = { id, screenType: screen, status: "active" };
+        toggleActiveScreenMutation.mutate(temp);
+    };
+
     return (
         <div className="device-size-switcher-container">
             <div className="device-size-switcher">
@@ -657,15 +671,6 @@ export const ScreenSizeSwitcher = ({ screen, setScreen }: any) => {
                                 <div
                                     key={item.id}
                                     className="setting-option-container"
-                                    onClick={() => {
-                                        if (selectedOption !== item.id) {
-                                            setActiveOptionId(
-                                                activeOptionId == null
-                                                    ? item.id
-                                                    : null,
-                                            );
-                                        }
-                                    }}
                                 >
                                     <div className="screen-heading-wrapper">
                                         {selectedOption === item.id ? (
@@ -682,7 +687,14 @@ export const ScreenSizeSwitcher = ({ screen, setScreen }: any) => {
                                             />
                                         )}
 
-                                        <div className="select-toggle-button">
+                                        <div
+                                            className={`select-toggle-button ${item.status}`}
+                                            onClick={() =>
+                                                handleToggleActiveScreen(
+                                                    item.id,
+                                                )
+                                            }
+                                        >
                                             <div className="toggle-button"></div>
                                         </div>
                                     </div>
@@ -736,29 +748,26 @@ export const ScreenSizeSwitcher = ({ screen, setScreen }: any) => {
                                             </div>
                                         </div>
                                     ) : (
-                                        activeOptionId === item.id && (
-                                            <>
-                                                <div
-                                                    className="screen-size-edit"
-                                                    onClick={() =>
-                                                        handleStartEdit(item)
-                                                    }
-                                                >
-                                                    edit
-                                                </div>
-
-                                                <div
-                                                    className="screen-size-btn -size-delete"
-                                                    onClick={() =>
-                                                        handleDeleteScreenSize(
-                                                            item.id,
-                                                        )
-                                                    }
-                                                >
-                                                    delete
-                                                </div>
-                                            </>
-                                        )
+                                        <div className="screen-size-actions">
+                                            <div
+                                                className="screen-size-edit"
+                                                onClick={() =>
+                                                    handleStartEdit(item)
+                                                }
+                                            >
+                                                edit
+                                            </div>
+                                            <div
+                                                className="screen-size-btn -size-delete"
+                                                onClick={() =>
+                                                    handleDeleteScreenSize(
+                                                        item.id,
+                                                    )
+                                                }
+                                            >
+                                                delete
+                                            </div>
+                                        </div>
                                     )}
                                 </div>
                             ))}

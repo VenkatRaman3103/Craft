@@ -117,3 +117,38 @@ export const updateScreenSize = async (req, res) => {
         res.status(500).json(errorMessage);
     }
 };
+
+export const updateScreenSizesStatus = async (req, res) => {
+    const { id } = req.params;
+    const { status } = req.body;
+
+    try {
+        const [targetEntry] = await db
+            .select()
+            .from(screenSizes)
+            .where(eq(screenSizes.id, id));
+
+        const screenType = targetEntry.screenType;
+
+        await db
+            .update(screenSizes)
+            .set({ status: "in-active" })
+            .where(eq(screenSizes.screenType, screenType));
+
+        const [updated] = await db
+            .update(screenSizes)
+            .set({ status })
+            .where(eq(screenSizes.id, id))
+            .returning();
+
+        res.json(updated);
+    } catch (error) {
+        const errorMessage = {
+            error: error.toString(),
+            message: `Error updating the screen size`,
+            origin: "backend/updateScreenSizesStatus/PATCH",
+        };
+        console.error(errorMessage);
+        res.status(500).json(errorMessage);
+    }
+};

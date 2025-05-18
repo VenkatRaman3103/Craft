@@ -21,3 +21,9 @@ export const deleteScreenSize = async (id) => {
 export const updateScreenSize = async (id, updates) => {
     await axios.patch(`${backendUrl}/canvas/screen-size/${id}`, updates);
 };
+
+export const udpateScreenSizeStatus = async (id, screenType, status) => {
+    await axios.patch(`${backendUrl}/canvas/screen-size/${id}/status`, {
+        status,
+    });
+};
