@@ -15,9 +15,13 @@ import {
     ArrowDown,
     ArrowLeft,
     ArrowUp,
+    Minus,
     Monitor,
     Settings,
     Smartphone,
+    Square,
+    SquareDashed,
+    SquareDashedTopSolid,
     Tablet,
 } from "lucide-react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
@@ -253,6 +257,8 @@ export const Canvas: React.FC = () => {
                             <div className="dimension">0</div>
                         </div>
                     </div>
+                    <BorderControlPanel />
+
                     <AlignmentControlPanel />
                     <div className="box-model-container toolbar-section">
                         <div className="heading">box model</div>
@@ -270,7 +276,66 @@ export const Canvas: React.FC = () => {
     );
 };
 
-export default function AlignmentControlPanel() {
+export const BorderControlPanel = () => {
+    return (
+        <div className="border-section-container toolbar-section">
+            <div className="heading">border</div>
+            <div className="border-tools-container">
+                <div className="border-width-sub-section">
+                    <div className="sub-heading">width</div>
+                    <div className="border-width-tools-container">
+                        <div className="boder-width-adjustments-container">
+                            <div className="boder-width-adjustments">
+                                <div className="border-width">
+                                    <div className="border-width-icon">
+                                        <Minus />
+                                    </div>
+                                    <input type="number" />
+                                </div>
+                            </div>
+                            <div className="boder-width-sides-toggle">
+                                <div className="all-sides">
+                                    <Square />
+                                </div>
+                                <div className="target-sides">
+                                    <SquareDashed />
+                                </div>
+                            </div>
+                        </div>
+                        <div className="boder-width-specific-sides-selection">
+                            <div className="top-side-wrapper border-sides">
+                                <div className="top-border">
+                                    <SquareDashedTopSolid />
+                                </div>
+                                <input type="number" />
+                            </div>
+                            <div className="bottom-side-wrapper border-sides">
+                                <div className="bottom-border">
+                                    <SquareDashedTopSolid />
+                                </div>
+                                <input type="number" />
+                            </div>
+                            <div className="left-side-wrapper border-sides">
+                                <div className="left-border">
+                                    <SquareDashedTopSolid />
+                                </div>
+                                <input type="number" />
+                            </div>
+                            <div className="right-side-wrapper border-sides">
+                                <div className="right-border">
+                                    <SquareDashedTopSolid />
+                                </div>
+                                <input type="number" />
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    );
+};
+
+export const AlignmentControlPanel = () => {
     const [layoutType, setLayoutType] = useState("flex");
     const [direction, setDirection] = useState("row");
     const [reverse, setReverse] = useState(false);
@@ -428,7 +493,7 @@ export default function AlignmentControlPanel() {
             </div>
         </div>
     );
-}
+};
 
 const MetricSelection = () => {
     const [selectedMetric, setSelectedMetric] = useState<
