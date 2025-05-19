@@ -11,14 +11,20 @@ import {
     Settings,
     UserRound,
     GalleryVerticalEnd,
+    FileText,
+    Image,
+    Code,
+    File,
 } from "lucide-react";
 import { darkFont, lightFont } from "@/Styles/base";
 import { useNavigate } from "react-router";
+import { useLocation } from "react-router";
 
 type IconType = {
     Icon: React.ElementType;
     actionKey: string;
     label: string;
+    url?: string;
 };
 
 const ExplorerSection = ({
@@ -43,7 +49,9 @@ const ExplorerSection = ({
     const navigate = useNavigate();
 
     const pushUrl = (url) => {
-        navigate(url);
+        if (url) {
+            navigate(url);
+        }
     };
 
     return (
@@ -77,19 +85,19 @@ const ExplorerSection = ({
                                           : lightFont
                                 }
                             />
-                            {/* {expanded && ( */}
-                            {/*     <span */}
-                            {/*         className={`icon-label ${isSelected || isHovered ? "selected" : ""}`} */}
-                            {/*     > */}
-                            {/*         {label} */}
-                            {/*     </span> */}
-                            {/* )} */}
+                            {expanded && (
+                                <span
+                                    className={`icon-label ${isSelected || isHovered ? "selected" : ""}`}
+                                >
+                                    {label}
+                                </span>
+                            )}
                         </div>
-                        {/* {expanded && isSelected && ( */}
-                        {/*     <div className="section-content-wrapper"> */}
-                        {/*         {renderSelectedContent(actionKey)} */}
-                        {/*     </div> */}
-                        {/* )} */}
+                        {expanded && isSelected && (
+                            <div className="section-content-wrapper">
+                                {renderSelectedContent(actionKey)}
+                            </div>
+                        )}
                     </div>
                 );
             })}
@@ -247,30 +255,295 @@ const GalleryContent = () => (
     </div>
 );
 
+const DesignFileTree = () => (
+    <div className="file-tree-container">
+        <h3>Design Files</h3>
+        <ul className="file-tree">
+            <li className="file-tree-folder">
+                <span>
+                    <FolderOpen size={16} strokeWidth={2} /> Designs
+                </span>
+                <ul>
+                    <li className="file-tree-file">
+                        <FileText size={14} strokeWidth={2} /> homepage.sketch
+                    </li>
+                    <li className="file-tree-file">
+                        <Image size={14} strokeWidth={2} /> logo.svg
+                    </li>
+                    <li className="file-tree-file">
+                        <FileText size={14} strokeWidth={2} /> color-palette.pdf
+                    </li>
+                </ul>
+            </li>
+            <li className="file-tree-folder">
+                <span>
+                    <FolderOpen size={16} strokeWidth={2} /> Assets
+                </span>
+                <ul>
+                    <li className="file-tree-file">
+                        <Image size={14} strokeWidth={2} /> hero-image.png
+                    </li>
+                    <li className="file-tree-file">
+                        <Image size={14} strokeWidth={2} /> icons.svg
+                    </li>
+                </ul>
+            </li>
+            <li className="file-tree-folder">
+                <span>
+                    <FolderOpen size={16} strokeWidth={2} /> Wireframes
+                </span>
+                <ul>
+                    <li className="file-tree-file">
+                        <FileText size={14} strokeWidth={2} /> mobile.sketch
+                    </li>
+                    <li className="file-tree-file">
+                        <FileText size={14} strokeWidth={2} /> tablet.sketch
+                    </li>
+                    <li className="file-tree-file">
+                        <FileText size={14} strokeWidth={2} /> desktop.sketch
+                    </li>
+                </ul>
+            </li>
+        </ul>
+    </div>
+);
+
+const EditFileTree = () => (
+    <div className="file-tree-container">
+        <h3>Edit Files</h3>
+        <ul className="file-tree">
+            <li className="file-tree-folder">
+                <span>
+                    <FolderOpen size={16} strokeWidth={2} /> Components
+                </span>
+                <ul>
+                    <li className="file-tree-file">
+                        <Code size={14} strokeWidth={2} /> Button.jsx
+                    </li>
+                    <li className="file-tree-file">
+                        <Code size={14} strokeWidth={2} /> Card.jsx
+                    </li>
+                    <li className="file-tree-file">
+                        <Code size={14} strokeWidth={2} /> Navbar.jsx
+                    </li>
+                </ul>
+            </li>
+            <li className="file-tree-folder">
+                <span>
+                    <FolderOpen size={16} strokeWidth={2} /> Layouts
+                </span>
+                <ul>
+                    <li className="file-tree-file">
+                        <Code size={14} strokeWidth={2} /> MainLayout.jsx
+                    </li>
+                    <li className="file-tree-file">
+                        <Code size={14} strokeWidth={2} /> DashboardLayout.jsx
+                    </li>
+                </ul>
+            </li>
+            <li className="file-tree-folder">
+                <span>
+                    <FolderOpen size={16} strokeWidth={2} /> Styles
+                </span>
+                <ul>
+                    <li className="file-tree-file">
+                        <Code size={14} strokeWidth={2} /> global.css
+                    </li>
+                    <li className="file-tree-file">
+                        <Code size={14} strokeWidth={2} /> theme.css
+                    </li>
+                </ul>
+            </li>
+        </ul>
+    </div>
+);
+
+const CMSFileTree = () => (
+    <div className="file-tree-container">
+        <h3>CMS Content</h3>
+        <ul className="file-tree">
+            <li className="file-tree-folder">
+                <span>
+                    <FolderOpen size={16} strokeWidth={2} /> Blog Posts
+                </span>
+                <ul>
+                    <li className="file-tree-file">
+                        <File size={14} strokeWidth={2} /> getting-started.md
+                    </li>
+                    <li className="file-tree-file">
+                        <File size={14} strokeWidth={2} /> features-overview.md
+                    </li>
+                    <li className="file-tree-file">
+                        <File size={14} strokeWidth={2} /> best-practices.md
+                    </li>
+                </ul>
+            </li>
+            <li className="file-tree-folder">
+                <span>
+                    <FolderOpen size={16} strokeWidth={2} /> Products
+                </span>
+                <ul>
+                    <li className="file-tree-file">
+                        <File size={14} strokeWidth={2} /> product-1.json
+                    </li>
+                    <li className="file-tree-file">
+                        <File size={14} strokeWidth={2} /> product-2.json
+                    </li>
+                    <li className="file-tree-file">
+                        <File size={14} strokeWidth={2} /> product-3.json
+                    </li>
+                </ul>
+            </li>
+            <li className="file-tree-folder">
+                <span>
+                    <FolderOpen size={16} strokeWidth={2} /> Media
+                </span>
+                <ul>
+                    <li className="file-tree-file">
+                        <Image size={14} strokeWidth={2} /> banner.jpg
+                    </li>
+                    <li className="file-tree-file">
+                        <Image size={14} strokeWidth={2} /> product-images.zip
+                    </li>
+                </ul>
+            </li>
+        </ul>
+    </div>
+);
+
+const DatabaseFileTree = () => (
+    <div className="file-tree-container">
+        <h3>Database Files</h3>
+        <ul className="file-tree">
+            <li className="file-tree-folder">
+                <span>
+                    <FolderOpen size={16} strokeWidth={2} /> Models
+                </span>
+                <ul>
+                    <li className="file-tree-file">
+                        <Code size={14} strokeWidth={2} /> User.js
+                    </li>
+                    <li className="file-tree-file">
+                        <Code size={14} strokeWidth={2} /> Product.js
+                    </li>
+                    <li className="file-tree-file">
+                        <Code size={14} strokeWidth={2} /> Order.js
+                    </li>
+                </ul>
+            </li>
+            <li className="file-tree-folder">
+                <span>
+                    <FolderOpen size={16} strokeWidth={2} /> Migrations
+                </span>
+                <ul>
+                    <li className="file-tree-file">
+                        <Code size={14} strokeWidth={2} /> 001_initial.sql
+                    </li>
+                    <li className="file-tree-file">
+                        <Code size={14} strokeWidth={2} /> 002_add_users.sql
+                    </li>
+                </ul>
+            </li>
+            <li className="file-tree-folder">
+                <span>
+                    <FolderOpen size={16} strokeWidth={2} /> Backups
+                </span>
+                <ul>
+                    <li className="file-tree-file">
+                        <File size={14} strokeWidth={2} />{" "}
+                        db_backup_2025-05-15.sql
+                    </li>
+                    <li className="file-tree-file">
+                        <File size={14} strokeWidth={2} />{" "}
+                        db_backup_2025-05-10.sql
+                    </li>
+                </ul>
+            </li>
+        </ul>
+    </div>
+);
+
+const ChecklistFileTree = () => (
+    <div className="file-tree-container">
+        <h3>Task Files</h3>
+        <ul className="file-tree">
+            <li className="file-tree-folder">
+                <span>
+                    <FolderOpen size={16} strokeWidth={2} /> Project Tasks
+                </span>
+                <ul>
+                    <li className="file-tree-file">
+                        <File size={14} strokeWidth={2} /> sprint-1.md
+                    </li>
+                    <li className="file-tree-file">
+                        <File size={14} strokeWidth={2} /> sprint-2.md
+                    </li>
+                    <li className="file-tree-file">
+                        <File size={14} strokeWidth={2} /> backlog.md
+                    </li>
+                </ul>
+            </li>
+            <li className="file-tree-folder">
+                <span>
+                    <FolderOpen size={16} strokeWidth={2} /> Documentation
+                </span>
+                <ul>
+                    <li className="file-tree-file">
+                        <File size={14} strokeWidth={2} /> project-plan.pdf
+                    </li>
+                    <li className="file-tree-file">
+                        <File size={14} strokeWidth={2} /> requirements.md
+                    </li>
+                </ul>
+            </li>
+        </ul>
+    </div>
+);
+
 export const Explorer = ({ children }: { children: React.ReactNode }) => {
     const [selectedAction, setSelectedAction] = React.useState<string | null>(
         null,
     );
     const [expanded, setExpanded] = React.useState(false);
     const [galleryMode, setGalleryMode] = React.useState(false);
+    const [showFileTree, setShowFileTree] = React.useState(false);
+
+    const location = useLocation();
+    const navigate = useNavigate();
+
+    React.useEffect(() => {
+        const path = location.pathname.substring(1);
+        if (path) {
+            const pathToActionMap = {
+                canvas: "design",
+                api: "edit",
+                collections: "cms",
+                database: "database",
+                checklist: "checklist",
+                settings: "settings",
+                user: "user",
+                gallery: "gallery",
+            };
+
+            const actionKey = pathToActionMap[path];
+            if (actionKey) {
+                setSelectedAction(actionKey);
+                setShowFileTree(true);
+            }
+        }
+    }, [location.pathname]);
 
     const handleSelectAction = (action: string) => {
         if (action === "toggle") {
             setExpanded(!expanded);
-            if (!expanded) {
-                setSelectedAction(null);
-            }
-        } else if (action === "gallery") {
-            setExpanded(false);
-            setSelectedAction(null);
-            setGalleryMode(!galleryMode);
-        } else if (action === selectedAction) {
-            setSelectedAction(null);
-            setExpanded(false);
+            return;
+        }
+
+        if (selectedAction === action) {
+            setShowFileTree(!showFileTree);
         } else {
             setSelectedAction(action);
-            setExpanded(true);
-            setGalleryMode(false);
+            setShowFileTree(true);
         }
     };
 
@@ -297,19 +570,44 @@ export const Explorer = ({ children }: { children: React.ReactNode }) => {
         },
         {
             Icon: Folder,
-            actionKey: "folder",
+            actionKey: "cms",
             label: "CMS",
             url: "/collections",
         },
-        // { Icon: FolderOpen, actionKey: "open-folder", label: "Open Project" },
-        { Icon: Database, actionKey: "database", label: "Database" },
-        { Icon: ListChecks, actionKey: "checklist", label: "Checklists" },
+
+        {
+            Icon: Database,
+            actionKey: "database",
+            label: "Database",
+            url: "/database",
+        },
+        {
+            Icon: ListChecks,
+            actionKey: "checklist",
+            label: "Checklists",
+            url: "/checklist",
+        },
     ];
 
     const settingsIcons = [
-        { Icon: Settings, actionKey: "settings", label: "Settings" },
-        { Icon: UserRound, actionKey: "user", label: "User Profile" },
-        { Icon: GalleryVerticalEnd, actionKey: "gallery", label: "Gallery" },
+        {
+            Icon: Settings,
+            actionKey: "settings",
+            label: "Settings",
+            url: "/settings",
+        },
+        {
+            Icon: UserRound,
+            actionKey: "user",
+            label: "User Profile",
+            url: "/user",
+        },
+        {
+            Icon: GalleryVerticalEnd,
+            actionKey: "gallery",
+            label: "Gallery",
+            url: "/gallery",
+        },
     ];
 
     const renderContent = (actionKey: string) => {
@@ -318,7 +616,7 @@ export const Explorer = ({ children }: { children: React.ReactNode }) => {
                 return <DesignContent />;
             case "edit":
                 return <EditContent />;
-            case "folder":
+            case "cms":
                 return <FolderContent />;
             case "open-folder":
                 return <OpenFolderContent />;
@@ -337,6 +635,25 @@ export const Explorer = ({ children }: { children: React.ReactNode }) => {
         }
     };
 
+    const renderFileTree = () => {
+        if (!showFileTree) return null;
+
+        switch (selectedAction) {
+            case "design":
+                return <DesignFileTree />;
+            case "edit":
+                return <EditFileTree />;
+            case "cms":
+                return <CMSFileTree />;
+            case "database":
+                return <DatabaseFileTree />;
+            case "checklist":
+                return <ChecklistFileTree />;
+            default:
+                return null;
+        }
+    };
+
     return (
         <div className="explorer-container">
             <div className="explorer-wrapper">
@@ -344,7 +661,7 @@ export const Explorer = ({ children }: { children: React.ReactNode }) => {
                     className={`explorer-options-container ${expanded ? "expanded" : ""}`}
                 >
                     <div
-                        className={`explorer-options-wrapper ${selectedAction === "folder" ? "folder" : ""}`}
+                        className={`explorer-options-wrapper ${selectedAction === "cms" ? "folder" : ""}`}
                     >
                         <div className="explorer-header">
                             <ExplorerSection
@@ -374,6 +691,13 @@ export const Explorer = ({ children }: { children: React.ReactNode }) => {
                         />
                     </div>
                 </div>
+
+                <div
+                    className={`file-tree-section ${showFileTree ? "active" : ""}`}
+                >
+                    {renderFileTree()}
+                </div>
+
                 <div className="content-container">
                     <div
                         className={`content-wrapper ${galleryMode ? "gallery-mode" : ""}`}
