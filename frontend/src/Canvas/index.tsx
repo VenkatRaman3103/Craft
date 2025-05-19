@@ -196,12 +196,12 @@ export const Canvas: React.FC = () => {
                 onMouseMove={handleMouseMove}
                 onClick={handleCanvasClick}
             >
-                <div
+                <canvas
                     className={`canvas ${screen}`}
                     style={{ position: "relative" }}
                 >
                     {elements.map(renderElement)}
-                </div>
+                </canvas>
             </div>
 
             <div className="status-bar-container">
@@ -395,7 +395,11 @@ export const FontsControlPanel = () => {
 };
 
 export const BorderControlPanel = () => {
-    const [activeBorderType, setActiveBorderType] = useState<
+    const [activeSide_width, setActiveSide_width] = useState<
+        "all" | "specific"
+    >("all");
+
+    const [activeSide_radius, setActiveSide_radius] = useState<
         "all" | "specific"
     >("all");
 
@@ -419,15 +423,15 @@ export const BorderControlPanel = () => {
                             </div>
                             <div className="boder-width-sides-toggle">
                                 <div
-                                    className={`all-sides ${activeBorderType == "all" ? "active" : ""}`}
-                                    onClick={() => setActiveBorderType("all")}
+                                    className={`all-sides ${activeSide_width == "all" ? "active" : ""}`}
+                                    onClick={() => setActiveSide_width("all")}
                                 >
                                     <Square size={borderIconSize} />
                                 </div>
                                 <div
-                                    className={`target-sides ${activeBorderType == "specific" ? "active" : ""}`}
+                                    className={`target-sides ${activeSide_width == "specific" ? "active" : ""}`}
                                     onClick={() =>
-                                        setActiveBorderType("specific")
+                                        setActiveSide_width("specific")
                                     }
                                 >
                                     <SquareDashed size={borderIconSize} />
@@ -502,15 +506,15 @@ export const BorderControlPanel = () => {
                             </div>
                             <div className="boder-radius-sides-toggle">
                                 <div
-                                    className={`all-sides ${activeBorderType == "all" ? "active" : ""}`}
-                                    onClick={() => setActiveBorderType("all")}
+                                    className={`all-sides ${activeSide_radius == "all" ? "active" : ""}`}
+                                    onClick={() => setActiveSide_radius("all")}
                                 >
                                     <Square size={borderIconSize} />
                                 </div>
                                 <div
-                                    className={`target-sides ${activeBorderType == "specific" ? "active" : ""}`}
+                                    className={`target-sides ${activeSide_radius == "specific" ? "active" : ""}`}
                                     onClick={() =>
-                                        setActiveBorderType("specific")
+                                        setActiveSide_radius("specific")
                                     }
                                 >
                                     <Scan size={borderIconSize} />

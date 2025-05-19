@@ -26,11 +26,13 @@ const ExplorerSection = ({
     onSelect,
     expanded,
     renderSelectedContent,
+    isMain,
 }: {
     icons: IconType[];
     selectedAction: string | null;
     onSelect: (action: string) => void;
     expanded: boolean;
+    isMain?: boolean;
     renderSelectedContent: (actionKey: string) => React.ReactNode;
 }) => {
     const [hoveredAction, setHoveredAction] = React.useState<string | null>(
@@ -38,7 +40,7 @@ const ExplorerSection = ({
     );
 
     return (
-        <div className="icons-container">
+        <div className={`icons-container ${isMain ? "middle" : ""}`}>
             {icons.map(({ Icon, actionKey, label }) => {
                 const isHovered = hoveredAction === actionKey;
                 const isSelected = selectedAction === actionKey;
@@ -65,19 +67,19 @@ const ExplorerSection = ({
                                           : lightFont
                                 }
                             />
-                            {expanded && (
-                                <span
-                                    className={`icon-label ${isSelected || isHovered ? "selected" : ""}`}
-                                >
-                                    {label}
-                                </span>
-                            )}
+                            {/* {expanded && ( */}
+                            {/*     <span */}
+                            {/*         className={`icon-label ${isSelected || isHovered ? "selected" : ""}`} */}
+                            {/*     > */}
+                            {/*         {label} */}
+                            {/*     </span> */}
+                            {/* )} */}
                         </div>
-                        {expanded && isSelected && (
-                            <div className="section-content-wrapper">
-                                {renderSelectedContent(actionKey)}
-                            </div>
-                        )}
+                        {/* {expanded && isSelected && ( */}
+                        {/*     <div className="section-content-wrapper"> */}
+                        {/*         {renderSelectedContent(actionKey)} */}
+                        {/*     </div> */}
+                        {/* )} */}
                     </div>
                 );
             })}
@@ -327,15 +329,16 @@ export const Explorer = ({ children }: { children: React.ReactNode }) => {
                                 expanded={expanded}
                                 renderSelectedContent={renderContent}
                             />
-
-                            <ExplorerSection
-                                icons={actionIcons}
-                                selectedAction={selectedAction}
-                                onSelect={handleSelectAction}
-                                expanded={expanded}
-                                renderSelectedContent={renderContent}
-                            />
                         </div>
+
+                        <ExplorerSection
+                            icons={actionIcons}
+                            selectedAction={selectedAction}
+                            onSelect={handleSelectAction}
+                            expanded={expanded}
+                            renderSelectedContent={renderContent}
+                            isMain={true}
+                        />
 
                         <ExplorerSection
                             icons={settingsIcons}
