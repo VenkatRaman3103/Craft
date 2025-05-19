@@ -26,6 +26,7 @@ import {
     Italic,
     Minus,
     Monitor,
+    RotateCcw,
     Scan,
     Settings,
     Smartphone,
@@ -77,6 +78,9 @@ export const Canvas: React.FC = () => {
 
     // zoome in and out
     const [zoomLevel, setZoomLevel] = useState(1);
+    const maxZoomLevel = 3;
+    const minZoomLevel = 0.3;
+    const zoomStepper = 0.1;
 
     const addElement = (type: CanvasElement["type"]) => {
         const newElement: CanvasElement = {
@@ -123,6 +127,17 @@ export const Canvas: React.FC = () => {
             setDragOffset({ x: offsetX, y: offsetY });
             setDragging(true);
         }
+
+        if (element && canvasRef.current) {
+            const canvasRect = canvasRef.current.getBoundingClientRect();
+            // Divide by zoomLevel to get the true position in the original coordinates
+            const offsetX =
+                (e.clientX - canvasRect.left) / zoomLevel - element.x;
+            const offsetY =
+                (e.clientY - canvasRect.top) / zoomLevel - element.y;
+            setDragOffset({ x: offsetX, y: offsetY });
+            setDragging(true);
+        }
         e.stopPropagation();
     };
 
@@ -135,8 +150,9 @@ export const Canvas: React.FC = () => {
     const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
         if (dragging && selectedId !== null && canvasRef.current) {
             const canvasRect = canvasRef.current.getBoundingClientRect();
-            const x = e.clientX - canvasRect.left - dragOffset.x;
-            const y = e.clientY - canvasRect.top - dragOffset.y;
+            // Adjust for zoom level
+            const x = (e.clientX - canvasRect.left) / zoomLevel - dragOffset.x;
+            const y = (e.clientY - canvasRect.top) / zoomLevel - dragOffset.y;
 
             setElements((prev) =>
                 prev.map((el) => (el.id === selectedId ? { ...el, x, y } : el)),
@@ -201,6 +217,18 @@ export const Canvas: React.FC = () => {
         transition: "transform 0.1s ease-out",
     };
 
+    const handleZoomIn = () => {
+        setZoomLevel(Math.min(zoomLevel + zoomStepper, maxZoomLevel));
+    };
+
+    const handleZoomOut = () => {
+        setZoomLevel(Math.max(zoomLevel - zoomStepper, minZoomLevel));
+    };
+
+    const handleZoomReset = () => {
+        setZoomLevel(1);
+    };
+
     return (
         <div className="figma-container">
             <div
@@ -224,10 +252,22 @@ export const Canvas: React.FC = () => {
                 <ScreenSizeSwitcher screen={screen} setScreen={setScreen} />
 
                 <div className="zoom-buttons-container">
-                    <div className="zoom-out-btn zoom-btn">
+                    <div
+                        className="zoom-out-btn zoom-btn"
+                        onClick={() => handleZoomOut()}
+                    >
                         <ZoomOut size={ZoomIconSize} />
                     </div>
-                    <div className="zoom-in-btn zoom-btn">
+                    <div
+                        className="zoom-reset-btn zoom-btn"
+                        onClick={() => handleZoomReset()}
+                    >
+                        <RotateCcw size={ZoomIconSize} />
+                    </div>
+                    <div
+                        className="zoom-in-btn zoom-btn"
+                        onClick={() => handleZoomIn()}
+                    >
                         <ZoomIn size={ZoomIconSize} />
                     </div>
                 </div>
