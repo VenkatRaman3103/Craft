@@ -37,6 +37,7 @@
             margin: 60px 16px 16px 16px;
             border-radius: 4px;
             overflow: hidden;
+            position: relative;
 
             &.mobile {
                 width: 50%;
@@ -419,7 +420,9 @@
 }
 
 .publish-button:disabled {
-    background-color: #cccccc;
+    /* background-color: #cccccc; */
+    background-color: var(--primary-color);
+    border: 1px solid var(--border-color);
     cursor: not-allowed;
 }
 
@@ -1392,5 +1395,28 @@
     input {
         width: 30px;
         background-color: var(--secondary-color);
+    }
+}
+
+.zoom-buttons-container {
+    width: auto;
+    height: 100%;
+    background-color: var(--primary-color);
+
+    display: flex;
+    gap: 2px;
+
+    border-radius: 50px;
+    overflow: hidden;
+
+    .zoom-btn {
+        height: 25px;
+        width: 25px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background-color: var(--secondary-color);
+
+        padding: 0px 10px;
     }
 }

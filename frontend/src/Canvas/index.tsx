@@ -36,6 +36,8 @@ import {
     Tablet,
     Type,
     Underline,
+    ZoomIn,
+    ZoomOut,
 } from "lucide-react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import {
@@ -72,6 +74,9 @@ export const Canvas: React.FC = () => {
     const [dragOffset, setDragOffset] = useState({ x: 0, y: 0 });
 
     const canvasRef = useRef<HTMLDivElement | null>(null);
+
+    // zoome in and out
+    const [zoomLevel, setZoomLevel] = useState(1);
 
     const addElement = (type: CanvasElement["type"]) => {
         const newElement: CanvasElement = {
@@ -188,6 +193,14 @@ export const Canvas: React.FC = () => {
         );
     };
 
+    const ZoomIconSize = 16;
+
+    const canvasStyle = {
+        transform: `scale(${zoomLevel})`,
+        transformOrigin: "top left",
+        transition: "transform 0.1s ease-out",
+    };
+
     return (
         <div className="figma-container">
             <div
@@ -196,12 +209,9 @@ export const Canvas: React.FC = () => {
                 onMouseMove={handleMouseMove}
                 onClick={handleCanvasClick}
             >
-                <canvas
-                    className={`canvas ${screen}`}
-                    style={{ position: "relative" }}
-                >
+                <div className={`canvas ${screen}`} style={canvasStyle}>
                     {elements.map(renderElement)}
-                </canvas>
+                </div>
             </div>
 
             <div className="status-bar-container">
@@ -213,6 +223,15 @@ export const Canvas: React.FC = () => {
 
                 <ScreenSizeSwitcher screen={screen} setScreen={setScreen} />
 
+                <div className="zoom-buttons-container">
+                    <div className="zoom-out-btn zoom-btn">
+                        <ZoomOut size={ZoomIconSize} />
+                    </div>
+                    <div className="zoom-in-btn zoom-btn">
+                        <ZoomIn size={ZoomIconSize} />
+                    </div>
+                </div>
+
                 <div className="publish-container">
                     <PublishFeature
                         elements={elements}
@@ -220,14 +239,6 @@ export const Canvas: React.FC = () => {
                         elementHeight={elementHeight}
                     />
                 </div>
-
-                <button
-                    className="delete-button"
-                    onClick={deleteSelected}
-                    disabled={selectedId === null}
-                >
-                    Delete
-                </button>
             </div>
 
             <ElementPicker addElement={addElement} />
@@ -283,6 +294,14 @@ export const Canvas: React.FC = () => {
                             </div>
                         </div>
                     </div>
+
+                    <button
+                        className="delete-button"
+                        onClick={deleteSelected}
+                        disabled={selectedId === null}
+                    >
+                        Delete
+                    </button>
                 </div>
             </div>
         </div>
