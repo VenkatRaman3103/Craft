@@ -258,12 +258,14 @@ export const Canvas: React.FC = () => {
                     >
                         <ZoomOut size={ZoomIconSize} />
                     </div>
-                    <div
-                        className="zoom-reset-btn zoom-btn"
-                        onClick={() => handleZoomReset()}
-                    >
-                        <RotateCcw size={ZoomIconSize} />
-                    </div>
+                    {zoomLevel != 1 && (
+                        <div
+                            className="zoom-reset-btn zoom-btn"
+                            onClick={() => handleZoomReset()}
+                        >
+                            <RotateCcw size={ZoomIconSize} />
+                        </div>
+                    )}
                     <div
                         className="zoom-in-btn zoom-btn"
                         onClick={() => handleZoomIn()}

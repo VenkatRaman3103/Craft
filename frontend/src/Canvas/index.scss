@@ -1401,10 +1401,13 @@
 .zoom-buttons-container {
     width: auto;
     height: 100%;
-    background-color: var(--primary-color);
+    /* background-color: var(--primary-color); */
+
+    background-color: var(--border-color);
+    border: 1px solid var(--border-color);
 
     display: flex;
-    gap: 2px;
+    gap: 1px;
 
     border-radius: 50px;
     overflow: hidden;
@@ -1415,8 +1418,12 @@
         display: flex;
         align-items: center;
         justify-content: center;
-        background-color: var(--secondary-color);
+        background-color: var(--white-color);
 
         padding: 0px 10px;
+
+        &:hover {
+            background-color: var(--secondary-color);
+        }
     }
 }
