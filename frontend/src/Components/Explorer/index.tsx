@@ -13,6 +13,7 @@ import {
     GalleryVerticalEnd,
 } from "lucide-react";
 import { darkFont, lightFont } from "@/Styles/base";
+import { useNavigate } from "react-router";
 
 type IconType = {
     Icon: React.ElementType;
@@ -39,9 +40,15 @@ const ExplorerSection = ({
         null,
     );
 
+    const navigate = useNavigate();
+
+    const pushUrl = (url) => {
+        navigate(url);
+    };
+
     return (
         <div className={`icons-container ${isMain ? "middle" : ""}`}>
-            {icons.map(({ Icon, actionKey, label }) => {
+            {icons.map(({ Icon, actionKey, label, url }) => {
                 const isHovered = hoveredAction === actionKey;
                 const isSelected = selectedAction === actionKey;
 
@@ -51,7 +58,10 @@ const ExplorerSection = ({
                         className={`section-wrapper ${isSelected ? "selected" : ""}`}
                         onMouseEnter={() => setHoveredAction(actionKey)}
                         onMouseLeave={() => setHoveredAction(null)}
-                        onClick={() => onSelect(actionKey)}
+                        onClick={() => {
+                            onSelect(actionKey);
+                            pushUrl(url);
+                        }}
                     >
                         <div
                             className={`icon-item ${isSelected ? "selected" : ""}`}
@@ -273,9 +283,24 @@ export const Explorer = ({ children }: { children: React.ReactNode }) => {
     ];
 
     const actionIcons = [
-        { Icon: PencilRuler, actionKey: "design", label: "Design" },
-        { Icon: DraftingCompass, actionKey: "edit", label: "Edit" },
-        { Icon: Folder, actionKey: "folder", label: "CMS" },
+        {
+            Icon: PencilRuler,
+            actionKey: "design",
+            label: "Design",
+            url: "/canvas",
+        },
+        {
+            Icon: DraftingCompass,
+            actionKey: "edit",
+            label: "Edit",
+            url: "/api",
+        },
+        {
+            Icon: Folder,
+            actionKey: "folder",
+            label: "CMS",
+            url: "/collections",
+        },
         // { Icon: FolderOpen, actionKey: "open-folder", label: "Open Project" },
         { Icon: Database, actionKey: "database", label: "Database" },
         { Icon: ListChecks, actionKey: "checklist", label: "Checklists" },
