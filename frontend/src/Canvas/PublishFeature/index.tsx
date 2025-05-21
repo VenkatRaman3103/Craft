@@ -5,6 +5,11 @@ export const PublishFeature = ({
     elementWidth,
     elementHeight,
     elementRadius,
+    topRightRadius,
+    topLeftRadius,
+    bottomRightRadius,
+    bottomLeftRadius,
+    toggleAllSide_radius,
 }) => {
     const [published, setPublished] = useState(false);
     const [isLoading, setIsLoading] = useState(false);
@@ -68,7 +73,16 @@ export const PublishFeature = ({
         height: ${height}px;
         background-color: ${element.color};
         position: absolute;
-        border-radius: ${radius}px
+        ${
+            toggleAllSide_radius == "specific"
+                ? `
+        border-top-left-radius: ${topLeftRadius}px;
+        border-top-right-radius: ${topRightRadius}px;
+        border-bottom-left-radius: ${bottomLeftRadius}px;
+        border-bottom-right-radius: ${bottomRightRadius}px;
+`
+                : `border-radius: ${radius}px;`
+        }
       `;
 
             let content = "";
@@ -84,6 +98,7 @@ export const PublishFeature = ({
         <div class="canvas-element" style="${elementStyle}">
           ${content}
         </div>
+<div>${topLeftRadius}</div>
       `;
         });
 

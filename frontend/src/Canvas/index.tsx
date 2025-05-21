@@ -75,6 +75,15 @@ export const Canvas: React.FC = () => {
     // border
     const [elementRadius, setElementRadius] = useState(0);
 
+    const [topLeftRadius, setTopLeftRadius] = useState(0);
+    const [topRightRadius, setTopRightRadius] = useState(0);
+    const [bottomRightRadius, setBottomRightRadius] = useState(0);
+    const [bottomLeftRadius, setBottomLeftRadius] = useState(0);
+
+    const [toggleAllSide_radius, setToggleAllSide_radius] = useState<
+        "all" | "specific"
+    >("all");
+
     const [dragging, setDragging] = useState(false);
     const [dragOffset, setDragOffset] = useState({ x: 0, y: 0 });
 
@@ -192,6 +201,10 @@ export const Canvas: React.FC = () => {
             height: `${elementHeight}px`,
             backgroundColor: element.color,
             borderRadius: `${elementRadius}px`,
+            borderTopLeftRadius: `${topLeftRadius}px`,
+            borderTopRightRadius: `${topRightRadius}px`,
+            borderBottomLeftRadius: `${bottomLeftRadius}px`,
+            borderBottomRightRadius: `${bottomRightRadius}px`,
             position: "absolute",
         };
 
@@ -284,6 +297,11 @@ export const Canvas: React.FC = () => {
                         elementWidth={elementWidth}
                         elementHeight={elementHeight}
                         elementRadius={elementRadius}
+                        topRightRadius={topRightRadius}
+                        topLeftRadius={topLeftRadius}
+                        bottomRightRadius={bottomRightRadius}
+                        bottomLeftRadius={bottomLeftRadius}
+                        toggleAllSide_radius={toggleAllSide_radius}
                     />
                 </div>
             </div>
@@ -332,6 +350,16 @@ export const Canvas: React.FC = () => {
                     <BorderControlPanel
                         elementRadius={elementRadius}
                         setElementRadius={setElementRadius}
+                        toggleAllSide_radius={toggleAllSide_radius}
+                        setToggleAllSide_radius={setToggleAllSide_radius}
+                        topLeftRadius={topLeftRadius}
+                        setTopLeftRadius={setTopLeftRadius}
+                        topRightRadius={topRightRadius}
+                        setTopRightRadius={setTopRightRadius}
+                        bottomRightRadius={bottomRightRadius}
+                        setBottomRightRadius={setBottomRightRadius}
+                        bottomLeftRadius={bottomLeftRadius}
+                        setBottomLeftRadius={setBottomLeftRadius}
                     />
                     <AlignmentControlPanel />
                     <div className="box-model-container toolbar-section">
@@ -358,12 +386,21 @@ export const Canvas: React.FC = () => {
     );
 };
 
-export const BorderControlPanel = ({ elementRadius, setElementRadius }) => {
+export const BorderControlPanel = ({
+    elementRadius,
+    setElementRadius,
+    toggleAllSide_radius,
+    setToggleAllSide_radius,
+    topLeftRadius,
+    setTopLeftRadius,
+    topRightRadius,
+    setTopRightRadius,
+    bottomRightRadius,
+    setBottomRightRadius,
+    bottomLeftRadius,
+    setBottomLeftRadius,
+}: any) => {
     const [activeSide_width, setActiveSide_width] = useState<
-        "all" | "specific"
-    >("all");
-
-    const [activeSide_radius, setActiveSide_radius] = useState<
         "all" | "specific"
     >("all");
 
@@ -373,6 +410,17 @@ export const BorderControlPanel = ({ elementRadius, setElementRadius }) => {
         event.preventDefault();
         setElementRadius(event.target.value);
     }
+
+    useEffect(() => {
+        if (toggleAllSide_radius == "specific") {
+            setElementRadius(0);
+        } else {
+            setTopLeftRadius(0);
+            setTopRightRadius(0);
+            setBottomRightRadius(0);
+            setBottomLeftRadius(0);
+        }
+    }, [toggleAllSide_radius]);
 
     return (
         <div className="border-section-container toolbar-section">
@@ -479,59 +527,87 @@ export const BorderControlPanel = ({ elementRadius, setElementRadius }) => {
                             </div>
                             <div className="boder-radius-sides-toggle">
                                 <div
-                                    className={`all-sides ${activeSide_radius == "all" ? "active" : ""}`}
-                                    onClick={() => setActiveSide_radius("all")}
+                                    className={`all-sides ${toggleAllSide_radius == "all" ? "active" : ""}`}
+                                    onClick={() =>
+                                        setToggleAllSide_radius("all")
+                                    }
                                 >
                                     <Square size={borderIconSize} />
                                 </div>
                                 <div
-                                    className={`target-sides ${activeSide_radius == "specific" ? "active" : ""}`}
+                                    className={`target-sides ${toggleAllSide_radius == "specific" ? "active" : ""}`}
                                     onClick={() =>
-                                        setActiveSide_radius("specific")
+                                        setToggleAllSide_radius("specific")
                                     }
                                 >
                                     <Scan size={borderIconSize} />
                                 </div>
                             </div>
                         </div>
-                        <div className="boder-radius-specific-sides-selection">
-                            <div className="top-side-wrapper border-sides border-tool">
-                                <div className="top-border-wraper">
-                                    <SquareRoundCorner
-                                        className="top-border"
-                                        size={borderIconSize}
+                        {toggleAllSide_radius == "specific" && (
+                            <div className="boder-radius-specific-sides-selection">
+                                <div className="top-side-wrapper border-sides border-tool">
+                                    <div className="top-border-wraper">
+                                        <SquareRoundCorner
+                                            className="top-border"
+                                            size={borderIconSize}
+                                        />
+                                    </div>
+                                    <input
+                                        type="number"
+                                        value={topLeftRadius}
+                                        onChange={(e) =>
+                                            setTopLeftRadius(e.target.value)
+                                        }
                                     />
                                 </div>
-                                <input type="number" />
-                            </div>
-                            <div className="bottom-side-wrapper border-sides border-tool">
-                                <div className="bottom-border-wraper">
-                                    <SquareRoundCorner
-                                        className="bottom-border"
-                                        size={borderIconSize}
+                                <div className="bottom-side-wrapper border-sides border-tool">
+                                    <div className="bottom-border-wraper">
+                                        <SquareRoundCorner
+                                            className="bottom-border"
+                                            size={borderIconSize}
+                                        />
+                                    </div>
+                                    <input
+                                        type="number"
+                                        value={topRightRadius}
+                                        onChange={(e) =>
+                                            setTopRightRadius(e.target.value)
+                                        }
                                     />
                                 </div>
-                                <input type="number" />
-                            </div>
-                            <div className="left-side-wrapper border-sides border-tool">
-                                <div className="left-border-wraper">
-                                    <SquareRoundCorner
-                                        className="left-border"
-                                        size={borderIconSize}
+                                <div className="left-side-wrapper border-sides border-tool">
+                                    <div className="left-border-wraper">
+                                        <SquareRoundCorner
+                                            className="left-border"
+                                            size={borderIconSize}
+                                        />
+                                    </div>
+                                    <input
+                                        type="number"
+                                        value={bottomLeftRadius}
+                                        onChange={(e) =>
+                                            setBottomLeftRadius(e.target.value)
+                                        }
                                     />
                                 </div>
-                                <input type="number" />
-                            </div>
-                            <div className="right-side-wrapper border-sides border-tool">
-                                <div className="right-border-wraper">
-                                    <SquareRoundCorner
-                                        className="right-border"
-                                        size={borderIconSize}
+                                <div className="right-side-wrapper border-sides border-tool">
+                                    <div className="right-border-wraper">
+                                        <SquareRoundCorner
+                                            className="right-border"
+                                            size={borderIconSize}
+                                        />
+                                    </div>
+                                    <input
+                                        type="number"
+                                        value={bottomRightRadius}
+                                        onChange={(e) =>
+                                            setBottomRightRadius(e.target.value)
+                                        }
                                     />
                                 </div>
-                                <input type="number" />
                             </div>
-                        </div>
+                        )}
                     </div>
                 </div>
             </div>
