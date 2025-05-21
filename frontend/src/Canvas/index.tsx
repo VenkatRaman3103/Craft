@@ -130,7 +130,6 @@ export const Canvas: React.FC = () => {
 
         if (element && canvasRef.current) {
             const canvasRect = canvasRef.current.getBoundingClientRect();
-            // Divide by zoomLevel to get the true position in the original coordinates
             const offsetX =
                 (e.clientX - canvasRect.left) / zoomLevel - element.x;
             const offsetY =
