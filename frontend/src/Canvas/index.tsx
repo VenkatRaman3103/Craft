@@ -55,6 +55,7 @@ type CanvasElement = {
     x: number;
     y: number;
     width: number;
+    "border-radius": number;
     height: number;
     text: string;
     color: string;
@@ -70,6 +71,9 @@ export const Canvas: React.FC = () => {
     // dimensions
     const [elementHeight, setElementHeight] = useState(100);
     const [elementWidth, setElementWidth] = useState(100);
+
+    // border
+    const [elementRadius, setElementRadius] = useState(0);
 
     const [dragging, setDragging] = useState(false);
     const [dragOffset, setDragOffset] = useState({ x: 0, y: 0 });
@@ -90,6 +94,7 @@ export const Canvas: React.FC = () => {
             y: 100,
             width: elementWidth,
             height: elementHeight,
+            "border-radius": elementRadius,
             text: type === "text" ? "Text element" : "",
             color: getRandomColor(),
         };
@@ -149,7 +154,6 @@ export const Canvas: React.FC = () => {
     const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
         if (dragging && selectedId !== null && canvasRef.current) {
             const canvasRect = canvasRef.current.getBoundingClientRect();
-            // Adjust for zoom level
             const x = (e.clientX - canvasRect.left) / zoomLevel - dragOffset.x;
             const y = (e.clientY - canvasRect.top) / zoomLevel - dragOffset.y;
 
@@ -187,6 +191,7 @@ export const Canvas: React.FC = () => {
             width: `${elementWidth}px`,
             height: `${elementHeight}px`,
             backgroundColor: element.color,
+            borderRadius: `${elementRadius}px`,
             position: "absolute",
         };
 
@@ -278,6 +283,7 @@ export const Canvas: React.FC = () => {
                         elements={elements}
                         elementWidth={elementWidth}
                         elementHeight={elementHeight}
+                        elementRadius={elementRadius}
                     />
                 </div>
             </div>
@@ -323,7 +329,10 @@ export const Canvas: React.FC = () => {
                         </div>
                     </div>
                     <FontsControlPanel />
-                    <BorderControlPanel />
+                    <BorderControlPanel
+                        elementRadius={elementRadius}
+                        setElementRadius={setElementRadius}
+                    />
                     <AlignmentControlPanel />
                     <div className="box-model-container toolbar-section">
                         <div className="heading">box model</div>
@@ -343,6 +352,187 @@ export const Canvas: React.FC = () => {
                     >
                         Delete
                     </button>
+                </div>
+            </div>
+        </div>
+    );
+};
+
+export const BorderControlPanel = ({ elementRadius, setElementRadius }) => {
+    const [activeSide_width, setActiveSide_width] = useState<
+        "all" | "specific"
+    >("all");
+
+    const [activeSide_radius, setActiveSide_radius] = useState<
+        "all" | "specific"
+    >("all");
+
+    const borderIconSize = 16;
+
+    function handleBorderRadius(event) {
+        event.preventDefault();
+        setElementRadius(event.target.value);
+    }
+
+    return (
+        <div className="border-section-container toolbar-section">
+            <div className="heading">border</div>
+            <div className="border-tools-container">
+                <div className="border-width-sub-section">
+                    <div className="sub-heading">width</div>
+                    <div className="border-width-tools-container">
+                        <div className="boder-width-adjustments-container">
+                            <div className="boder-width-adjustments">
+                                <div className="border-width border-tool">
+                                    <div className="border-width-icon">
+                                        <Minus size={borderIconSize} />
+                                    </div>
+                                    <input type="number" />
+                                </div>
+                            </div>
+                            <div className="boder-width-sides-toggle">
+                                <div
+                                    className={`all-sides ${activeSide_width == "all" ? "active" : ""}`}
+                                    onClick={() => setActiveSide_width("all")}
+                                >
+                                    <Square size={borderIconSize} />
+                                </div>
+                                <div
+                                    className={`target-sides ${activeSide_width == "specific" ? "active" : ""}`}
+                                    onClick={() =>
+                                        setActiveSide_width("specific")
+                                    }
+                                >
+                                    <SquareDashed size={borderIconSize} />
+                                </div>
+                            </div>
+                        </div>
+                        <div className="boder-width-specific-sides-selection">
+                            <div className="top-side-wrapper border-sides border-tool">
+                                <div className="top-border-wraper">
+                                    <SquareDashedTopSolid
+                                        className="top-border"
+                                        size={borderIconSize}
+                                    />
+                                </div>
+                                <input type="number" />
+                            </div>
+                            <div className="bottom-side-wrapper border-sides border-tool">
+                                <div className="bottom-border-wraper">
+                                    <SquareDashedTopSolid
+                                        className="bottom-border"
+                                        size={borderIconSize}
+                                    />
+                                </div>
+                                <input type="number" />
+                            </div>
+                            <div className="left-side-wrapper border-sides border-tool">
+                                <div className="left-border-wraper">
+                                    <SquareDashedTopSolid
+                                        className="left-border"
+                                        size={borderIconSize}
+                                    />
+                                </div>
+                                <input type="number" />
+                            </div>
+                            <div className="right-side-wrapper border-sides border-tool">
+                                <div className="right-border-wraper">
+                                    <SquareDashedTopSolid
+                                        className="right-border"
+                                        size={borderIconSize}
+                                    />
+                                </div>
+                                <input type="number" />
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div className="border-width-sub-section">
+                    <div className="sub-heading">Style</div>
+                    <div className="border-width-tools-container">
+                        <select className="select-drop-down">
+                            <option>line</option>
+                            <option>dashed</option>
+                            <option>dotted</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div className="border-radius-sub-section">
+                    <div className="sub-heading">radius</div>
+                    <div className="border-radius-tools-container">
+                        <div className="boder-radius-adjustments-container">
+                            <div className="boder-radius-adjustments">
+                                <div className="border-radius border-tool">
+                                    <div className="border-radius-icon">
+                                        <SquareRoundCorner
+                                            size={borderIconSize}
+                                        />
+                                    </div>
+                                    <input
+                                        type="number"
+                                        onChange={(e) => handleBorderRadius(e)}
+                                        value={elementRadius}
+                                    />
+                                </div>
+                            </div>
+                            <div className="boder-radius-sides-toggle">
+                                <div
+                                    className={`all-sides ${activeSide_radius == "all" ? "active" : ""}`}
+                                    onClick={() => setActiveSide_radius("all")}
+                                >
+                                    <Square size={borderIconSize} />
+                                </div>
+                                <div
+                                    className={`target-sides ${activeSide_radius == "specific" ? "active" : ""}`}
+                                    onClick={() =>
+                                        setActiveSide_radius("specific")
+                                    }
+                                >
+                                    <Scan size={borderIconSize} />
+                                </div>
+                            </div>
+                        </div>
+                        <div className="boder-radius-specific-sides-selection">
+                            <div className="top-side-wrapper border-sides border-tool">
+                                <div className="top-border-wraper">
+                                    <SquareRoundCorner
+                                        className="top-border"
+                                        size={borderIconSize}
+                                    />
+                                </div>
+                                <input type="number" />
+                            </div>
+                            <div className="bottom-side-wrapper border-sides border-tool">
+                                <div className="bottom-border-wraper">
+                                    <SquareRoundCorner
+                                        className="bottom-border"
+                                        size={borderIconSize}
+                                    />
+                                </div>
+                                <input type="number" />
+                            </div>
+                            <div className="left-side-wrapper border-sides border-tool">
+                                <div className="left-border-wraper">
+                                    <SquareRoundCorner
+                                        className="left-border"
+                                        size={borderIconSize}
+                                    />
+                                </div>
+                                <input type="number" />
+                            </div>
+                            <div className="right-side-wrapper border-sides border-tool">
+                                <div className="right-border-wraper">
+                                    <SquareRoundCorner
+                                        className="right-border"
+                                        size={borderIconSize}
+                                    />
+                                </div>
+                                <input type="number" />
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -445,178 +635,6 @@ export const FontsControlPanel = () => {
                                 >
                                     <AlignRight size={fontIconSize} />
                                 </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    );
-};
-
-export const BorderControlPanel = () => {
-    const [activeSide_width, setActiveSide_width] = useState<
-        "all" | "specific"
-    >("all");
-
-    const [activeSide_radius, setActiveSide_radius] = useState<
-        "all" | "specific"
-    >("all");
-
-    const borderIconSize = 16;
-
-    return (
-        <div className="border-section-container toolbar-section">
-            <div className="heading">border</div>
-            <div className="border-tools-container">
-                <div className="border-width-sub-section">
-                    <div className="sub-heading">width</div>
-                    <div className="border-width-tools-container">
-                        <div className="boder-width-adjustments-container">
-                            <div className="boder-width-adjustments">
-                                <div className="border-width border-tool">
-                                    <div className="border-width-icon">
-                                        <Minus size={borderIconSize} />
-                                    </div>
-                                    <input type="number" />
-                                </div>
-                            </div>
-                            <div className="boder-width-sides-toggle">
-                                <div
-                                    className={`all-sides ${activeSide_width == "all" ? "active" : ""}`}
-                                    onClick={() => setActiveSide_width("all")}
-                                >
-                                    <Square size={borderIconSize} />
-                                </div>
-                                <div
-                                    className={`target-sides ${activeSide_width == "specific" ? "active" : ""}`}
-                                    onClick={() =>
-                                        setActiveSide_width("specific")
-                                    }
-                                >
-                                    <SquareDashed size={borderIconSize} />
-                                </div>
-                            </div>
-                        </div>
-                        <div className="boder-width-specific-sides-selection">
-                            <div className="top-side-wrapper border-sides border-tool">
-                                <div className="top-border-wraper">
-                                    <SquareDashedTopSolid
-                                        className="top-border"
-                                        size={borderIconSize}
-                                    />
-                                </div>
-                                <input type="number" />
-                            </div>
-                            <div className="bottom-side-wrapper border-sides border-tool">
-                                <div className="bottom-border-wraper">
-                                    <SquareDashedTopSolid
-                                        className="bottom-border"
-                                        size={borderIconSize}
-                                    />
-                                </div>
-                                <input type="number" />
-                            </div>
-                            <div className="left-side-wrapper border-sides border-tool">
-                                <div className="left-border-wraper">
-                                    <SquareDashedTopSolid
-                                        className="left-border"
-                                        size={borderIconSize}
-                                    />
-                                </div>
-                                <input type="number" />
-                            </div>
-                            <div className="right-side-wrapper border-sides border-tool">
-                                <div className="right-border-wraper">
-                                    <SquareDashedTopSolid
-                                        className="right-border"
-                                        size={borderIconSize}
-                                    />
-                                </div>
-                                <input type="number" />
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <div className="border-width-sub-section">
-                    <div className="sub-heading">Style</div>
-                    <div className="border-width-tools-container">
-                        <select className="select-drop-down">
-                            <option>line</option>
-                            <option>dashed</option>
-                            <option>dotted</option>
-                        </select>
-                    </div>
-                </div>
-
-                <div className="border-radius-sub-section">
-                    <div className="sub-heading">radius</div>
-                    <div className="border-radius-tools-container">
-                        <div className="boder-radius-adjustments-container">
-                            <div className="boder-radius-adjustments">
-                                <div className="border-radius border-tool">
-                                    <div className="border-radius-icon">
-                                        <SquareRoundCorner
-                                            size={borderIconSize}
-                                        />
-                                    </div>
-                                    <input type="number" />
-                                </div>
-                            </div>
-                            <div className="boder-radius-sides-toggle">
-                                <div
-                                    className={`all-sides ${activeSide_radius == "all" ? "active" : ""}`}
-                                    onClick={() => setActiveSide_radius("all")}
-                                >
-                                    <Square size={borderIconSize} />
-                                </div>
-                                <div
-                                    className={`target-sides ${activeSide_radius == "specific" ? "active" : ""}`}
-                                    onClick={() =>
-                                        setActiveSide_radius("specific")
-                                    }
-                                >
-                                    <Scan size={borderIconSize} />
-                                </div>
-                            </div>
-                        </div>
-                        <div className="boder-radius-specific-sides-selection">
-                            <div className="top-side-wrapper border-sides border-tool">
-                                <div className="top-border-wraper">
-                                    <SquareRoundCorner
-                                        className="top-border"
-                                        size={borderIconSize}
-                                    />
-                                </div>
-                                <input type="number" />
-                            </div>
-                            <div className="bottom-side-wrapper border-sides border-tool">
-                                <div className="bottom-border-wraper">
-                                    <SquareRoundCorner
-                                        className="bottom-border"
-                                        size={borderIconSize}
-                                    />
-                                </div>
-                                <input type="number" />
-                            </div>
-                            <div className="left-side-wrapper border-sides border-tool">
-                                <div className="left-border-wraper">
-                                    <SquareRoundCorner
-                                        className="left-border"
-                                        size={borderIconSize}
-                                    />
-                                </div>
-                                <input type="number" />
-                            </div>
-                            <div className="right-side-wrapper border-sides border-tool">
-                                <div className="right-border-wraper">
-                                    <SquareRoundCorner
-                                        className="right-border"
-                                        size={borderIconSize}
-                                    />
-                                </div>
-                                <input type="number" />
                             </div>
                         </div>
                     </div>

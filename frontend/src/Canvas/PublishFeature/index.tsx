@@ -1,6 +1,11 @@
 import React, { useState } from "react";
 
-export const PublishFeature = ({ elements, elementWidth, elementHeight }) => {
+export const PublishFeature = ({
+    elements,
+    elementWidth,
+    elementHeight,
+    elementRadius,
+}) => {
     const [published, setPublished] = useState(false);
     const [isLoading, setIsLoading] = useState(false);
 
@@ -9,7 +14,12 @@ export const PublishFeature = ({ elements, elementWidth, elementHeight }) => {
         setIsLoading(true);
 
         // Generate HTML content from the canvas elements
-        const htmlContent = generateHtml(elements, elementWidth, elementHeight);
+        const htmlContent = generateHtml(
+            elements,
+            elementWidth,
+            elementHeight,
+            elementRadius,
+        );
 
         // Store it in localStorage (for persistence between refreshes)
         localStorage.setItem("publishedSite", htmlContent);
@@ -27,7 +37,7 @@ export const PublishFeature = ({ elements, elementWidth, elementHeight }) => {
     };
 
     // Function to generate HTML from canvas elements
-    const generateHtml = (elements, width, height) => {
+    const generateHtml = (elements, width, height, radius) => {
         // Base HTML template
         const htmlHeader = `
           <!DOCTYPE html>
@@ -58,6 +68,7 @@ export const PublishFeature = ({ elements, elementWidth, elementHeight }) => {
         height: ${height}px;
         background-color: ${element.color};
         position: absolute;
+        border-radius: ${radius}px
       `;
 
             let content = "";
