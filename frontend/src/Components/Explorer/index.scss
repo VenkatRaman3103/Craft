@@ -12,6 +12,7 @@
     display: flex;
     flex-direction: row;
     justify-content: start;
+    align-items: center;
 
     .explorer-options-container {
       /* padding-left: 4px; */
@@ -314,5 +315,25 @@
   to {
     opacity: 1;
     transform: translateY(0);
+  }
+}
+
+.file-tree-section {
+  background-color: var(--white-color);
+  /* background-color: var(--base-color); */
+  height: 98.2vh;
+  min-width: 0vw;
+  border-top-left-radius: 10px;
+  border-bottom-left-radius: 10px;
+  border: 1px solid var(--white-color);
+
+  /* transition: all 0.3s linear; */
+
+  &.active {
+    min-width: 20vw;
+    border: 1px solid var(--border-color);
+
+    margin-right: -8px;
+    padding-right: 10px;
   }
 }

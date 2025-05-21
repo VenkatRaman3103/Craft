@@ -19,6 +19,7 @@ import {
 import { darkFont, lightFont } from "@/Styles/base";
 import { useNavigate } from "react-router";
 import { useLocation } from "react-router";
+import { CMSFileTree } from "./CmsFileTree";
 
 type IconType = {
     Icon: React.ElementType;
@@ -351,59 +352,6 @@ const EditFileTree = () => (
                     </li>
                     <li className="file-tree-file">
                         <Code size={14} strokeWidth={2} /> theme.css
-                    </li>
-                </ul>
-            </li>
-        </ul>
-    </div>
-);
-
-const CMSFileTree = () => (
-    <div className="file-tree-container">
-        <h3>CMS Content</h3>
-        <ul className="file-tree">
-            <li className="file-tree-folder">
-                <span>
-                    <FolderOpen size={16} strokeWidth={2} /> Blog Posts
-                </span>
-                <ul>
-                    <li className="file-tree-file">
-                        <File size={14} strokeWidth={2} /> getting-started.md
-                    </li>
-                    <li className="file-tree-file">
-                        <File size={14} strokeWidth={2} /> features-overview.md
-                    </li>
-                    <li className="file-tree-file">
-                        <File size={14} strokeWidth={2} /> best-practices.md
-                    </li>
-                </ul>
-            </li>
-            <li className="file-tree-folder">
-                <span>
-                    <FolderOpen size={16} strokeWidth={2} /> Products
-                </span>
-                <ul>
-                    <li className="file-tree-file">
-                        <File size={14} strokeWidth={2} /> product-1.json
-                    </li>
-                    <li className="file-tree-file">
-                        <File size={14} strokeWidth={2} /> product-2.json
-                    </li>
-                    <li className="file-tree-file">
-                        <File size={14} strokeWidth={2} /> product-3.json
-                    </li>
-                </ul>
-            </li>
-            <li className="file-tree-folder">
-                <span>
-                    <FolderOpen size={16} strokeWidth={2} /> Media
-                </span>
-                <ul>
-                    <li className="file-tree-file">
-                        <Image size={14} strokeWidth={2} /> banner.jpg
-                    </li>
-                    <li className="file-tree-file">
-                        <Image size={14} strokeWidth={2} /> product-images.zip
                     </li>
                 </ul>
             </li>
