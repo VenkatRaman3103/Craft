@@ -9,17 +9,12 @@ import {
     AlignCenterVertical,
     AlignEndHorizontal,
     AlignEndVertical,
-    AlignHorizontalSpaceAround,
     AlignHorizontalSpaceAroundIcon,
     AlignLeft,
     AlignRight,
     AlignStartHorizontal,
     AlignStartVertical,
-    AlignVerticalJustifyEnd,
-    AlignVerticalJustifyStart,
-    AlignVerticalSpaceAround,
     AlignVerticalSpaceAroundIcon,
-    ArrowDown,
     ArrowLeft,
     ArrowUp,
     Bold,
@@ -59,6 +54,7 @@ type CanvasElement = {
     height: number;
     text: string;
     color: string;
+    "border-style": string;
 };
 
 export const Canvas: React.FC = () => {
@@ -84,6 +80,8 @@ export const Canvas: React.FC = () => {
         "all" | "specific"
     >("all");
 
+    const [elementBorderStyle, setElementBorderStyle] = useState("solid");
+
     const [dragging, setDragging] = useState(false);
     const [dragOffset, setDragOffset] = useState({ x: 0, y: 0 });
 
@@ -106,6 +104,7 @@ export const Canvas: React.FC = () => {
             "border-radius": elementRadius,
             text: type === "text" ? "Text element" : "",
             color: getRandomColor(),
+            "border-style": elementBorderStyle,
         };
         setElements((prev) => [...prev, newElement]);
         setSelectedId(newElement.id);
@@ -205,6 +204,7 @@ export const Canvas: React.FC = () => {
             borderTopRightRadius: `${topRightRadius}px`,
             borderBottomLeftRadius: `${bottomLeftRadius}px`,
             borderBottomRightRadius: `${bottomRightRadius}px`,
+            borderStyle: `${elementBorderStyle}`,
             position: "absolute",
         };
 
@@ -302,6 +302,7 @@ export const Canvas: React.FC = () => {
                         bottomRightRadius={bottomRightRadius}
                         bottomLeftRadius={bottomLeftRadius}
                         toggleAllSide_radius={toggleAllSide_radius}
+                        elementBorderStyle={elementBorderStyle}
                     />
                 </div>
             </div>
@@ -360,6 +361,8 @@ export const Canvas: React.FC = () => {
                         setBottomRightRadius={setBottomRightRadius}
                         bottomLeftRadius={bottomLeftRadius}
                         setBottomLeftRadius={setBottomLeftRadius}
+                        setElementBorderStyle={setElementBorderStyle}
+                        elementBorderStyle={elementBorderStyle}
                     />
                     <AlignmentControlPanel />
                     <div className="box-model-container toolbar-section">
@@ -399,6 +402,8 @@ export const BorderControlPanel = ({
     setBottomRightRadius,
     bottomLeftRadius,
     setBottomLeftRadius,
+    setElementBorderStyle,
+    elementBorderStyle,
 }: any) => {
     const [activeSide_width, setActiveSide_width] = useState<
         "all" | "specific"
@@ -499,10 +504,23 @@ export const BorderControlPanel = ({
                 <div className="border-width-sub-section">
                     <div className="sub-heading">Style</div>
                     <div className="border-width-tools-container">
-                        <select className="select-drop-down">
-                            <option>line</option>
-                            <option>dashed</option>
-                            <option>dotted</option>
+                        <select
+                            className="select-drop-down"
+                            value={elementBorderStyle}
+                            onChange={(e) =>
+                                setElementBorderStyle(e.target.value)
+                            }
+                        >
+                            <option value={"solid"}>solid</option>
+                            <option value={"dotted"}>dotted</option>
+                            <option value={"dashed"}>dashed</option>
+                            <option value={"double"}>double</option>
+                            <option value={"groove"}>groove</option>
+                            <option value={"ridge"}>ridge</option>
+                            <option value={"inset"}>inset</option>
+                            <option value={"outset"}>outset</option>
+                            <option value={"none"}>none</option>
+                            <option value={"hidden"}>hidden</option>
                         </select>
                     </div>
                 </div>
