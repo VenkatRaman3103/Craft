@@ -1,6 +1,6 @@
 import React, { useState, useRef, useEffect } from "react";
 import "./index.scss";
-import { ElementPicker, iconStrockWidth } from "./ElementPicker";
+import { ElementPicker} from "./ElementPicker";
 import { elementType } from "@/Types/canvas/elementsType";
 import { PublishFeature } from "./PublishFeature";
 import {
