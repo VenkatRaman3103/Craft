@@ -11,6 +11,13 @@ export const PublishFeature = ({
     bottomLeftRadius,
     toggleAllSide_radius,
     elementBorderStyle,
+
+    toggleAllSide_width,
+    elementBoderWidth,
+    leftWidth,
+    rightWidth,
+    topWidth,
+    bottomWidth,
 }) => {
     const [published, setPublished] = useState(false);
     const [isLoading, setIsLoading] = useState(false);
@@ -25,6 +32,7 @@ export const PublishFeature = ({
             elementWidth,
             elementHeight,
             elementRadius,
+            elementBoderWidth,
         );
 
         // Store it in localStorage (for persistence between refreshes)
@@ -43,7 +51,7 @@ export const PublishFeature = ({
     };
 
     // Function to generate HTML from canvas elements
-    const generateHtml = (elements, width, height, radius) => {
+    const generateHtml = (elements, width, height, radius, borderWidth) => {
         // Base HTML template
         const htmlHeader = `
           <!DOCTYPE html>
@@ -75,6 +83,17 @@ export const PublishFeature = ({
         background-color: ${element.color};
         position: absolute;
         border-style: ${elementBorderStyle};
+        ${
+            toggleAllSide_width == "specific"
+                ? `
+        border-top-width: ${topWidth}px;
+        border-left-width: ${bottomWidth}px;
+        border-bottom-width: ${leftWidth}px;
+        border-right-width: ${rightWidth}px;
+`
+                : `border-width: ${borderWidth}px;`
+        }
+
         ${
             toggleAllSide_radius == "specific"
                 ? `

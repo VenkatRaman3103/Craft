@@ -1,6 +1,6 @@
 import React, { useState, useRef, useEffect } from "react";
 import "./index.scss";
-import { ElementPicker} from "./ElementPicker";
+import { ElementPicker } from "./ElementPicker";
 import { elementType } from "@/Types/canvas/elementsType";
 import { PublishFeature } from "./PublishFeature";
 import {
@@ -70,13 +70,22 @@ export const Canvas: React.FC = () => {
 
     // border
     const [elementRadius, setElementRadius] = useState(0);
+    const [elementBoderWidth, setElementBoderWidth] = useState(1);
 
     const [topLeftRadius, setTopLeftRadius] = useState(0);
     const [topRightRadius, setTopRightRadius] = useState(0);
     const [bottomRightRadius, setBottomRightRadius] = useState(0);
     const [bottomLeftRadius, setBottomLeftRadius] = useState(0);
 
+    const [topWidth, setTopWidth] = useState(1);
+    const [bottomWidth, setBottomWidth] = useState(1);
+    const [leftWidth, setLeftWidth] = useState(1);
+    const [rightWidth, setRightWidth] = useState(1);
+
     const [toggleAllSide_radius, setToggleAllSide_radius] = useState<
+        "all" | "specific"
+    >("all");
+    const [toggleAllSide_width, setToggleAllSide_width] = useState<
         "all" | "specific"
     >("all");
 
@@ -205,6 +214,11 @@ export const Canvas: React.FC = () => {
             borderBottomLeftRadius: `${bottomLeftRadius}px`,
             borderBottomRightRadius: `${bottomRightRadius}px`,
             borderStyle: `${elementBorderStyle}`,
+            borderWidth: `${elementBoderWidth}px`,
+            borderLeftWidth: `${leftWidth}px`,
+            borderRightWidth: `${rightWidth}px`,
+            borderTopWidth: `${topWidth}px`,
+            borderBottomWidth: `${bottomWidth}px`,
             position: "absolute",
         };
 
@@ -302,7 +316,13 @@ export const Canvas: React.FC = () => {
                         bottomRightRadius={bottomRightRadius}
                         bottomLeftRadius={bottomLeftRadius}
                         toggleAllSide_radius={toggleAllSide_radius}
+                        toggleAllSide_width={toggleAllSide_width}
                         elementBorderStyle={elementBorderStyle}
+                        elementBoderWidth={elementBoderWidth}
+                        leftWidth={leftWidth}
+                        rightWidth={rightWidth}
+                        topWidth={topWidth}
+                        bottomWidth={bottomWidth}
                     />
                 </div>
             </div>
@@ -363,6 +383,18 @@ export const Canvas: React.FC = () => {
                         setBottomLeftRadius={setBottomLeftRadius}
                         setElementBorderStyle={setElementBorderStyle}
                         elementBorderStyle={elementBorderStyle}
+                        toggleAllSide_width={toggleAllSide_width}
+                        setToggleAllSide_width={setToggleAllSide_width}
+                        topWidth={topWidth}
+                        setTopWidth={setTopWidth}
+                        bottomWidth={bottomWidth}
+                        setBottomWidth={setBottomWidth}
+                        leftWidth={leftWidth}
+                        setLeftWidth={setLeftWidth}
+                        rightWidth={rightWidth}
+                        setRightWidth={setRightWidth}
+                        elementBoderWidth={elementBoderWidth}
+                        setElementBoderWidth={setElementBoderWidth}
                     />
                     <AlignmentControlPanel />
                     <div className="box-model-container toolbar-section">
@@ -404,11 +436,20 @@ export const BorderControlPanel = ({
     setBottomLeftRadius,
     setElementBorderStyle,
     elementBorderStyle,
-}: any) => {
-    const [activeSide_width, setActiveSide_width] = useState<
-        "all" | "specific"
-    >("all");
+    toggleAllSide_width,
+    setToggleAllSide_width,
+    topWidth,
+    setTopWidth,
+    bottomWidth,
+    setBottomWidth,
+    leftWidth,
+    setLeftWidth,
+    rightWidth,
+    setRightWidth,
 
+    elementBoderWidth,
+    setElementBoderWidth,
+}: any) => {
     const borderIconSize = 16;
 
     function handleBorderRadius(event) {
@@ -427,6 +468,17 @@ export const BorderControlPanel = ({
         }
     }, [toggleAllSide_radius]);
 
+    useEffect(() => {
+        if (toggleAllSide_width == "specific") {
+            setElementBoderWidth(1);
+        } else {
+            setTopWidth(1);
+            setBottomWidth(1);
+            setLeftWidth(1);
+            setRightWidth(1);
+        }
+    }, [toggleAllSide_width]);
+
     return (
         <div className="border-section-container toolbar-section">
             <div className="heading">border</div>
@@ -440,64 +492,98 @@ export const BorderControlPanel = ({
                                     <div className="border-width-icon">
                                         <Minus size={borderIconSize} />
                                     </div>
-                                    <input type="number" />
+                                    <input
+                                        type="number"
+                                        value={elementBoderWidth}
+                                        onChange={(e) =>
+                                            setElementBoderWidth(e.target.value)
+                                        }
+                                    />
                                 </div>
                             </div>
                             <div className="boder-width-sides-toggle">
                                 <div
-                                    className={`all-sides ${activeSide_width == "all" ? "active" : ""}`}
-                                    onClick={() => setActiveSide_width("all")}
+                                    className={`all-sides ${toggleAllSide_width == "all" ? "active" : ""}`}
+                                    onClick={() =>
+                                        setToggleAllSide_width("all")
+                                    }
                                 >
                                     <Square size={borderIconSize} />
                                 </div>
                                 <div
-                                    className={`target-sides ${activeSide_width == "specific" ? "active" : ""}`}
+                                    className={`target-sides ${toggleAllSide_width == "specific" ? "active" : ""}`}
                                     onClick={() =>
-                                        setActiveSide_width("specific")
+                                        setToggleAllSide_width("specific")
                                     }
                                 >
                                     <SquareDashed size={borderIconSize} />
                                 </div>
                             </div>
                         </div>
-                        <div className="boder-width-specific-sides-selection">
-                            <div className="top-side-wrapper border-sides border-tool">
-                                <div className="top-border-wraper">
-                                    <SquareDashedTopSolid
-                                        className="top-border"
-                                        size={borderIconSize}
+                        {toggleAllSide_width == "specific" && (
+                            <div className="boder-width-specific-sides-selection">
+                                <div className="top-side-wrapper border-sides border-tool">
+                                    <div className="top-border-wraper">
+                                        <SquareDashedTopSolid
+                                            className="top-border"
+                                            size={borderIconSize}
+                                        />
+                                    </div>
+                                    <input
+                                        type="number"
+                                        value={topWidth}
+                                        onChange={(e) =>
+                                            setTopWidth(e.target.value)
+                                        }
                                     />
                                 </div>
-                                <input type="number" />
-                            </div>
-                            <div className="bottom-side-wrapper border-sides border-tool">
-                                <div className="bottom-border-wraper">
-                                    <SquareDashedTopSolid
-                                        className="bottom-border"
-                                        size={borderIconSize}
+                                <div className="bottom-side-wrapper border-sides border-tool">
+                                    <div className="bottom-border-wraper">
+                                        <SquareDashedTopSolid
+                                            className="bottom-border"
+                                            size={borderIconSize}
+                                        />
+                                    </div>
+                                    <input
+                                        type="number"
+                                        value={bottomWidth}
+                                        onChange={(e) =>
+                                            setBottomWidth(e.target.value)
+                                        }
                                     />
                                 </div>
-                                <input type="number" />
-                            </div>
-                            <div className="left-side-wrapper border-sides border-tool">
-                                <div className="left-border-wraper">
-                                    <SquareDashedTopSolid
-                                        className="left-border"
-                                        size={borderIconSize}
+                                <div className="left-side-wrapper border-sides border-tool">
+                                    <div className="left-border-wraper">
+                                        <SquareDashedTopSolid
+                                            className="left-border"
+                                            size={borderIconSize}
+                                        />
+                                    </div>
+                                    <input
+                                        type="number"
+                                        value={leftWidth}
+                                        onChange={(e) =>
+                                            setLeftWidth(e.target.value)
+                                        }
                                     />
                                 </div>
-                                <input type="number" />
-                            </div>
-                            <div className="right-side-wrapper border-sides border-tool">
-                                <div className="right-border-wraper">
-                                    <SquareDashedTopSolid
-                                        className="right-border"
-                                        size={borderIconSize}
+                                <div className="right-side-wrapper border-sides border-tool">
+                                    <div className="right-border-wraper">
+                                        <SquareDashedTopSolid
+                                            className="right-border"
+                                            size={borderIconSize}
+                                        />
+                                    </div>
+                                    <input
+                                        type="number"
+                                        value={rightWidth}
+                                        onChange={(e) =>
+                                            setRightWidth(e.target.value)
+                                        }
                                     />
                                 </div>
-                                <input type="number" />
                             </div>
-                        </div>
+                        )}
                     </div>
                 </div>
 
