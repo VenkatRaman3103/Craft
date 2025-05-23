@@ -9,6 +9,9 @@ lerna-debug.log*
 
 node_modules
 /backend/.env
+./backend/drizzle.config.js
+/backend/drizzle.config.js
+drizzle.config.js
 dist
 dist-ssr
 *.local
