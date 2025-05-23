@@ -3,6 +3,21 @@ import "./index.scss";
 import { ElementPicker } from "./ElementPicker";
 import { elementType } from "@/Types/canvas/elementsType";
 import { PublishFeature } from "./PublishFeature";
+
+import {
+    updateBoderRadius,
+    updateRightWidth,
+    updateLeftWidth,
+    updateBottomWidth,
+    updateTopWidth,
+    updateElementBoderWidth,
+    updateBottomLeftRadius,
+    updateBottomRightRadius,
+    updateTopRightRadius,
+    updateTopLeftRadius,
+    updateBorderStyle,
+} from "../store/toolbar/borderControl/borderControl";
+
 import {
     AlignCenter,
     AlignCenterHorizontal,
@@ -72,27 +87,30 @@ export const Canvas: React.FC = () => {
     const [elementWidth, setElementWidth] = useState(100);
 
     // border
-    const [elementRadius, setElementRadius] = useState(0);
-    const [elementBoderWidth, setElementBoderWidth] = useState(1);
 
-    const [topLeftRadius, setTopLeftRadius] = useState(0);
-    const [topRightRadius, setTopRightRadius] = useState(0);
-    const [bottomRightRadius, setBottomRightRadius] = useState(0);
-    const [bottomLeftRadius, setBottomLeftRadius] = useState(0);
+    const {
+        elementRadius,
 
-    const [topWidth, setTopWidth] = useState(1);
-    const [bottomWidth, setBottomWidth] = useState(1);
-    const [leftWidth, setLeftWidth] = useState(1);
-    const [rightWidth, setRightWidth] = useState(1);
+        topLeftRadius,
+        topRightRadius,
+        bottomRightRadius,
+        bottomLeftRadius,
 
+        elementBoderWidth,
+
+        topWidth,
+        bottomWidth,
+        leftWidth,
+        rightWidth,
+
+        borderStyle,
+    } = useSelector((state: StoreState) => state.borderControl);
     const [toggleAllSide_radius, setToggleAllSide_radius] = useState<
         "all" | "specific"
     >("all");
     const [toggleAllSide_width, setToggleAllSide_width] = useState<
         "all" | "specific"
     >("all");
-
-    const [elementBorderStyle, setElementBorderStyle] = useState("solid");
 
     const [dragging, setDragging] = useState(false);
     const [dragOffset, setDragOffset] = useState({ x: 0, y: 0 });
@@ -116,7 +134,7 @@ export const Canvas: React.FC = () => {
             "border-radius": elementRadius,
             text: type === "text" ? "Text element" : "",
             color: getRandomColor(),
-            "border-style": elementBorderStyle,
+            "border-style": borderStyle,
         };
         setElements((prev) => [...prev, newElement]);
         setSelectedId(newElement.id);
@@ -216,7 +234,7 @@ export const Canvas: React.FC = () => {
             borderTopRightRadius: `${topRightRadius}px`,
             borderBottomLeftRadius: `${bottomLeftRadius}px`,
             borderBottomRightRadius: `${bottomRightRadius}px`,
-            borderStyle: `${elementBorderStyle}`,
+            borderStyle: `${borderStyle}`,
             borderWidth: `${elementBoderWidth}px`,
             borderLeftWidth: `${leftWidth}px`,
             borderRightWidth: `${rightWidth}px`,
@@ -320,7 +338,7 @@ export const Canvas: React.FC = () => {
                         bottomLeftRadius={bottomLeftRadius}
                         toggleAllSide_radius={toggleAllSide_radius}
                         toggleAllSide_width={toggleAllSide_width}
-                        elementBorderStyle={elementBorderStyle}
+                        elementBorderStyle={borderStyle}
                         elementBoderWidth={elementBoderWidth}
                         leftWidth={leftWidth}
                         rightWidth={rightWidth}
@@ -372,32 +390,10 @@ export const Canvas: React.FC = () => {
                     </div>
                     <FontsControlPanel />
                     <BorderControlPanel
-                        elementRadius={elementRadius}
-                        setElementRadius={setElementRadius}
                         toggleAllSide_radius={toggleAllSide_radius}
-                        setToggleAllSide_radius={setToggleAllSide_radius}
-                        topLeftRadius={topLeftRadius}
-                        setTopLeftRadius={setTopLeftRadius}
-                        topRightRadius={topRightRadius}
-                        setTopRightRadius={setTopRightRadius}
-                        bottomRightRadius={bottomRightRadius}
-                        setBottomRightRadius={setBottomRightRadius}
-                        bottomLeftRadius={bottomLeftRadius}
-                        setBottomLeftRadius={setBottomLeftRadius}
-                        setElementBorderStyle={setElementBorderStyle}
-                        elementBorderStyle={elementBorderStyle}
                         toggleAllSide_width={toggleAllSide_width}
+                        setToggleAllSide_radius={setToggleAllSide_radius}
                         setToggleAllSide_width={setToggleAllSide_width}
-                        topWidth={topWidth}
-                        setTopWidth={setTopWidth}
-                        bottomWidth={bottomWidth}
-                        setBottomWidth={setBottomWidth}
-                        leftWidth={leftWidth}
-                        setLeftWidth={setLeftWidth}
-                        rightWidth={rightWidth}
-                        setRightWidth={setRightWidth}
-                        elementBoderWidth={elementBoderWidth}
-                        setElementBoderWidth={setElementBoderWidth}
                     />
                     <AlignmentControlPanel />
                     <div className="box-model-container toolbar-section">
@@ -425,70 +421,35 @@ export const Canvas: React.FC = () => {
 };
 
 export const BorderControlPanel = ({
-    elementRadius,
-    setElementRadius,
     toggleAllSide_radius,
-    setToggleAllSide_radius,
-    topLeftRadius,
-    setTopLeftRadius,
-    topRightRadius,
-    setTopRightRadius,
-    bottomRightRadius,
-    setBottomRightRadius,
-    bottomLeftRadius,
-    setBottomLeftRadius,
-    setElementBorderStyle,
-    elementBorderStyle,
     toggleAllSide_width,
-    setToggleAllSide_width,
-    topWidth,
-    setTopWidth,
-    bottomWidth,
-    setBottomWidth,
-    leftWidth,
-    setLeftWidth,
-    rightWidth,
-    setRightWidth,
 
-    elementBoderWidth,
-    setElementBoderWidth,
+    setToggleAllSide_radius,
+    setToggleAllSide_width,
 }: any) => {
     const borderIconSize = 16;
 
-    function handleBorderRadius(event) {
-        event.preventDefault();
-        setElementRadius(event.target.value);
-    }
+    const {
+        elementRadius,
 
-    useEffect(() => {
-        if (toggleAllSide_radius == "specific") {
-            setElementRadius(0);
-        } else {
-            setTopLeftRadius(0);
-            setTopRightRadius(0);
-            setBottomRightRadius(0);
-            setBottomLeftRadius(0);
-        }
-    }, [toggleAllSide_radius]);
+        topLeftRadius,
+        topRightRadius,
+        bottomRightRadius,
+        bottomLeftRadius,
 
-    useEffect(() => {
-        if (toggleAllSide_width == "specific") {
-            setElementBoderWidth(1);
-        } else {
-            setTopWidth(1);
-            setBottomWidth(1);
-            setLeftWidth(1);
-            setRightWidth(1);
-        }
-    }, [toggleAllSide_width]);
+        elementBoderWidth,
 
-    const count = useSelector((state: StoreState) => state.counter.num);
+        topWidth,
+        bottomWidth,
+        leftWidth,
+        rightWidth,
+
+        borderStyle,
+    } = useSelector((state: StoreState) => state.borderControl);
     const dispatch = useDispatch();
 
     return (
         <div className="border-section-container toolbar-section">
-            {count}
-            <div onClick={() => dispatch(increment())}>+</div>
             <div className="heading">border</div>
             <div className="border-tools-container">
                 <div className="border-width-sub-section">
@@ -504,7 +465,11 @@ export const BorderControlPanel = ({
                                         type="number"
                                         value={elementBoderWidth}
                                         onChange={(e) =>
-                                            setElementBoderWidth(e.target.value)
+                                            dispatch(
+                                                updateElementBoderWidth(
+                                                    Number(e.target.value),
+                                                ),
+                                            )
                                         }
                                     />
                                 </div>
@@ -541,7 +506,11 @@ export const BorderControlPanel = ({
                                         type="number"
                                         value={topWidth}
                                         onChange={(e) =>
-                                            setTopWidth(e.target.value)
+                                            dispatch(
+                                                updateTopWidth(
+                                                    Number(e.target.value),
+                                                ),
+                                            )
                                         }
                                     />
                                 </div>
@@ -556,7 +525,11 @@ export const BorderControlPanel = ({
                                         type="number"
                                         value={bottomWidth}
                                         onChange={(e) =>
-                                            setBottomWidth(e.target.value)
+                                            dispatch(
+                                                updateBottomWidth(
+                                                    Number(e.target.value),
+                                                ),
+                                            )
                                         }
                                     />
                                 </div>
@@ -571,7 +544,11 @@ export const BorderControlPanel = ({
                                         type="number"
                                         value={leftWidth}
                                         onChange={(e) =>
-                                            setLeftWidth(e.target.value)
+                                            dispatch(
+                                                updateLeftWidth(
+                                                    Number(e.target.value),
+                                                ),
+                                            )
                                         }
                                     />
                                 </div>
@@ -586,7 +563,11 @@ export const BorderControlPanel = ({
                                         type="number"
                                         value={rightWidth}
                                         onChange={(e) =>
-                                            setRightWidth(e.target.value)
+                                            dispatch(
+                                                updateRightWidth(
+                                                    Number(e.target.value),
+                                                ),
+                                            )
                                         }
                                     />
                                 </div>
@@ -600,9 +581,9 @@ export const BorderControlPanel = ({
                     <div className="border-width-tools-container">
                         <select
                             className="select-drop-down"
-                            value={elementBorderStyle}
+                            value={borderStyle}
                             onChange={(e) =>
-                                setElementBorderStyle(e.target.value)
+                                dispatch(updateBorderStyle(e.target.value))
                             }
                         >
                             <option value={"solid"}>solid</option>
@@ -632,7 +613,13 @@ export const BorderControlPanel = ({
                                     </div>
                                     <input
                                         type="number"
-                                        onChange={(e) => handleBorderRadius(e)}
+                                        onChange={(e) =>
+                                            dispatch(
+                                                updateBoderRadius(
+                                                    Number(e.target.value),
+                                                ),
+                                            )
+                                        }
                                         value={elementRadius}
                                     />
                                 </div>
@@ -669,7 +656,11 @@ export const BorderControlPanel = ({
                                         type="number"
                                         value={topLeftRadius}
                                         onChange={(e) =>
-                                            setTopLeftRadius(e.target.value)
+                                            dispatch(
+                                                updateTopLeftRadius(
+                                                    Number(e.target.value),
+                                                ),
+                                            )
                                         }
                                     />
                                 </div>
@@ -684,7 +675,11 @@ export const BorderControlPanel = ({
                                         type="number"
                                         value={topRightRadius}
                                         onChange={(e) =>
-                                            setTopRightRadius(e.target.value)
+                                            dispatch(
+                                                updateTopRightRadius(
+                                                    Number(e.target.value),
+                                                ),
+                                            )
                                         }
                                     />
                                 </div>
@@ -699,7 +694,11 @@ export const BorderControlPanel = ({
                                         type="number"
                                         value={bottomLeftRadius}
                                         onChange={(e) =>
-                                            setBottomLeftRadius(e.target.value)
+                                            dispatch(
+                                                updateBottomLeftRadius(
+                                                    Number(e.target.value),
+                                                ),
+                                            )
                                         }
                                     />
                                 </div>
@@ -714,7 +713,11 @@ export const BorderControlPanel = ({
                                         type="number"
                                         value={bottomRightRadius}
                                         onChange={(e) =>
-                                            setBottomRightRadius(e.target.value)
+                                            dispatch(
+                                                updateBottomRightRadius(
+                                                    Number(e.target.value),
+                                                ),
+                                            )
                                         }
                                     />
                                 </div>
