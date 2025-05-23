@@ -25,6 +25,7 @@ import {
 import { useDispatch, useSelector } from "react-redux";
 
 import { StoreState } from "@/store/store";
+import { useEffect } from "react";
 
 export const BorderControlPanel = ({
     toggleAllSide_radius,
@@ -53,6 +54,28 @@ export const BorderControlPanel = ({
         borderStyle,
     } = useSelector((state: StoreState) => state.borderControl);
     const dispatch = useDispatch();
+
+    useEffect(() => {
+        if (toggleAllSide_radius == "specific") {
+            dispatch(updateBoderRadius(0));
+        } else {
+            dispatch(updateTopLeftRadius(0));
+            dispatch(updateTopRightRadius(0));
+            dispatch(updateBottomRightRadius(0));
+            dispatch(updateBottomLeftRadius(0));
+        }
+    }, [toggleAllSide_radius]);
+
+    useEffect(() => {
+        if (toggleAllSide_width == "specific") {
+            dispatch(updateElementBoderWidth(1));
+        } else {
+            dispatch(updateTopWidth(1));
+            dispatch(updateBottomWidth(1));
+            dispatch(updateLeftWidth(1));
+            dispatch(updateRightWidth(1));
+        }
+    }, [toggleAllSide_width]);
 
     return (
         <div className="border-section-container toolbar-section">
