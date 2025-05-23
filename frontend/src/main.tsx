@@ -7,6 +7,8 @@ import { Page } from "./Pages/Page/index.tsx";
 import { Explorer } from "./Components/Explorer";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { Canvas } from "./Canvas/index.tsx";
+import { Provider } from "react-redux";
+import { store } from "./store/store.ts";
 
 const rootElement = document.getElementById("root");
 
@@ -20,22 +22,24 @@ const queryClient = new QueryClient();
 
 createRoot(rootElement).render(
     <BrowserRouter>
-        <QueryClientProvider client={queryClient}>
-            <Explorer>
-                <Routes>
-                    <Route path="/collections" element={<Collections />} />
-                    <Route
-                        path="/collections/:collection_id"
-                        element={<Collections />}
-                    />
-                    <Route
-                        path="/collection/:collection_id"
-                        element={<Collection />}
-                    />
-                    <Route path="/pages/:page_id" element={<Page />} />
-                    <Route path="/canvas" element={<Canvas />} />
-                </Routes>
-            </Explorer>
-        </QueryClientProvider>
+        <Provider store={store}>
+            <QueryClientProvider client={queryClient}>
+                <Explorer>
+                    <Routes>
+                        <Route path="/collections" element={<Collections />} />
+                        <Route
+                            path="/collections/:collection_id"
+                            element={<Collections />}
+                        />
+                        <Route
+                            path="/collection/:collection_id"
+                            element={<Collection />}
+                        />
+                        <Route path="/pages/:page_id" element={<Page />} />
+                        <Route path="/canvas" element={<Canvas />} />
+                    </Routes>
+                </Explorer>
+            </QueryClientProvider>
+        </Provider>
     </BrowserRouter>,
 );

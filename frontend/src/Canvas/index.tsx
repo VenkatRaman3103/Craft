@@ -43,6 +43,9 @@ import {
     udpateScreenSizeStatus,
     updateScreenSize,
 } from "@/api/screenSizes";
+import { useDispatch, useSelector } from "react-redux";
+import { StoreState } from "@/store/store";
+import { increment } from "@/store/counter/counterSlice";
 
 type CanvasElement = {
     id: number;
@@ -479,8 +482,13 @@ export const BorderControlPanel = ({
         }
     }, [toggleAllSide_width]);
 
+    const count = useSelector((state: StoreState) => state.counter.num);
+    const dispatch = useDispatch();
+
     return (
         <div className="border-section-container toolbar-section">
+            {count}
+            <div onClick={() => dispatch(increment())}>+</div>
             <div className="heading">border</div>
             <div className="border-tools-container">
                 <div className="border-width-sub-section">
