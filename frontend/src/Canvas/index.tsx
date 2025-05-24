@@ -55,7 +55,10 @@ type CanvasElement = {
     "border-style": string;
 };
 
+type Actions = "moving" | "scalling" | "grouping" | "grabbing";
+
 export const Canvas: React.FC = () => {
+    const [activeAction, setActiveAction] = useState<Actions>("moving");
     const [elements, setElements] = useState<CanvasElement[]>([]);
     const [selectedId, setSelectedId] = useState<number | null>(null);
     const [screen, setScreen] = useState<"mobile" | "desktop" | "tablet">(
@@ -262,6 +265,8 @@ export const Canvas: React.FC = () => {
         setZoomLevel(1);
     };
 
+    // INFO: handle grouping
+
     return (
         <div className="figma-container">
             <div
@@ -329,7 +334,11 @@ export const Canvas: React.FC = () => {
                 </div>
             </div>
 
-            <ElementPicker addElement={addElement} />
+            <ElementPicker
+                addElement={addElement}
+                activeAction={activeAction}
+                setActiveAction={setActiveAction}
+            />
 
             <div className="toolbar-container">
                 <div className="toolbar">

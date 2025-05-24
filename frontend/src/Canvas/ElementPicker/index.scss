@@ -89,12 +89,15 @@
                     align-items: center;
                     gap: 8px;
                     white-space: nowrap;
+                    background-color: transparent;
 
-                    &:hover {
-                        background-color: #666;
+                    &.active {
+                        background-color: var(--secondary-color);
                     }
+
                 }
             }
+
         }
     }
 

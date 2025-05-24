@@ -476,7 +476,7 @@ export const Explorer = ({ children }: { children: React.ReactNode }) => {
             const actionKey = pathToActionMap[path];
             if (actionKey) {
                 setSelectedAction(actionKey);
-                setShowFileTree(true);
+                // setShowFileTree(true);
             }
         }
     }, [location.pathname]);

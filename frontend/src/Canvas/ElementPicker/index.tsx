@@ -15,6 +15,7 @@ import {
     Landmark,
     MousePointerClick,
     Table,
+    Group,
 } from "lucide-react";
 
 const elementsHash = {
@@ -55,7 +56,11 @@ const elementTypeIcons = {
     table: <Table size={iconSize} strokeWidth={iconStrockWidth} />,
 };
 
-export const ElementPicker = ({ addElement }: any) => {
+export const ElementPicker = ({
+    addElement,
+    activeAction,
+    setActiveAction,
+}: any) => {
     const [activeType, setActiveType] = useState<elementType>("layouts");
     const [showTypeSelector, setShowTypeSelector] = useState(false);
     const typePopupReft = useRef<HTMLDivElement | null>(null);
@@ -124,20 +129,42 @@ export const ElementPicker = ({ addElement }: any) => {
                             </div>
                         </div>
                         <div className="section">
-                            <button className="tool-button hand">
+                            {/* for moving the elements */}
+                            <button
+                                className={`tool-button move ${activeAction == "moving" ? "active" : ""}`}
+                                onClick={() => setActiveAction("moving")}
+                            >
+                                <Move
+                                    strokeWidth={iconStrockWidth}
+                                    size={iconSize}
+                                />
+                            </button>
+                            {/* to grouping */}
+                            <button
+                                className={`tool-button hand ${activeAction == "grouping" ? "active" : ""}`}
+                                onClick={() => setActiveAction("grouping")}
+                            >
+                                <Group
+                                    strokeWidth={iconStrockWidth}
+                                    size={iconSize}
+                                />
+                            </button>
+                            {/* for moving the canvas */}
+                            <button
+                                className={`tool-button hand ${activeAction == "grabbing" ? "active" : ""}`}
+                                onClick={() => setActiveAction("grabbing")}
+                            >
                                 <Hand
                                     strokeWidth={iconStrockWidth}
                                     size={iconSize}
                                 />
                             </button>
-                            <button className="tool-button scale">
+                            {/* for scalling the elements */}
+                            <button
+                                className={`tool-button scale ${activeAction == "scalling" ? "active" : ""}`}
+                                onClick={() => setActiveAction("scalling")}
+                            >
                                 <Scaling
-                                    strokeWidth={iconStrockWidth}
-                                    size={iconSize}
-                                />
-                            </button>
-                            <button className="tool-button move">
-                                <Move
                                     strokeWidth={iconStrockWidth}
                                     size={iconSize}
                                 />
