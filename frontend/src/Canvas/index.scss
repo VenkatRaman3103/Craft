@@ -69,6 +69,21 @@
         border-left: 1px solid var(--border-color);
         overflow: scroll;
 
+        .toolbar-header {
+            width: 100%;
+            height: 22px;
+
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .header-button {
+            border-radius: 5px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
         .title {
             font-size: 18px;
             font-weight: bold;
@@ -218,6 +233,7 @@
 
     .flex-alignment-preview {
         width: 100%;
+        height: 250px;
         display: grid;
         grid-template-columns: 1fr 1fr 1fr;
         gap: 10px;
@@ -233,13 +249,14 @@
 
         .direction-wrapper {
             width: 100%;
+            height: fit-content;
             display: flex;
             gap: 3px;
             grid-area: dir;
 
             .direction-selector {
                 width: 100%;
-                height: 28px;
+                height: 30px;
                 display: flex;
                 gap: 2px;
                 background-color: var(--white-color);
@@ -274,6 +291,7 @@
                 border-radius: 6px;
                 border: 2px solid var(--white-color);
                 width: 40px;
+                height: 34px;
                 display: flex;
                 align-items: center;
                 justify-content: center;
@@ -295,6 +313,15 @@
                     color: white;
                 }
             }
+        }
+
+        .preview-wrapper {
+            width: 90%;
+            height: 86%;
+            background-color: var(--secondary-color);
+            border: 2px solid var(--white-color);
+            border-radius: 6px;
+            grid-area: pre;
         }
 
         .gap-wrapper {
@@ -326,14 +353,6 @@
             }
         }
 
-        .preiview-wrapper {
-            height: 150px;
-            width: 150px;
-            background-color: var(--secondary-color);
-            border: 2px solid var(--white-color);
-            border-radius: 6px;
-            grid-area: pre;
-        }
 
         .jc-wrapper {
             width: 100%;

@@ -26,18 +26,7 @@ const elementsHash = {
     list: ["ul", "ol", "li"],
     semantic: ["nav", "aside", "figure", "figcaption", "form", "label"],
     interactive: ["details", "summary", "dialog", "progress", "meter"],
-    table: [
-        "table",
-        "thead",
-        "tbody",
-        "tfoot",
-        "tr",
-        "th",
-        "td",
-        // "caption",
-        // "colgroup",
-        // "col",
-    ],
+    table: ["table", "thead", "tbody", "tfoot", "tr", "th", "td"],
 };
 
 export const iconStrockWidth = 1.5;
@@ -60,6 +49,12 @@ export const ElementPicker = ({
     addElement,
     activeAction,
     setActiveAction,
+    selectedElements,
+    setSelectedElements,
+    selectedId,
+    toggleGrouping,
+    setToggleGrouping,
+    createGroup,
 }: any) => {
     const [activeType, setActiveType] = useState<elementType>("layouts");
     const [showTypeSelector, setShowTypeSelector] = useState(false);
@@ -81,6 +76,18 @@ export const ElementPicker = ({
             document.removeEventListener("mousedown", handleClickOutside);
         };
     }, [typePopupReft]);
+
+    function handleGroupingCancel() {
+        setSelectedElements([]);
+        setToggleGrouping(false);
+        setActiveAction("moving");
+    }
+
+    function handleCreateGroup() {
+        if (selectedElements.length >= 2) {
+            createGroup();
+        }
+    }
 
     return (
         <div className="element-picker-container">
@@ -132,37 +139,82 @@ export const ElementPicker = ({
                             {/* for moving the elements */}
                             <button
                                 className={`tool-button move ${activeAction == "moving" ? "active" : ""}`}
-                                onClick={() => setActiveAction("moving")}
+                                onClick={() => {
+                                    setActiveAction("moving");
+                                    if (toggleGrouping) {
+                                        handleGroupingCancel();
+                                    }
+                                }}
                             >
                                 <Move
                                     strokeWidth={iconStrockWidth}
                                     size={iconSize}
                                 />
                             </button>
+
                             {/* to grouping */}
                             <button
-                                className={`tool-button hand ${activeAction == "grouping" ? "active" : ""}`}
-                                onClick={() => setActiveAction("grouping")}
+                                className={`tool-button grouping-btn hand ${activeAction == "grouping" ? "active" : ""}`}
+                                onClick={() => {
+                                    setActiveAction("grouping");
+                                    setToggleGrouping(!toggleGrouping);
+                                    if (!toggleGrouping) {
+                                        setSelectedElements([]);
+                                    }
+                                }}
                             >
                                 <Group
                                     strokeWidth={iconStrockWidth}
                                     size={iconSize}
                                 />
                             </button>
+
+                            {/* Grouping controls */}
+                            {toggleGrouping && (
+                                <div className="grouping-controls">
+                                    {selectedElements.length >= 2 && (
+                                        <button
+                                            className="create-group-btn"
+                                            onClick={handleCreateGroup}
+                                        >
+                                            Create Group (
+                                            {selectedElements.length})
+                                        </button>
+                                    )}
+                                    <button
+                                        className="cancel-grouping-btn"
+                                        onClick={handleGroupingCancel}
+                                    >
+                                        Cancel
+                                    </button>
+                                </div>
+                            )}
+
                             {/* for moving the canvas */}
                             <button
                                 className={`tool-button hand ${activeAction == "grabbing" ? "active" : ""}`}
-                                onClick={() => setActiveAction("grabbing")}
+                                onClick={() => {
+                                    setActiveAction("grabbing");
+                                    if (toggleGrouping) {
+                                        handleGroupingCancel();
+                                    }
+                                }}
                             >
                                 <Hand
                                     strokeWidth={iconStrockWidth}
                                     size={iconSize}
                                 />
                             </button>
+
                             {/* for scalling the elements */}
                             <button
                                 className={`tool-button scale ${activeAction == "scalling" ? "active" : ""}`}
-                                onClick={() => setActiveAction("scalling")}
+                                onClick={() => {
+                                    setActiveAction("scalling");
+                                    if (toggleGrouping) {
+                                        handleGroupingCancel();
+                                    }
+                                }}
                             >
                                 <Scaling
                                     strokeWidth={iconStrockWidth}

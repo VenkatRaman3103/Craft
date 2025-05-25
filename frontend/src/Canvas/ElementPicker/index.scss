@@ -187,3 +187,13 @@ button {
     color: white;
     border: none;
 }
+
+.grouping-btn {
+    position: relative;
+
+    .create-group-btn {
+        position: absolute;
+        left: 50%;
+        bottom: 50%;
+    }
+}

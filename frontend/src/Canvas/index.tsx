@@ -5,16 +5,28 @@ import { elementType } from "@/Types/canvas/elementsType";
 import { PublishFeature } from "./PublishFeature";
 
 import {
+    updateAlignType,
+    updateAlignItems,
+    updateIsReveresed,
+    updateFlexDirection,
+    updateJustifyContent,
+    updateGap,
+} from "@/store/toolbar/alignmentControl/alignmentControl";
+
+import {
     AlignCenter,
     AlignCenterHorizontal,
     AlignCenterVertical,
     AlignEndHorizontal,
     AlignEndVertical,
+    AlignHorizontalSpaceAround,
     AlignHorizontalSpaceAroundIcon,
+    AlignHorizontalSpaceBetween,
     AlignLeft,
     AlignRight,
     AlignStartHorizontal,
     AlignStartVertical,
+    AlignVerticalJustifyCenter,
     AlignVerticalSpaceAroundIcon,
     ArrowLeft,
     ArrowUp,
@@ -40,7 +52,7 @@ import {
 } from "@/api/screenSizes";
 import { StoreState } from "@/store/store";
 import { BorderControlPanel } from "./ToolBar/BroderControlPanel";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 
 type CanvasElement = {
     id: number;
@@ -53,12 +65,30 @@ type CanvasElement = {
     text: string;
     color: string;
     "border-style": string;
+    alignItems?: "flex-start" | "center" | "flex-end" | "stretch";
+    justifyContent?:
+        | "flex-start"
+        | "center"
+        | "flex-end"
+        | "space-between"
+        | "space-around";
+    flexDirection?: "row" | "column";
+    isReversed?: boolean;
+    gap?: number;
+    children?: CanvasElement[];
+    isGroup?: boolean;
+    groupLevel?: number;
 };
 
 type Actions = "moving" | "scalling" | "grouping" | "grabbing";
 
 export const Canvas: React.FC = () => {
     const [activeAction, setActiveAction] = useState<Actions>("moving");
+
+    // grouping
+    const [selectedElements, setSelectedElements] = useState<string[]>([]);
+    const [toggleGrouping, setToggleGrouping] = useState(false);
+
     const [elements, setElements] = useState<CanvasElement[]>([]);
     const [selectedId, setSelectedId] = useState<number | null>(null);
     const [screen, setScreen] = useState<"mobile" | "desktop" | "tablet">(
@@ -70,24 +100,29 @@ export const Canvas: React.FC = () => {
     const [elementWidth, setElementWidth] = useState(100);
 
     // border
-
     const {
         elementRadius,
-
         topLeftRadius,
         topRightRadius,
         bottomRightRadius,
         bottomLeftRadius,
-
         elementBoderWidth,
-
         topWidth,
         bottomWidth,
         leftWidth,
         rightWidth,
-
         borderStyle,
     } = useSelector((state: StoreState) => state.borderControl);
+
+    // alignment
+    const {
+        type,
+        flexDirection,
+        isReveresed,
+        alignItems,
+        justifyContent,
+        gap,
+    } = useSelector((state: StoreState) => state.alignmentControl);
 
     const [toggleAllSide_radius, setToggleAllSide_radius] = useState<
         "all" | "specific"
@@ -101,7 +136,7 @@ export const Canvas: React.FC = () => {
 
     const canvasRef = useRef<HTMLDivElement | null>(null);
 
-    // zoome in and out
+    // zoom in and out
     const [zoomLevel, setZoomLevel] = useState(1);
     const maxZoomLevel = 3;
     const minZoomLevel = 0.3;
@@ -119,6 +154,9 @@ export const Canvas: React.FC = () => {
             text: type === "text" ? "Text element" : "",
             color: getRandomColor(),
             "border-style": borderStyle,
+            children: [],
+            isGroup: false,
+            groupLevel: 0,
         };
         setElements((prev) => [...prev, newElement]);
         setSelectedId(newElement.id);
@@ -142,19 +180,16 @@ export const Canvas: React.FC = () => {
         e: React.MouseEvent<HTMLDivElement>,
         id: number,
     ) => {
+        if (toggleGrouping) {
+            handleSelementElements(id.toString());
+            return;
+        }
+
         if (id !== selectedId) {
             setSelectedId(id);
         }
 
         const element = elements.find((el) => el.id === id);
-        if (element && canvasRef.current) {
-            const canvasRect = canvasRef.current.getBoundingClientRect();
-            const offsetX = e.clientX - canvasRect.left - element.x;
-            const offsetY = e.clientY - canvasRect.top - element.y;
-            setDragOffset({ x: offsetX, y: offsetY });
-            setDragging(true);
-        }
-
         if (element && canvasRef.current) {
             const canvasRect = canvasRef.current.getBoundingClientRect();
             const offsetX =
@@ -170,6 +205,9 @@ export const Canvas: React.FC = () => {
     const handleCanvasClick = (e: React.MouseEvent<HTMLDivElement>) => {
         if (e.target === canvasRef.current) {
             setSelectedId(null);
+            if (toggleGrouping && selectedElements.length > 1) {
+                createGroup();
+            }
         }
     };
 
@@ -196,6 +234,129 @@ export const Canvas: React.FC = () => {
         }
     };
 
+    function handleSelementElements(elementId: string) {
+        const numericId = parseInt(elementId);
+
+        if (!selectedElements.includes(elementId)) {
+            setSelectedElements([...selectedElements, elementId]);
+        } else {
+            setSelectedElements(
+                selectedElements.filter((id) => id !== elementId),
+            );
+        }
+    }
+
+    const createGroup = () => {
+        if (selectedElements.length < 2) return;
+
+        const selectedElementIds = selectedElements.map((id) => parseInt(id));
+        const elementsToGroup = elements.filter((el) =>
+            selectedElementIds.includes(el.id),
+        );
+
+        if (elementsToGroup.length < 2) return;
+
+        const getAllBounds = (element) => {
+            if (element.isGroup && element.children) {
+                const childBounds = element.children.map((child) => ({
+                    minX: element.x + child.x,
+                    minY: element.y + child.y,
+                    maxX: element.x + child.x + child.width,
+                    maxY: element.y + child.y + child.height,
+                }));
+
+                return {
+                    minX: Math.min(...childBounds.map((b) => b.minX)),
+                    minY: Math.min(...childBounds.map((b) => b.minY)),
+                    maxX: Math.max(...childBounds.map((b) => b.maxX)),
+                    maxY: Math.max(...childBounds.map((b) => b.maxY)),
+                };
+            } else {
+                return {
+                    minX: element.x,
+                    minY: element.y,
+                    maxX: element.x + element.width,
+                    maxY: element.y + element.height,
+                };
+            }
+        };
+
+        const allBounds = elementsToGroup.map(getAllBounds);
+        const minX = Math.min(...allBounds.map((b) => b.minX));
+        const minY = Math.min(...allBounds.map((b) => b.minY));
+        const maxX = Math.max(...allBounds.map((b) => b.maxX));
+        const maxY = Math.max(...allBounds.map((b) => b.maxY));
+
+        const groupElement: CanvasElement = {
+            id: Date.now(),
+            type: "div",
+            x: minX,
+            y: minY,
+            width: maxX - minX,
+            height: maxY - minY,
+            "border-radius": 0,
+            text: "",
+            color: "transparent",
+            "border-style": "dashed",
+            alignItems: "flex-start",
+            justifyContent: "flex-start",
+            flexDirection: "row",
+            isReversed: false,
+            gap: 0,
+            children: elementsToGroup.map((el) => {
+                if (el.isGroup && el.children) {
+                    return {
+                        ...el,
+                        x: el.x - minX,
+                        y: el.y - minY,
+                        children: el.children,
+                    };
+                } else {
+                    return {
+                        ...el,
+                        x: el.x - minX,
+                        y: el.y - minY,
+                    };
+                }
+            }),
+            isGroup: true,
+            groupLevel:
+                Math.max(...elementsToGroup.map((el) => el.groupLevel || 0)) +
+                1,
+        };
+
+        setElements((prev) => [
+            ...prev.filter((el) => !selectedElementIds.includes(el.id)),
+            groupElement,
+        ]);
+
+        setSelectedElements([]);
+        setToggleGrouping(false);
+        setActiveAction("moving");
+        setSelectedId(groupElement.id);
+    };
+
+    const ungroupSelected = () => {
+        if (selectedId === null) return;
+
+        const element = elements.find((el) => el.id === selectedId);
+        if (!element || !element.isGroup || !element.children) return;
+
+        const ungroupedElements = element.children.map((child) => ({
+            ...child,
+            id: child.id || Date.now() + Math.random(),
+            x: child.x + element.x,
+            y: child.y + element.y,
+        }));
+
+        setElements((prev) => [
+            ...prev.filter((el) => el.id !== selectedId),
+            ...ungroupedElements,
+        ]);
+
+        setSelectedId(null);
+    };
+
     useEffect(() => {
         document.addEventListener("mouseup", handleMouseUp);
         return () => {
@@ -205,26 +366,119 @@ export const Canvas: React.FC = () => {
 
     const renderElement = (element) => {
         const isSelected = element.id === selectedId;
+        const isSelectedForGrouping = selectedElements.includes(
+            element.id.toString(),
+        );
 
-        const elementClassNames = `canvas-element ${isSelected ? "selected" : ""}`;
+        const elementClassNames = `canvas-element ${isSelected ? "selected" : ""} ${isSelectedForGrouping ? "selected-for-grouping" : ""}`;
+
+        const getElementFlexDirection = () => {
+            const baseDirection = element.flexDirection || "row";
+            const reversed = element.isReversed || false;
+
+            if (reversed) {
+                return baseDirection === "row"
+                    ? "row-reverse"
+                    : "column-reverse";
+            }
+            return baseDirection;
+        };
+
         const elementStyle: React.CSSProperties = {
             left: `${element.x}px`,
             top: `${element.y}px`,
-            width: `${elementWidth}px`,
-            height: `${elementHeight}px`,
+            width: `${element.isGroup ? element.width : elementWidth}px`,
+            height: `${element.isGroup ? element.height : elementHeight}px`,
             backgroundColor: element.color,
             borderRadius: `${elementRadius}px`,
             borderTopLeftRadius: `${topLeftRadius}px`,
             borderTopRightRadius: `${topRightRadius}px`,
             borderBottomLeftRadius: `${bottomLeftRadius}px`,
             borderBottomRightRadius: `${bottomRightRadius}px`,
-            borderStyle: `${borderStyle}`,
+            borderStyle: element.isGroup ? "dashed" : borderStyle,
             borderWidth: `${elementBoderWidth}px`,
             borderLeftWidth: `${leftWidth}px`,
             borderRightWidth: `${rightWidth}px`,
             borderTopWidth: `${topWidth}px`,
             borderBottomWidth: `${bottomWidth}px`,
+            borderColor: element.isGroup ? "#007AFF" : "inherit",
             position: "absolute",
+            display: element.isGroup ? "flex" : "block",
+            alignItems: element.isGroup
+                ? element.alignItems || "flex-start"
+                : undefined,
+            justifyContent: element.isGroup
+                ? element.justifyContent || "flex-start"
+                : undefined,
+            flexDirection: element.isGroup
+                ? getElementFlexDirection()
+                : undefined,
+            gap: element.isGroup ? `${element.gap || 0}px` : undefined,
+        };
+
+        const renderNestedElement = (child, depth = 0) => {
+            if (child.isGroup && child.children) {
+                const nestedGroupStyle: React.CSSProperties = {
+                    position: "relative",
+                    width: `${child.width}px`,
+                    height: `${child.height}px`,
+                    borderStyle: "dashed",
+                    borderWidth: "1px",
+                    borderColor: depth === 0 ? "#FF6B35" : "#28A745",
+                    backgroundColor: "transparent",
+                    display: "flex",
+                    alignItems: child.alignItems || "flex-start",
+                    justifyContent: child.justifyContent || "flex-start",
+                    flexDirection: child.isReversed
+                        ? child.flexDirection === "row"
+                            ? "row-reverse"
+                            : "column-reverse"
+                        : child.flexDirection || "row",
+                    gap: `${child.gap || 0}px`,
+                    flexShrink: 0,
+                };
+
+                return (
+                    <div key={child.id} style={nestedGroupStyle}>
+                        {child.children.map((nestedChild) =>
+                            renderNestedElement(nestedChild, depth + 1),
+                        )}
+                        <div
+                            style={{
+                                position: "absolute",
+                                top: `${-15 - depth * 15}px`,
+                                left: "0",
+                                fontSize: "10px",
+                                color: depth === 0 ? "#FF6B35" : "#28A745",
+                                fontWeight: "bold",
+                                whiteSpace: "nowrap",
+                                zIndex: 1000,
+                            }}
+                        >
+                            Group L{depth + 1}
+                        </div>
+                    </div>
+                );
+            } else {
+                const childStyle: React.CSSProperties = {
+                    position: "relative",
+                    width: `${child.width}px`,
+                    height: `${child.height}px`,
+                    backgroundColor: child.color,
+                    borderRadius: `${child["border-radius"]}px`,
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "center",
+                    fontSize: "12px",
+                    flexShrink: 0,
+                };
+
+                return (
+                    <div key={child.id} style={childStyle}>
+                        {child.type === "text" ? child.text : child.type}
+                    </div>
+                );
+            }
         };
 
         return (
@@ -234,12 +488,35 @@ export const Canvas: React.FC = () => {
                 style={elementStyle}
                 onMouseDown={(e) => handleMouseDown(e, element.id)}
             >
-                {element.type === "text" ? (
-                    element.text
-                ) : element.type === "div" ? (
-                    <div className="element-content rectangle"></div>
+                {element.isGroup ? (
+                    <>
+                        {element.children?.map((child) =>
+                            renderNestedElement(child),
+                        )}
+                        <div
+                            style={{
+                                position: "absolute",
+                                top: "-20px",
+                                left: "0",
+                                fontSize: "12px",
+                                color: "#007AFF",
+                                fontWeight: "bold",
+                                zIndex: 1000,
+                            }}
+                        >
+                            Main Group
+                        </div>
+                    </>
                 ) : (
-                    <div className="element-content circle"></div>
+                    <>
+                        {element.type === "text" ? (
+                            element.text
+                        ) : element.type === "div" ? (
+                            <div className="element-content rectangle">div</div>
+                        ) : (
+                            <div className="element-content circle">circle</div>
+                        )}
+                    </>
                 )}
             </div>
         );
@@ -265,7 +542,7 @@ export const Canvas: React.FC = () => {
         setZoomLevel(1);
     };
 
-    // INFO: handle grouping
+    console.log(selectedElements, "selectedElements");
 
     return (
         <div className="figma-container">
@@ -281,11 +558,13 @@ export const Canvas: React.FC = () => {
             </div>
 
             <div className="status-bar-container">
-                {/* <div className="selected-item-info"> */}
-                {/*     {selectedId */}
-                {/*         ? `Selected element ID: ${selectedId}` */}
-                {/*         : "Click to select an element. Drag to move."} */}
-                {/* </div> */}
+                <div className="selected-item-info">
+                    {toggleGrouping && selectedElements.length > 0
+                        ? `${selectedElements.length} elements selected for grouping`
+                        : selectedId
+                          ? `Selected element ID: ${selectedId}`
+                          : "Click to select an element. Drag to move."}
+                </div>
 
                 <ScreenSizeSwitcher screen={screen} setScreen={setScreen} />
 
@@ -338,16 +617,42 @@ export const Canvas: React.FC = () => {
                 addElement={addElement}
                 activeAction={activeAction}
                 setActiveAction={setActiveAction}
+                selectedElements={selectedElements}
+                setSelectedElements={setSelectedElements}
+                selectedId={selectedId}
+                toggleGrouping={toggleGrouping}
+                setToggleGrouping={setToggleGrouping}
+                createGroup={createGroup}
             />
 
             <div className="toolbar-container">
                 <div className="toolbar">
+                    <div className="toolbar-header toolbar-section">
+                        {selectedId
+                            ? elements.find((el) => el.id === selectedId)
+                                  ?.isGroup && (
+                                  <button
+                                      className="ungroup-button header-button"
+                                      onClick={ungroupSelected}
+                                  >
+                                      Ungroup
+                                  </button>
+                              )
+                            : ""}
+                        <button
+                            className="delete-button header-button"
+                            onClick={deleteSelected}
+                            disabled={selectedId === null}
+                        >
+                            Delete
+                        </button>
+                    </div>
+
                     <div className="dimenstion-cotainer toolbar-section">
                         <div className="heading">Dimensions</div>
                         <div className="dimensions">
                             <div className="element-height dimension">
                                 <label>H</label>
-
                                 <div className="divider"></div>
                                 <input
                                     value={elementHeight}
@@ -357,7 +662,6 @@ export const Canvas: React.FC = () => {
                                         setElementHeight(Number(e.target.value))
                                     }
                                 />
-
                                 <div className="divider"></div>
                                 <MetricSelection />
                             </div>
@@ -378,14 +682,17 @@ export const Canvas: React.FC = () => {
                             <div className="dimension">0</div>
                         </div>
                     </div>
-                    <FontsControlPanel />
+                    <AlignmentControlPanel
+                        selectedId={selectedId}
+                        elements={elements}
+                        setElements={setElements}
+                    />
                     <BorderControlPanel
                         toggleAllSide_radius={toggleAllSide_radius}
                         toggleAllSide_width={toggleAllSide_width}
                         setToggleAllSide_radius={setToggleAllSide_radius}
                         setToggleAllSide_width={setToggleAllSide_width}
                     />
-                    <AlignmentControlPanel />
                     <div className="box-model-container toolbar-section">
                         <div className="heading">box model</div>
                         <div className="margin">
@@ -396,20 +703,333 @@ export const Canvas: React.FC = () => {
                             </div>
                         </div>
                     </div>
-
-                    <button
-                        className="delete-button"
-                        onClick={deleteSelected}
-                        disabled={selectedId === null}
-                    >
-                        Delete
-                    </button>
                 </div>
             </div>
         </div>
     );
 };
-//
+
+export const AlignmentControlPanel = ({
+    selectedId,
+    elements,
+    setElements,
+}: {
+    selectedId: number | null;
+    elements: CanvasElement[];
+    setElements: React.Dispatch<React.SetStateAction<CanvasElement[]>>;
+}) => {
+    const {
+        type: globalType,
+        flexDirection: globalFlexDirection,
+        isReveresed: globalIsReversed,
+        alignItems: globalAlignItems,
+        justifyContent: globalJustifyContent,
+        gap: globalGap,
+    } = useSelector((state: StoreState) => state.alignmentControl);
+
+    const dispatch = useDispatch();
+
+    const selectedElement = selectedId
+        ? elements.find((el) => el.id === selectedId)
+        : null;
+
+    const isGroupSelected = selectedElement?.isGroup || false;
+
+    const type = isGroupSelected
+        ? selectedElement?.displayType || "flex"
+        : globalType;
+    const flexDirection = isGroupSelected
+        ? selectedElement?.flexDirection || "row"
+        : globalFlexDirection;
+    const isReveresed = isGroupSelected
+        ? selectedElement?.isReversed || false
+        : globalIsReversed;
+    const alignItems = isGroupSelected
+        ? selectedElement?.alignItems || "flex-start"
+        : globalAlignItems;
+    const justifyContent = isGroupSelected
+        ? selectedElement?.justifyContent || "flex-start"
+        : globalJustifyContent;
+    const gap = isGroupSelected ? selectedElement?.gap || 0 : globalGap;
+
+    const getFlexDirection = () => {
+        if (flexDirection === "row") {
+            return isReveresed ? "row-reverse" : "row";
+        } else {
+            return isReveresed ? "column-reverse" : "column";
+        }
+    };
+
+    const updateElementProperty = (property: string, value: any) => {
+        if (isGroupSelected && selectedId) {
+            setElements((prev) =>
+                prev.map((el) =>
+                    el.id === selectedId ? { ...el, [property]: value } : el,
+                ),
+            );
+        }
+    };
+
+    const updateType = (newType: string) => {
+        if (isGroupSelected && selectedId) {
+            updateElementProperty("displayType", newType);
+        } else {
+            dispatch(updateAlignType(newType));
+        }
+    };
+
+    const updateDirection = (direction: "row" | "column") => {
+        if (isGroupSelected && selectedId) {
+            updateElementProperty("flexDirection", direction);
+        } else {
+            dispatch(updateFlexDirection(direction));
+        }
+    };
+
+    const updateReversed = (reversed: boolean) => {
+        if (isGroupSelected && selectedId) {
+            updateElementProperty("isReversed", reversed);
+        } else {
+            dispatch(updateIsReveresed(reversed));
+        }
+    };
+
+    const updateJustify = (justify: string) => {
+        if (isGroupSelected && selectedId) {
+            updateElementProperty("justifyContent", justify);
+        } else {
+            dispatch(updateJustifyContent(justify));
+        }
+    };
+
+    const updateAlign = (align: string) => {
+        if (isGroupSelected && selectedId) {
+            updateElementProperty("alignItems", align);
+        } else {
+            dispatch(updateAlignItems(align));
+        }
+    };
+
+    const updateGapValue = (newGap: number) => {
+        if (isGroupSelected && selectedId) {
+            updateElementProperty("gap", newGap);
+        } else {
+            dispatch(updateGap(newGap));
+        }
+    };
+
+    return (
+        <div className="alignment-container toolbar-section">
+            <div className="heading">
+                Alignment {isGroupSelected && "(Group)"}
+            </div>
+
+            {!isGroupSelected && (
+                <select
+                    className="alignment-select"
+                    value={type}
+                    onChange={(e) => updateType(e.target.value)}
+                >
+                    <option value="flex">flex</option>
+                    <option value="grid">grid</option>
+                </select>
+            )}
+
+            <div className="flex-alignment-preview">
+                <div className="direction-wrapper">
+                    <div className="direction-selector">
+                        <button
+                            className={`row ${flexDirection === "row" ? "active" : ""}`}
+                            onClick={() => updateDirection("row")}
+                        >
+                            Row
+                        </button>
+                        <button
+                            className={`column ${flexDirection === "column" ? "active" : ""}`}
+                            onClick={() => updateDirection("column")}
+                        >
+                            Column
+                        </button>
+                    </div>
+
+                    <button
+                        onClick={() => updateReversed(!isReveresed)}
+                        className={`reverse-selection ${isReveresed ? "active" : ""}`}
+                    >
+                        {flexDirection === "row" ? (
+                            <ArrowLeft size={20} strokeWidth={1.25} />
+                        ) : (
+                            <ArrowUp size={20} strokeWidth={1.25} />
+                        )}
+                    </button>
+                </div>
+
+                <div
+                    className="preview-wrapper"
+                    style={{
+                        display: type === "flex" ? "flex" : "grid",
+                        flexDirection:
+                            type === "flex" ? getFlexDirection() : undefined,
+                        gridTemplateColumns:
+                            type === "grid" ? "1fr 1fr 1fr" : undefined,
+                        gap: `${gap}px`,
+                        justifyContent:
+                            type === "flex" ? justifyContent : undefined,
+                        alignItems: type === "flex" ? alignItems : undefined,
+                        alignContent: type === "grid" ? alignItems : undefined,
+                        placeItems: type === "grid" ? alignItems : undefined,
+                        backgroundColor: "#0b0b0c",
+                        borderRadius: "4px",
+                    }}
+                >
+                    <div
+                        className="box"
+                        style={{
+                            width: "20px",
+                            height: "20px",
+                            backgroundColor: "#007AFF",
+                            color: "white",
+                            display: "flex",
+                            alignItems: "center",
+                            justifyContent: "center",
+                            fontSize: "10px",
+                            borderRadius: "2px",
+                        }}
+                    >
+                        1
+                    </div>
+                    <div
+                        className="box"
+                        style={{
+                            width: "20px",
+                            height: "20px",
+                            backgroundColor: "#FF6B35",
+                            color: "white",
+                            display: "flex",
+                            alignItems: "center",
+                            justifyContent: "center",
+                            fontSize: "10px",
+                            borderRadius: "2px",
+                        }}
+                    >
+                        2
+                    </div>
+                    <div
+                        className="box"
+                        style={{
+                            width: "20px",
+                            height: "20px",
+                            backgroundColor: "#28A745",
+                            color: "white",
+                            display: "flex",
+                            alignItems: "center",
+                            justifyContent: "center",
+                            fontSize: "10px",
+                            borderRadius: "2px",
+                        }}
+                    >
+                        3
+                    </div>
+                </div>
+
+                <div className="gap-wrapper">
+                    <div className="gap-icon">Gap:</div>
+                    <div className="gap-value">
+                        <input
+                            type="range"
+                            min="0"
+                            max="50"
+                            value={gap}
+                            onChange={(e) =>
+                                updateGapValue(parseInt(e.target.value))
+                            }
+                        />
+                        <span>{gap}px</span>
+                    </div>
+                </div>
+
+                <div className="jc-wrapper">
+                    <div className="jc-options">
+                        <button
+                            className={`start-option ${justifyContent === "flex-start" ? "active" : ""}`}
+                            onClick={() => updateJustify("flex-start")}
+                        >
+                            <AlignStartVertical size={20} strokeWidth={1.25} />
+                        </button>
+                        <button
+                            className={`center-option ${justifyContent === "center" ? "active" : ""}`}
+                            onClick={() => updateJustify("center")}
+                        >
+                            <AlignCenterVertical size={20} strokeWidth={1.25} />
+                        </button>
+                        <button
+                            className={`end-option ${justifyContent === "flex-end" ? "active" : ""}`}
+                            onClick={() => updateJustify("flex-end")}
+                        >
+                            <AlignEndVertical size={20} strokeWidth={1.25} />
+                        </button>
+                        <button
+                            className={`space-between-option ${justifyContent === "space-between" ? "active" : ""}`}
+                            onClick={() => updateJustify("space-between")}
+                        >
+                            <AlignHorizontalSpaceBetween
+                                size={20}
+                                strokeWidth={1.25}
+                            />
+                        </button>
+                        <button
+                            className={`space-around-option ${justifyContent === "space-around" ? "active" : ""}`}
+                            onClick={() => updateJustify("space-around")}
+                        >
+                            <AlignHorizontalSpaceAround
+                                size={20}
+                                strokeWidth={1.25}
+                            />
+                        </button>
+                    </div>
+                </div>
+
+                <div className="ai-wrapper">
+                    <div className="ai-options">
+                        <button
+                            className={`start-option ${alignItems === "flex-start" ? "active" : ""}`}
+                            onClick={() => updateAlign("flex-start")}
+                        >
+                            <AlignStartHorizontal
+                                size={20}
+                                strokeWidth={1.25}
+                            />
+                        </button>
+                        <button
+                            className={`center-option ${alignItems === "center" ? "active" : ""}`}
+                            onClick={() => updateAlign("center")}
+                        >
+                            <AlignCenterHorizontal
+                                size={20}
+                                strokeWidth={1.25}
+                            />
+                        </button>
+                        <button
+                            className={`end-option ${alignItems === "flex-end" ? "active" : ""}`}
+                            onClick={() => updateAlign("flex-end")}
+                        >
+                            <AlignEndHorizontal size={20} strokeWidth={1.25} />
+                        </button>
+                        <button
+                            className={`stretch-option ${alignItems === "stretch" ? "active" : ""}`}
+                            onClick={() => updateAlign("stretch")}
+                        >
+                            <AlignVerticalJustifyCenter
+                                size={20}
+                                strokeWidth={1.25}
+                            />
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    );
+};
 
 export const FontsControlPanel = () => {
     const [activeDecoration, setActiveDecoration] = useState("bold");
@@ -509,166 +1129,6 @@ export const FontsControlPanel = () => {
                                 </div>
                             </div>
                         </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    );
-};
-
-export const AlignmentControlPanel = () => {
-    const [layoutType, setLayoutType] = useState("flex");
-    const [direction, setDirection] = useState("row");
-    const [reverse, setReverse] = useState(false);
-    const [gap, setGap] = useState(10);
-    const [justifyContent, setJustifyContent] = useState("flex-start");
-    const [alignItems, setAlignItems] = useState("flex-start");
-
-    const getFlexDirection = () => {
-        if (direction === "row") {
-            return reverse ? "row-reverse" : "row";
-        } else {
-            return reverse ? "column-reverse" : "column";
-        }
-    };
-
-    const boxStyle = {
-        width: "50px",
-        height: "50px",
-        display: "flex",
-        justifyContent: "center",
-        alignItems: "center",
-        border: "1px solid #ccc",
-        margin: "5px",
-    };
-
-    return (
-        <div className="alignment-container  toolbar-section">
-            <div className="heading">Alignment</div>
-            <select
-                className="alignment-select"
-                value={layoutType}
-                onChange={(e) => setLayoutType(e.target.value)}
-            >
-                <option value="flex">flex</option>
-                <option value="grid">grid</option>
-            </select>
-
-            <div className="flex-alignment-preview">
-                <div className="direction-wrapper">
-                    <div className="direction-selector">
-                        <button
-                            className={`row ${direction === "row" ? "active" : ""}`}
-                            onClick={() => setDirection("row")}
-                        >
-                            Row
-                        </button>
-                        <button
-                            className={`column ${direction === "column" ? "active" : ""}`}
-                            onClick={() => setDirection("column")}
-                        >
-                            Column
-                        </button>
-                    </div>
-
-                    <button
-                        onClick={() => setReverse(!reverse)}
-                        className={`reverse-selection ${reverse ? "active" : ""}`}
-                    >
-                        {direction == "row" ? (
-                            <ArrowLeft size={20} strokeWidth={1.25} />
-                        ) : (
-                            <ArrowUp size={20} strokeWidth={1.25} />
-                        )}
-                    </button>
-                </div>
-
-                <div className="gap-wrapper">
-                    <div className="gap-icon">Gap:</div>
-                    <div className="gap-value">
-                        <input
-                            type="range"
-                            min="0"
-                            max="50"
-                            value={gap}
-                            onChange={(e) => setGap(parseInt(e.target.value))}
-                        />
-                        <span>{gap}px</span>
-                    </div>
-                </div>
-
-                <div
-                    className="preiview-wrapper"
-                    style={{
-                        display: layoutType === "flex" ? "flex" : "grid",
-                        flexDirection:
-                            layoutType === "flex"
-                                ? getFlexDirection()
-                                : undefined,
-                        gridTemplateColumns:
-                            layoutType === "grid" ? "1fr 1fr 1fr" : undefined,
-                        gap: `${gap}px`,
-                        justifyContent,
-                        alignItems:
-                            layoutType === "flex" ? alignItems : undefined,
-                        alignContent:
-                            layoutType === "grid" ? alignItems : undefined,
-                    }}
-                >
-                    <div className="box"></div>
-                    <div className="box"></div>
-                    <div className="box"></div>
-                </div>
-
-                <div className="jc-wrapper">
-                    <div className="jc-options">
-                        <button
-                            className={`start-option ${justifyContent === "flex-start" ? "active" : ""}`}
-                            onClick={() => setJustifyContent("flex-start")}
-                        >
-                            <AlignStartVertical size={20} strokeWidth={1.25} />
-                        </button>
-                        <button
-                            className={`center-option ${justifyContent === "center" ? "active" : ""}`}
-                            onClick={() => setJustifyContent("center")}
-                        >
-                            <AlignCenterVertical size={20} strokeWidth={1.25} />
-                        </button>
-                        <button
-                            className={`end-option ${justifyContent === "flex-end" ? "active" : ""}`}
-                            onClick={() => setJustifyContent("flex-end")}
-                        >
-                            <AlignEndVertical size={20} strokeWidth={1.25} />
-                        </button>
-                    </div>
-                </div>
-
-                <div className="ai-wrapper">
-                    <div className="ai-options">
-                        <button
-                            className={`start-option ${alignItems === "flex-start" ? "active" : ""}`}
-                            onClick={() => setAlignItems("flex-start")}
-                        >
-                            <AlignStartHorizontal
-                                size={20}
-                                strokeWidth={1.25}
-                            />
-                        </button>
-                        <button
-                            className={`center-option ${alignItems === "center" ? "active" : ""}`}
-                            onClick={() => setAlignItems("center")}
-                        >
-                            <AlignCenterHorizontal
-                                size={20}
-                                strokeWidth={1.25}
-                            />
-                        </button>
-                        <button
-                            className={`end-option ${alignItems === "flex-end" ? "active" : ""}`}
-                            onClick={() => setAlignItems("flex-end")}
-                        >
-                            <AlignEndHorizontal size={20} strokeWidth={1.25} />
-                        </button>
                     </div>
                 </div>
             </div>

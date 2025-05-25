@@ -33,3 +33,4 @@ export * from "./blocks/apiBlocks/schema.js";
 
 // canvas
 export * from "./canvas/screenSizes.js";
+export * from "./canvas/toolBar/border.js";
