@@ -16,6 +16,8 @@ import {
     MousePointerClick,
     Table,
     Group,
+    ShoppingCart,
+    Scan,
 } from "lucide-react";
 
 const elementsHash = {
@@ -163,32 +165,38 @@ export const ElementPicker = ({
                                     }
                                 }}
                             >
-                                <Group
+                                <Scan
                                     strokeWidth={iconStrockWidth}
                                     size={iconSize}
                                 />
-                            </button>
 
-                            {/* Grouping controls */}
-                            {toggleGrouping && (
-                                <div className="grouping-controls">
-                                    {selectedElements.length >= 2 && (
-                                        <button
+                                {toggleGrouping && (
+                                    <div className="grouping-controls">
+                                        <div
                                             className="create-group-btn"
                                             onClick={handleCreateGroup}
                                         >
-                                            Create Group (
-                                            {selectedElements.length})
+                                            <Group
+                                                strokeWidth={iconStrockWidth}
+                                                size={iconSize}
+                                            />
+                                            {selectedElements.length >= 2 ? (
+                                                <div className="selected-items-count">
+                                                    {selectedElements.length}
+                                                </div>
+                                            ) : (
+                                                ""
+                                            )}
+                                        </div>
+                                        <button
+                                            className="cancel-grouping-btn"
+                                            onClick={handleGroupingCancel}
+                                        >
+                                            Cancel
                                         </button>
-                                    )}
-                                    <button
-                                        className="cancel-grouping-btn"
-                                        onClick={handleGroupingCancel}
-                                    >
-                                        Cancel
-                                    </button>
-                                </div>
-                            )}
+                                    </div>
+                                )}
+                            </button>
 
                             {/* for moving the canvas */}
                             <button

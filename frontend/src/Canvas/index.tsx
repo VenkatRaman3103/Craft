@@ -682,17 +682,18 @@ export const Canvas: React.FC = () => {
                             <div className="dimension">0</div>
                         </div>
                     </div>
-                    <AlignmentControlPanel
-                        selectedId={selectedId}
-                        elements={elements}
-                        setElements={setElements}
-                    />
                     <BorderControlPanel
                         toggleAllSide_radius={toggleAllSide_radius}
                         toggleAllSide_width={toggleAllSide_width}
                         setToggleAllSide_radius={setToggleAllSide_radius}
                         setToggleAllSide_width={setToggleAllSide_width}
                     />
+                    <AlignmentControlPanel
+                        selectedId={selectedId}
+                        elements={elements}
+                        setElements={setElements}
+                    />
+                    <FontsControlPanel/>
                     <div className="box-model-container toolbar-section">
                         <div className="heading">box model</div>
                         <div className="margin">
