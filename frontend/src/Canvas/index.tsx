@@ -513,6 +513,8 @@ export const Canvas: React.FC = () => {
                             element.text
                         ) : element.type === "div" ? (
                             <div className="element-content rectangle">div</div>
+                        ) : element.type === "section" ? (
+                            <section className="element-content rectangle">section</section>
                         ) : (
                             <div className="element-content circle">circle</div>
                         )}
@@ -558,13 +560,13 @@ export const Canvas: React.FC = () => {
             </div>
 
             <div className="status-bar-container">
-                <div className="selected-item-info">
-                    {toggleGrouping && selectedElements.length > 0
-                        ? `${selectedElements.length} elements selected for grouping`
-                        : selectedId
-                          ? `Selected element ID: ${selectedId}`
-                          : "Click to select an element. Drag to move."}
-                </div>
+                {/* <div className="selected-item-info"> */}
+                {/*     {toggleGrouping && selectedElements.length > 0 */}
+                {/*         ? `${selectedElements.length} elements selected for grouping` */}
+                {/*         : selectedId */}
+                {/*           ? `Selected element ID: ${selectedId}` */}
+                {/*           : "Click to select an element. Drag to move."} */}
+                {/* </div> */}
 
                 <ScreenSizeSwitcher screen={screen} setScreen={setScreen} />
 
@@ -693,7 +695,7 @@ export const Canvas: React.FC = () => {
                         elements={elements}
                         setElements={setElements}
                     />
-                    <FontsControlPanel/>
+                    <FontsControlPanel />
                     <div className="box-model-container toolbar-section">
                         <div className="heading">box model</div>
                         <div className="margin">
@@ -836,119 +838,151 @@ export const AlignmentControlPanel = ({
                 </select>
             )}
 
-            <div className="flex-alignment-preview">
-                <div className="direction-wrapper">
-                    <div className="direction-selector">
+            <div className="border-width-sub-section">
+                <div className="sub-heading">directions</div>
+                <div className="flex-alignment-preview">
+                    <div className="direction-wrapper">
+                        <div className="direction-selector">
+                            <button
+                                className={`row ${flexDirection === "row" ? "active" : ""}`}
+                                onClick={() => updateDirection("row")}
+                            >
+                                Row
+                            </button>
+                            <button
+                                className={`column ${flexDirection === "column" ? "active" : ""}`}
+                                onClick={() => updateDirection("column")}
+                            >
+                                Column
+                            </button>
+                        </div>
+
                         <button
-                            className={`row ${flexDirection === "row" ? "active" : ""}`}
-                            onClick={() => updateDirection("row")}
+                            onClick={() => updateReversed(!isReveresed)}
+                            className={`reverse-selection ${isReveresed ? "active" : ""}`}
                         >
-                            Row
-                        </button>
-                        <button
-                            className={`column ${flexDirection === "column" ? "active" : ""}`}
-                            onClick={() => updateDirection("column")}
-                        >
-                            Column
+                            {flexDirection === "row" ? (
+                                <ArrowLeft size={20} strokeWidth={1.25} />
+                            ) : (
+                                <ArrowUp size={20} strokeWidth={1.25} />
+                            )}
                         </button>
                     </div>
-
-                    <button
-                        onClick={() => updateReversed(!isReveresed)}
-                        className={`reverse-selection ${isReveresed ? "active" : ""}`}
-                    >
-                        {flexDirection === "row" ? (
-                            <ArrowLeft size={20} strokeWidth={1.25} />
-                        ) : (
-                            <ArrowUp size={20} strokeWidth={1.25} />
-                        )}
-                    </button>
                 </div>
+            </div>
 
-                <div
-                    className="preview-wrapper"
-                    style={{
-                        display: type === "flex" ? "flex" : "grid",
-                        flexDirection:
-                            type === "flex" ? getFlexDirection() : undefined,
-                        gridTemplateColumns:
-                            type === "grid" ? "1fr 1fr 1fr" : undefined,
-                        gap: `${gap}px`,
-                        justifyContent:
-                            type === "flex" ? justifyContent : undefined,
-                        alignItems: type === "flex" ? alignItems : undefined,
-                        alignContent: type === "grid" ? alignItems : undefined,
-                        placeItems: type === "grid" ? alignItems : undefined,
-                        backgroundColor: "#0b0b0c",
-                        borderRadius: "4px",
-                    }}
-                >
+            <div className="border-width-sub-section">
+                <div className="sub-heading">directions</div>
+                <div className="preview-tool-wrapper">
                     <div
-                        className="box"
+                        className="preview-wrapper"
                         style={{
-                            width: "20px",
-                            height: "20px",
-                            backgroundColor: "#007AFF",
-                            color: "white",
-                            display: "flex",
-                            alignItems: "center",
-                            justifyContent: "center",
-                            fontSize: "10px",
-                            borderRadius: "2px",
+                            display: type === "flex" ? "flex" : "grid",
+                            flexDirection:
+                                type === "flex"
+                                    ? getFlexDirection()
+                                    : undefined,
+                            gridTemplateColumns:
+                                type === "grid" ? "1fr 1fr 1fr" : undefined,
+                            gap: `${gap}px`,
+                            justifyContent:
+                                type === "flex" ? justifyContent : undefined,
+                            alignItems:
+                                type === "flex" ? alignItems : undefined,
+                            alignContent:
+                                type === "grid" ? alignItems : undefined,
+                            placeItems:
+                                type === "grid" ? alignItems : undefined,
+                            backgroundColor: "#0b0b0c",
+                            borderRadius: "4px",
                         }}
                     >
-                        1
+                        <div
+                            className="box"
+                            style={{
+                                width: "20px",
+                                height: "20px",
+                                backgroundColor: "#007AFF",
+                                color: "white",
+                                display: "flex",
+                                alignItems: "center",
+                                justifyContent: "center",
+                                fontSize: "10px",
+                                borderRadius: "2px",
+                            }}
+                        >
+                            1
+                        </div>
+                        <div
+                            className="box"
+                            style={{
+                                width: "20px",
+                                height: "20px",
+                                backgroundColor: "#FF6B35",
+                                color: "white",
+                                display: "flex",
+                                alignItems: "center",
+                                justifyContent: "center",
+                                fontSize: "10px",
+                                borderRadius: "2px",
+                            }}
+                        >
+                            2
+                        </div>
+                        <div
+                            className="box"
+                            style={{
+                                width: "20px",
+                                height: "20px",
+                                backgroundColor: "#28A745",
+                                color: "white",
+                                display: "flex",
+                                alignItems: "center",
+                                justifyContent: "center",
+                                fontSize: "10px",
+                                borderRadius: "2px",
+                            }}
+                        >
+                            3
+                        </div>
                     </div>
-                    <div
-                        className="box"
-                        style={{
-                            width: "20px",
-                            height: "20px",
-                            backgroundColor: "#FF6B35",
-                            color: "white",
-                            display: "flex",
-                            alignItems: "center",
-                            justifyContent: "center",
-                            fontSize: "10px",
-                            borderRadius: "2px",
-                        }}
-                    >
-                        2
-                    </div>
-                    <div
-                        className="box"
-                        style={{
-                            width: "20px",
-                            height: "20px",
-                            backgroundColor: "#28A745",
-                            color: "white",
-                            display: "flex",
-                            alignItems: "center",
-                            justifyContent: "center",
-                            fontSize: "10px",
-                            borderRadius: "2px",
-                        }}
-                    >
-                        3
+
+                    <div className="ai-wrapper">
+                        <div className="ai-options">
+                            <button
+                                className={`start-option ${alignItems === "flex-start" ? "active" : ""}`}
+                                onClick={() => updateAlign("flex-start")}
+                            >
+                                <AlignStartHorizontal
+                                    size={20}
+                                    strokeWidth={1.25}
+                                />
+                            </button>
+                            <button
+                                className={`center-option ${alignItems === "center" ? "active" : ""}`}
+                                onClick={() => updateAlign("center")}
+                            >
+                                <AlignCenterHorizontal
+                                    size={20}
+                                    strokeWidth={1.25}
+                                />
+                            </button>
+                            <button
+                                className={`end-option ${alignItems === "flex-end" ? "active" : ""}`}
+                                onClick={() => updateAlign("flex-end")}
+                            >
+                                <AlignEndHorizontal
+                                    size={20}
+                                    strokeWidth={1.25}
+                                />
+                            </button>
+                        </div>
                     </div>
                 </div>
+            </div>
 
-                <div className="gap-wrapper">
-                    <div className="gap-icon">Gap:</div>
-                    <div className="gap-value">
-                        <input
-                            type="range"
-                            min="0"
-                            max="50"
-                            value={gap}
-                            onChange={(e) =>
-                                updateGapValue(parseInt(e.target.value))
-                            }
-                        />
-                        <span>{gap}px</span>
-                    </div>
-                </div>
-
+            <div className="border-width-sub-section">
+                <div className="sub-heading">directions</div>
                 <div className="jc-wrapper">
                     <div className="jc-options">
                         <button
@@ -969,62 +1003,59 @@ export const AlignmentControlPanel = ({
                         >
                             <AlignEndVertical size={20} strokeWidth={1.25} />
                         </button>
-                        <button
-                            className={`space-between-option ${justifyContent === "space-between" ? "active" : ""}`}
-                            onClick={() => updateJustify("space-between")}
-                        >
-                            <AlignHorizontalSpaceBetween
-                                size={20}
-                                strokeWidth={1.25}
-                            />
-                        </button>
-                        <button
-                            className={`space-around-option ${justifyContent === "space-around" ? "active" : ""}`}
-                            onClick={() => updateJustify("space-around")}
-                        >
-                            <AlignHorizontalSpaceAround
-                                size={20}
-                                strokeWidth={1.25}
-                            />
-                        </button>
                     </div>
                 </div>
+            </div>
 
-                <div className="ai-wrapper">
-                    <div className="ai-options">
-                        <button
-                            className={`start-option ${alignItems === "flex-start" ? "active" : ""}`}
-                            onClick={() => updateAlign("flex-start")}
-                        >
-                            <AlignStartHorizontal
-                                size={20}
-                                strokeWidth={1.25}
-                            />
-                        </button>
-                        <button
-                            className={`center-option ${alignItems === "center" ? "active" : ""}`}
-                            onClick={() => updateAlign("center")}
-                        >
-                            <AlignCenterHorizontal
-                                size={20}
-                                strokeWidth={1.25}
-                            />
-                        </button>
-                        <button
-                            className={`end-option ${alignItems === "flex-end" ? "active" : ""}`}
-                            onClick={() => updateAlign("flex-end")}
-                        >
-                            <AlignEndHorizontal size={20} strokeWidth={1.25} />
-                        </button>
-                        <button
-                            className={`stretch-option ${alignItems === "stretch" ? "active" : ""}`}
-                            onClick={() => updateAlign("stretch")}
-                        >
-                            <AlignVerticalJustifyCenter
-                                size={20}
-                                strokeWidth={1.25}
-                            />
-                        </button>
+            <div className="border-width-sub-section">
+                <div className="sub-heading">directions</div>
+
+                <div>
+                    <button
+                        className={`space-between-option ${justifyContent === "space-between" ? "active" : ""}`}
+                        onClick={() => updateJustify("space-between")}
+                    >
+                        <AlignHorizontalSpaceBetween
+                            size={20}
+                            strokeWidth={1.25}
+                        />
+                    </button>
+                    <button
+                        className={`space-around-option ${justifyContent === "space-around" ? "active" : ""}`}
+                        onClick={() => updateJustify("space-around")}
+                    >
+                        <AlignHorizontalSpaceAround
+                            size={20}
+                            strokeWidth={1.25}
+                        />
+                    </button>
+                    <button
+                        className={`stretch-option ${alignItems === "stretch" ? "active" : ""}`}
+                        onClick={() => updateAlign("stretch")}
+                    >
+                        <AlignVerticalJustifyCenter
+                            size={20}
+                            strokeWidth={1.25}
+                        />
+                    </button>
+                </div>
+            </div>
+
+            <div className="border-width-sub-section">
+                <div className="sub-heading">directions</div>
+                <div className="gap-wrapper">
+                    <div className="gap-icon">Gap:</div>
+                    <div className="gap-value">
+                        <input
+                            type="range"
+                            min="0"
+                            max="50"
+                            value={gap}
+                            onChange={(e) =>
+                                updateGapValue(parseInt(e.target.value))
+                            }
+                        />
+                        <span>{gap}px</span>
                     </div>
                 </div>
             </div>
