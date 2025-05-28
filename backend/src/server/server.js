@@ -21,6 +21,8 @@ import { tableRouter } from "./blocks/tableBlocks/route.js";
 import { referenceBlockRouter } from "./blocks/referenceBlocks/route.js";
 import { apiBlockRouter } from "./blocks/apiBlocks/route.js";
 import { canvasRouter } from "./canvas/route.js";
+import { canvasElements } from "../db/schema/canvas/canvasElements.js";
+import { elementStyles } from "../db/schema/canvas/elementStyles.js";
 
 dotenv.config();
 
@@ -48,6 +50,89 @@ app.get("/api/users", async (req, res) => {
         res.json(allUsers);
     } catch (error) {
         res.status(500).json({ error: `Internal server error ${error}` });
+    }
+});
+
+app.get("/elements", async (req, res) => {
+    try {
+        const elements = await db
+            .select()
+            .from(canvasElements)
+            .leftJoin(
+                elementStyles,
+                eq(canvasElements.elementId, elementStyles.elementId),
+            );
+
+        res.json(elements);
+    } catch (error) {
+        res.status(500).json({ error: "Failed to fetch elements" });
+    }
+});
+
+// Get specific element styles
+app.get("/elements/:elementId/styles", async (req, res) => {
+    try {
+        const { elementId } = req.params;
+
+        const styles = await db
+            .select()
+            .from(elementStyles)
+            .where(eq(elementStyles.elementId, parseInt(elementId)));
+
+        res.json(styles[0] || {});
+    } catch (error) {
+        res.status(500).json({ error: "Failed to fetch element styles" });
+    }
+});
+
+// Update element styles
+app.put("/elements/:elementId/styles", async (req, res) => {
+    try {
+        const { elementId } = req.params;
+        const styleData = req.body;
+
+        // Check if styles exist
+        const existingStyles = await db
+            .select()
+            .from(elementStyles)
+            .where(eq(elementStyles.elementId, parseInt(elementId)));
+
+        if (existingStyles.length > 0) {
+            // Update existing styles
+            await db
+                .update(elementStyles)
+                .set({
+                    ...styleData,
+                    updatedAt: new Date(),
+                })
+                .where(eq(elementStyles.elementId, parseInt(elementId)));
+        } else {
+            // Insert new styles
+            await db.insert(elementStyles).values({
+                elementId: parseInt(elementId),
+                ...styleData,
+            });
+        }
+
+        res.json({ success: true });
+    } catch (error) {
+        res.status(500).json({ error: "Failed to update element styles" });
+    }
+});
+
+// Create new element
+app.post("/elements", async (req, res) => {
+    try {
+        const elementData = req.body;
+
+        const [newElement] = await db
+            .insert(canvasElements)
+            .values(elementData)
+            .returning();
+
+        res.json(newElement);
+    } catch (error) {
+        res.status(500).json({ error: "Failed to create element" });
     }
 });
 
