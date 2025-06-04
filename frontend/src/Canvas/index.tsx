@@ -85,11 +85,6 @@ type Actions = "moving" | "scalling" | "grouping" | "grabbing";
 
 export const Canvas: React.FC = () => {
     const [activeAction, setActiveAction] = useState<Actions>("moving");
-
-    // grouping
-    const [selectedElements, setSelectedElements] = useState<string[]>([]);
-    const [toggleGrouping, setToggleGrouping] = useState(false);
-
     const [elements, setElements] = useState<CanvasElement[]>([]);
     const [selectedId, setSelectedId] = useState<number | null>(null);
     const [screen, setScreen] = useState<"mobile" | "desktop" | "tablet">(
@@ -101,7 +96,7 @@ export const Canvas: React.FC = () => {
     const [elementWidth, setElementWidth] = useState(100);
 
     // border
-const {
+    const {
         elementRadius,
         topLeftRadius,
         topRightRadius,
@@ -151,13 +146,24 @@ const {
             y: 100,
             width: elementWidth,
             height: elementHeight,
-            "border-radius": elementRadius,
             text: type === "text" ? "Text element" : "",
             color: getRandomColor(),
-            "border-style": borderStyle,
             children: [],
             isGroup: false,
             groupLevel: 0,
+
+            // Initialize with default border values
+            borderRadius: 0,
+            topLeftRadius: 0,
+            topRightRadius: 0,
+            bottomRightRadius: 0,
+            bottomLeftRadius: 0,
+            borderWidth: 1,
+            topWidth: 1,
+            bottomWidth: 1,
+            leftWidth: 1,
+            rightWidth: 1,
+            borderStyle: "solid",
         };
         setElements((prev) => [...prev, newElement]);
         setSelectedId(newElement.id);
@@ -177,55 +183,10 @@ const {
         return colors[Math.floor(Math.random() * colors.length)];
     };
 
-    const handleMouseDown = (
-        e: React.MouseEvent<HTMLDivElement>,
-        id: number,
-    ) => {
-        if (toggleGrouping) {
-            handleSelementElements(id.toString());
-            return;
-        }
-
-        if (id !== selectedId) {
-            setSelectedId(id);
-        }
-
-        const element = elements.find((el) => el.id === id);
-        if (element && canvasRef.current) {
-            const canvasRect = canvasRef.current.getBoundingClientRect();
-            const offsetX =
-                (e.clientX - canvasRect.left) / zoomLevel - element.x;
-            const offsetY =
-                (e.clientY - canvasRect.top) / zoomLevel - element.y;
-            setDragOffset({ x: offsetX, y: offsetY });
-            setDragging(true);
-        }
-        e.stopPropagation();
-    };
-
     const handleCanvasClick = (e: React.MouseEvent<HTMLDivElement>) => {
         if (e.target === canvasRef.current) {
             setSelectedId(null);
-            if (toggleGrouping && selectedElements.length > 1) {
-                createGroup();
-            }
         }
-    };
-
-    const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
-        if (dragging && selectedId !== null && canvasRef.current) {
-            const canvasRect = canvasRef.current.getBoundingClientRect();
-            const x = (e.clientX - canvasRect.left) / zoomLevel - dragOffset.x;
-            const y = (e.clientY - canvasRect.top) / zoomLevel - dragOffset.y;
-
-            setElements((prev) =>
-                prev.map((el) => (el.id === selectedId ? { ...el, x, y } : el)),
-            );
-        }
-    };
-
-    const handleMouseUp = () => {
-        setDragging(false);
     };
 
     const deleteSelected = () => {
@@ -233,298 +194,6 @@ const {
             setElements((prev) => prev.filter((el) => el.id !== selectedId));
             setSelectedId(null);
         }
-    };
-
-    function handleSelementElements(elementId: string) {
-        const numericId = parseInt(elementId);
-
-        if (!selectedElements.includes(elementId)) {
-            setSelectedElements([...selectedElements, elementId]);
-        } else {
-            setSelectedElements(
-                selectedElements.filter((id) => id !== elementId),
-            );
-        }
-    }
-
-    const createGroup = () => {
-        if (selectedElements.length < 2) return;
-
-        const selectedElementIds = selectedElements.map((id) => parseInt(id));
-        const elementsToGroup = elements.filter((el) =>
-            selectedElementIds.includes(el.id),
-        );
-
-        if (elementsToGroup.length < 2) return;
-
-        const getAllBounds = (element) => {
-            if (element.isGroup && element.children) {
-                const childBounds = element.children.map((child) => ({
-                    minX: element.x + child.x,
-                    minY: element.y + child.y,
-                    maxX: element.x + child.x + child.width,
-                    maxY: element.y + child.y + child.height,
-                }));
-
-                return {
-                    minX: Math.min(...childBounds.map((b) => b.minX)),
-                    minY: Math.min(...childBounds.map((b) => b.minY)),
-                    maxX: Math.max(...childBounds.map((b) => b.maxX)),
-                    maxY: Math.max(...childBounds.map((b) => b.maxY)),
-                };
-            } else {
-                return {
-                    minX: element.x,
-                    minY: element.y,
-                    maxX: element.x + element.width,
-                    maxY: element.y + element.height,
-                };
-            }
-        };
-
-        const allBounds = elementsToGroup.map(getAllBounds);
-        const minX = Math.min(...allBounds.map((b) => b.minX));
-        const minY = Math.min(...allBounds.map((b) => b.minY));
-        const maxX = Math.max(...allBounds.map((b) => b.maxX));
-        const maxY = Math.max(...allBounds.map((b) => b.maxY));
-
-        const groupElement: CanvasElement = {
-            id: Date.now(),
-            type: "div",
-            x: minX,
-            y: minY,
-            width: maxX - minX,
-            height: maxY - minY,
-            "border-radius": 0,
-            text: "",
-            color: "transparent",
-            "border-style": "dashed",
-            alignItems: "flex-start",
-            justifyContent: "flex-start",
-            flexDirection: "row",
-            isReversed: false,
-            gap: 0,
-            children: elementsToGroup.map((el) => {
-                if (el.isGroup && el.children) {
-                    return {
-                        ...el,
-                        x: el.x - minX,
-                        y: el.y - minY,
-                        children: el.children,
-                    };
-                } else {
-                    return {
-                        ...el,
-                        x: el.x - minX,
-                        y: el.y - minY,
-                    };
-                }
-            }),
-            isGroup: true,
-            groupLevel:
-                Math.max(...elementsToGroup.map((el) => el.groupLevel || 0)) +
-                1,
-        };
-
-        setElements((prev) => [
-            ...prev.filter((el) => !selectedElementIds.includes(el.id)),
-            groupElement,
-        ]);
-
-        setSelectedElements([]);
-        setToggleGrouping(false);
-        setActiveAction("moving");
-        setSelectedId(groupElement.id);
-    };
-
-    const ungroupSelected = () => {
-        if (selectedId === null) return;
-
-        const element = elements.find((el) => el.id === selectedId);
-        if (!element || !element.isGroup || !element.children) return;
-
-        const ungroupedElements = element.children.map((child) => ({
-            ...child,
-            id: child.id || Date.now() + Math.random(),
-            x: child.x + element.x,
-            y: child.y + element.y,
-        }));
-
-        setElements((prev) => [
-            ...prev.filter((el) => el.id !== selectedId),
-            ...ungroupedElements,
-        ]);
-
-        setSelectedId(null);
-    };
-
-    useEffect(() => {
-        document.addEventListener("mouseup", handleMouseUp);
-        return () => {
-            document.removeEventListener("mouseup", handleMouseUp);
-        };
-    }, []);
-
-    const renderElement = (element) => {
-        const isSelected = element.id === selectedId;
-        const isSelectedForGrouping = selectedElements.includes(
-            element.id.toString(),
-        );
-
-        const elementClassNames = `canvas-element ${isSelected ? "selected" : ""} ${isSelectedForGrouping ? "selected-for-grouping" : ""}`;
-
-        const getElementFlexDirection = () => {
-            const baseDirection = element.flexDirection || "row";
-            const reversed = element.isReversed || false;
-
-            if (reversed) {
-                return baseDirection === "row"
-                    ? "row-reverse"
-                    : "column-reverse";
-            }
-            return baseDirection;
-        };
-
-        const elementStyle: React.CSSProperties = {
-            left: `${element.x}px`,
-            top: `${element.y}px`,
-            width: `${element.isGroup ? element.width : elementWidth}px`,
-            height: `${element.isGroup ? element.height : elementHeight}px`,
-            backgroundColor: element.color,
-            borderRadius: `${elementRadius}px`,
-            borderTopLeftRadius: `${topLeftRadius}px`,
-            borderTopRightRadius: `${topRightRadius}px`,
-            borderBottomLeftRadius: `${bottomLeftRadius}px`,
-            borderBottomRightRadius: `${bottomRightRadius}px`,
-            borderStyle: element.isGroup ? "dashed" : borderStyle,
-            borderWidth: `${elementBoderWidth}px`,
-            borderLeftWidth: `${leftWidth}px`,
-            borderRightWidth: `${rightWidth}px`,
-            borderTopWidth: `${topWidth}px`,
-            borderBottomWidth: `${bottomWidth}px`,
-            borderColor: element.isGroup ? "#007AFF" : "inherit",
-            position: "absolute",
-            display: element.isGroup ? "flex" : "block",
-            alignItems: element.isGroup
-                ? element.alignItems || "flex-start"
-                : undefined,
-            justifyContent: element.isGroup
-                ? element.justifyContent || "flex-start"
-                : undefined,
-            flexDirection: element.isGroup
-                ? getElementFlexDirection()
-                : undefined,
-            gap: element.isGroup ? `${element.gap || 0}px` : undefined,
-        };
-
-        const renderNestedElement = (child, depth = 0) => {
-            if (child.isGroup && child.children) {
-                const nestedGroupStyle: React.CSSProperties = {
-                    position: "relative",
-                    width: `${child.width}px`,
-                    height: `${child.height}px`,
-                    borderStyle: "dashed",
-                    borderWidth: "1px",
-                    borderColor: depth === 0 ? "#FF6B35" : "#28A745",
-                    backgroundColor: "transparent",
-                    display: "flex",
-                    alignItems: child.alignItems || "flex-start",
-                    justifyContent: child.justifyContent || "flex-start",
-                    flexDirection: child.isReversed
-                        ? child.flexDirection === "row"
-                            ? "row-reverse"
-                            : "column-reverse"
-                        : child.flexDirection || "row",
-                    gap: `${child.gap || 0}px`,
-                    flexShrink: 0,
-                };
-
-                return (
-                    <div key={child.id} style={nestedGroupStyle}>
-                        {child.children.map((nestedChild) =>
-                            renderNestedElement(nestedChild, depth + 1),
-                        )}
-                        <div
-                            style={{
-                                position: "absolute",
-                                top: `${-15 - depth * 15}px`,
-                                left: "0",
-                                fontSize: "10px",
-                                color: depth === 0 ? "#FF6B35" : "#28A745",
-                                fontWeight: "bold",
-                                whiteSpace: "nowrap",
-                                zIndex: 1000,
-                            }}
-                        >
-                            Group L{depth + 1}
-                        </div>
-                    </div>
-                );
-            } else {
-                const childStyle: React.CSSProperties = {
-                    position: "relative",
-                    width: `${child.width}px`,
-                    height: `${child.height}px`,
-                    backgroundColor: child.color,
-                    borderRadius: `${child["border-radius"]}px`,
-                    display: "flex",
-                    alignItems: "center",
-                    justifyContent: "center",
-                    fontSize: "12px",
-                    flexShrink: 0,
-                };
-
-                return (
-                    <div key={child.id} style={childStyle}>
-                        {child.type === "text" ? child.text : child.type}
-                    </div>
-                );
-            }
-        };
-
-        return (
-            <div
-                key={element.id}
-                className={elementClassNames}
-                style={elementStyle}
-                onMouseDown={(e) => handleMouseDown(e, element.id)}
-            >
-                {element.isGroup ? (
-                    <>
-                        {element.children?.map((child) =>
-                            renderNestedElement(child),
-                        )}
-                        <div
-                            style={{
-                                position: "absolute",
-                                top: "-20px",
-                                left: "0",
-                                fontSize: "12px",
-                                color: "#007AFF",
-                                fontWeight: "bold",
-                                zIndex: 1000,
-                            }}
-                        >
-                            Main Group
-                        </div>
-                    </>
-                ) : (
-                    <>
-                        {element.type === "text" ? (
-                            element.text
-                        ) : element.type === "div" ? (
-                            <div className="element-content rectangle">div</div>
-                        ) : element.type === "section" ? (
-                            <section className="element-content rectangle">
-                                section
-                            </section>
-                        ) : (
-                            <div className="element-content circle">circle</div>
-                        )}
-                    </>
-                )}
-            </div>
-        );
     };
 
     const ZoomIconSize = 16;
@@ -547,30 +216,19 @@ const {
         setZoomLevel(1);
     };
 
-    console.log(selectedElements, "selectedElements");
-
     return (
         <div className="figma-container">
             <div
                 className="canvas-container"
                 ref={canvasRef}
-                onMouseMove={handleMouseMove}
                 onClick={handleCanvasClick}
             >
                 <div className={`canvas ${screen}`} style={canvasStyle}>
-                    {elements.map(renderElement)}
+                    {/* render elements */}
                 </div>
             </div>
 
             <div className="status-bar-container">
-                {/* <div className="selected-item-info"> */}
-                {/*     {toggleGrouping && selectedElements.length > 0 */}
-                {/*         ? `${selectedElements.length} elements selected for grouping` */}
-                {/*         : selectedId */}
-                {/*           ? `Selected element ID: ${selectedId}` */}
-                {/*           : "Click to select an element. Drag to move."} */}
-                {/* </div> */}
-
                 <ScreenSizeSwitcher screen={screen} setScreen={setScreen} />
 
                 <div className="zoom-buttons-container">
@@ -622,28 +280,12 @@ const {
                 addElement={addElement}
                 activeAction={activeAction}
                 setActiveAction={setActiveAction}
-                selectedElements={selectedElements}
-                setSelectedElements={setSelectedElements}
                 selectedId={selectedId}
-                toggleGrouping={toggleGrouping}
-                setToggleGrouping={setToggleGrouping}
-                createGroup={createGroup}
             />
 
             <div className="toolbar-container">
                 <div className="toolbar">
                     <div className="toolbar-header toolbar-section">
-                        {selectedId
-                            ? elements.find((el) => el.id === selectedId)
-                                  ?.isGroup && (
-                                  <button
-                                      className="ungroup-button header-button"
-                                      onClick={ungroupSelected}
-                                  >
-                                      Ungroup
-                                  </button>
-                              )
-                            : ""}
                         <button
                             className="delete-button header-button"
                             onClick={deleteSelected}

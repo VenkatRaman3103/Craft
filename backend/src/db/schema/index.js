@@ -36,3 +36,6 @@ export * from "./canvas/screenSizes.js";
 export * from "./canvas/elementStyles.js";
 export * from "./canvas/canvasElements.js";
 export * from "./canvas/toolBar/border.js";
+
+export * from "./canvas/projectCanvas/schema.js";
+export * from "./canvas/pagesCanvas/schema.js";
