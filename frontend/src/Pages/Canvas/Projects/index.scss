@@ -21,6 +21,7 @@
         justify-content: space-between;
 
 
+
         .project-folder-header {
             width: 100%;
             display: flex;
@@ -117,4 +118,12 @@
             color: black;
         }
     }
+}
+
+.project-menu {
+    width: 200px;
+    height: 200px;
+    background-color: var(--base-color);
+    border: 1px solid var(--border-color);
+    border-radius: 10px;
 }

@@ -1,3 +1,4 @@
+import React from "react";
 import { ArrowUpRight, Plus } from "lucide-react";
 import "./index.scss";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
@@ -12,6 +13,12 @@ type dataType = {
 };
 
 export const Projects = () => {
+    const [menuPosition, setMenuPosition] = useState<{
+        x: number;
+        y: number;
+        id: string;
+    } | null>(null);
+
     const { data, isLoading, isError } = useQuery({
         queryFn: () => getAllProjects(),
         queryKey: ["project-canvas"],
@@ -19,13 +26,28 @@ export const Projects = () => {
 
     const [addProjectPopup, setAddProjectPopup] = useState(false);
 
+    function hadleRightClick(event: React.MouseEvent, project_id: string) {
+        event.preventDefault();
+        console.log(event.clientX);
+
+        setMenuPosition({ x: event.pageX, y: event.pageY, id: project_id });
+    }
+
+    const closeMenu = () => setMenuPosition(null);
+
     if (isLoading) return <div>Loading...</div>;
     if (isError) return <div>Error loading projects.</div>;
 
     return (
         <div className="project-list-container">
             {data.map((item: dataType) => (
-                <Project key={item.project_id} data={item} />
+                <Project
+                    key={item.project_id}
+                    data={item}
+                    hadleRightClick={hadleRightClick}
+                    menuPosition={menuPosition}
+                    closeMenu={closeMenu}
+                />
             ))}
             {addProjectPopup && (
                 <>
@@ -42,6 +64,47 @@ export const Projects = () => {
             >
                 <Plus />
             </div>
+        </div>
+    );
+};
+
+type ProjectType = {
+    data: dataType;
+    hadleRightClick: any;
+    menuPosition: any;
+};
+
+export const Project = ({
+    data,
+    menuPosition,
+    hadleRightClick,
+    closeMenu,
+}: ProjectType) => {
+    return (
+        <div
+            className="project-folder-continaer"
+            onClick={() => closeMenu(null)}
+            onContextMenu={(event) => hadleRightClick(event, data.project_id)}
+        >
+            <div className="project-folder-header">
+                <ArrowUpRight />
+            </div>
+            <div className="project-folder-body">
+                <div className="project-folder-name">{data.name}</div>
+                <div className="project-folder-status">{data.status}</div>
+            </div>
+            {menuPosition?.id == data.project_id && (
+                <div
+                    className="project-menu"
+                    style={{
+                        position: "absolute",
+                        top: `${menuPosition.y - 5}px`,
+                        left: `${menuPosition.x + 10}px`,
+                    }}
+                >
+                    {/* {data.project_id} */}
+                </div>
+            )}
         </div>
     );
 };
@@ -121,24 +184,6 @@ export const AddProjectPopup = ({ setAddProjectPopup }) => {
                 >
                     cancel
                 </div>
-            </div>
-        </div>
-    );
-};
-
-type ProjectType = {
-    data: dataType;
-};
-
-export const Project = ({ data }: ProjectType) => {
-    return (
-        <div className="project-folder-continaer">
-            <div className="project-folder-header">
-                <ArrowUpRight />
-            </div>
-            <div className="project-folder-body">
-                <div className="project-folder-name">{data.name}</div>
-                <div className="project-folder-status">{data.status}</div>
             </div>
         </div>
     );
