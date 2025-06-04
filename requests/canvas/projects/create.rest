@@ -25,7 +25,7 @@ POST /canvas/projects-canvas
 
 # body
 {
-    "name": "test project name",
+    "name": "test project name 1",
     "status": "active"
 }
 
