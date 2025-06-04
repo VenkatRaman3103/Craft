@@ -1,9 +1,8 @@
-import React from "react";
+import React, { useState } from "react";
 import { ArrowUpRight, Plus } from "lucide-react";
 import "./index.scss";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { getAllProjects } from "@/api/canvas/getAllProjects";
-import { useState } from "react";
 import { createProjects } from "@/api/canvas/createProjects";
 
 type dataType = {
@@ -28,8 +27,6 @@ export const Projects = () => {
 
     function hadleRightClick(event: React.MouseEvent, project_id: string) {
         event.preventDefault();
-        console.log(event.clientX);
-
         setMenuPosition({ x: event.pageX, y: event.pageY, id: project_id });
     }
 
@@ -49,21 +46,17 @@ export const Projects = () => {
                     closeMenu={closeMenu}
                 />
             ))}
-            {addProjectPopup && (
-                <>
-                    <div
-                        className="popup-backdrop"
-                        onClick={() => setAddProjectPopup(false)}
-                    />
-                    <AddProjectPopup setAddProjectPopup={setAddProjectPopup} />
-                </>
+
+            {addProjectPopup ? (
+                <AddProjectPrompt setAddProjectPopup={setAddProjectPopup} />
+            ) : (
+                <div
+                    className="project-folder-add"
+                    onClick={() => setAddProjectPopup(true)}
+                >
+                    <Plus />
+                </div>
             )}
-            <div
-                className="project-folder-add"
-                onClick={() => setAddProjectPopup(!addProjectPopup)}
-            >
-                <Plus />
-            </div>
         </div>
     );
 };
@@ -72,6 +65,7 @@ type ProjectType = {
     data: dataType;
     hadleRightClick: any;
     menuPosition: any;
+    closeMenu: any;
 };
 
 export const Project = ({
@@ -93,7 +87,7 @@ export const Project = ({
                 <div className="project-folder-name">{data.name}</div>
                 <div className="project-folder-status">{data.status}</div>
             </div>
-            {menuPosition?.id == data.project_id && (
+            {menuPosition?.id === data.project_id && (
                 <div
                     className="project-menu"
                     style={{
@@ -102,88 +96,63 @@ export const Project = ({
                         left: `${menuPosition.x + 10}px`,
                     }}
                 >
-                    {/* {data.project_id} */}
+                    {/**/}
                 </div>
             )}
         </div>
     );
 };
 
-export const AddProjectPopup = ({ setAddProjectPopup }) => {
+export const AddProjectPrompt = ({ setAddProjectPopup }) => {
     const [projectName, setProjectName] = useState("");
     const [projectStatus, setProjectStatus] = useState("");
 
-    function handleNameChange(even) {
-        event?.preventDefault();
-
-        setProjectName(even.target.value);
-    }
-
-    function handleStatusChange(even) {
-        event?.preventDefault();
-
-        setProjectStatus(even.target.value);
-    }
-
     const queryClient = useQueryClient();
 
-    const creatMuatation = useMutation({
+    const createMutation = useMutation({
         mutationFn: (payload) => createProjects(payload),
         onSuccess: () => {
             queryClient.invalidateQueries({ queryKey: ["project-canvas"] });
+            setProjectName("");
+            setProjectStatus("");
+            setAddProjectPopup(false);
         },
     });
 
-    function handleCreateProject() {
-        const payload = {
-            name: projectName,
-            status: projectStatus,
-        };
-        creatMuatation.mutate(payload);
-    }
-
-    function handleCancel() {
-        setProjectName("");
-        setProjectStatus("");
-        setAddProjectPopup(false);
-    }
+    const handleSubmit = () => {
+        if (!projectName.trim()) return;
+        createMutation.mutate({
+            name: projectName.trim(),
+            status: projectStatus.trim(),
+        });
+    };
 
     return (
-        <div className="add-project-popup-container">
-            <div className="project-name-container input-container">
-                <label>Project Name</label>
-                <input
-                    type="text"
-                    placeholder="Enter the project name"
-                    value={projectName}
-                    onChange={(event) => handleNameChange(event)}
-                    className="project-name-input"
-                />
-            </div>
-
-            <div className="project-status-container input-container">
-                <label>Project Status</label>
-                <input
-                    type="text"
-                    placeholder="Enter the project status"
-                    value={projectStatus}
-                    onChange={(event) => handleStatusChange(event)}
-                    className="project-name-input"
-                />
-            </div>
-            <div className="project-popup-action-btns-container">
-                <div
-                    className="project-popup-create action-btn"
-                    onClick={() => handleCreateProject()}
+        <div className="add-project-inline-container">
+            <input
+                type="text"
+                placeholder="Project Name"
+                value={projectName}
+                onChange={(e) => setProjectName(e.target.value)}
+                className="inline-input"
+            />
+            <input
+                type="text"
+                placeholder="Project Status"
+                value={projectStatus}
+                onChange={(e) => setProjectStatus(e.target.value)}
+                className="inline-input"
+            />
+            <div>
+                <button onClick={handleSubmit} className="inline-btn">
+                    Create
+                </button>
+                <button
+                    onClick={() => setAddProjectPopup(false)}
+                    className="inline-btn cancel"
                 >
-                    create
-                </div>
-                <div
-                    className="project-popup-cancel action-btn"
-                    onClick={() => handleCancel()}
-                >
-                    cancel
-                </div>
+                    Cancel
+                </button>
             </div>
         </div>
     );

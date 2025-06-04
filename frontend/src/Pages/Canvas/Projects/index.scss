@@ -1,6 +1,7 @@
 .project-list-container {
     width: 100%;
-    height: 100%;
+    /* height: 100%; */
+    height: fit-content;
     min-height: fit-content;
     display: flex;
     flex-direction: row;
@@ -8,7 +9,6 @@
     justify-content: start;
     flex-wrap: wrap;
     gap: 20px;
-
     margin: 40px;
 
     .project-folder-continaer {
@@ -19,8 +19,6 @@
         display: flex;
         flex-direction: column;
         justify-content: space-between;
-
-
 
         .project-folder-header {
             width: 100%;
@@ -37,85 +35,52 @@
         height: 200px;
         width: 200px;
         border: 1.5px solid var(--secondary-color);
-
         display: flex;
         align-items: center;
         justify-content: center;
+        cursor: pointer;
     }
-}
 
-.popup-backdrop {
-    position: fixed;
-    top: 0;
-    left: 0;
-    height: 100dvh;
-    width: 100dvw;
+    .add-project-inline-container {
+        width: 160px;
+        min-height: 160px;
+        background-color: var(--secondary-color);
+        padding: 20px;
 
-    backdrop-filter: blur(6px);
-    background-color: rgba(0, 0, 0, 0.2);
-    z-index: 10;
-}
-
-.add-project-popup-container {
-    height: auto;
-    width: 450px;
-    background-color: var(--secondary-color);
-
-    position: fixed;
-    left: 50%;
-    top: 50%;
-
-    transform: translate(-50%, -50%);
-    z-index: 11;
-    border-radius: 8px;
-    padding: 20px;
-
-    display: flex;
-    flex-direction: column;
-    gap: 30px;
-
-    .input-container {
         display: flex;
         flex-direction: column;
-        gap: 10px;
-    }
+        gap: 16px;
 
-    .project-name-input {
-        height: 40px;
-        width: calc(100% - 20px);
-        color: white;
-
-        border: 1px solid var(--border-color);
-        border-radius: 5px;
-
-        padding-left: 20px;
-    }
-
-    .project-popup-action-btns-container {
-        width: 100%;
-        height: 20px;
-
-        display: flex;
-        justify-content: end;
-        gap: 10px;
-        padding-bottom: 20px;
-
-        .action-btn {
-            height: 100%;
-            padding: 10px;
-
-            display: flex;
-            align-items: center;
-            justify-content: center;
-
-            border-radius: 5px;
-            padding-left: 20px;
-            padding-right: 20px;
+        .inline-input {
+            height: 40px;
+            padding-left: 16px;
+            background-color: transparent;
+            border: 1px solid var(--border-color);
+            border-radius: 3px;
+            color: white;
+            font-size: 14px;
         }
 
-        .project-popup-create {
+        .inline-btn {
+            height: 40px;
+            padding: 0 20px;
             background-color: white;
             color: black;
+            border: none;
+            border-radius: 5px;
+            font-weight: 500;
+            cursor: pointer;
+
+            &.cancel {
+                background-color: transparent;
+                color: white;
+                border: 1px solid var(--border-color);
+            }
+        }
+
+        .btn-group {
+            display: flex;
+            gap: 10px;
         }
     }
 }
