@@ -23,11 +23,12 @@ User-Agent: VRC
 # query
 # GET /canvas/screen-size
 # GET /canvas/projects-canvas
-PATCH /canvas/projects-canvas/d3fda80a-a646-4e0a-afa4-429e6b2dba4b
+# PATCH /canvas/projects-canvas/d3fda80a-a646-4e0a-afa4-429e6b2dba4b/name
+PATCH /canvas/projects-canvas/d3fda80a-a646-4e0a-afa4-429e6b2dba4b/status
 
 # body
 {
-    "name": "new name 3"
+    "status": "on ride"
 }
 
 

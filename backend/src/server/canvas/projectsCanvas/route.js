@@ -2,7 +2,7 @@ import express from "express";
 import { createProjects } from "./create.js";
 import { getAllProjects, getProjectsById } from "./read.js";
 import { deleteProjectsById } from "./delete.js";
-import { updateProjectsById } from "./update.js";
+import { updateProjectNameById, updateProjectStatusById } from "./update.js";
 
 export const projectCanvasRouter = express.Router();
 
@@ -17,4 +17,8 @@ projectCanvasRouter.get("/projects-canvas/:id", getProjectsById); // id
 projectCanvasRouter.delete("/projects-canvas/:id", deleteProjectsById); // id
 
 // update
-projectCanvasRouter.patch("/projects-canvas/:id", updateProjectsById); // id
+projectCanvasRouter.patch("/projects-canvas/:id/name", updateProjectNameById); // id
+projectCanvasRouter.patch(
+    "/projects-canvas/:id/status",
+    updateProjectStatusById,
+); // id
