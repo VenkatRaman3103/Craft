@@ -22,7 +22,8 @@ User-Agent: VRC
 
 # query
 # GET /canvas/screen-size
-GET /canvas/projects-canvas
+# GET /canvas/projects-canvas
+GET /canvas/projects-canvas/82d48625-62da-4d93-98f7-be4e62156a0f
 
 # body
 # {

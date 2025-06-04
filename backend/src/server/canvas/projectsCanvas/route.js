@@ -1,6 +1,6 @@
 import express from "express";
 import { createProjects } from "./create.js";
-import { getAllProjects } from "./read.js";
+import { getAllProjects, getAllProjectsById } from "./read.js";
 
 export const projectCanvasRouter = express.Router();
 
@@ -8,4 +8,5 @@ export const projectCanvasRouter = express.Router();
 projectCanvasRouter.post("/projects-canvas", createProjects);
 
 // read
-projectCanvasRouter.get("/projects-canvas", getAllProjects);
+projectCanvasRouter.get("/projects-canvas", getAllProjects); // all
+projectCanvasRouter.get("/projects-canvas/:id", getAllProjectsById); // id
