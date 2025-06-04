@@ -1,7 +1,6 @@
 import express from "express";
+import { createProjects } from "./create.js";
 
 export const projectCanvasRouter = express.Router();
 
-projectCanvasRouter.get("/projects-canvas", async (req, res) => {
-    res.json("hello from projectCanvasRouter");
-});
+projectCanvasRouter.post("/projects-canvas", createProjects);
