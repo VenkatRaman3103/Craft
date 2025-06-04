@@ -9,6 +9,7 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { Canvas } from "./Canvas/index.tsx";
 import { Provider } from "react-redux";
 import { store } from "./store/store.ts";
+import { Projects } from "./Pages/Canvas/Projects/index.tsx";
 
 const rootElement = document.getElementById("root");
 
@@ -37,6 +38,7 @@ createRoot(rootElement).render(
                         />
                         <Route path="/pages/:page_id" element={<Page />} />
                         <Route path="/canvas" element={<Canvas />} />
+                        <Route path="/canvas/projects" element={<Projects />} />
                     </Routes>
                 </Explorer>
             </QueryClientProvider>

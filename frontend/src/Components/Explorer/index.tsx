@@ -508,7 +508,7 @@ export const Explorer = ({ children }: { children: React.ReactNode }) => {
             Icon: PencilRuler,
             actionKey: "design",
             label: "Design",
-            url: "/canvas",
+            url: "/canvas/projects",
         },
         {
             Icon: DraftingCompass,
