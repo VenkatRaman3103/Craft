@@ -17,8 +17,8 @@ projectCanvasRouter.get("/projects-canvas/:id", getProjectsById); // id
 projectCanvasRouter.delete("/projects-canvas/:id", deleteProjectsById); // id
 
 // update
-projectCanvasRouter.patch("/projects-canvas/:id/name", updateProjectNameById); // id
+projectCanvasRouter.patch("/projects-canvas/:id/name", updateProjectNameById); // name
 projectCanvasRouter.patch(
     "/projects-canvas/:id/status",
     updateProjectStatusById,
-); // id
+); // status
