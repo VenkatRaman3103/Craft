@@ -2,7 +2,7 @@ import { eq } from "drizzle-orm";
 import { projectsCanvas } from "../../../db/schema/canvas/projectCanvas/schema.js";
 import { db } from "../../server.js";
 
-export const deleteAllProjectsById = async (req, res) => {
+export const deleteProjectsById = async (req, res) => {
     const { id } = req.params;
     try {
         const response = await db

@@ -17,7 +17,7 @@ export const getAllProjects = async (req, res) => {
     }
 };
 
-export const getAllProjectsById = async (req, res) => {
+export const getProjectsById = async (req, res) => {
     const { id } = req.params;
 
     try {

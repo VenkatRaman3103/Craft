@@ -1,7 +1,8 @@
 import express from "express";
 import { createProjects } from "./create.js";
-import { getAllProjects, getAllProjectsById } from "./read.js";
-import { deleteAllProjectsById } from "./delete.js";
+import { getAllProjects, getProjectsById } from "./read.js";
+import { deleteProjectsById } from "./delete.js";
+import { updateProjectsById } from "./update.js";
 
 export const projectCanvasRouter = express.Router();
 
@@ -10,7 +11,10 @@ projectCanvasRouter.post("/projects-canvas", createProjects);
 
 // read
 projectCanvasRouter.get("/projects-canvas", getAllProjects); // all
-projectCanvasRouter.get("/projects-canvas/:id", getAllProjectsById); // id
+projectCanvasRouter.get("/projects-canvas/:id", getProjectsById); // id
 
 // delete
-projectCanvasRouter.delete("/projects-canvas/:id", deleteAllProjectsById); // id
+projectCanvasRouter.delete("/projects-canvas/:id", deleteProjectsById); // id
+
+// update
+projectCanvasRouter.patch("/projects-canvas/:id", updateProjectsById); // id
