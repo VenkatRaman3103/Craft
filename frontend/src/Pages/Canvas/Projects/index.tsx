@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { ArrowUpRight, Plus } from "lucide-react";
 import "./index.scss";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
@@ -23,6 +23,8 @@ export const Projects = () => {
         id: string;
     } | null>(null);
 
+    const contextMenuRef = useRef<HTMLDivElement | null>(null);
+
     const { data, isLoading, isError } = useQuery({
         queryFn: () => getAllProjects(),
         queryKey: ["project-canvas"],
@@ -30,6 +32,26 @@ export const Projects = () => {
 
     const [addProjectPopup, setAddProjectPopup] = useState(false);
     const [editProject, setEditProject] = useState<dataType | null>(null);
+
+    useEffect(() => {
+        function handleClickOutsideContextMenu(event: MouseEvent) {
+            if (
+                contextMenuRef.current &&
+                !contextMenuRef.current.contains(event.target as Node)
+            ) {
+                setMenuPosition(null);
+            }
+        }
+
+        document.addEventListener("mousedown", handleClickOutsideContextMenu);
+
+        return () => {
+            document.removeEventListener(
+                "mousedown",
+                handleClickOutsideContextMenu,
+            );
+        };
+    }, [contextMenuRef]);
 
     function hadleRightClick(event: React.MouseEvent, project_id: string) {
         event.preventDefault();
@@ -62,6 +84,7 @@ export const Projects = () => {
                         menuPosition={menuPosition}
                         closeMenu={closeMenu}
                         onEdit={handleEdit}
+                        contextMenuRef={contextMenuRef}
                     />
                 ))}
 
@@ -90,6 +113,7 @@ type ProjectType = {
     menuPosition: any;
     closeMenu: any;
     onEdit: (project: dataType) => void;
+    contextMenuRef: HTMLDivElement | null;
 };
 
 export const Project = ({
@@ -98,6 +122,7 @@ export const Project = ({
     hadleRightClick,
     closeMenu,
     onEdit,
+    contextMenuRef,
 }: ProjectType) => {
     return (
         <div
@@ -124,6 +149,7 @@ export const Project = ({
                         data={data}
                         closeMenu={closeMenu}
                         onEdit={onEdit}
+                        contextMenuRef={contextMenuRef}
                     />
                 </div>
             )}
@@ -135,9 +161,15 @@ type ContextMenuProps = {
     data: dataType;
     closeMenu: () => void;
     onEdit: (project: dataType) => void;
+    contextMenuRef: HTMLDivElement | null;
 };
 
-export const ContextMenu = ({ data, closeMenu, onEdit }: ContextMenuProps) => {
+export const ContextMenu = ({
+    data,
+    closeMenu,
+    onEdit,
+    contextMenuRef,
+}: ContextMenuProps) => {
     const queryClient = useQueryClient();
 
     const deleteMutation = useMutation({
@@ -159,7 +191,7 @@ export const ContextMenu = ({ data, closeMenu, onEdit }: ContextMenuProps) => {
     }
 
     return (
-        <div className="context-menu-container">
+        <div className="context-menu-container" ref={contextMenuRef}>
             <div className="context-menu-option" onClick={handleEditProject}>
                 edit
             </div>
