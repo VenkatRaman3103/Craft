@@ -20,6 +20,7 @@ import { darkFont, lightFont } from "@/Styles/base";
 import { useNavigate } from "react-router";
 import { useLocation } from "react-router";
 import { CMSFileTree } from "./CmsFileTree";
+import { DesignFileTree } from "./DesignFileTree";
 
 type IconType = {
     Icon: React.ElementType;
@@ -253,59 +254,6 @@ const GalleryContent = () => (
             <div className="gallery-item">Table</div>
             <div className="gallery-item">Form</div>
         </div>
-    </div>
-);
-
-const DesignFileTree = () => (
-    <div className="file-tree-container">
-        <h3>Design Files</h3>
-        <ul className="file-tree">
-            <li className="file-tree-folder">
-                <span>
-                    <FolderOpen size={16} strokeWidth={2} /> Designs
-                </span>
-                <ul>
-                    <li className="file-tree-file">
-                        <FileText size={14} strokeWidth={2} /> homepage.sketch
-                    </li>
-                    <li className="file-tree-file">
-                        <Image size={14} strokeWidth={2} /> logo.svg
-                    </li>
-                    <li className="file-tree-file">
-                        <FileText size={14} strokeWidth={2} /> color-palette.pdf
-                    </li>
-                </ul>
-            </li>
-            <li className="file-tree-folder">
-                <span>
-                    <FolderOpen size={16} strokeWidth={2} /> Assets
-                </span>
-                <ul>
-                    <li className="file-tree-file">
-                        <Image size={14} strokeWidth={2} /> hero-image.png
-                    </li>
-                    <li className="file-tree-file">
-                        <Image size={14} strokeWidth={2} /> icons.svg
-                    </li>
-                </ul>
-            </li>
-            <li className="file-tree-folder">
-                <span>
-                    <FolderOpen size={16} strokeWidth={2} /> Wireframes
-                </span>
-                <ul>
-                    <li className="file-tree-file">
-                        <FileText size={14} strokeWidth={2} /> mobile.sketch
-                    </li>
-                    <li className="file-tree-file">
-                        <FileText size={14} strokeWidth={2} /> tablet.sketch
-                    </li>
-                    <li className="file-tree-file">
-                        <FileText size={14} strokeWidth={2} /> desktop.sketch
-                    </li>
-                </ul>
-            </li>
-        </ul>
     </div>
 );
 

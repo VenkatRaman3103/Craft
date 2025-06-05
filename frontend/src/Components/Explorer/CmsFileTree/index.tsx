@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { getAllCollections, getCollectionById } from "@/api/explorer";
 import {
@@ -13,6 +13,8 @@ import "./index.scss";
 import { darkFont } from "@/Styles/base";
 import { useNavigate, useSearchParams } from "react-router";
 import { useLocation } from "react-router";
+import is from "date-fns/esm/locale/is/index.js";
+import { FolderEntry } from "../UI/FolderEntry";
 
 export const CMSFileTree = () => {
     const { data: rootCollections } = useQuery({
@@ -64,8 +66,6 @@ const CollectionFolder = ({
         enabled: isOpen || isActive || isInPath,
     });
 
-    const navigate = useNavigate();
-
     const childCollections =
         data?.filter((item) => item.reference_id === collectionId) || [];
 
@@ -105,48 +105,17 @@ const CollectionFolder = ({
         }
         if (onInPath) onInPath();
     };
-    const pushUrl = (url) => {
-        if (url) {
-            navigate(`collections/${url}`);
-        }
-    };
-
-    const toggleFolder = () => {
-        setIsOpen(!isOpen);
-    };
 
     return (
         <li>
-            <div className={`folder ${isActive ? "active" : ""} `}>
-                <span onClick={toggleFolder}>
-                    {isOpen ? (
-                        <ChevronDown size={14} className="chev-folder-icon" />
-                    ) : (
-                        <ChevronRight size={14} className="chev-folder-icon" />
-                    )}
-                </span>
-                <span>
-                    {isOpen ? (
-                        <FolderOpen
-                            size={16}
-                            className="folder-icon"
-                            fill="#444444"
-                        />
-                    ) : (
-                        <Folder
-                            size={16}
-                            className="folder-icon"
-                            fill="#444444"
-                        />
-                    )}
-                </span>
-                <span
-                    className={`folder-name ${isActive ? "active" : ""}`}
-                    onClick={() => pushUrl(collectionId)}
-                >
-                    {name}
-                </span>
-            </div>
+            <FolderEntry
+                isOpen={isOpen}
+                collectionId={collectionId}
+                name={name}
+                setToggleState={setIsOpen}
+                toggleState={isOpen}
+                endpoint="collection"
+            />
             {isOpen && childCollections.length > 0 && (
                 <ul>
                     {childCollections.map((childCollection) => (
