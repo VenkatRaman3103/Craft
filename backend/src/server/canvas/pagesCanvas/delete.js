@@ -1,18 +1,13 @@
 import { db } from "../../server.js";
 import { pagesCanvas } from "../../../db/schema/canvas/pagesCanvas/schema.js";
+import { eq } from "drizzle-orm";
 
-export const createCanvasPages = async (req, res) => {
-    const { name, status } = req.body;
-
+export const deleteCanvasPageById = async (req, res) => {
+    const { id } = req.params;
     try {
         const response = await db
-            .insert(pagesCanvas)
-            .values([
-                {
-                    name,
-                    status,
-                },
-            ])
+            .delete(pagesCanvas)
+            .where(eq(pagesCanvas.page_id, id))
             .returning();
 
         res.json(response[0]);
@@ -20,7 +15,7 @@ export const createCanvasPages = async (req, res) => {
         const errorMessage = {
             error,
             message: `Error in creating the block`,
-            origin: "backend/createCanvasPages/POST",
+            origin: "backend/getAllCanvasPages/GET",
         };
         console.log(errorMessage);
         res.status(500).json(errorMessage);
