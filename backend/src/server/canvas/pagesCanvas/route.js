@@ -11,6 +11,7 @@ export const pagesCanvasRouter = express.Router();
 
 // create
 pagesCanvasRouter.post("/pages", createCanvasPages);
+//
 
 // read
 pagesCanvasRouter.get("/pages", getAllCanvasPages); // all
