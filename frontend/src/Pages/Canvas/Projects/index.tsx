@@ -9,12 +9,7 @@ import {
     updateProjectNameById,
     updateProjectStatusById,
 } from "@/api/canvas/updateProjects";
-
-type dataType = {
-    project_id: string;
-    name: string;
-    status: string;
-};
+import { dataType } from "@/Types/canvas/projectType";
 
 export const Projects = () => {
     const [menuPosition, setMenuPosition] = useState<{

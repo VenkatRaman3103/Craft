@@ -21,6 +21,19 @@ Content-Type: application/json; charset=utf-8
 User-Agent: VRC
 
 # query
-GET /api
+# GET /canvas/screen-size
+# GET /canvas/projects-canvas
+GET /canvas/pages
+
+# body
+# {
+#     "name": "test screen-size 1",
+#     "type": "mobile",
+#     "width": "100px",
+#     "heigth": "100px"
+# }
+
+
+
 
 
