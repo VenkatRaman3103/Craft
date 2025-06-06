@@ -23,15 +23,14 @@ User-Agent: VRC
 # query
 # GET /canvas/screen-size
 # GET /canvas/projects-canvas
-GET /canvas/pages/f6865c18-94a4-4cae-9fed-39bb1d087d18
+POST /canvas/pages
 
 # body
-# {
-#     "name": "test screen-size 1",
-#     "type": "mobile",
-#     "width": "100px",
-#     "heigth": "100px"
-# }
+{
+    "name": "new page for canvas 1",
+    "status": "active"
+}
+
 
 
 

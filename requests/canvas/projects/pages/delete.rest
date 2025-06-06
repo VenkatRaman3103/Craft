@@ -23,7 +23,7 @@ User-Agent: VRC
 # query
 # GET /canvas/screen-size
 # GET /canvas/projects-canvas
-GET /canvas/pages/f6865c18-94a4-4cae-9fed-39bb1d087d18
+DELETE /canvas/pages/f6865c18-94a4-4cae-9fed-39bb1d087d18
 
 # body
 # {
@@ -32,6 +32,7 @@ GET /canvas/pages/f6865c18-94a4-4cae-9fed-39bb1d087d18
 #     "width": "100px",
 #     "heigth": "100px"
 # }
+
 
 
 

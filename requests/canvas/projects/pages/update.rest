@@ -23,15 +23,16 @@ User-Agent: VRC
 # query
 # GET /canvas/screen-size
 # GET /canvas/projects-canvas
-GET /canvas/pages/f6865c18-94a4-4cae-9fed-39bb1d087d18
+# PATCH /canvas/pages/ed5d7947-cead-4c6f-a70c-d31dfa7617cc/name
+PATCH /canvas/pages/ed5d7947-cead-4c6f-a70c-d31dfa7617cc/status
 
 # body
-# {
-#     "name": "test screen-size 1",
-#     "type": "mobile",
-#     "width": "100px",
-#     "heigth": "100px"
-# }
+{
+    # "name": "I'm batman"
+    "status": "on ride"
+}
+
+
 
 
 
