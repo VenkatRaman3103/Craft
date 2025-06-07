@@ -272,3 +272,29 @@ ${htmlContent}
 };
 
 elementsRouter.get("/elements/:pageId/html", generatePageHTML);
+
+export const updateElement = async (req, res) => {
+    const { elementId } = req.params;
+    try {
+        const updates = req.body;
+
+        const updatedElement = await db
+            .update(elements)
+            .set({
+                ...updates,
+                updatedAt: new Date(),
+            })
+            .where(eq(elements.id, elementId))
+            .returning();
+
+        if (!updatedElement.length) {
+            return res.status(404).json({ error: "Element not found" });
+        }
+
+        res.json(updatedElement[0]);
+    } catch (error) {
+        res.status(500).json({ error: error.message });
+    }
+};
+
+elementsRouter.patch("/elements/:elementId", updateElement);
