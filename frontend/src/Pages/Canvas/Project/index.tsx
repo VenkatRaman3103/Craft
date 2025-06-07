@@ -1,26 +1,31 @@
+import "./index.scss";
+import React, { useState } from "react";
+import { CanvasPagePayload, createPage } from "@/api/canvas/pages/createPage";
+import { PagePreview } from "@/components/PagePreview";
+import { PagePrompt } from "@/components/PagePrompt";
 import { StoreState } from "@/store/store";
+import { deletePageById } from "@/api/canvas/pages/deletePageById";
 import { getProjectById } from "@/api/canvas/getProjectById";
 import { updatePages } from "@/store/canvas/projectSlice";
 import { useDispatch, useSelector } from "react-redux";
-import { useParams } from "react-router";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import React, { useState } from "react";
-import "./index.scss";
-import { deletePageById } from "@/api/canvas/pages/deletePageById";
-import { PagePreview } from "@/components/PagePreview";
+import { useParams } from "react-router";
 
 type ItemType = "pages" | "layouts" | "variables";
 
 export const Project = () => {
     const { project_id } = useParams();
 
-    // store
+    // global state (store)
     const { pages } = useSelector((state: StoreState) => state.canvasProject);
     const dispatch = useDispatch();
 
-    // state
+    // local state
     const [activeItemType, setActiveItemType] = useState<ItemType>("pages");
+    const [showAddPage, setShowAddPage] = useState<boolean>(false);
+    const [title, setTitle] = useState<string>("");
 
+    // fetching project data
     const { data, isLoading, isError } = useQuery({
         queryKey: ["project", project_id],
         queryFn: () => getProjectById(project_id!),
@@ -31,6 +36,19 @@ export const Project = () => {
 
     const queryClient = useQueryClient();
 
+    // creation of new page
+    const createMutation = useMutation({
+        mutationFn: (payload: CanvasPagePayload) => createPage(payload),
+        onSuccess: () => {
+            queryClient.invalidateQueries({
+                queryKey: ["project"],
+            });
+            setTitle("");
+            setShowAddPage(false);
+        },
+    });
+
+    // deletion of a page
     const deleteMutation = useMutation({
         mutationFn: (id: string) => deletePageById(id),
         onSuccess: () => {
@@ -40,13 +58,21 @@ export const Project = () => {
         },
     });
 
-    // TODO: delete functionality
+    // event handlers
+    function handleCreatePage() {
+        const payload: CanvasPagePayload = {
+            name: title,
+            status: "active",
+            project_id: project_id,
+        };
+        createMutation.mutate(payload);
+    }
+
     function handleDeltePage(id: string) {
         deleteMutation.mutate(id);
     }
 
-    // TODO: isDeleteing state
-
+    // loaders
     if (!project_id) {
         return <div>Project ID not found</div>;
     }
@@ -62,6 +88,10 @@ export const Project = () => {
     console.log(pages, "pages: store");
     console.log(data, "pages: api");
 
+    /**
+     * @param: itemType (ItemType)
+     * @returns: PagePreview | Layouts | Variables
+     */
     function renderItems(itemType: ItemType): React.JSX {
         switch (itemType) {
             case "pages":
@@ -105,7 +135,24 @@ export const Project = () => {
                     Variables
                 </div>
             </div>
-            <div className="items-contianer">{renderItems(activeItemType)}</div>
+            <div className="items-contianer">
+                {renderItems(activeItemType)}
+                {showAddPage && (
+                    <PagePrompt
+                        title={title}
+                        setTitle={setTitle}
+                        isCreating={createMutation.isLoading}
+                        handleSave={handleCreatePage}
+                    />
+                )}
+
+                <button
+                    className="add-page-btn"
+                    onClick={() => setShowAddPage(true)}
+                >
+                    Add Page
+                </button>
+            </div>
         </div>
     );
 };

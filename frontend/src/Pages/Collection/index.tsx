@@ -30,6 +30,46 @@ export const Collection = () => {
     const options = ["Pages", "Components", "Fields"];
     const [selectedOption, setSelectedOption] = useState(options[0]);
 
+    const [pageTitle, setPageTitle] = useState<string>("");
+
+    const createPageMutation = useMutation({
+        mutationFn: async () => {
+            const page_id = uuidv4();
+            const newPage = {
+                title: pageTitle,
+                slug: collectionData.slug,
+                page_id,
+            };
+
+            await axios.post(`${backendUrl}/page`, newPage);
+
+            await axios.post(`${backendUrl}/collection-page`, {
+                collection_id,
+                page_id,
+            });
+
+            await axios.post(
+                `${backendUrl}/collection/${collection_id}/collection_items`,
+                {
+                    reference_id: page_id,
+                    type: "page",
+                },
+            );
+
+            return newPage;
+        },
+        onSuccess: () => {
+            // Invalidate and refetch the collection query
+            queryClient.invalidateQueries({
+                queryKey: ["collection", collection_id],
+            });
+            setShowAddPage(false);
+        },
+        onError: (error) => {
+            console.error("Error creating page:", error);
+        },
+    });
+
     const deleteMutation = useMutation({
         mutationFn: async (page_id: string) => {
             await axios.delete(`${backendUrl}/page/${page_id}`);
@@ -56,6 +96,12 @@ export const Collection = () => {
 
     if (!collectionData) {
         return <div>Collection not found</div>;
+    }
+
+    function handleSave() {
+        if (pageTitle) {
+            createPageMutation.mutate();
+        }
     }
 
     console.log(collectionData, "collectionData");
@@ -86,7 +132,6 @@ export const Collection = () => {
                                 (item: pageType, ind: number) => (
                                     <PagePreview
                                         key={ind}
-                                        // page={item}
                                         deletePage={handleDeletePage}
                                         isDeleting={deleteMutation.isPending}
                                         title={item.title}
@@ -110,10 +155,10 @@ export const Collection = () => {
                 )}
                 {showAddPage && (
                     <PagePrompt
-                        slug={collectionData?.slug}
-                        collection_id={collectionData.collection_id}
-                        setShowAddPage={setShowAddPage}
-                        queryClient={queryClient}
+                        title={pageTitle}
+                        setTitle={setPageTitle}
+                        isCreating={createPageMutation.isPending}
+                        handleSave={handleSave}
                     />
                 )}
                 <button

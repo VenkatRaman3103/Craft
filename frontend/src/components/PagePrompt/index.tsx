@@ -5,62 +5,16 @@ import React, { useState } from "react";
 import { v4 as uuidv4 } from "uuid";
 
 export const PagePrompt = ({
-    slug,
-    collection_id,
-    setShowAddPage,
-    queryClient,
+    title,
+    setTitle,
+    isCreating,
+    handleSave,
 }: {
-    slug: string;
-    collection_id: string;
-    setShowAddPage: React.Dispatch<React.SetStateAction<boolean>>;
-    queryClient: any;
+    title: string;
+    setTitle: React.Dispatch<React.SetStateAction<string>>;
+    isCreating: any;
+    handleSave: any;
 }) => {
-    const [pageTitle, setPageTitle] = useState<string>("");
-
-    const createPageMutation = useMutation({
-        mutationFn: async () => {
-            const page_id = uuidv4();
-            const newPage = {
-                title: pageTitle,
-                slug: slug,
-                page_id,
-            };
-
-            await axios.post(`${backendUrl}/page`, newPage);
-
-            await axios.post(`${backendUrl}/collection-page`, {
-                collection_id,
-                page_id,
-            });
-
-            await axios.post(
-                `${backendUrl}/collection/${collection_id}/collection_items`,
-                {
-                    reference_id: page_id,
-                    type: "page",
-                },
-            );
-
-            return newPage;
-        },
-        onSuccess: () => {
-            // Invalidate and refetch the collection query
-            queryClient.invalidateQueries({
-                queryKey: ["collection", collection_id],
-            });
-            setShowAddPage(false);
-        },
-        onError: (error) => {
-            console.error("Error creating page:", error);
-        },
-    });
-
-    function handleSave() {
-        if (pageTitle) {
-            createPageMutation.mutate();
-        }
-    }
-
     return (
         <div className="page-container">
             <div className="page-wrapper">
@@ -71,21 +25,17 @@ export const PagePrompt = ({
                     <div className="collection-content-wrapper">
                         <input
                             type="text"
-                            value={pageTitle}
+                            value={title}
                             placeholder="Page Title"
-                            onChange={(e) => setPageTitle(e.target.value)}
+                            onChange={(e) => setTitle(e.target.value)}
                             className="heading"
                         />
                         <button
                             className="go-to-page-btn"
                             onClick={handleSave}
-                            disabled={
-                                createPageMutation.isPending || !pageTitle
-                            }
+                            disabled={isCreating}
                         >
-                            {createPageMutation.isPending
-                                ? "Saving..."
-                                : "Save"}
+                            {isCreating ? "Saving..." : "Save"}
                         </button>
                     </div>
                 </div>

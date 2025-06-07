@@ -128,3 +128,14 @@
     }
   }
 }
+
+.add-page-btn {
+  width: fit-content;
+  height: auto;
+  padding: 10px 20px;
+  border-radius: 100px;
+  border: 1px solid var(--border-color);
+  background-color: var(--base-color);
+  color: var(--light-font);
+  cursor: pointer;
+}
