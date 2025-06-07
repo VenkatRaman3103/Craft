@@ -10,6 +10,7 @@ import { Canvas } from "./Canvas/index.tsx";
 import { Provider } from "react-redux";
 import { store } from "./store/store.ts";
 import { Projects } from "./Pages/Canvas/Projects/index.tsx";
+import { Project } from "./Pages/Canvas/Project/index.tsx";
 
 const rootElement = document.getElementById("root");
 
@@ -39,6 +40,12 @@ createRoot(rootElement).render(
                         <Route path="/pages/:page_id" element={<Page />} />
                         <Route path="/canvas" element={<Canvas />} />
                         <Route path="/canvas/projects" element={<Projects />} />
+
+                        {/* INFO: it will list all the pages */}
+                        <Route
+                            path="/canvas/projects/:project_id"
+                            element={<Project />}
+                        />
                     </Routes>
                 </Explorer>
             </QueryClientProvider>

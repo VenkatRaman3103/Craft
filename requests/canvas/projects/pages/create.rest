@@ -27,12 +27,6 @@ POST /canvas/pages
 
 # body
 {
-    "name": "new page for canvas 1",
+    "name": "page 5",
     "status": "active"
 }
-
-
-
-
-
-

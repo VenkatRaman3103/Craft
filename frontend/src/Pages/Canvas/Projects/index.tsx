@@ -10,6 +10,7 @@ import {
     updateProjectStatusById,
 } from "@/api/canvas/updateProjects";
 import { dataType } from "@/Types/canvas/projectType";
+import { useNavigate } from "react-router";
 
 export const Projects = () => {
     const [menuPosition, setMenuPosition] = useState<{
@@ -111,7 +112,7 @@ type ProjectType = {
     contextMenuRef: HTMLDivElement | null;
 };
 
-export const Project = ({
+const Project = ({
     data,
     menuPosition,
     hadleRightClick,
@@ -119,10 +120,19 @@ export const Project = ({
     onEdit,
     contextMenuRef,
 }: ProjectType) => {
+    const navigate = useNavigate();
+
+    function puchUrl() {
+        navigate(`${data.project_id}`);
+    }
+
     return (
         <div
             className="project-folder-continaer"
-            onClick={() => closeMenu()}
+            onClick={() => {
+                puchUrl();
+                closeMenu();
+            }}
             onContextMenu={(event) => hadleRightClick(event, data.project_id)}
         >
             <div className="project-folder-header">
