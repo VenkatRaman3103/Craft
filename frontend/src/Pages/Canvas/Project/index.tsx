@@ -4,13 +4,20 @@ import { updatePages } from "@/store/canvas/projectSlice";
 import { useDispatch, useSelector } from "react-redux";
 import { useParams } from "react-router";
 import { useQuery } from "@tanstack/react-query";
+import React, { useState } from "react";
+import "./index.scss";
+
+type ItemType = "pages" | "layouts" | "variables";
 
 export const Project = () => {
     const { project_id } = useParams();
 
+    // store
     const { pages } = useSelector((state: StoreState) => state.canvasProject);
-
     const dispatch = useDispatch();
+
+    // state
+    const [activeItemType, setActiveItemType] = useState<ItemType>("pages");
 
     const { data, isLoading, isError } = useQuery({
         queryKey: ["project", project_id],
@@ -35,10 +42,43 @@ export const Project = () => {
     console.log(pages, "pages: store");
     console.log(data, "pages: api");
 
+    function renderItems(itemType: ItemType): React.JSX {
+        switch (itemType) {
+            case "pages":
+                return pages?.map((item) => (
+                    <div key={item.page_id}>{item.name}</div>
+                ));
+            case "layouts":
+                return <div>Layout</div>;
+            case "variables":
+                return <div>Variables</div>;
+        }
+    }
+
     return (
-        <div>
-            <div>{project_id}</div>
-            {pages?.map((item) => <div key={item.page_id}>{item.name}</div>)}
+        <div className="canvas-project-container">
+            <div className="canvas-project-intro-container">{project_id}</div>
+            <div className="item-type-selector-container">
+                <div
+                    className={`item-type ${activeItemType == "pages" ? "active" : ""}`}
+                    onClick={() => setActiveItemType("pages")}
+                >
+                    Pages
+                </div>
+                <div
+                    className={`item-type ${activeItemType == "layouts" ? "active" : ""}`}
+                    onClick={() => setActiveItemType("layouts")}
+                >
+                    Layouts
+                </div>
+                <div
+                    className={`item-type ${activeItemType == "variables" ? "active" : ""}`}
+                    onClick={() => setActiveItemType("variables")}
+                >
+                    Variables
+                </div>
+            </div>
+            <div>{renderItems(activeItemType)}</div>
         </div>
     );
 };

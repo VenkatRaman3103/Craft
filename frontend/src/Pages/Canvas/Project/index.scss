@@ -1,0 +1,45 @@
+.canvas-project-container {
+    width: 100%;
+    height: 100%;
+
+    display: flex;
+    flex-direction: column;
+    align-items: start;
+    gap: 30px;
+
+    padding: 30px;
+
+    .canvas-project-intro-container {
+        width: 100%;
+    }
+
+    .item-type-selector-container {
+        width: fit-content;
+        height: auto;
+        background-color: var(--primary-color);
+        border-radius: 100px;
+
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 5px;
+
+        padding: 5px;
+
+        .item-type {
+            width: 100%;
+
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 100px;
+
+            padding: 10px 20px;
+
+            &.active {
+                background-color: var(--secondary-color);
+            }
+        }
+    }
+
+}
