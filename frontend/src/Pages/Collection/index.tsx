@@ -10,7 +10,7 @@ import * as React from "react";
 import { FieldsAndBlocksList } from "@/Components/FieldsAndBlocksList";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { PagePrompt } from "@/components/PagePrompt";
-import { PagePreview } from "../Canvas/Project";
+import { PagePreview } from "@/components/PagePreview";
 
 export const Collection = () => {
     const { collection_id } = useParams();
@@ -86,9 +86,12 @@ export const Collection = () => {
                                 (item: pageType, ind: number) => (
                                     <PagePreview
                                         key={ind}
-                                        page={item}
+                                        // page={item}
                                         deletePage={handleDeletePage}
                                         isDeleting={deleteMutation.isPending}
+                                        title={item.title}
+                                        page_id={item.page_id}
+                                        url={"/canvas/page"}
                                     />
                                 ),
                             )}

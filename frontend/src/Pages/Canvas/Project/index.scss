@@ -39,7 +39,15 @@
             &.active {
                 background-color: var(--secondary-color);
             }
+
         }
+
     }
 
+    .items-contianer {
+        width: 100%;
+        display: flex;
+        flex-direction: column;
+        gap: 20px;
+    }
 }

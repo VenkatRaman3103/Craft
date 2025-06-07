@@ -3,9 +3,11 @@ import { getProjectById } from "@/api/canvas/getProjectById";
 import { updatePages } from "@/store/canvas/projectSlice";
 import { useDispatch, useSelector } from "react-redux";
 import { useParams } from "react-router";
-import { useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import React, { useState } from "react";
 import "./index.scss";
+import { deletePageById } from "@/api/canvas/pages/deletePageById";
+import { PagePreview } from "@/components/PagePreview";
 
 type ItemType = "pages" | "layouts" | "variables";
 
@@ -27,6 +29,24 @@ export const Project = () => {
         },
     });
 
+    const queryClient = useQueryClient();
+
+    const deleteMutation = useMutation({
+        mutationFn: (id: string) => deletePageById(id),
+        onSuccess: () => {
+            queryClient.invalidateQueries({
+                queryKey: ["project"],
+            });
+        },
+    });
+
+    // TODO: delete functionality
+    function handleDeltePage(id: string) {
+        deleteMutation.mutate(id);
+    }
+
+    // TODO: isDeleteing state
+
     if (!project_id) {
         return <div>Project ID not found</div>;
     }
@@ -46,7 +66,14 @@ export const Project = () => {
         switch (itemType) {
             case "pages":
                 return pages?.map((item) => (
-                    <div key={item.page_id}>{item.name}</div>
+                    <PagePreview
+                        deletePage={handleDeltePage}
+                        isDeleting={deleteMutation.isPending}
+                        title={item.name}
+                        page_id={item.page_id}
+                        url={"hello world"}
+                        key={item.page_id}
+                    />
                 ));
             case "layouts":
                 return <div>Layout</div>;
@@ -78,7 +105,7 @@ export const Project = () => {
                     Variables
                 </div>
             </div>
-            <div>{renderItems(activeItemType)}</div>
+            <div className="items-contianer">{renderItems(activeItemType)}</div>
         </div>
     );
 };
