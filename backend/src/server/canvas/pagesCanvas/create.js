@@ -2,7 +2,7 @@ import { db } from "../../server.js";
 import { pagesCanvas } from "../../../db/schema/canvas/pagesCanvas/schema.js";
 
 export const createCanvasPages = async (req, res) => {
-    const { name, status } = req.body;
+    const { name, status, project_id } = req.body;
 
     try {
         const response = await db
@@ -11,6 +11,7 @@ export const createCanvasPages = async (req, res) => {
                 {
                     name,
                     status,
+                    project_id,
                 },
             ])
             .returning();

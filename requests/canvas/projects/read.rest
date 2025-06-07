@@ -23,7 +23,7 @@ User-Agent: VRC
 # query
 # GET /canvas/screen-size
 # GET /canvas/projects-canvas
-GET /canvas/projects-canvas/82d48625-62da-4d93-98f7-be4e62156a0f
+GET /canvas/projects-canvas/d3fda80a-a646-4e0a-afa4-429e6b2dba4b
 
 # body
 # {
@@ -32,7 +32,4 @@ GET /canvas/projects-canvas/82d48625-62da-4d93-98f7-be4e62156a0f
 #     "width": "100px",
 #     "heigth": "100px"
 # }
-
-
-
 

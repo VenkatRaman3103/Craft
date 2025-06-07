@@ -27,6 +27,7 @@ POST /canvas/pages
 
 # body
 {
-    "name": "page 5",
-    "status": "active"
+    "name": "page 4",
+    "status": "active",
+    "project_id": "d3fda80a-a646-4e0a-afa4-429e6b2dba4b"
 }

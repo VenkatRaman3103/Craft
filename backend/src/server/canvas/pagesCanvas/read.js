@@ -33,3 +33,22 @@ export const getCanvasPagesById = async (req, res) => {
         res.status(500).json(errorMessage);
     }
 };
+
+// info: get all pages for the specific project, based on project_id
+export const getPagesForProject = async (req, res) => {
+    const { project_id } = req.params;
+    try {
+        const response = await db.query.pagesCanvas.findFirst({
+            where: (pagesCanvas, { eq }) => eq(pagesCanvas.page_id, project_id),
+        });
+        res.json(response);
+    } catch (error) {
+        const errorMessage = {
+            error,
+            message: `Error in creating the block`,
+            origin: "backend/getPagesForProject/GET",
+        };
+        console.log(errorMessage);
+        res.status(500).json(errorMessage);
+    }
+};

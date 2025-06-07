@@ -130,12 +130,16 @@ const Project = ({
         <div
             className="project-folder-continaer"
             onClick={() => {
-                puchUrl();
                 closeMenu();
             }}
             onContextMenu={(event) => hadleRightClick(event, data.project_id)}
         >
-            <div className="project-folder-header">
+            <div
+                className="project-folder-header"
+                onClick={() => {
+                    puchUrl();
+                }}
+            >
                 <ArrowUpRight />
             </div>
             <div className="project-folder-body">
