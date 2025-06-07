@@ -1,7 +1,5 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { defaults } from "lodash";
 
-// TODO: interface for initial state
 type pageType = {
     page_id: string;
     name: string;
@@ -15,12 +13,10 @@ interface PagesType {
     pages: pageType[] | null;
 }
 
-// TODO: initial state itself
 const initialState: PagesType = {
     pages: null,
 };
 
-// TODO: slice with reducers
 const projectSlice = createSlice({
     name: "canvasProject",
     initialState,
