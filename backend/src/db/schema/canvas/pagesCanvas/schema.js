@@ -10,4 +10,8 @@ export const pagesCanvas = pgTable("pages_canvas", {
         .notNull(),
     created_at: timestamp("created_at").defaultNow(),
     edited_at: timestamp("edited_at").defaultNow(),
+
+    // new
+    meta_title: text("meta_title"),
+    meta_description: text("meta_description"),
 });

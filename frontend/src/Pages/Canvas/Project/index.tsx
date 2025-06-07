@@ -101,7 +101,7 @@ export const Project = () => {
                         isDeleting={deleteMutation.isPending}
                         title={item.name}
                         page_id={item.page_id}
-                        url={"hello world"}
+                        url={"/canvas/pages"}
                         key={item.page_id}
                     />
                 ));

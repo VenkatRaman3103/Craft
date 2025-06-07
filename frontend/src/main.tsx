@@ -38,10 +38,10 @@ createRoot(rootElement).render(
                             element={<Collection />}
                         />
                         <Route path="/pages/:page_id" element={<Page />} />
-                        <Route path="/canvas" element={<Canvas />} />
+                        <Route path="/canvas/pages/:id" element={<Canvas />} />
                         <Route path="/canvas/projects" element={<Projects />} />
 
-                        {/* INFO: it will list all the pages */}
+                        {/* list all the pages */}
                         <Route
                             path="/canvas/projects/:project_id"
                             element={<Project />}
