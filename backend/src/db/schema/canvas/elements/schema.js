@@ -13,27 +13,32 @@ import { relations } from "drizzle-orm";
 export const elements = pgTable("elements", {
     id: uuid("id").defaultRandom().primaryKey(),
     pageId: uuid("page_id")
-        .references(() => pagesCanvas.id, { onDelete: "cascade" })
+        .references(() => pagesCanvas.page_id, { onDelete: "cascade" })
         .notNull(),
     parentId: uuid("parent_id").references(() => elements.id, {
         onDelete: "cascade",
-    }),
-    type: text("type").notNull(),
-    name: text("name"),
-    order: integer("order").notNull().default(0),
+    }), // Self-reference for nested elements
+    type: text("type").notNull(), // 'div', 'text', 'image', 'button', etc.
+    name: text("name"), // User-friendly name
+    order: integer("order").notNull().default(0), // For element ordering within parent
 
-    content: text("content"),
+    // Content properties
+    content: text("content"), // For text elements, image src, etc.
 
-    styles: jsonb("styles").notNull().default({}),
+    // CSS Styles - stored as JSONB for flexibility
+    styles: jsonb("styles").notNull().default({}), // All CSS properties
 
-    attributes: jsonb("attributes").default({}),
+    // Element-specific properties
+    attributes: jsonb("attributes").default({}), // HTML attributes like href, alt, etc.
 
+    // Responsive styles (optional - for advanced features)
     responsiveStyles: jsonb("responsive_styles").default({
         mobile: {},
         tablet: {},
         desktop: {},
     }),
 
+    // Visibility and state
     isVisible: boolean("is_visible").default(true),
     isLocked: boolean("is_locked").default(false),
 

@@ -41,3 +41,5 @@ export * from "./canvas/projectCanvas/schema.js";
 export * from "./canvas/projectCanvas/relations.js";
 export * from "./canvas/pagesCanvas/schema.js";
 export * from "./canvas/pagesCanvas/relations.js";
+
+export * from "./canvas/elements/schema.js";

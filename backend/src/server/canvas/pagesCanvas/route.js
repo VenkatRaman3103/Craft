@@ -6,12 +6,13 @@ import {
     updateCanvasPageNameById,
     updateCanvasPageStatusById,
 } from "./update.js";
+import { elementsRouter } from "../elemets/route.js";
 
 export const pagesCanvasRouter = express.Router();
+pagesCanvasRouter.use("/pages", elementsRouter);
 
 // create
 pagesCanvasRouter.post("/pages", createCanvasPages);
-//
 
 // read
 pagesCanvasRouter.get("/pages", getAllCanvasPages); // all
