@@ -89,7 +89,6 @@ export const Canvas: React.FC = () => {
         queryKey: ["canvas_page", page_id],
     });
 
-    // React Query mutations
     const updateElementMutation = useMutation({
         mutationFn: async ({
             elementId,
