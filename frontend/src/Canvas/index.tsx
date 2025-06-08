@@ -216,7 +216,6 @@ export const Canvas: React.FC = () => {
 
         const currentPendingChanges = pendingApiChanges[selectedId] || {};
 
-        // Preserve existing position if not being updated
         const currentLeft =
             currentPendingChanges.left || selectedElement.styles?.left || "0px";
         const currentTop =
@@ -225,7 +224,6 @@ export const Canvas: React.FC = () => {
         const updatedStyles = {
             ...selectedElement.styles,
             ...currentPendingChanges,
-            // Ensure position is preserved
             left: currentLeft,
             top: currentTop,
             width: `${elementWidth}px`,
@@ -269,7 +267,6 @@ export const Canvas: React.FC = () => {
         });
     };
 
-    // Drag and drop handlers
     const handleMouseDown = (
         e: React.MouseEvent,
         elementId: string | number,
@@ -285,11 +282,9 @@ export const Canvas: React.FC = () => {
         const canvasRect = canvasRef.current?.getBoundingClientRect();
         if (!canvasRect) return;
 
-        // Calculate mouse position relative to canvas, accounting for zoom
         const mouseX = (e.clientX - canvasRect.left) / zoomLevel;
         const mouseY = (e.clientY - canvasRect.top) / zoomLevel;
 
-        // Get element's current position
         const element = findApiElementById(apiElements, elementId);
         if (!element) return;
 
@@ -300,7 +295,6 @@ export const Canvas: React.FC = () => {
             element.styles?.top?.replace("px", "") || "0",
         );
 
-        // Calculate offset between mouse and element's top-left corner
         setDragOffset({
             x: mouseX - currentLeft,
             y: mouseY - currentTop,
@@ -315,14 +309,12 @@ export const Canvas: React.FC = () => {
         const canvasRect = canvasRef.current?.getBoundingClientRect();
         if (!canvasRect) return;
 
-        // Calculate new position relative to canvas, accounting for zoom
         const mouseX = (e.clientX - canvasRect.left) / zoomLevel;
         const mouseY = (e.clientY - canvasRect.top) / zoomLevel;
 
         const newLeft = Math.max(0, mouseX - dragOffset.x);
         const newTop = Math.max(0, mouseY - dragOffset.y);
 
-        // Update pending changes for immediate visual feedback
         updatePendingApiChanges(selectedId, {
             left: `${newLeft}px`,
             top: `${newTop}px`,
@@ -331,7 +323,6 @@ export const Canvas: React.FC = () => {
 
     const handleMouseUp = () => {
         if (isDragging && selectedId !== null) {
-            // Save the position changes immediately to the API
             const pendingChanges = pendingApiChanges[selectedId] || {};
             if (pendingChanges.left || pendingChanges.top) {
                 const selectedElement = getSelectedElement();
@@ -339,7 +330,6 @@ export const Canvas: React.FC = () => {
                     const updatedStyles = {
                         ...selectedElement.styles,
                         ...pendingChanges,
-                        // Ensure position styles are preserved
                         left:
                             pendingChanges.left ||
                             selectedElement.styles?.left ||
@@ -355,7 +345,6 @@ export const Canvas: React.FC = () => {
                         styles: updatedStyles,
                     });
 
-                    // Clear only the position-related pending changes
                     setPendingApiChanges((prev) => {
                         const updated = { ...prev };
                         if (updated[selectedId]) {
@@ -373,7 +362,6 @@ export const Canvas: React.FC = () => {
         setDragStartPos({ x: 0, y: 0 });
     };
 
-    // Add global mouse event listeners for drag and drop
     useEffect(() => {
         if (isDragging) {
             const handleGlobalMouseMove = (e: MouseEvent) => handleMouseMove(e);
