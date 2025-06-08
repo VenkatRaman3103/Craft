@@ -1,139 +1,49 @@
-import React, { useState, useRef, useEffect } from "react";
+import React, { useState, useRef, useEffect, useCallback } from "react";
 import "./index.scss";
 import { ElementPicker } from "./ElementPicker";
-import { elementType } from "@/Types/canvas/elementsType";
-import { PublishFeature } from "./PublishFeature";
-
 import { RotateCcw, ZoomIn, ZoomOut } from "lucide-react";
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { StoreState } from "@/store/store";
 import { BorderControlPanel } from "./ToolBar/BroderControlPanel";
 import { useSelector } from "react-redux";
 import { FontsControlPanel } from "./ToolBar/FontsControlPanel";
 import { useParams } from "react-router";
-import { getPageElements } from "@/api/canvas/pages/getPageElements";
-import axios from "axios";
-import { backendUrl } from "@/config";
 import { AlignmentControlPanel } from "./ToolBar/AlignmentControlPanel";
 import { ScreenSizeSwitcher } from "./ScreenSizeSwitcher";
-
-export type CanvasElement = {
-    id: number;
-    type: elementType;
-    x: number;
-    y: number;
-    width: number;
-    "border-radius": number;
-    height: number;
-    text: string;
-    color: string;
-    "border-style": string;
-    alignItems?: "flex-start" | "center" | "flex-end" | "stretch";
-    justifyContent?:
-        | "flex-start"
-        | "center"
-        | "flex-end"
-        | "space-between"
-        | "space-around";
-    flexDirection?: "row" | "column";
-    isReversed?: boolean;
-    gap?: number;
-    children?: CanvasElement[];
-    isGroup?: boolean;
-    groupLevel?: number;
-};
+import { MetricSelection } from "./MetricSelector";
+import { CanvasElement } from "@/Types/canvas/CanvasElement";
+import { useCanvasApi } from "./useCanvasApi";
+import { useDragAndDrop } from "./useDragAndDrop";
 
 type Actions = "moving" | "scalling" | "grouping" | "grabbing";
 
 export const Canvas: React.FC = () => {
-    // to get page_id
     const { page_id } = useParams();
-
-    // fetch canvas page data
-    const { data, isLoading, isError, refetch } = useQuery({
-        queryFn: () => getPageElements(page_id),
-        queryKey: ["canvas_page", page_id],
-    });
-
-    const updateElementMutation = useMutation({
-        mutationFn: async ({
-            elementId,
-            styles,
-        }: {
-            elementId: string | number;
-            styles: any;
-        }) => {
-            const response = await axios.patch(
-                `${backendUrl}/canvas/pages/elements/${elementId}`,
-                { styles },
-            );
-            return response.data;
-        },
-        onSuccess: () => {
-            refetch();
-        },
-        onError: (error) => {
-            console.error("Error updating element:", error);
-        },
-    });
-
-    const deleteElementMutation = useMutation({
-        mutationFn: async (elementId: string | number) => {
-            const response = await axios.delete(
-                `${backendUrl}/canvas/pages/elements/${elementId}`,
-            );
-            return response.data;
-        },
-        onSuccess: () => {
-            refetch();
-        },
-        onError: (error) => {
-            console.error("Error deleting element:", error);
-        },
-    });
-
-    const createElementMutation = useMutation({
-        mutationFn: async (elementData: any) => {
-            const response = await axios.post(
-                `${backendUrl}/canvas/pages/elements/${page_id}`,
-                { elementData },
-            );
-            return response.data;
-        },
-        onSuccess: (data) => {
-            refetch();
-            if (data?.id) {
-                setSelectedId(data.id);
-            }
-        },
-        onError: (error) => {
-            console.error("Error creating element:", error);
-        },
-    });
-
-    console.log(data, "data: canvas");
-
-    const [activeAction, setActiveAction] = useState<Actions>("moving");
-    const [apiElements, setApiElements] = useState<any[]>([]);
     const [selectedId, setSelectedId] = useState<number | string | null>(null);
-
+    const [activeAction, setActiveAction] = useState<Actions>("moving");
     const [screen, setScreen] = useState<"mobile" | "desktop" | "tablet">(
         "desktop",
     );
-
     const [elementHeight, setElementHeight] = useState(100);
     const [elementWidth, setElementWidth] = useState(100);
+    const [zoomLevel, setZoomLevel] = useState(1);
 
-    const [pendingApiChanges, setPendingApiChanges] = useState<{
-        [key: string]: any;
-    }>({});
+    // Toggle states
+    const [toggleAllSide_radius, setToggleAllSide_radius] = useState<
+        "all" | "specific"
+    >("all");
+    const [toggleAllSide_width, setToggleAllSide_width] = useState<
+        "all" | "specific"
+    >("all");
 
-    // Drag and drop state
-    const [isDragging, setIsDragging] = useState(false);
-    const [dragOffset, setDragOffset] = useState({ x: 0, y: 0 });
-    const [dragStartPos, setDragStartPos] = useState({ x: 0, y: 0 });
+    const canvasRef = useRef<HTMLDivElement | null>(null);
 
-    // border
+    // Zoom constants
+    const maxZoomLevel = 3;
+    const minZoomLevel = 0.3;
+    const zoomStepper = 0.1;
+    const ZoomIconSize = 16;
+
+    // store
     const {
         elementRadius,
         topLeftRadius,
@@ -148,84 +58,94 @@ export const Canvas: React.FC = () => {
         borderStyle,
     } = useSelector((state: StoreState) => state.borderControl);
 
-    // alignment
+    const { flexDirection, alignItems, justifyContent, gap } = useSelector(
+        (state: StoreState) => state.alignmentControl,
+    );
+
+    // hooks
     const {
-        type,
-        flexDirection,
-        isReveresed,
-        alignItems,
-        justifyContent,
-        gap,
-    } = useSelector((state: StoreState) => state.alignmentControl);
+        elements,
+        isLoading,
+        isError,
+        updateElementMutation,
+        deleteElementMutation,
+        createElementMutation,
+        findElementById,
+        updateElementPosition,
+        createDefaultElement,
+    } = useCanvasApi({
+        pageId: page_id,
+        onElementCreate: setSelectedId,
+        onElementDelete: (elementId) => {
+            if (selectedId === elementId) {
+                setSelectedId(null);
+            }
+        },
+    });
 
-    const [toggleAllSide_radius, setToggleAllSide_radius] = useState<
-        "all" | "specific"
-    >("all");
-    const [toggleAllSide_width, setToggleAllSide_width] = useState<
-        "all" | "specific"
-    >("all");
+    const handleDragEnd = useCallback(
+        async (
+            elementId: string | number,
+            newPosition: { x: number; y: number },
+        ) => {
+            try {
+                await updateElementPosition(elementId, newPosition);
+            } catch (error) {
+                console.error("Failed to update element position:", error);
+            }
+        },
+        [updateElementPosition],
+    );
 
-    const canvasRef = useRef<HTMLDivElement | null>(null);
-
-    // zoom in and out
-    const [zoomLevel, setZoomLevel] = useState(1);
-    const maxZoomLevel = 3;
-    const minZoomLevel = 0.3;
-    const zoomStepper = 0.1;
+    const { isDragging, handleMouseDown, handleMouseMove, handleMouseUp } =
+        useDragAndDrop({
+            zoomLevel,
+            canvasRef,
+            onDragEnd: handleDragEnd,
+            findElementById,
+            elements,
+        });
 
     useEffect(() => {
-        if (data?.elements) {
-            setApiElements(data.elements);
-        }
-    }, [data]);
+        if (isDragging) {
+            document.addEventListener("mousemove", handleMouseMove);
+            document.addEventListener("mouseup", handleMouseUp);
 
-    const getSelectedElement = () => {
+            return () => {
+                document.removeEventListener("mousemove", handleMouseMove);
+                document.removeEventListener("mouseup", handleMouseUp);
+            };
+        }
+    }, [isDragging, handleMouseMove, handleMouseUp]);
+
+    useEffect(() => {
+        const selectedElement = getSelectedElement();
+        if (selectedElement) {
+            const width = parseInt(
+                selectedElement.styles?.width?.replace("px", "") || "100",
+            );
+            const height = parseInt(
+                selectedElement.styles?.height?.replace("px", "") || "100",
+            );
+
+            if (!isNaN(width)) setElementWidth(width);
+            if (!isNaN(height)) setElementHeight(height);
+        }
+    }, [selectedId, elements]);
+
+    const getSelectedElement = useCallback(() => {
         if (selectedId === null) return null;
-        return findApiElementById(apiElements, selectedId);
-    };
+        return findElementById(elements, selectedId);
+    }, [selectedId, elements, findElementById]);
 
-    const findApiElementById = (elements: any[], id: string | number): any => {
-        for (const element of elements) {
-            if (element.id === id) return element;
-            if (element.children?.length > 0) {
-                const found = findApiElementById(element.children, id);
-                if (found) return found;
-            }
-        }
-        return null;
-    };
-
-    const updatePendingApiChanges = (
-        elementId: string | number,
-        changes: any,
-    ) => {
-        setPendingApiChanges((prev) => ({
-            ...prev,
-            [elementId]: {
-                ...prev[elementId],
-                ...changes,
-            },
-        }));
-    };
-
-    const savePendingApiChanges = async () => {
+    const updateElementStyles = useCallback(async () => {
         if (selectedId === null) return;
 
         const selectedElement = getSelectedElement();
         if (!selectedElement) return;
 
-        const currentPendingChanges = pendingApiChanges[selectedId] || {};
-
-        const currentLeft =
-            currentPendingChanges.left || selectedElement.styles?.left || "0px";
-        const currentTop =
-            currentPendingChanges.top || selectedElement.styles?.top || "0px";
-
         const updatedStyles = {
             ...selectedElement.styles,
-            ...currentPendingChanges,
-            left: currentLeft,
-            top: currentTop,
             width: `${elementWidth}px`,
             height: `${elementHeight}px`,
             borderStyle: borderStyle,
@@ -243,189 +163,18 @@ export const Canvas: React.FC = () => {
             gap: `${gap}px`,
         };
 
-        updateElementMutation.mutate({
-            elementId: selectedId,
-            styles: updatedStyles,
-        });
-
-        setPendingApiChanges((prev) => {
-            const updated = { ...prev };
-            delete updated[selectedId];
-            return updated;
-        });
-    };
-
-    const deleteApiElement = async (elementId: string | number) => {
-        deleteElementMutation.mutate(elementId);
-        if (selectedId === elementId) {
-            setSelectedId(null);
-        }
-        setPendingApiChanges((prev) => {
-            const updated = { ...prev };
-            delete updated[elementId];
-            return updated;
-        });
-    };
-
-    const handleMouseDown = (
-        e: React.MouseEvent,
-        elementId: string | number,
-    ) => {
-        if (activeAction !== "moving") return;
-
-        e.preventDefault();
-        e.stopPropagation();
-
-        setSelectedId(elementId);
-        setIsDragging(true);
-
-        const canvasRect = canvasRef.current?.getBoundingClientRect();
-        if (!canvasRect) return;
-
-        const mouseX = (e.clientX - canvasRect.left) / zoomLevel;
-        const mouseY = (e.clientY - canvasRect.top) / zoomLevel;
-
-        const element = findApiElementById(apiElements, elementId);
-        if (!element) return;
-
-        const currentLeft = parseFloat(
-            element.styles?.left?.replace("px", "") || "0",
-        );
-        const currentTop = parseFloat(
-            element.styles?.top?.replace("px", "") || "0",
-        );
-
-        setDragOffset({
-            x: mouseX - currentLeft,
-            y: mouseY - currentTop,
-        });
-
-        setDragStartPos({ x: currentLeft, y: currentTop });
-    };
-
-    const handleMouseMove = (e: MouseEvent) => {
-        if (!isDragging || selectedId === null) return;
-
-        const canvasRect = canvasRef.current?.getBoundingClientRect();
-        if (!canvasRect) return;
-
-        const mouseX = (e.clientX - canvasRect.left) / zoomLevel;
-        const mouseY = (e.clientY - canvasRect.top) / zoomLevel;
-
-        const newLeft = Math.max(0, mouseX - dragOffset.x);
-        const newTop = Math.max(0, mouseY - dragOffset.y);
-
-        updatePendingApiChanges(selectedId, {
-            left: `${newLeft}px`,
-            top: `${newTop}px`,
-        });
-    };
-
-    const handleMouseUp = () => {
-        if (isDragging && selectedId !== null) {
-            const pendingChanges = pendingApiChanges[selectedId] || {};
-            if (pendingChanges.left || pendingChanges.top) {
-                const selectedElement = getSelectedElement();
-                if (selectedElement) {
-                    const updatedStyles = {
-                        ...selectedElement.styles,
-                        ...pendingChanges,
-                        left:
-                            pendingChanges.left ||
-                            selectedElement.styles?.left ||
-                            "0px",
-                        top:
-                            pendingChanges.top ||
-                            selectedElement.styles?.top ||
-                            "0px",
-                    };
-
-                    updateElementMutation.mutate({
-                        elementId: selectedId,
-                        styles: updatedStyles,
-                    });
-
-                    setPendingApiChanges((prev) => {
-                        const updated = { ...prev };
-                        if (updated[selectedId]) {
-                            delete updated[selectedId].left;
-                            delete updated[selectedId].top;
-                        }
-                        return updated;
-                    });
-                }
-            }
-        }
-
-        setIsDragging(false);
-        setDragOffset({ x: 0, y: 0 });
-        setDragStartPos({ x: 0, y: 0 });
-    };
-
-    useEffect(() => {
-        if (isDragging) {
-            const handleGlobalMouseMove = (e: MouseEvent) => handleMouseMove(e);
-            const handleGlobalMouseUp = () => handleMouseUp();
-
-            document.addEventListener("mousemove", handleGlobalMouseMove);
-            document.addEventListener("mouseup", handleGlobalMouseUp);
-
-            return () => {
-                document.removeEventListener(
-                    "mousemove",
-                    handleGlobalMouseMove,
-                );
-                document.removeEventListener("mouseup", handleGlobalMouseUp);
-            };
-        }
-    }, [isDragging, selectedId, dragOffset, zoomLevel, pendingApiChanges]);
-
-    useEffect(() => {
-        const selectedElement = getSelectedElement();
-        if (selectedElement) {
-            if (selectedElement.styles?.width) {
-                const width = parseInt(
-                    selectedElement.styles.width.replace("px", ""),
-                );
-                if (!isNaN(width)) setElementWidth(width);
-            }
-            if (selectedElement.styles?.height) {
-                const height = parseInt(
-                    selectedElement.styles.height.replace("px", ""),
-                );
-                if (!isNaN(height)) setElementHeight(height);
-            }
-        }
-    }, [selectedId, apiElements]);
-
-    useEffect(() => {
-        if (selectedId !== null) {
-            updatePendingApiChanges(selectedId, {
-                width: `${elementWidth}px`,
-                height: `${elementHeight}px`,
+        try {
+            await updateElementMutation.mutateAsync({
+                elementId: selectedId,
+                styles: updatedStyles,
             });
-        }
-    }, [elementWidth, elementHeight, selectedId]);
-
-    useEffect(() => {
-        if (selectedId !== null) {
-            updatePendingApiChanges(selectedId, {
-                borderStyle: borderStyle,
-                borderWidth:
-                    toggleAllSide_width === "all"
-                        ? `${elementBoderWidth}px`
-                        : `${topWidth}px ${rightWidth}px ${bottomWidth}px ${leftWidth}px`,
-                borderRadius:
-                    toggleAllSide_radius === "all"
-                        ? `${elementRadius}px`
-                        : `${topLeftRadius}px ${topRightRadius}px ${bottomRightRadius}px ${bottomLeftRadius}px`,
-                flexDirection: flexDirection,
-                alignItems: alignItems,
-                justifyContent: justifyContent,
-                gap: `${gap}px`,
-            });
+        } catch (error) {
+            console.error("Failed to update element styles:", error);
         }
     }, [
+        selectedId,
+        elementWidth,
+        elementHeight,
         borderStyle,
         elementBoderWidth,
         topWidth,
@@ -443,142 +192,144 @@ export const Canvas: React.FC = () => {
         alignItems,
         justifyContent,
         gap,
-        selectedId,
+        getSelectedElement,
+        updateElementMutation,
     ]);
 
-    const addElement = async (type: CanvasElement["type"]) => {
-        const newElementData = {
-            type: "div",
-            parentId: null,
-            styles: {
-                position: "absolute",
-                left: "100px",
-                top: "100px",
-                width: `${elementWidth}px`,
-                height: `${elementHeight}px`,
-                backgroundColor: getRandomColor(),
-                borderStyle: borderStyle,
-                borderWidth: `${elementBoderWidth}px`,
-                borderColor: "#000",
-                borderRadius: `${elementRadius}px`,
-                display: "flex",
-                flexDirection: flexDirection,
-                alignItems: alignItems,
-                justifyContent: justifyContent,
-                gap: `${gap}px`,
-                cursor: activeAction === "moving" ? "move" : "default",
-                boxSizing: "border-box",
-            },
-            content: type === "text" ? "Text element" : "",
-            attributes: {},
-            order: apiElements.length,
-            name: `${type}_${Date.now()}`,
-        };
+    const addElement = useCallback(
+        async (type: CanvasElement["type"]) => {
+            const newElementData = createDefaultElement(
+                type,
+                elementWidth,
+                elementHeight,
+                borderStyle,
+                elementBoderWidth,
+                elementRadius,
+                flexDirection,
+                alignItems,
+                justifyContent,
+                gap,
+                elements.length,
+            );
 
-        createElementMutation.mutate(newElementData);
-    };
+            try {
+                await createElementMutation.mutateAsync(newElementData);
+            } catch (error) {
+                console.error("Failed to create element:", error);
+            }
+        },
+        [
+            elementWidth,
+            elementHeight,
+            borderStyle,
+            elementBoderWidth,
+            elementRadius,
+            flexDirection,
+            alignItems,
+            justifyContent,
+            gap,
+            elements.length,
+            createDefaultElement,
+            createElementMutation,
+        ],
+    );
 
-    const getRandomColor = (): string => {
-        const colors = [
-            "#FF6633",
-            "#FFB399",
-            "#FF33FF",
-            "#FFFF99",
-            "#00B3E6",
-            "#E6B333",
-            "#3366E6",
-            "#999966",
-        ];
-        return colors[Math.floor(Math.random() * colors.length)];
-    };
-
-    const handleCanvasClick = (e: React.MouseEvent<HTMLDivElement>) => {
-        if (e.target === canvasRef.current) {
-            setSelectedId(null);
-        }
-    };
-
-    const deleteSelected = async () => {
+    const deleteSelected = useCallback(async () => {
         if (selectedId !== null) {
-            await deleteApiElement(selectedId);
-            setSelectedId(null);
+            try {
+                await deleteElementMutation.mutateAsync(selectedId);
+                setSelectedId(null);
+            } catch (error) {
+                console.error("Failed to delete element:", error);
+            }
         }
-    };
+    }, [selectedId, deleteElementMutation]);
 
-    const ZoomIconSize = 16;
+    const handleCanvasClick = useCallback(
+        (e: React.MouseEvent<HTMLDivElement>) => {
+            if (e.target === canvasRef.current) {
+                setSelectedId(null);
+            }
+        },
+        [],
+    );
+
+    // Zoom functions
+    const handleZoomIn = useCallback(() => {
+        setZoomLevel((prev) => Math.min(prev + zoomStepper, maxZoomLevel));
+    }, []);
+
+    const handleZoomOut = useCallback(() => {
+        setZoomLevel((prev) => Math.max(prev - zoomStepper, minZoomLevel));
+    }, []);
+
+    const handleZoomReset = useCallback(() => {
+        setZoomLevel(1);
+    }, []);
+
+    const getElementStyle = useCallback(
+        (element: any) => {
+            return {
+                position: "absolute" as const,
+                cursor: activeAction === "moving" ? "move" : "default",
+                border:
+                    selectedId === element.id ? "2px solid #007bff" : "none",
+                outline:
+                    selectedId === element.id ? "1px dashed #007bff" : "none",
+                outlineOffset: selectedId === element.id ? "2px" : "0",
+                userSelect: "none" as const,
+                zIndex:
+                    selectedId === element.id
+                        ? 1000
+                        : element.styles?.zIndex || 1,
+                transition: isDragging ? "none" : "all 0.1s ease",
+                ...element.styles,
+                ...(element.responsiveStyles?.[screen] || {}),
+            };
+        },
+        [selectedId, activeAction, isDragging, screen],
+    );
+
+    const renderElement = useCallback(
+        (element: any, level: number = 0) => {
+            const handleElementClick = (e: React.MouseEvent) => {
+                e.stopPropagation();
+                if (!isDragging) {
+                    setSelectedId(element.id);
+                }
+            };
+
+            return (
+                <div
+                    key={element.id}
+                    style={getElementStyle(element)}
+                    onClick={handleElementClick}
+                    onMouseDown={(e) => {
+                        if (activeAction === "moving") {
+                            handleMouseDown(e, element.id, setSelectedId);
+                        }
+                    }}
+                    title={element.name}
+                >
+                    {element.content && <span>{element.content}</span>}
+                    {element.children?.length > 0 && (
+                        <>
+                            {element.children.map((child: any) =>
+                                renderElement(child, level + 1),
+                            )}
+                        </>
+                    )}
+                </div>
+            );
+        },
+        [getElementStyle, isDragging, activeAction, handleMouseDown],
+    );
 
     const canvasStyle = {
         transform: `scale(${zoomLevel})`,
         transformOrigin: "top left",
         transition: isDragging ? "none" : "transform 0.1s ease-out",
     };
-
-    const handleZoomIn = () => {
-        setZoomLevel(Math.min(zoomLevel + zoomStepper, maxZoomLevel));
-    };
-
-    const handleZoomOut = () => {
-        setZoomLevel(Math.max(zoomLevel - zoomStepper, minZoomLevel));
-    };
-
-    const handleZoomReset = () => {
-        setZoomLevel(1);
-    };
-
-    const getApiElementStyle = (element: any) => {
-        const baseStyle = {
-            position: "absolute" as const,
-            cursor: activeAction === "moving" ? "move" : "default",
-            border: selectedId === element.id ? "2px solid #007bff" : "none",
-            outline: selectedId === element.id ? "1px dashed #007bff" : "none",
-            outlineOffset: selectedId === element.id ? "2px" : "0",
-            userSelect: "none" as const,
-            zIndex:
-                selectedId === element.id ? 1000 : element.styles?.zIndex || 1,
-        };
-
-        const pendingChanges = pendingApiChanges[element.id] || {};
-
-        return {
-            ...baseStyle,
-            ...element.styles,
-            ...pendingChanges,
-            ...(element.responsiveStyles?.[screen] || {}),
-        };
-    };
-
-    const renderElement = (element: any, level: number = 0) => {
-        const handleElementClick = (e: React.MouseEvent) => {
-            e.stopPropagation();
-            if (!isDragging) {
-                setSelectedId(element.id);
-            }
-        };
-
-        return (
-            <div
-                key={element.id}
-                style={getApiElementStyle(element)}
-                onClick={handleElementClick}
-                onMouseDown={(e) => handleMouseDown(e, element.id)}
-                title={element.name}
-            >
-                {element.content && <span>{element.content}</span>}
-                {element.children && element.children.length > 0 && (
-                    <>
-                        {element.children.map((child: any) =>
-                            renderElement(child, level + 1),
-                        )}
-                    </>
-                )}
-            </div>
-        );
-    };
-
-    const hasUnsavedApiChanges =
-        selectedId !== null &&
-        pendingApiChanges[selectedId] &&
-        Object.keys(pendingApiChanges[selectedId]).length > 0;
 
     if (isLoading) {
         return <div className="figma-container">Loading...</div>;
@@ -601,7 +352,7 @@ export const Canvas: React.FC = () => {
                 }}
             >
                 <div className={`canvas ${screen}`} style={canvasStyle}>
-                    {apiElements.map((element) => renderElement(element))}
+                    {elements.map((element) => renderElement(element))}
                 </div>
             </div>
 
@@ -611,21 +362,21 @@ export const Canvas: React.FC = () => {
                 <div className="zoom-buttons-container">
                     <div
                         className="zoom-out-btn zoom-btn"
-                        onClick={() => handleZoomOut()}
+                        onClick={handleZoomOut}
                     >
                         <ZoomOut size={ZoomIconSize} />
                     </div>
-                    {zoomLevel != 1 && (
+                    {zoomLevel !== 1 && (
                         <div
                             className="zoom-reset-btn zoom-btn"
-                            onClick={() => handleZoomReset()}
+                            onClick={handleZoomReset}
                         >
                             <RotateCcw size={ZoomIconSize} />
                         </div>
                     )}
                     <div
                         className="zoom-in-btn zoom-btn"
-                        onClick={() => handleZoomIn()}
+                        onClick={handleZoomIn}
                     >
                         <ZoomIn size={ZoomIconSize} />
                     </div>
@@ -644,23 +395,25 @@ export const Canvas: React.FC = () => {
             <div className="toolbar-container">
                 <div className="toolbar">
                     <div className="toolbar-header toolbar-section">
-                        {hasUnsavedApiChanges && (
-                            <button
-                                className="save-changes-button header-button"
-                                onClick={savePendingApiChanges}
-                                disabled={updateElementMutation.isPending}
-                                style={{
-                                    backgroundColor:
-                                        !updateElementMutation.isPending
-                                            ? "#28a745"
-                                            : "#ccc",
-                                }}
-                            >
-                                {updateElementMutation.isPending
-                                    ? "Saving..."
-                                    : "Save Changes"}
-                            </button>
-                        )}
+                        <button
+                            className="save-changes-button header-button"
+                            onClick={updateElementStyles}
+                            disabled={
+                                updateElementMutation.isPending ||
+                                selectedId === null
+                            }
+                            style={{
+                                backgroundColor:
+                                    !updateElementMutation.isPending &&
+                                    selectedId !== null
+                                        ? "#28a745"
+                                        : "#ccc",
+                            }}
+                        >
+                            {updateElementMutation.isPending
+                                ? "Saving..."
+                                : "Save Changes"}
+                        </button>
 
                         {createElementMutation.isPending && (
                             <div className="creating-status">
@@ -673,22 +426,22 @@ export const Canvas: React.FC = () => {
                             onClick={deleteSelected}
                             disabled={
                                 selectedId === null ||
-                                deleteElementMutation.isLoading
+                                deleteElementMutation.isPending
                             }
                             style={{
                                 backgroundColor:
                                     selectedId !== null &&
-                                    !deleteElementMutation.isLoading
+                                    !deleteElementMutation.isPending
                                         ? "#dc3545"
                                         : "#ccc",
                                 cursor:
                                     selectedId !== null &&
-                                    !deleteElementMutation.isLoading
+                                    !deleteElementMutation.isPending
                                         ? "pointer"
                                         : "not-allowed",
                             }}
                         >
-                            {deleteElementMutation.isLoading
+                            {deleteElementMutation.isPending
                                 ? "Deleting..."
                                 : "Delete"}
                         </button>
@@ -728,18 +481,22 @@ export const Canvas: React.FC = () => {
                             <div className="dimension">0</div>
                         </div>
                     </div>
+
                     <BorderControlPanel
                         toggleAllSide_radius={toggleAllSide_radius}
                         toggleAllSide_width={toggleAllSide_width}
                         setToggleAllSide_radius={setToggleAllSide_radius}
                         setToggleAllSide_width={setToggleAllSide_width}
                     />
+
                     <AlignmentControlPanel
                         selectedId={selectedId}
-                        elements={apiElements}
-                        setElements={setApiElements}
+                        elements={elements}
+                        setElements={() => {}}
                     />
+
                     <FontsControlPanel />
+
                     <div className="box-model-container toolbar-section">
                         <div className="heading">box model</div>
                         <div className="margin">
@@ -751,32 +508,6 @@ export const Canvas: React.FC = () => {
                         </div>
                     </div>
                 </div>
-            </div>
-        </div>
-    );
-};
-
-const MetricSelection = () => {
-    const [selectedMetric, setSelectedMetric] = useState<
-        "px" | "%" | "vw" | "vh"
-    >("px");
-    const [showMetricPopup, setShowMetricPopup] = useState(false);
-
-    return (
-        <div className="metric-selection">
-            {showMetricPopup && (
-                <div className="metric-selection-popup">
-                    <div className="metric-option">px</div>
-                    <div className="metric-option">%</div>
-                    <div className="metric-option">vw</div>
-                </div>
-            )}
-            <div className="divider"></div>
-            <div
-                className="metric-display"
-                onClick={() => setShowMetricPopup(!showMetricPopup)}
-            >
-                {selectedMetric}
             </div>
         </div>
     );
