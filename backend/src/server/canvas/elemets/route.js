@@ -298,3 +298,24 @@ export const updateElement = async (req, res) => {
 };
 
 elementsRouter.patch("/elements/:elementId", updateElement);
+
+export const deleteElementById = async (req, res) => {
+    try {
+        const { elementId } = req.params;
+
+        const deletedElement = await db
+            .delete(elements)
+            .where(eq(elements.id, elementId))
+            .returning();
+
+        if (!deletedElement.length) {
+            return res.status(404).json({ error: "Element not found" });
+        }
+
+        res.json(deletedElement[0]);
+    } catch (error) {
+        res.status(500).json({ error: error.message });
+    }
+};
+
+elementsRouter.delete("/elements/:elementId", deleteElementById);
