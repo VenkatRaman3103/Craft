@@ -297,5 +297,4 @@ export const updateElement = async (req, res) => {
     }
 };
 
-//
 elementsRouter.patch("/elements/:elementId", updateElement);
