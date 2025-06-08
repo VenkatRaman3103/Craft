@@ -45,6 +45,9 @@ import { StoreState } from "@/store/store";
 import { BorderControlPanel } from "./ToolBar/BroderControlPanel";
 import { useDispatch, useSelector } from "react-redux";
 import { FontsControlPanel } from "./ToolBar/FontsControlPanel";
+import { getPageById } from "@/api/canvas/pages/getPageById";
+import { useParams } from "react-router";
+import { getPageElements } from "@/api/canvas/pages/getPageElements";
 
 type CanvasElement = {
     id: number;
@@ -75,6 +78,20 @@ type CanvasElement = {
 type Actions = "moving" | "scalling" | "grouping" | "grabbing";
 
 export const Canvas: React.FC = () => {
+    // TODO: global state ( store )
+    // TODO: local state
+
+    // to get page_id
+    const { page_id } = useParams();
+
+    // TODO: fetch canvas page data
+    const { data, isLoading, isError } = useQuery({
+        queryFn: () => getPageElements(page_id),
+        // queryFn: () => getPageById(page_id),
+        queryKey: ["canvas_page", page_id],
+    });
+    console.log(data, "data: canvas");
+
     const [activeAction, setActiveAction] = useState<Actions>("moving");
     const [elements, setElements] = useState<CanvasElement[]>([]);
     const [selectedId, setSelectedId] = useState<number | null>(null);
@@ -207,6 +224,30 @@ export const Canvas: React.FC = () => {
         setZoomLevel(1);
     };
 
+    const elementStyle = {
+        position: "absolute",
+        width: `${elementWidth}px`,
+        height: `${elementHeight}px`,
+        borderStyle: borderStyle,
+        borderWidth:
+            toggleAllSide_width === "all"
+                ? `${elementBoderWidth}px`
+                : `${topWidth}px ${rightWidth}px ${bottomWidth}px ${leftWidth}px`,
+        borderColor: "#000",
+        borderRadius:
+            toggleAllSide_radius === "all"
+                ? `${elementRadius}px`
+                : `${topLeftRadius}px ${topRightRadius}px ${bottomRightRadius}px ${bottomLeftRadius}px`,
+        display: "flex",
+        flexDirection: flexDirection,
+        alignItems: alignItems,
+        justifyContent: justifyContent,
+        gap: `${gap}px`,
+        backgroundColor: "red",
+        cursor: activeAction === "moving" ? "move" : "default",
+        boxSizing: "border-box",
+    };
+
     return (
         <div className="figma-container">
             <div
@@ -215,8 +256,11 @@ export const Canvas: React.FC = () => {
                 onClick={handleCanvasClick}
             >
                 <div className={`canvas ${screen}`} style={canvasStyle}>
-                    <div className="test-element"></div>
                     {/* render elements */}
+                    <div
+                        className="test-element"
+                        style={{ ...elementStyle }}
+                    ></div>
                 </div>
             </div>
 
