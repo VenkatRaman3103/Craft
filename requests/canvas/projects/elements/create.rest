@@ -26,15 +26,14 @@ POST /canvas/pages/elements/0075dc57-3471-45ff-b7fa-0404718bf637
 # body
 {
     "type": "div",
-    "parentId": "404cda88-a12f-49c0-ac71-660810a63b20",
     "styles": {
     "display": "flex",
-    "flexDirection": "column",
+    "flexDirection": "row",
         "padding": "16px",
-        "backgroundColor": "#f9f9f9"
+        "backgroundColor": "red"
     },
     "content": "",
     "attributes": {},
     "order": 0,
-    "name": "item-1"
+    "name": "container"
 }

@@ -133,10 +133,10 @@ export const Collection = () => {
                                     <PagePreview
                                         key={ind}
                                         deletePage={handleDeletePage}
-                                        isDeleting={deleteMutation.isPending}
+                                        isDeleting={deleteMutation.isLoading}
                                         title={item.title}
                                         page_id={item.page_id}
-                                        url={"/canvas/page"}
+                                        url={"/pages"}
                                     />
                                 ),
                             )}

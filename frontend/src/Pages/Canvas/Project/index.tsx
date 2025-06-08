@@ -98,10 +98,10 @@ export const Project = () => {
                 return pages?.map((item) => (
                     <PagePreview
                         deletePage={handleDeltePage}
-                        isDeleting={deleteMutation.isPending}
+                        isDeleting={deleteMutation.isLoading}
                         title={item.name}
                         page_id={item.page_id}
-                        url={"/canvas/pages"}
+                        url="/canvas/pages"
                         key={item.page_id}
                     />
                 ));
@@ -109,6 +109,8 @@ export const Project = () => {
                 return <div>Layout</div>;
             case "variables":
                 return <div>Variables</div>;
+            default:
+                return <div>Hello world</div>;
         }
     }
 

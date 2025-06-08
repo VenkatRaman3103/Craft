@@ -8,7 +8,6 @@ export const PagePreview = ({
     page_id,
     url,
 }: {
-    // page: pageType;
     deletePage: (page_id: string) => void;
     isDeleting: boolean;
     title: string;

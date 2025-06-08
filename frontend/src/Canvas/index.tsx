@@ -14,31 +14,22 @@ import {
 } from "@/store/toolbar/alignmentControl/alignmentControl";
 
 import {
-    AlignCenter,
     AlignCenterHorizontal,
     AlignCenterVertical,
     AlignEndHorizontal,
     AlignEndVertical,
     AlignHorizontalSpaceAround,
-    AlignHorizontalSpaceAroundIcon,
     AlignHorizontalSpaceBetween,
-    AlignLeft,
-    AlignRight,
     AlignStartHorizontal,
     AlignStartVertical,
     AlignVerticalJustifyCenter,
-    AlignVerticalSpaceAroundIcon,
     ArrowLeft,
     ArrowUp,
-    Bold,
-    Italic,
     Monitor,
     RotateCcw,
     Settings,
     Smartphone,
     Tablet,
-    Type,
-    Underline,
     ZoomIn,
     ZoomOut,
 } from "lucide-react";
@@ -224,6 +215,7 @@ export const Canvas: React.FC = () => {
                 onClick={handleCanvasClick}
             >
                 <div className={`canvas ${screen}`} style={canvasStyle}>
+                    <div className="test-element"></div>
                     {/* render elements */}
                 </div>
             </div>
