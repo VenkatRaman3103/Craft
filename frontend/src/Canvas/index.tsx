@@ -48,6 +48,8 @@ import { FontsControlPanel } from "./ToolBar/FontsControlPanel";
 import { getPageById } from "@/api/canvas/pages/getPageById";
 import { useParams } from "react-router";
 import { getPageElements } from "@/api/canvas/pages/getPageElements";
+import axios from "axios";
+import { backendUrl } from "@/config";
 
 type CanvasElement = {
     id: number;
@@ -78,30 +80,88 @@ type CanvasElement = {
 type Actions = "moving" | "scalling" | "grouping" | "grabbing";
 
 export const Canvas: React.FC = () => {
-    // TODO: global state ( store )
-    // TODO: local state
-
     // to get page_id
     const { page_id } = useParams();
 
-    // TODO: fetch canvas page data
-    const { data, isLoading, isError } = useQuery({
+    // fetch canvas page data
+    const { data, isLoading, isError, refetch } = useQuery({
         queryFn: () => getPageElements(page_id),
-        // queryFn: () => getPageById(page_id),
         queryKey: ["canvas_page", page_id],
     });
+
+    // React Query mutations
+    const updateElementMutation = useMutation({
+        mutationFn: async ({
+            elementId,
+            styles,
+        }: {
+            elementId: string | number;
+            styles: any;
+        }) => {
+            const response = await axios.patch(
+                `${backendUrl}/canvas/pages/elements/${elementId}`,
+                { styles },
+            );
+            return response.data;
+        },
+        onSuccess: () => {
+            refetch();
+        },
+        onError: (error) => {
+            console.error("Error updating element:", error);
+        },
+    });
+
+    const deleteElementMutation = useMutation({
+        mutationFn: async (elementId: string | number) => {
+            const response = await axios.delete(
+                `${backendUrl}/canvas/pages/elements/${elementId}`,
+            );
+            return response.data;
+        },
+        onSuccess: () => {
+            refetch();
+        },
+        onError: (error) => {
+            console.error("Error deleting element:", error);
+        },
+    });
+
+    const createElementMutation = useMutation({
+        mutationFn: async (elementData: any) => {
+            const response = await axios.post(
+                `${backendUrl}/canvas/pages/elements/${page_id}`,
+                { elementData },
+            );
+            return response.data;
+        },
+        onSuccess: (data) => {
+            refetch();
+            if (data?.id) {
+                setSelectedId(data.id);
+            }
+        },
+        onError: (error) => {
+            console.error("Error creating element:", error);
+        },
+    });
+
     console.log(data, "data: canvas");
 
     const [activeAction, setActiveAction] = useState<Actions>("moving");
-    const [elements, setElements] = useState<CanvasElement[]>([]);
-    const [selectedId, setSelectedId] = useState<number | null>(null);
+    const [apiElements, setApiElements] = useState<any[]>([]);
+    const [selectedId, setSelectedId] = useState<number | string | null>(null);
+
     const [screen, setScreen] = useState<"mobile" | "desktop" | "tablet">(
         "desktop",
     );
 
-    // dimensions
     const [elementHeight, setElementHeight] = useState(100);
     const [elementWidth, setElementWidth] = useState(100);
+
+    const [pendingApiChanges, setPendingApiChanges] = useState<{
+        [key: string]: any;
+    }>({});
 
     // border
     const {
@@ -135,9 +195,6 @@ export const Canvas: React.FC = () => {
         "all" | "specific"
     >("all");
 
-    const [dragging, setDragging] = useState(false);
-    const [dragOffset, setDragOffset] = useState({ x: 0, y: 0 });
-
     const canvasRef = useRef<HTMLDivElement | null>(null);
 
     // zoom in and out
@@ -146,35 +203,189 @@ export const Canvas: React.FC = () => {
     const minZoomLevel = 0.3;
     const zoomStepper = 0.1;
 
-    const addElement = (type: CanvasElement["type"]) => {
-        const newElement: CanvasElement = {
-            id: Date.now(),
-            type,
-            x: 100,
-            y: 100,
-            width: elementWidth,
-            height: elementHeight,
-            text: type === "text" ? "Text element" : "",
-            color: getRandomColor(),
-            children: [],
-            isGroup: false,
-            groupLevel: 0,
+    useEffect(() => {
+        if (data?.elements) {
+            setApiElements(data.elements);
+        }
+    }, [data]);
 
-            // Initialize with default border values
-            borderRadius: 0,
-            topLeftRadius: 0,
-            topRightRadius: 0,
-            bottomRightRadius: 0,
-            bottomLeftRadius: 0,
-            borderWidth: 1,
-            topWidth: 1,
-            bottomWidth: 1,
-            leftWidth: 1,
-            rightWidth: 1,
-            borderStyle: "solid",
+    const getSelectedElement = () => {
+        if (selectedId === null) return null;
+        return findApiElementById(apiElements, selectedId);
+    };
+
+    const findApiElementById = (elements: any[], id: string | number): any => {
+        for (const element of elements) {
+            if (element.id === id) return element;
+            if (element.children?.length > 0) {
+                const found = findApiElementById(element.children, id);
+                if (found) return found;
+            }
+        }
+        return null;
+    };
+
+    const updatePendingApiChanges = (
+        elementId: string | number,
+        changes: any,
+    ) => {
+        setPendingApiChanges((prev) => ({
+            ...prev,
+            [elementId]: {
+                ...prev[elementId],
+                ...changes,
+            },
+        }));
+    };
+
+    const savePendingApiChanges = async () => {
+        if (selectedId === null) return;
+
+        const selectedElement = getSelectedElement();
+        if (!selectedElement) return;
+
+        const currentPendingChanges = pendingApiChanges[selectedId] || {};
+
+        const updatedStyles = {
+            ...selectedElement.styles,
+            ...currentPendingChanges,
+            width: `${elementWidth}px`,
+            height: `${elementHeight}px`,
+            borderStyle: borderStyle,
+            borderWidth:
+                toggleAllSide_width === "all"
+                    ? `${elementBoderWidth}px`
+                    : `${topWidth}px ${rightWidth}px ${bottomWidth}px ${leftWidth}px`,
+            borderRadius:
+                toggleAllSide_radius === "all"
+                    ? `${elementRadius}px`
+                    : `${topLeftRadius}px ${topRightRadius}px ${bottomRightRadius}px ${bottomLeftRadius}px`,
+            flexDirection: flexDirection,
+            alignItems: alignItems,
+            justifyContent: justifyContent,
+            gap: `${gap}px`,
         };
-        setElements((prev) => [...prev, newElement]);
-        setSelectedId(newElement.id);
+
+        updateElementMutation.mutate({
+            elementId: selectedId,
+            styles: updatedStyles,
+        });
+
+        setPendingApiChanges((prev) => {
+            const updated = { ...prev };
+            delete updated[selectedId];
+            return updated;
+        });
+    };
+
+    const deleteApiElement = async (elementId: string | number) => {
+        deleteElementMutation.mutate(elementId);
+        if (selectedId === elementId) {
+            setSelectedId(null);
+        }
+        setPendingApiChanges((prev) => {
+            const updated = { ...prev };
+            delete updated[elementId];
+            return updated;
+        });
+    };
+
+    useEffect(() => {
+        const selectedElement = getSelectedElement();
+        if (selectedElement) {
+            if (selectedElement.styles?.width) {
+                const width = parseInt(
+                    selectedElement.styles.width.replace("px", ""),
+                );
+                if (!isNaN(width)) setElementWidth(width);
+            }
+            if (selectedElement.styles?.height) {
+                const height = parseInt(
+                    selectedElement.styles.height.replace("px", ""),
+                );
+                if (!isNaN(height)) setElementHeight(height);
+            }
+        }
+    }, [selectedId, apiElements]);
+
+    useEffect(() => {
+        if (selectedId !== null) {
+            updatePendingApiChanges(selectedId, {
+                width: `${elementWidth}px`,
+                height: `${elementHeight}px`,
+            });
+        }
+    }, [elementWidth, elementHeight, selectedId]);
+
+    useEffect(() => {
+        if (selectedId !== null) {
+            updatePendingApiChanges(selectedId, {
+                borderStyle: borderStyle,
+                borderWidth:
+                    toggleAllSide_width === "all"
+                        ? `${elementBoderWidth}px`
+                        : `${topWidth}px ${rightWidth}px ${bottomWidth}px ${leftWidth}px`,
+                borderRadius:
+                    toggleAllSide_radius === "all"
+                        ? `${elementRadius}px`
+                        : `${topLeftRadius}px ${topRightRadius}px ${bottomRightRadius}px ${bottomLeftRadius}px`,
+                flexDirection: flexDirection,
+                alignItems: alignItems,
+                justifyContent: justifyContent,
+                gap: `${gap}px`,
+            });
+        }
+    }, [
+        borderStyle,
+        elementBoderWidth,
+        topWidth,
+        bottomWidth,
+        leftWidth,
+        rightWidth,
+        elementRadius,
+        topLeftRadius,
+        topRightRadius,
+        bottomRightRadius,
+        bottomLeftRadius,
+        toggleAllSide_width,
+        toggleAllSide_radius,
+        flexDirection,
+        alignItems,
+        justifyContent,
+        gap,
+        selectedId,
+    ]);
+
+    const addElement = async (type: CanvasElement["type"]) => {
+        const newElementData = {
+            type: "div",
+            parentId: null,
+            styles: {
+                position: "absolute",
+                left: "100px",
+                top: "100px",
+                width: `${elementWidth}px`,
+                height: `${elementHeight}px`,
+                backgroundColor: getRandomColor(),
+                borderStyle: borderStyle,
+                borderWidth: `${elementBoderWidth}px`,
+                borderColor: "#000",
+                borderRadius: `${elementRadius}px`,
+                display: "flex",
+                flexDirection: flexDirection,
+                alignItems: alignItems,
+                justifyContent: justifyContent,
+                gap: `${gap}px`,
+                cursor: activeAction === "moving" ? "move" : "default",
+                boxSizing: "border-box",
+            },
+            content: type === "text" ? "Text element" : "",
+            attributes: {},
+            order: apiElements.length,
+            name: `${type}_${Date.now()}`,
+        };
+
+        createElementMutation.mutate(newElementData);
     };
 
     const getRandomColor = (): string => {
@@ -197,9 +408,9 @@ export const Canvas: React.FC = () => {
         }
     };
 
-    const deleteSelected = () => {
+    const deleteSelected = async () => {
         if (selectedId !== null) {
-            setElements((prev) => prev.filter((el) => el.id !== selectedId));
+            await deleteApiElement(selectedId);
             setSelectedId(null);
         }
     };
@@ -224,29 +435,62 @@ export const Canvas: React.FC = () => {
         setZoomLevel(1);
     };
 
-    const elementStyle = {
-        position: "absolute",
-        width: `${elementWidth}px`,
-        height: `${elementHeight}px`,
-        borderStyle: borderStyle,
-        borderWidth:
-            toggleAllSide_width === "all"
-                ? `${elementBoderWidth}px`
-                : `${topWidth}px ${rightWidth}px ${bottomWidth}px ${leftWidth}px`,
-        borderColor: "#000",
-        borderRadius:
-            toggleAllSide_radius === "all"
-                ? `${elementRadius}px`
-                : `${topLeftRadius}px ${topRightRadius}px ${bottomRightRadius}px ${bottomLeftRadius}px`,
-        display: "flex",
-        flexDirection: flexDirection,
-        alignItems: alignItems,
-        justifyContent: justifyContent,
-        gap: `${gap}px`,
-        backgroundColor: "red",
-        cursor: activeAction === "moving" ? "move" : "default",
-        boxSizing: "border-box",
+    const getApiElementStyle = (element: any) => {
+        const baseStyle = {
+            position: "relative" as const,
+            cursor: activeAction === "moving" ? "move" : "default",
+            border: selectedId === element.id ? "2px solid #007bff" : "none",
+            outline: selectedId === element.id ? "1px dashed #007bff" : "none",
+            outlineOffset: selectedId === element.id ? "2px" : "0",
+        };
+
+        const pendingChanges = pendingApiChanges[element.id] || {};
+
+        return {
+            ...baseStyle,
+            ...element.styles,
+            ...pendingChanges,
+            ...(element.responsiveStyles?.[screen] || {}),
+        };
     };
+
+    const renderElement = (element: any, level: number = 0) => {
+        const handleElementClick = (e: React.MouseEvent) => {
+            e.stopPropagation();
+            setSelectedId(element.id);
+        };
+
+        return (
+            <div
+                key={element.id}
+                style={getApiElementStyle(element)}
+                onClick={handleElementClick}
+                title={element.name}
+            >
+                {element.content && <span>{element.content}</span>}
+                {element.children && element.children.length > 0 && (
+                    <>
+                        {element.children.map((child: any) =>
+                            renderElement(child, level + 1),
+                        )}
+                    </>
+                )}
+            </div>
+        );
+    };
+
+    const hasUnsavedApiChanges =
+        selectedId !== null &&
+        pendingApiChanges[selectedId] &&
+        Object.keys(pendingApiChanges[selectedId]).length > 0;
+
+    if (isLoading) {
+        return <div className="figma-container">Loading...</div>;
+    }
+
+    if (isError) {
+        return <div className="figma-container">Error loading canvas data</div>;
+    }
 
     return (
         <div className="figma-container">
@@ -256,11 +500,7 @@ export const Canvas: React.FC = () => {
                 onClick={handleCanvasClick}
             >
                 <div className={`canvas ${screen}`} style={canvasStyle}>
-                    {/* render elements */}
-                    <div
-                        className="test-element"
-                        style={{ ...elementStyle }}
-                    ></div>
+                    {apiElements.map((element) => renderElement(element))}
                 </div>
             </div>
 
@@ -292,7 +532,7 @@ export const Canvas: React.FC = () => {
 
                 <div className="publish-container">
                     <PublishFeature
-                        elements={elements}
+                        elements={apiElements}
                         elementWidth={elementWidth}
                         elementHeight={elementHeight}
                         elementRadius={elementRadius}
@@ -322,12 +562,53 @@ export const Canvas: React.FC = () => {
             <div className="toolbar-container">
                 <div className="toolbar">
                     <div className="toolbar-header toolbar-section">
+                        {hasUnsavedApiChanges && (
+                            <button
+                                className="save-changes-button header-button"
+                                onClick={savePendingApiChanges}
+                                disabled={updateElementMutation.isPending}
+                                style={{
+                                    backgroundColor:
+                                        !updateElementMutation.isPending
+                                            ? "#28a745"
+                                            : "#ccc",
+                                }}
+                            >
+                                {updateElementMutation.isPending
+                                    ? "Saving..."
+                                    : "Save Changes"}
+                            </button>
+                        )}
+
+                        {createElementMutation.isPending && (
+                            <div className="creating-status">
+                                Creating element...
+                            </div>
+                        )}
+
                         <button
                             className="delete-button header-button"
                             onClick={deleteSelected}
-                            disabled={selectedId === null}
+                            disabled={
+                                selectedId === null ||
+                                deleteElementMutation.isLoading
+                            }
+                            style={{
+                                backgroundColor:
+                                    selectedId !== null &&
+                                    !deleteElementMutation.isLoading
+                                        ? "#dc3545"
+                                        : "#ccc",
+                                cursor:
+                                    selectedId !== null &&
+                                    !deleteElementMutation.isLoading
+                                        ? "pointer"
+                                        : "not-allowed",
+                            }}
                         >
-                            Delete
+                            {deleteElementMutation.isLoading
+                                ? "Deleting..."
+                                : "Delete"}
                         </button>
                     </div>
 
@@ -373,8 +654,8 @@ export const Canvas: React.FC = () => {
                     />
                     <AlignmentControlPanel
                         selectedId={selectedId}
-                        elements={elements}
-                        setElements={setElements}
+                        elements={apiElements}
+                        setElements={setApiElements}
                     />
                     <FontsControlPanel />
                     <div className="box-model-container toolbar-section">

@@ -73,9 +73,9 @@ function buildElementTree(elements) {
 // create new element with attributes
 export const createNewElement = async (req, res) => {
     const { pageId } = req.params;
-
+    const { elementData } = req.body;
     const { type, parentId, styles, content, attributes, order, name } =
-        req.body;
+        elementData;
 
     try {
         const response = await db
