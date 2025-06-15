@@ -1,6 +1,11 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
 export type overflowType = "visible" | "hidden" | "scroll" | "auto";
+export type minWidhtType = number | "auto";
+export type minHeightType = number | "auto";
+
+export type maxWidhtType = number | "none";
+export type maxHeightType = number | "none";
 
 type InitialState = {
     // dimensions
@@ -8,11 +13,11 @@ type InitialState = {
     elementWidth: number;
 
     // min max
-    elementMinWidth: number;
-    elementMaxWidth: number | "none";
+    elementMinWidth: minWidhtType;
+    elementMaxWidth: maxWidhtType;
 
-    elementMinHeight: number;
-    elementMaxHeight: number | "none";
+    elementMinHeight: minHeightType;
+    elementMaxHeight: maxHeightType;
 
     // overflow
     elementOverFlow: overflowType;
@@ -22,10 +27,10 @@ const initialState: InitialState = {
     elementHeight: 100,
     elementWidth: 100,
 
-    elementMinHeight: 0,
+    elementMinHeight: "auto",
     elementMaxHeight: "none",
 
-    elementMinWidth: 0,
+    elementMinWidth: "auto",
     elementMaxWidth: "none",
 
     elementOverFlow: "auto",
@@ -45,24 +50,24 @@ export const dimensionControlSlice = createSlice({
         },
 
         // min max
-        updateElementMinWidth: (state, action: PayloadAction<number>) => {
+        updateElementMinWidth: (state, action: PayloadAction<minWidhtType>) => {
             state.elementMinWidth = action.payload;
         },
 
-        updateElementMinHeight: (state, action: PayloadAction<number>) => {
+        updateElementMinHeight: (
+            state,
+            action: PayloadAction<minHeightType>,
+        ) => {
             state.elementMinHeight = action.payload;
         },
 
-        updateElementMaxWidth: (
-            state,
-            action: PayloadAction<number | "none">,
-        ) => {
+        updateElementMaxWidth: (state, action: PayloadAction<maxWidhtType>) => {
             state.elementMaxWidth = action.payload;
         },
 
         updateElementMaxHeight: (
             state,
-            action: PayloadAction<number | "none">,
+            action: PayloadAction<maxHeightType>,
         ) => {
             state.elementMaxHeight = action.payload;
         },

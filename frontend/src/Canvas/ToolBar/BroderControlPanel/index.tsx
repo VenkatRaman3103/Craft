@@ -26,6 +26,7 @@ import { useDispatch, useSelector } from "react-redux";
 
 import { StoreState } from "@/store/store";
 import { useEffect } from "react";
+import { ControlPanelSelect } from "@/Canvas";
 
 export const BorderControlPanel = ({
     toggleAllSide_radius,
@@ -204,30 +205,23 @@ export const BorderControlPanel = ({
                         )}
                     </div>
                 </div>
-
-                <div className="border-width-sub-section">
-                    <div className="sub-heading">Style</div>
-                    <div className="border-width-tools-container">
-                        <select
-                            className="select-drop-down"
-                            value={borderStyle}
-                            onChange={(e) =>
-                                dispatch(updateBorderStyle(e.target.value))
-                            }
-                        >
-                            <option value={"solid"}>solid</option>
-                            <option value={"dotted"}>dotted</option>
-                            <option value={"dashed"}>dashed</option>
-                            <option value={"double"}>double</option>
-                            <option value={"groove"}>groove</option>
-                            <option value={"ridge"}>ridge</option>
-                            <option value={"inset"}>inset</option>
-                            <option value={"outset"}>outset</option>
-                            <option value={"none"}>none</option>
-                            <option value={"hidden"}>hidden</option>
-                        </select>
-                    </div>
-                </div>
+                <ControlPanelSelect
+                    options={[
+                        { value: "solid", label: "solid" },
+                        { value: "dotted", label: "dotted" },
+                        { value: "dashed", label: "dashed" },
+                        { value: "double", label: "double" },
+                        { value: "groove", label: "groove" },
+                        { value: "ridge", label: "ridge" },
+                        { value: "inset", label: "inset" },
+                        { value: "outset", label: "outset" },
+                        { value: "none", label: "none" },
+                        { value: "hidden", label: "hidden" },
+                    ]}
+                    sectionTitle="Style"
+                    elementStyle={borderStyle}
+                    updateDispatch={updateBorderStyle}
+                />
 
                 <div className="border-radius-sub-section">
                     <div className="sub-heading">radius</div>

@@ -144,6 +144,7 @@ export const useCanvasApi = ({
         justifyContent: string,
         gap: number,
         elementsCount: number,
+        elementOverFlow: any,
     ) => {
         return {
             type: "div",
@@ -166,6 +167,7 @@ export const useCanvasApi = ({
                 gap: `${gap}px`,
                 cursor: "move",
                 boxSizing: "border-box",
+                overFlow: `${elementOverFlow}`,
             },
             content: type === "text" ? "Text element" : "",
             attributes: {},

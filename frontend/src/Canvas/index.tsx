@@ -13,6 +13,9 @@ import { MetricSelection } from "./MetricSelector";
 import { CanvasElement } from "@/Types/canvas/CanvasElement";
 import { useCanvasApi } from "./useCanvasApi";
 import { useDragAndDrop } from "./useDragAndDrop";
+
+// NOTE: 1 - IMPORT ACTION CREATORS
+// Import Redux action creators for the new property
 import {
     updateBoderRadius,
     updateRightWidth,
@@ -25,7 +28,9 @@ import {
     updateTopRightRadius,
     updateTopLeftRadius,
     updateBorderStyle,
+    // add new border-related action creators
 } from "@/store/toolbar/borderControl/borderControl";
+
 import {
     updateElementWidth,
     updateElementHeight,
@@ -34,7 +39,10 @@ import {
     updateElementMaxWidth,
     updateElementMaxHeight,
     updateElementOverFlow,
+    overflowType,
+    // add new dimension-related action creators
 } from "@/store/toolbar/dimensionControl/dimensionControl";
+
 import { ToolBarHeader } from "./ToolBar/ToolBarHeader";
 
 type Actions = "moving" | "scalling" | "grouping" | "grabbing";
@@ -65,7 +73,10 @@ export const Canvas: React.FC = () => {
     const zoomStepper = 0.1;
     const ZoomIconSize = 16;
 
-    // Border control store
+    // NOTE: 2 - REDUX STATE SELECTORS
+    // Add new property selectors here by category
+
+    // Border control properties
     const {
         elementRadius,
         topLeftRadius,
@@ -78,9 +89,10 @@ export const Canvas: React.FC = () => {
         leftWidth,
         rightWidth,
         borderStyle,
+        // add new border properties
     } = useSelector((state: StoreState) => state.borderControl);
 
-    // Dimension control store
+    // Dimension control properties
     const {
         elementHeight,
         elementWidth,
@@ -89,11 +101,15 @@ export const Canvas: React.FC = () => {
         elementMinHeight,
         elementMaxHeight,
         elementOverFlow,
+        // add new dimension properties
     } = useSelector((state: StoreState) => state.dimensionControl);
 
+    // Alignment control properties
     const { flexDirection, alignItems, justifyContent, gap } = useSelector(
         (state: StoreState) => state.alignmentControl,
     );
+
+    // ADD NEW PROPERTY CATEGORIES HERE (spacing, typography, etc.)
 
     // hooks
     const {
@@ -151,9 +167,13 @@ export const Canvas: React.FC = () => {
         }
     }, [isDragging, handleMouseMove, handleMouseUp]);
 
+    // NOTE: 3 - ELEMENT STYLE READING
+    // This useEffect reads styles from selected element and updates Redux store
+    // Add new property reading logic here in the same structure
     useEffect(() => {
         const selectedElement = getSelectedElement();
         if (selectedElement) {
+            // DIMENSION PROPERTIES - Read and dispatch to Redux
             const width = parseInt(
                 selectedElement.styles?.width?.replace("px", "") || "100",
             );
@@ -165,10 +185,10 @@ export const Canvas: React.FC = () => {
             if (!isNaN(height)) dispatch(updateElementHeight(height));
 
             const minWidth = parseInt(
-                selectedElement.styles?.minWidth?.replace("px", "") || "0",
+                selectedElement.styles?.minWidth?.replace("px", "") || "auto",
             );
             const minHeight = parseInt(
-                selectedElement.styles?.minHeight?.replace("px", "") || "0",
+                selectedElement.styles?.minHeight?.replace("px", "") || "auto",
             );
 
             if (!isNaN(minWidth)) dispatch(updateElementMinWidth(minWidth));
@@ -193,14 +213,12 @@ export const Canvas: React.FC = () => {
                     dispatch(updateElementMaxHeight(maxHeightValue));
             }
 
-            const overflow = selectedElement.styles?.overflow;
-            if (
-                overflow &&
-                ["visible", "hidden", "scroll", "auto"].includes(overflow)
-            ) {
-                dispatch(updateElementOverFlow(overflow as any));
-            }
+            const overflow = selectedElement.styles?.overflow || "visible";
+            dispatch(updateElementOverFlow(overflow as overflowType));
 
+            // add new dimension property reading here
+
+            // BORDER PROPERTIES - Read and dispatch to Redux
             const borderWidth = selectedElement.styles?.borderWidth;
             const borderRadius = selectedElement.styles?.borderRadius;
             const borderStyleValue = selectedElement.styles?.borderStyle;
@@ -256,6 +274,21 @@ export const Canvas: React.FC = () => {
             if (borderStyleValue) {
                 dispatch(updateBorderStyle(borderStyleValue));
             }
+
+            // add new border property reading here
+
+            // ADD NEW PROPERTY CATEGORIES READING HERE (spacing, typography, etc.)
+        } else {
+            // RESET VALUES WHEN NO ELEMENT IS SELECTED
+            // Add reset actions for new properties
+            dispatch(updateElementOverFlow("visible"));
+            dispatch(updateElementWidth(100));
+            dispatch(updateElementHeight(100));
+            dispatch(updateElementMinWidth(0));
+            dispatch(updateElementMinHeight(0));
+            dispatch(updateElementMaxWidth("none"));
+            dispatch(updateElementMaxHeight("none"));
+            // add new property resets here
         }
     }, [selectedId, elements, dispatch]);
 
@@ -264,6 +297,9 @@ export const Canvas: React.FC = () => {
         return findElementById(elements, selectedId);
     }, [selectedId, elements, findElementById]);
 
+    // NOTE: 4 - ELEMENT STYLE WRITING (WRITE FROM REDUX TO ELEMENT STYLES)
+    // This function takes Redux state and applies it to the selected element
+    // Add new properties to the updatedStyles object
     const updateElementStyles = useCallback(async () => {
         if (selectedId === null) return;
 
@@ -272,6 +308,7 @@ export const Canvas: React.FC = () => {
 
         const updatedStyles = {
             ...selectedElement.styles,
+            // DIMENSION PROPERTIES
             width: `${elementWidth}px`,
             height: `${elementHeight}px`,
             minWidth: `${elementMinWidth}px`,
@@ -280,7 +317,10 @@ export const Canvas: React.FC = () => {
                 elementMaxWidth === "none" ? "none" : `${elementMaxWidth}px`,
             maxHeight:
                 elementMaxHeight === "none" ? "none" : `${elementMaxHeight}px`,
-            overflow: elementOverFlow,
+            overflow: elementOverFlow || "visible",
+            // add new dimension properties here
+
+            // BORDER PROPERTIES
             borderStyle: borderStyle,
             borderWidth:
                 toggleAllSide_width === "all"
@@ -290,10 +330,16 @@ export const Canvas: React.FC = () => {
                 toggleAllSide_radius === "all"
                     ? `${elementRadius}px`
                     : `${topLeftRadius}px ${topRightRadius}px ${bottomRightRadius}px ${bottomLeftRadius}px`,
+            // add new border properties here
+
+            // ALIGNMENT PROPERTIES
             flexDirection: flexDirection,
             alignItems: alignItems,
             justifyContent: justifyContent,
             gap: `${gap}px`,
+            // add new alignment properties here
+
+            // ADD NEW PROPERTY CATEGORIES HERE (spacing, typography, etc.)
         };
 
         try {
@@ -306,6 +352,7 @@ export const Canvas: React.FC = () => {
         }
     }, [
         selectedId,
+        // DIMENSION DEPENDENCIES
         elementWidth,
         elementHeight,
         elementMinWidth,
@@ -313,6 +360,9 @@ export const Canvas: React.FC = () => {
         elementMaxWidth,
         elementMaxHeight,
         elementOverFlow,
+        // add new dimension dependencies here
+
+        // BORDER DEPENDENCIES
         borderStyle,
         elementBoderWidth,
         topWidth,
@@ -326,14 +376,23 @@ export const Canvas: React.FC = () => {
         bottomLeftRadius,
         toggleAllSide_width,
         toggleAllSide_radius,
+        // add new border dependencies here
+
+        // ALIGNMENT DEPENDENCIES
         flexDirection,
         alignItems,
         justifyContent,
         gap,
+        // add new alignment dependencies here
+
+        // ADD NEW PROPERTY CATEGORY DEPENDENCIES HERE
+
         getSelectedElement,
         updateElementMutation,
     ]);
 
+    // NOTE: 5 - ELEMENT CREATION WITH DEFAULT VALUES
+    // When creating new elements, include default values for new properties
     const addElement = useCallback(
         async (type: CanvasElement["type"]) => {
             const newElementData = createDefaultElement(
@@ -348,6 +407,8 @@ export const Canvas: React.FC = () => {
                 justifyContent,
                 gap,
                 elements.length,
+                elementOverFlow,
+                // add new property parameters here
             );
 
             try {
@@ -369,6 +430,8 @@ export const Canvas: React.FC = () => {
             elements.length,
             createDefaultElement,
             createElementMutation,
+            elementOverFlow,
+            // add new property dependencies here
         ],
     );
 
@@ -472,7 +535,8 @@ export const Canvas: React.FC = () => {
         return <div className="figma-container">Error loading canvas data</div>;
     }
 
-    // Handler functions for dimension inputs
+    // NOTE: 6 - PROPERTY CHANGE HANDLERS
+    // Create handlers for new properties following this pattern
     const handleWidthChange = (value: number) => {
         dispatch(updateElementWidth(value));
     };
@@ -480,6 +544,8 @@ export const Canvas: React.FC = () => {
     const handleHeightChange = (value: number) => {
         dispatch(updateElementHeight(value));
     };
+
+    // ADD NEW PROPERTY HANDLERS HERE
 
     return (
         <div className="figma-container">
@@ -534,6 +600,7 @@ export const Canvas: React.FC = () => {
                 selectedId={selectedId}
             />
 
+            {/* NOTE: 7 - CONTROL PANELS */}
             <div className="toolbar-container">
                 <div className="toolbar">
                     <ToolBarHeader
@@ -545,60 +612,134 @@ export const Canvas: React.FC = () => {
                         deleteElementMutation={deleteElementMutation}
                     />
 
-                    <div className="dimenstion-cotainer toolbar-section">
-                        <div className="heading">Dimensions</div>
-                        <div className="dimensions">
-                            <div className="element-height dimension">
-                                <label>H</label>
-                                <div className="divider"></div>
-                                <input
-                                    value={elementHeight}
-                                    type="number"
-                                    className="dimension-field"
-                                    onChange={(e) =>
-                                        handleHeightChange(
-                                            Number(e.target.value),
-                                        )
-                                    }
-                                />
-                                <div className="divider"></div>
-                                <MetricSelection />
-                            </div>
-                            <div className="element-width dimension">
-                                <label>W</label>
-                                <div className="divider"></div>
-                                <input
-                                    value={elementWidth}
-                                    type="number"
-                                    className="dimension-field"
-                                    onChange={(e) =>
-                                        handleWidthChange(
-                                            Number(e.target.value),
-                                        )
-                                    }
-                                />
-                                <div className="divider"></div>
-                                <MetricSelection />
-                            </div>
-                            <div className="dimension">0</div>
-                        </div>
-                    </div>
+                    <DimensionControlPanel
+                        elementHeight={elementHeight}
+                        handleHeightChange={handleHeightChange}
+                        elementWidth={elementWidth}
+                        handleWidthChange={handleWidthChange}
+                        elementOverFlow={elementOverFlow}
+                        updateElementOverFlow={updateElementOverFlow}
+                        // add new dimension props here
+                    />
 
                     <BorderControlPanel
                         toggleAllSide_radius={toggleAllSide_radius}
                         toggleAllSide_width={toggleAllSide_width}
                         setToggleAllSide_radius={setToggleAllSide_radius}
                         setToggleAllSide_width={setToggleAllSide_width}
+                        // add new border props here
                     />
 
                     <AlignmentControlPanel
                         selectedId={selectedId}
                         elements={elements}
                         setElements={() => {}}
+                        // add new alignment props here
                     />
 
                     <FontsControlPanel />
+
+                    {/* ADD NEW CONTROL PANELS HERE */}
                 </div>
+            </div>
+        </div>
+    );
+};
+
+// NOTE: 8 - CONTROL PANEL COMPONENTS
+// Follow this structure when creating new control panels
+export const DimensionControlPanel = ({
+    elementHeight,
+    handleHeightChange,
+    elementWidth,
+    handleWidthChange,
+    elementOverFlow,
+    updateElementOverFlow,
+    // add new dimension props here
+}: any) => {
+    return (
+        <div className="dimenstion-cotainer toolbar-section">
+            <div className="heading">Dimensions</div>
+            <div className="dimensions">
+                <div className="element-height dimension">
+                    <label>H</label>
+                    <div className="divider"></div>
+                    <input
+                        value={elementHeight}
+                        type="number"
+                        className="dimension-field"
+                        onChange={(e) =>
+                            handleHeightChange(Number(e.target.value))
+                        }
+                    />
+                    <div className="divider"></div>
+                    <MetricSelection />
+                </div>
+                <div className="element-width dimension">
+                    <label>W</label>
+                    <div className="divider"></div>
+                    <input
+                        value={elementWidth}
+                        type="number"
+                        className="dimension-field"
+                        onChange={(e) =>
+                            handleWidthChange(Number(e.target.value))
+                        }
+                    />
+                    <div className="divider"></div>
+                    <MetricSelection />
+                </div>
+                <div className="dimension">0</div>
+            </div>
+
+            {/* ADD NEW DIMENSION CONTROLS HERE */}
+
+            <ControlPanelSelect
+                options={[
+                    { value: "visible", label: "visible" },
+                    { value: "hidden", label: "hidden" },
+                    { value: "scroll", label: "scroll" },
+                    { value: "auto", label: "auto" },
+                ]}
+                sectionTitle="Overflow"
+                elementStyle={elementOverFlow}
+                updateDispatch={updateElementOverFlow}
+            />
+        </div>
+    );
+};
+
+export type SelectOptionsType = { label: string; value: string }[];
+
+export type ControlPanelSelectType = {
+    options: SelectOptionsType;
+    sectionTitle: string;
+    elementStyle: any;
+    updateDispatch: any;
+};
+
+export const ControlPanelSelect = ({
+    options,
+    sectionTitle,
+    elementStyle,
+    updateDispatch,
+}: ControlPanelSelectType) => {
+    const dispatch = useDispatch();
+    return (
+        <div className="border-width-sub-section">
+            <div className="sub-heading">{sectionTitle}</div>
+            <div className="border-width-tools-container">
+                <select
+                    className="select-drop-down"
+                    value={elementStyle}
+                    onChange={(e) => dispatch(updateDispatch(e.target.value))}
+                >
+                    {options.map(({ label, value }) => (
+                        <option value={value} key={value}>
+                            {label}
+                        </option>
+                    ))}
+                </select>
             </div>
         </div>
     );
