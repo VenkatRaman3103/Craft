@@ -1,7 +1,7 @@
 import React, { useState, useRef, useEffect, useCallback } from "react";
 import "./index.scss";
 import { ElementPicker } from "./ElementPicker";
-import { RotateCcw, ZoomIn, ZoomOut } from "lucide-react";
+import { Minus, RotateCcw, ZoomIn, ZoomOut } from "lucide-react";
 import { StoreState } from "@/store/store";
 import { BorderControlPanel } from "./ToolBar/BroderControlPanel";
 import { useSelector, useDispatch } from "react-redux";
@@ -44,6 +44,7 @@ import {
 } from "@/store/toolbar/dimensionControl/dimensionControl";
 
 import { ToolBarHeader } from "./ToolBar/ToolBarHeader";
+import { ControlPanelSelect } from "@/components/canvas/ControlPanelSelect";
 
 type Actions = "moving" | "scalling" | "grouping" | "grabbing";
 
@@ -408,6 +409,10 @@ export const Canvas: React.FC = () => {
                 gap,
                 elements.length,
                 elementOverFlow,
+                elementMinHeight,
+                elementMinWidth,
+                elementMaxHeight,
+                elementMaxWidth,
                 // add new property parameters here
             );
 
@@ -420,6 +425,10 @@ export const Canvas: React.FC = () => {
         [
             elementWidth,
             elementHeight,
+            elementMinHeight,
+            elementMinWidth,
+            elementMaxHeight,
+            elementMaxWidth,
             borderStyle,
             elementBoderWidth,
             elementRadius,
@@ -618,8 +627,10 @@ export const Canvas: React.FC = () => {
                         elementWidth={elementWidth}
                         handleWidthChange={handleWidthChange}
                         elementOverFlow={elementOverFlow}
-                        updateElementOverFlow={updateElementOverFlow}
-                        // add new dimension props here
+                        elementMinWidth={elementMinWidth}
+                        elementMaxWidth={elementMaxWidth}
+                        elementMinHeight={elementMinHeight}
+                        elementMaxHeight={elementMaxHeight}
                     />
 
                     <BorderControlPanel
@@ -650,12 +661,14 @@ export const Canvas: React.FC = () => {
 // Follow this structure when creating new control panels
 export const DimensionControlPanel = ({
     elementHeight,
-    handleHeightChange,
     elementWidth,
+    elementMaxWidth,
+    elementMinWidth,
+    elementMaxHeight,
+    elementMinHeight,
+    handleHeightChange,
     handleWidthChange,
     elementOverFlow,
-    updateElementOverFlow,
-    // add new dimension props here
 }: any) => {
     return (
         <div className="dimenstion-cotainer toolbar-section">
@@ -692,7 +705,41 @@ export const DimensionControlPanel = ({
                 <div className="dimension">0</div>
             </div>
 
-            {/* ADD NEW DIMENSION CONTROLS HERE */}
+            <div className="border-width-sub-section">
+                <div className="sub-heading">Max</div>
+                <div className="border-width-tools-container">
+                    <div className="boder-width-adjustments-container">
+                        <div className="boder-width-adjustments">
+                            <ControlPanelInput
+                                value={elementMaxWidth}
+                                updateDispatch={updateElementMaxWidth}
+                            />
+                            <ControlPanelInput
+                                value={elementMaxHeight}
+                                updateDispatch={updateElementMaxHeight}
+                            />
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div className="border-width-sub-section">
+                <div className="sub-heading">Min</div>
+                <div className="border-width-tools-container">
+                    <div className="boder-width-adjustments-container">
+                        <div className="boder-width-adjustments">
+                            <ControlPanelInput
+                                value={elementMinWidth}
+                                updateDispatch={updateElementMinWidth}
+                            />
+                            <ControlPanelInput
+                                value={elementMinHeight}
+                                updateDispatch={updateElementMinHeight}
+                            />
+                        </div>
+                    </div>
+                </div>
+            </div>
 
             <ControlPanelSelect
                 options={[
@@ -709,38 +756,25 @@ export const DimensionControlPanel = ({
     );
 };
 
-export type SelectOptionsType = { label: string; value: string }[];
-
-export type ControlPanelSelectType = {
-    options: SelectOptionsType;
-    sectionTitle: string;
-    elementStyle: any;
+export type InputType = {
+    value: any;
     updateDispatch: any;
 };
 
-export const ControlPanelSelect = ({
-    options,
-    sectionTitle,
-    elementStyle,
-    updateDispatch,
-}: ControlPanelSelectType) => {
+export const ControlPanelInput = ({ value, updateDispatch }: InputType) => {
     const dispatch = useDispatch();
     return (
-        <div className="border-width-sub-section">
-            <div className="sub-heading">{sectionTitle}</div>
-            <div className="border-width-tools-container">
-                <select
-                    className="select-drop-down"
-                    value={elementStyle}
-                    onChange={(e) => dispatch(updateDispatch(e.target.value))}
-                >
-                    {options.map(({ label, value }) => (
-                        <option value={value} key={value}>
-                            {label}
-                        </option>
-                    ))}
-                </select>
+        <div className="border-width border-tool">
+            <div className="border-width-icon">
+                <Minus size={14} />
             </div>
+            <input
+                type="number"
+                value={value}
+                onChange={(e) =>
+                    dispatch(updateDispatch(Number(e.target.value)))
+                }
+            />
         </div>
     );
 };

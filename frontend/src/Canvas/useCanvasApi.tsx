@@ -145,6 +145,10 @@ export const useCanvasApi = ({
         gap: number,
         elementsCount: number,
         elementOverFlow: any,
+        elementMinHeight: any,
+        elementMinWidth: any,
+        elementMaxHeight: any,
+        elementMaxWidth: any,
     ) => {
         return {
             type: "div",
@@ -166,6 +170,10 @@ export const useCanvasApi = ({
                 justifyContent: justifyContent,
                 gap: `${gap}px`,
                 cursor: "move",
+                maxHeigth: `${elementMaxHeight}px`,
+                minHeigth: `${elementMinHeight}px`,
+                maxWidth: `${elementMaxWidth}px`,
+                minWidth: `${elementMinWidth}px`,
                 boxSizing: "border-box",
                 overFlow: `${elementOverFlow}`,
             },

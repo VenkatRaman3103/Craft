@@ -1155,3 +1155,77 @@
 .save-changes-button {
     cursor: pointer;
 }
+
+.border-tool {
+    background-color: var(--secondary-color);
+    /* border: 1px solid var(--border-color); */
+}
+
+.boder-width-adjustments-container {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    gap: 8px;
+    width: 100%;
+    height: 25px;
+
+    .boder-width-adjustments {
+        display: flex;
+        gap: 10px;
+        width: 52%;
+
+        .border-width {
+            width: 100%;
+            display: flex;
+            border-radius: 5px;
+            padding: 2px;
+
+            .border-width-icon {
+                display: flex;
+                align-items: center;
+            }
+        }
+    }
+
+    .boder-width-sides-toggle {
+        height: 22px;
+        width: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        background-color: var(--base-color);
+        border-radius: 5px;
+
+        padding: 2px;
+
+        .all-sides {
+            height: 22px;
+            /* width: 22px; */
+            width: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background-color: var(--base-color);
+            border-radius: 3px;
+
+            &.active {
+                background-color: var(--secondary-color);
+            }
+        }
+
+        .target-sides {
+            height: 22px;
+            /* width: 22px; */
+            width: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background-color: var(--base-color);
+            border-radius: 3px;
+
+            &.active {
+                background-color: var(--secondary-color);
+            }
+        }
+    }
+}

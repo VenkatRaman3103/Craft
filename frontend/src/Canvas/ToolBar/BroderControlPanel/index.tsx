@@ -26,7 +26,7 @@ import { useDispatch, useSelector } from "react-redux";
 
 import { StoreState } from "@/store/store";
 import { useEffect } from "react";
-import { ControlPanelSelect } from "@/Canvas";
+import { ControlPanelSelect } from "@/components/canvas/ControlPanelSelect";
 
 export const BorderControlPanel = ({
     toggleAllSide_radius,
