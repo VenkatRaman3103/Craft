@@ -43,6 +43,13 @@ function getDefaultStyles(type) {
             border: "none",
             borderRadius: "0px",
         },
+        group: {
+            display: "block",
+            position: "relative",
+            backgroundColor: "transparent",
+            border: "2px dashed #007bff",
+            borderRadius: "4px",
+        },
     };
 
     return defaults[type] || defaults.div;
@@ -105,11 +112,79 @@ export const createNewElement = async (req, res) => {
     }
 };
 
+export const createNewGroup = async (req, res) => {
+    const { pageId } = req.params;
+    const { groupData } = req.body;
+    const {
+        type,
+        parentId,
+        styles,
+        content,
+        attributes,
+        order,
+        name,
+        childIds,
+    } = groupData;
+
+    if (!childIds || childIds.length < 2) {
+        return res.status(400).json({
+            error: "At least 2 child elements are required to create a group",
+            origin: "backend/createNewGroup/POST",
+        });
+    }
+
+    try {
+        const result = await db.transaction(async (tx) => {
+            const groupResponse = await tx
+                .insert(elements)
+                .values([
+                    {
+                        pageId,
+                        parentId: parentId || null,
+                        type: type || "group",
+                        content: content || "",
+                        styles: styles || getDefaultStyles("group"),
+                        attributes: attributes || {},
+                        order: order || 0,
+                        name: name || `group_${Date.now()}`,
+                    },
+                ])
+                .returning();
+
+            const newGroup = groupResponse[0];
+
+            // Update child elements to have the new group as parent
+            const updatePromises = childIds.map((childId) =>
+                tx
+                    .update(elements)
+                    .set({ parentId: newGroup.id })
+                    .where(eq(elements.id, childId))
+                    .returning(),
+            );
+
+            const updatedChildren = await Promise.all(updatePromises);
+
+            return {
+                group: newGroup,
+                children: updatedChildren.flat(),
+            };
+        });
+
+        res.json(result);
+    } catch (error) {
+        const errorMessage = {
+            error: error.message,
+            message: `Error in creating the group`,
+            origin: "backend/createNewGroup/POST",
+        };
+        console.log(errorMessage);
+        res.status(500).json(errorMessage);
+    }
+};
+
 export const getElement = async (req, res) => {
     try {
         const { pageId } = req.params;
-
-        console.log("PageId:", pageId);
 
         const page = await db
             .select()
@@ -135,8 +210,10 @@ export const getElement = async (req, res) => {
     }
 };
 
+// Routes
 elementsRouter.get("/elements/:pageId", getElement);
 elementsRouter.post("/elements/:pageId", createNewElement);
+elementsRouter.post("/elements/:pageId/group", createNewGroup);
 
 // getting the data from db and generating the html and bind css stylling with tags using name as class
 function generateHTML(elements, depth = 0) {
@@ -193,6 +270,7 @@ function getHTMLTag(type) {
         link: "a",
         input: "input",
         container: "div",
+        group: "div",
     };
     return tagMap[type] || "div";
 }
