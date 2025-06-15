@@ -4,7 +4,7 @@ import { ElementPicker } from "./ElementPicker";
 import { RotateCcw, ZoomIn, ZoomOut } from "lucide-react";
 import { StoreState } from "@/store/store";
 import { BorderControlPanel } from "./ToolBar/BroderControlPanel";
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
 import { FontsControlPanel } from "./ToolBar/FontsControlPanel";
 import { useParams } from "react-router";
 import { AlignmentControlPanel } from "./ToolBar/AlignmentControlPanel";
@@ -13,18 +13,40 @@ import { MetricSelection } from "./MetricSelector";
 import { CanvasElement } from "@/Types/canvas/CanvasElement";
 import { useCanvasApi } from "./useCanvasApi";
 import { useDragAndDrop } from "./useDragAndDrop";
+import {
+    updateBoderRadius,
+    updateRightWidth,
+    updateLeftWidth,
+    updateBottomWidth,
+    updateTopWidth,
+    updateElementBoderWidth,
+    updateBottomLeftRadius,
+    updateBottomRightRadius,
+    updateTopRightRadius,
+    updateTopLeftRadius,
+    updateBorderStyle,
+} from "@/store/toolbar/borderControl/borderControl";
+import {
+    updateElementWidth,
+    updateElementHeight,
+    updateElementMinWidth,
+    updateElementMinHeight,
+    updateElementMaxWidth,
+    updateElementMaxHeight,
+    updateElementOverFlow,
+} from "@/store/toolbar/dimensionControl/dimensionControl";
+import { ToolBarHeader } from "./ToolBar/ToolBarHeader";
 
 type Actions = "moving" | "scalling" | "grouping" | "grabbing";
 
 export const Canvas: React.FC = () => {
     const { page_id } = useParams();
+    const dispatch = useDispatch();
     const [selectedId, setSelectedId] = useState<number | string | null>(null);
     const [activeAction, setActiveAction] = useState<Actions>("moving");
     const [screen, setScreen] = useState<"mobile" | "desktop" | "tablet">(
         "desktop",
     );
-    const [elementHeight, setElementHeight] = useState(100);
-    const [elementWidth, setElementWidth] = useState(100);
     const [zoomLevel, setZoomLevel] = useState(1);
 
     // Toggle states
@@ -43,7 +65,7 @@ export const Canvas: React.FC = () => {
     const zoomStepper = 0.1;
     const ZoomIconSize = 16;
 
-    // store
+    // Border control store
     const {
         elementRadius,
         topLeftRadius,
@@ -57,6 +79,17 @@ export const Canvas: React.FC = () => {
         rightWidth,
         borderStyle,
     } = useSelector((state: StoreState) => state.borderControl);
+
+    // Dimension control store
+    const {
+        elementHeight,
+        elementWidth,
+        elementMinWidth,
+        elementMaxWidth,
+        elementMinHeight,
+        elementMaxHeight,
+        elementOverFlow,
+    } = useSelector((state: StoreState) => state.dimensionControl);
 
     const { flexDirection, alignItems, justifyContent, gap } = useSelector(
         (state: StoreState) => state.alignmentControl,
@@ -128,10 +161,103 @@ export const Canvas: React.FC = () => {
                 selectedElement.styles?.height?.replace("px", "") || "100",
             );
 
-            if (!isNaN(width)) setElementWidth(width);
-            if (!isNaN(height)) setElementHeight(height);
+            if (!isNaN(width)) dispatch(updateElementWidth(width));
+            if (!isNaN(height)) dispatch(updateElementHeight(height));
+
+            const minWidth = parseInt(
+                selectedElement.styles?.minWidth?.replace("px", "") || "0",
+            );
+            const minHeight = parseInt(
+                selectedElement.styles?.minHeight?.replace("px", "") || "0",
+            );
+
+            if (!isNaN(minWidth)) dispatch(updateElementMinWidth(minWidth));
+            if (!isNaN(minHeight)) dispatch(updateElementMinHeight(minHeight));
+
+            const maxWidth = selectedElement.styles?.maxWidth;
+            const maxHeight = selectedElement.styles?.maxHeight;
+
+            if (maxWidth === "none" || maxWidth === undefined) {
+                dispatch(updateElementMaxWidth("none"));
+            } else {
+                const maxWidthValue = parseInt(maxWidth.replace("px", ""));
+                if (!isNaN(maxWidthValue))
+                    dispatch(updateElementMaxWidth(maxWidthValue));
+            }
+
+            if (maxHeight === "none" || maxHeight === undefined) {
+                dispatch(updateElementMaxHeight("none"));
+            } else {
+                const maxHeightValue = parseInt(maxHeight.replace("px", ""));
+                if (!isNaN(maxHeightValue))
+                    dispatch(updateElementMaxHeight(maxHeightValue));
+            }
+
+            const overflow = selectedElement.styles?.overflow;
+            if (
+                overflow &&
+                ["visible", "hidden", "scroll", "auto"].includes(overflow)
+            ) {
+                dispatch(updateElementOverFlow(overflow as any));
+            }
+
+            const borderWidth = selectedElement.styles?.borderWidth;
+            const borderRadius = selectedElement.styles?.borderRadius;
+            const borderStyleValue = selectedElement.styles?.borderStyle;
+
+            if (borderWidth) {
+                const borderWidthValues = borderWidth
+                    .replace(/px/g, "")
+                    .split(" ")
+                    .map((v) => parseInt(v));
+
+                if (borderWidthValues.length === 1) {
+                    const widthValue = borderWidthValues[0];
+                    if (!isNaN(widthValue)) {
+                        dispatch(updateElementBoderWidth(widthValue));
+                        setToggleAllSide_width("all");
+                    }
+                } else if (borderWidthValues.length === 4) {
+                    const [top, right, bottom, left] = borderWidthValues;
+                    if (!isNaN(top)) dispatch(updateTopWidth(top));
+                    if (!isNaN(right)) dispatch(updateRightWidth(right));
+                    if (!isNaN(bottom)) dispatch(updateBottomWidth(bottom));
+                    if (!isNaN(left)) dispatch(updateLeftWidth(left));
+                    setToggleAllSide_width("specific");
+                }
+            }
+
+            if (borderRadius) {
+                const borderRadiusValues = borderRadius
+                    .replace(/px/g, "")
+                    .split(" ")
+                    .map((v) => parseInt(v));
+
+                if (borderRadiusValues.length === 1) {
+                    const radiusValue = borderRadiusValues[0];
+                    if (!isNaN(radiusValue)) {
+                        dispatch(updateBoderRadius(radiusValue));
+                        setToggleAllSide_radius("all");
+                    }
+                } else if (borderRadiusValues.length === 4) {
+                    const [topLeft, topRight, bottomRight, bottomLeft] =
+                        borderRadiusValues;
+                    if (!isNaN(topLeft)) dispatch(updateTopLeftRadius(topLeft));
+                    if (!isNaN(topRight))
+                        dispatch(updateTopRightRadius(topRight));
+                    if (!isNaN(bottomRight))
+                        dispatch(updateBottomRightRadius(bottomRight));
+                    if (!isNaN(bottomLeft))
+                        dispatch(updateBottomLeftRadius(bottomLeft));
+                    setToggleAllSide_radius("specific");
+                }
+            }
+
+            if (borderStyleValue) {
+                dispatch(updateBorderStyle(borderStyleValue));
+            }
         }
-    }, [selectedId, elements]);
+    }, [selectedId, elements, dispatch]);
 
     const getSelectedElement = useCallback(() => {
         if (selectedId === null) return null;
@@ -148,6 +274,13 @@ export const Canvas: React.FC = () => {
             ...selectedElement.styles,
             width: `${elementWidth}px`,
             height: `${elementHeight}px`,
+            minWidth: `${elementMinWidth}px`,
+            minHeight: `${elementMinHeight}px`,
+            maxWidth:
+                elementMaxWidth === "none" ? "none" : `${elementMaxWidth}px`,
+            maxHeight:
+                elementMaxHeight === "none" ? "none" : `${elementMaxHeight}px`,
+            overflow: elementOverFlow,
             borderStyle: borderStyle,
             borderWidth:
                 toggleAllSide_width === "all"
@@ -175,6 +308,11 @@ export const Canvas: React.FC = () => {
         selectedId,
         elementWidth,
         elementHeight,
+        elementMinWidth,
+        elementMinHeight,
+        elementMaxWidth,
+        elementMaxHeight,
+        elementOverFlow,
         borderStyle,
         elementBoderWidth,
         topWidth,
@@ -272,11 +410,6 @@ export const Canvas: React.FC = () => {
             return {
                 position: "absolute" as const,
                 cursor: activeAction === "moving" ? "move" : "default",
-                border:
-                    selectedId === element.id ? "2px solid #007bff" : "none",
-                outline:
-                    selectedId === element.id ? "1px dashed #007bff" : "none",
-                outlineOffset: selectedId === element.id ? "2px" : "0",
                 userSelect: "none" as const,
                 zIndex:
                     selectedId === element.id
@@ -339,6 +472,15 @@ export const Canvas: React.FC = () => {
         return <div className="figma-container">Error loading canvas data</div>;
     }
 
+    // Handler functions for dimension inputs
+    const handleWidthChange = (value: number) => {
+        dispatch(updateElementWidth(value));
+    };
+
+    const handleHeightChange = (value: number) => {
+        dispatch(updateElementHeight(value));
+    };
+
     return (
         <div className="figma-container">
             <div
@@ -394,58 +536,14 @@ export const Canvas: React.FC = () => {
 
             <div className="toolbar-container">
                 <div className="toolbar">
-                    <div className="toolbar-header toolbar-section">
-                        <button
-                            className="save-changes-button header-button"
-                            onClick={updateElementStyles}
-                            disabled={
-                                updateElementMutation.isPending ||
-                                selectedId === null
-                            }
-                            style={{
-                                backgroundColor:
-                                    !updateElementMutation.isPending &&
-                                    selectedId !== null
-                                        ? "#28a745"
-                                        : "#ccc",
-                            }}
-                        >
-                            {updateElementMutation.isPending
-                                ? "Saving..."
-                                : "Save Changes"}
-                        </button>
-
-                        {createElementMutation.isPending && (
-                            <div className="creating-status">
-                                Creating element...
-                            </div>
-                        )}
-
-                        <button
-                            className="delete-button header-button"
-                            onClick={deleteSelected}
-                            disabled={
-                                selectedId === null ||
-                                deleteElementMutation.isPending
-                            }
-                            style={{
-                                backgroundColor:
-                                    selectedId !== null &&
-                                    !deleteElementMutation.isPending
-                                        ? "#dc3545"
-                                        : "#ccc",
-                                cursor:
-                                    selectedId !== null &&
-                                    !deleteElementMutation.isPending
-                                        ? "pointer"
-                                        : "not-allowed",
-                            }}
-                        >
-                            {deleteElementMutation.isPending
-                                ? "Deleting..."
-                                : "Delete"}
-                        </button>
-                    </div>
+                    <ToolBarHeader
+                        updateElementStyles={updateElementStyles}
+                        updateElementMutation={updateElementMutation}
+                        selectedId={selectedId}
+                        createElementMutation={createElementMutation}
+                        deleteSelected={deleteSelected}
+                        deleteElementMutation={deleteElementMutation}
+                    />
 
                     <div className="dimenstion-cotainer toolbar-section">
                         <div className="heading">Dimensions</div>
@@ -458,7 +556,9 @@ export const Canvas: React.FC = () => {
                                     type="number"
                                     className="dimension-field"
                                     onChange={(e) =>
-                                        setElementHeight(Number(e.target.value))
+                                        handleHeightChange(
+                                            Number(e.target.value),
+                                        )
                                     }
                                 />
                                 <div className="divider"></div>
@@ -472,7 +572,9 @@ export const Canvas: React.FC = () => {
                                     type="number"
                                     className="dimension-field"
                                     onChange={(e) =>
-                                        setElementWidth(Number(e.target.value))
+                                        handleWidthChange(
+                                            Number(e.target.value),
+                                        )
                                     }
                                 />
                                 <div className="divider"></div>
@@ -496,17 +598,6 @@ export const Canvas: React.FC = () => {
                     />
 
                     <FontsControlPanel />
-
-                    <div className="box-model-container toolbar-section">
-                        <div className="heading">box model</div>
-                        <div className="margin">
-                            <div className="border">
-                                <div className="padding">
-                                    <div className="content"></div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
                 </div>
             </div>
         </div>
