@@ -32,9 +32,9 @@ export const AlignmentControlPanel = ({
     elements,
     setElements,
 }: {
-    selectedId: number | null;
-    elements: CanvasElement[];
-    setElements: React.Dispatch<React.SetStateAction<CanvasElement[]>>;
+    selectedId: number | string | null;
+    elements: any[];
+    setElements: React.Dispatch<React.SetStateAction<any[]>>;
 }) => {
     const {
         type: globalType,

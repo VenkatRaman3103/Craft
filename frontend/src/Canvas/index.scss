@@ -483,7 +483,9 @@
     border-bottom: 1px solid var(--border-color);
 
     .heading {
-        color: grey !important;
+        /* color: grey !important; */
+        color: white !important;
+        margin-bottom: 20px;
     }
 }
 

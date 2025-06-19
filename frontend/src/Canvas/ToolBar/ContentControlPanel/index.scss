@@ -1,0 +1,17 @@
+.content-field-container {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+
+    color: grey;
+
+    font-size: 14px;
+}
+
+.content-textarea {
+    background-color: var(--secondary-color);
+    color: white;
+    border: none;
+
+    border-radius: 5px;
+}

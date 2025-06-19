@@ -1,7 +1,23 @@
 import React, { useState, useRef, useEffect, useCallback } from "react";
 import "./index.scss";
 import { ElementPicker } from "./ElementPicker";
-import { Minus, RotateCcw, ZoomIn, ZoomOut } from "lucide-react";
+import {
+    AlignCenterHorizontal,
+    AlignCenterVertical,
+    AlignEndHorizontal,
+    AlignEndVertical,
+    AlignHorizontalSpaceAround,
+    AlignHorizontalSpaceBetween,
+    AlignStartHorizontal,
+    AlignStartVertical,
+    AlignVerticalJustifyCenter,
+    ArrowLeft,
+    ArrowUp,
+    Minus,
+    RotateCcw,
+    ZoomIn,
+    ZoomOut,
+} from "lucide-react";
 import { StoreState } from "@/store/store";
 import { BorderControlPanel } from "./ToolBar/BroderControlPanel";
 import { useSelector, useDispatch } from "react-redux";
@@ -13,6 +29,7 @@ import { MetricSelection } from "./MetricSelector";
 import { CanvasElement } from "@/Types/canvas/CanvasElement";
 import { useCanvasApi } from "./useCanvasApi";
 import { useDragAndDrop } from "./useDragAndDrop";
+import { useElementRenderer } from "./ElementRenderer";
 
 // NOTE: 1 - IMPORT ACTION CREATORS
 import {
@@ -40,12 +57,22 @@ import {
     overflowType,
 } from "@/store/toolbar/dimensionControl/dimensionControl";
 
+import {
+    updateAlignType,
+    updateAlignItems,
+    updateIsReveresed,
+    updateFlexDirection,
+    updateJustifyContent,
+    updateGap,
+} from "@/store/toolbar/alignmentControl/alignmentControl";
+
 import { ToolBarHeader } from "./ToolBar/ToolBarHeader";
 import { ControlPanelSelect } from "@/components/canvas/ControlPanelSelect";
 import {
     updateElementContent,
     updateTextWrap,
 } from "@/store/toolbar/contentControl/contentControl";
+import { ContentControlPanel } from "./ToolBar/ContentControlPanel";
 
 type Actions = "moving" | "scalling" | "grouping" | "grabbing";
 
@@ -91,7 +118,6 @@ export const Canvas: React.FC = () => {
         leftWidth,
         rightWidth,
         borderStyle,
-        // add new border properties
     } = useSelector((state: StoreState) => state.borderControl);
 
     // Dimension control properties
@@ -103,13 +129,16 @@ export const Canvas: React.FC = () => {
         elementMinHeight,
         elementMaxHeight,
         elementOverFlow,
-        // add new dimension properties
     } = useSelector((state: StoreState) => state.dimensionControl);
 
-    // Alignment control properties
-    const { flexDirection, alignItems, justifyContent, gap } = useSelector(
-        (state: StoreState) => state.alignmentControl,
-    );
+    const {
+        type: alignType,
+        flexDirection,
+        alignItems,
+        justifyContent,
+        gap,
+        isReveresed,
+    } = useSelector((state: StoreState) => state.alignmentControl);
 
     // Content control properties
     const { elementContent, textWrap } = useSelector(
@@ -173,12 +202,10 @@ export const Canvas: React.FC = () => {
     }, [isDragging, handleMouseMove, handleMouseUp]);
 
     // NOTE: 3 - ELEMENT STYLE READING
-    // This useEffect reads styles from selected element and updates Redux store
-    // Add new property reading logic here in the same structure
     useEffect(() => {
         const selectedElement = getSelectedElement();
         if (selectedElement) {
-            // DIMENSION PROPERTIES - Read and dispatch to Redux
+            // DIMENSION PROPERTIES
             const width = parseInt(
                 selectedElement.styles?.width?.replace("px", "") || "100",
             );
@@ -221,7 +248,7 @@ export const Canvas: React.FC = () => {
             const overflow = selectedElement.styles?.overflow || "visible";
             dispatch(updateElementOverFlow(overflow as overflowType));
 
-            // BORDER PROPERTIES - Read and dispatch to Redux
+            // BORDER PROPERTIES
             const borderWidth = selectedElement.styles?.borderWidth;
             const borderRadius = selectedElement.styles?.borderRadius;
             const borderStyleValue = selectedElement.styles?.borderStyle;
@@ -278,7 +305,32 @@ export const Canvas: React.FC = () => {
                 dispatch(updateBorderStyle(borderStyleValue));
             }
 
-            // CONTENT PROPERTIES - Read and dispatch to Redux
+            const elementFlexDirection =
+                selectedElement.styles?.flexDirection || "row";
+            const elementAlignItems =
+                selectedElement.styles?.alignItems || "flex-start";
+            const elementJustifyContent =
+                selectedElement.styles?.justifyContent || "flex-start";
+            const elementGap = selectedElement.styles?.gap
+                ? parseInt(selectedElement.styles.gap.replace("px", ""))
+                : 0;
+            const elementDisplay = selectedElement.styles?.display || "flex";
+
+            const isReversed = elementFlexDirection.includes("reverse");
+            const baseDirection = isReversed
+                ? elementFlexDirection.includes("row")
+                    ? "row"
+                    : "column"
+                : elementFlexDirection;
+
+            dispatch(updateFlexDirection(baseDirection));
+            dispatch(updateAlignItems(elementAlignItems));
+            dispatch(updateJustifyContent(elementJustifyContent));
+            dispatch(updateGap(elementGap));
+            dispatch(updateAlignType(elementDisplay));
+            dispatch(updateIsReveresed(isReversed));
+
+            // CONTENT PROPERTIES
             const content = selectedElement.content || "";
             dispatch(updateElementContent(content));
 
@@ -295,6 +347,12 @@ export const Canvas: React.FC = () => {
             dispatch(updateElementMaxHeight("none"));
             dispatch(updateElementContent(""));
             dispatch(updateTextWrap("normal"));
+            dispatch(updateFlexDirection("row"));
+            dispatch(updateAlignItems("flex-start"));
+            dispatch(updateJustifyContent("flex-start"));
+            dispatch(updateGap(0));
+            dispatch(updateAlignType("flex"));
+            dispatch(updateIsReveresed(false));
         }
     }, [selectedId, elements, dispatch]);
 
@@ -303,14 +361,15 @@ export const Canvas: React.FC = () => {
         return findElementById(elements, selectedId);
     }, [selectedId, elements, findElementById]);
 
-    useEffect(() => {
-        console.log("Content in Redux:", elementContent);
-        console.log("Text Wrap in Redux:", textWrap);
-    }, [elementContent, textWrap]);
+    const getComputedFlexDirection = useCallback(() => {
+        if (flexDirection === "row") {
+            return isReveresed ? "row-reverse" : "row";
+        } else {
+            return isReveresed ? "column-reverse" : "column";
+        }
+    }, [flexDirection, isReveresed]);
 
-    // NOTE: 4 - ELEMENT STYLE WRITING (WRITE FROM REDUX TO ELEMENT STYLES)
-    // This function takes Redux state and applies it to the selected element
-    // Add new properties to the updatedStyles object
+    // NOTE: 4 - ELEMENT STYLE WRITING
     const updateElementStyles = useCallback(async () => {
         if (selectedId === null) return;
 
@@ -365,11 +424,13 @@ export const Canvas: React.FC = () => {
                     : `${topLeftRadius}px ${topRightRadius}px ${bottomRightRadius}px ${bottomLeftRadius}px`,
 
             // ALIGNMENT PROPERTIES
-            flexDirection: flexDirection,
+            display: alignType,
+            flexDirection: getComputedFlexDirection(),
             alignItems: alignItems,
             justifyContent: justifyContent,
             gap: `${gap}px`,
 
+            // TEXT PROPERTIES
             whiteSpace: textWrap,
 
             backgroundColor: isTextElement
@@ -413,17 +474,17 @@ export const Canvas: React.FC = () => {
         bottomLeftRadius,
         toggleAllSide_width,
         toggleAllSide_radius,
-        flexDirection,
+        alignType,
         alignItems,
         justifyContent,
         gap,
         textWrap,
         getSelectedElement,
         updateElementMutation,
+        getComputedFlexDirection,
     ]);
 
     // NOTE: 5 - ELEMENT CREATION WITH DEFAULT VALUES
-    // When creating new elements, include default values for new properties
     const addElement = useCallback(
         async (type: CanvasElement["type"]) => {
             const newElementData = createDefaultElement(
@@ -433,7 +494,7 @@ export const Canvas: React.FC = () => {
                 borderStyle,
                 elementBoderWidth,
                 elementRadius,
-                flexDirection,
+                getComputedFlexDirection(),
                 alignItems,
                 justifyContent,
                 gap,
@@ -444,6 +505,7 @@ export const Canvas: React.FC = () => {
                 elementMaxHeight,
                 elementMaxWidth,
                 textWrap,
+                alignType,
             );
 
             try {
@@ -462,15 +524,16 @@ export const Canvas: React.FC = () => {
             borderStyle,
             elementBoderWidth,
             elementRadius,
-            flexDirection,
             alignItems,
             justifyContent,
             gap,
+            alignType,
             elements.length,
             createDefaultElement,
             createElementMutation,
             elementOverFlow,
             textWrap,
+            getComputedFlexDirection,
         ],
     );
 
@@ -525,153 +588,12 @@ export const Canvas: React.FC = () => {
         [selectedId, activeAction, isDragging, screen],
     );
 
-    const renderElement = useCallback(
-        (element: any, level: number = 0) => {
-            const handleElementClick = (e: React.MouseEvent) => {
-                e.stopPropagation();
-                if (!isDragging) {
-                    setSelectedId(element.id);
-                }
-            };
-
-            const renderElementContent = () => {
-                console.log(element.type, "elementType");
-                switch (element.type) {
-                    case "text":
-                        return (
-                            <input
-                                type="text"
-                                placeholder={
-                                    element.attributes?.placeholder ||
-                                    "Enter text..."
-                                }
-                                defaultValue={element.content}
-                                style={{
-                                    border: "none",
-                                    background: "transparent",
-                                    outline: "none",
-                                    width: "100%",
-                                    height: "100%",
-                                }}
-                            />
-                        );
-                    case "textarea":
-                        return (
-                            <textarea
-                                placeholder={
-                                    element.attributes?.placeholder ||
-                                    "Enter textarea..."
-                                }
-                                defaultValue={element.content}
-                                style={{
-                                    border: "none",
-                                    background: "transparent",
-                                    outline: "none",
-                                    width: "100%",
-                                    height: "100%",
-                                    resize: "none",
-                                }}
-                            />
-                        );
-                    case "checkbox":
-                        return (
-                            <input
-                                type="checkbox"
-                                defaultValue={element.content}
-                                style={{
-                                    border: "none",
-                                    background: "transparent",
-                                    outline: "none",
-                                    width: "100%",
-                                    height: "100%",
-                                }}
-                            />
-                        );
-                    case "p":
-                        return (
-                            <p
-                                style={{
-                                    border: "none",
-                                    background: "transparent",
-                                    outline: "none",
-                                    width: "auto",
-                                    height: "auto",
-                                    margin: 0,
-                                    padding: "8px",
-                                    minWidth: "50px",
-                                }}
-                            >
-                                {element.content || "Enter paragraph"}
-                            </p>
-                        );
-                    case "h1":
-                        return (
-                            <h1
-                                style={{
-                                    border: "none",
-                                    background: "transparent",
-                                    outline: "none",
-                                    width: "auto",
-                                    height: "auto",
-                                    margin: 0,
-                                    padding: "8px",
-                                    minWidth: "50px",
-                                }}
-                            >
-                                {element.content || "Enter Heading"}
-                            </h1>
-                        );
-                    case "radio":
-                        return (
-                            <input
-                                type="radio"
-                                defaultValue={element.content}
-                                style={{
-                                    border: "none",
-                                    background: "transparent",
-                                    outline: "none",
-                                    width: "100%",
-                                    height: "100%",
-                                }}
-                            />
-                        );
-                    case "button":
-                        return <button>{element.content || "Button"}</button>;
-                    default:
-                        return (
-                            <>
-                                {element.content && (
-                                    <span>{element.content}</span>
-                                )}
-                                {element.children?.length > 0 && (
-                                    <>
-                                        {element.children.map((child: any) =>
-                                            renderElement(child, level + 1),
-                                        )}
-                                    </>
-                                )}
-                            </>
-                        );
-                }
-            };
-
-            return (
-                <div
-                    key={element.id}
-                    style={getElementStyle(element)}
-                    onClick={handleElementClick}
-                    onMouseDown={(e) => {
-                        if (activeAction === "moving") {
-                            handleMouseDown(e, element.id, setSelectedId);
-                        }
-                    }}
-                    title={element.name}
-                >
-                    {renderElementContent()}
-                </div>
-            );
-        },
-        [getElementStyle, isDragging, activeAction, handleMouseDown],
+    const { renderElement } = useElementRenderer(
+        isDragging,
+        activeAction,
+        getElementStyle,
+        handleMouseDown,
+        setSelectedId,
     );
 
     const canvasStyle = {
@@ -689,7 +611,6 @@ export const Canvas: React.FC = () => {
     }
 
     // NOTE: 6 - PROPERTY CHANGE HANDLERS
-    // Create handlers for new properties following this pattern
     const handleWidthChange = (value: number) => {
         dispatch(updateElementWidth(value));
     };
@@ -813,8 +734,6 @@ export const Canvas: React.FC = () => {
     );
 };
 
-// NOTE: 8 - CONTROL PANEL COMPONENTS
-// Follow this structure when creating new control panels
 export const DimensionControlPanel = ({
     elementHeight,
     elementWidth,
@@ -948,58 +867,6 @@ export const ControlPanelInput = ({ value, updateDispatch }: InputType) => {
                     dispatch(updateDispatch(Number(e.target.value)))
                 }
             />
-        </div>
-    );
-};
-
-export const ContentControlPanel = ({
-    elementContent,
-    handleContentChange,
-    textWrap,
-    handleTextWrapChange,
-    selectedElement,
-}: {
-    elementContent: string;
-    handleContentChange: (value: string) => void;
-    textWrap: string;
-    handleTextWrapChange: (value: string) => void;
-    selectedElement: any;
-}) => {
-    const isTextElement =
-        selectedElement?.type === "p" || selectedElement?.type === "h1";
-
-    return (
-        <div className="content-section-container toolbar-section">
-            <div className="heading">Content</div>
-            <div className="content-field-container">
-                <div className="content-field">
-                    <label>Text</label>
-                    <div className="divider"></div>
-                    <textarea
-                        value={elementContent}
-                        className="content-textarea"
-                        onChange={(e) => handleContentChange(e.target.value)}
-                        placeholder="Enter text content..."
-                        rows={3}
-                    />
-                </div>
-            </div>
-
-            {/* Add Text Wrap Control for text elements */}
-            {isTextElement && (
-                <ControlPanelSelect
-                    options={[
-                        { value: "normal", label: "Wrap" },
-                        { value: "nowrap", label: "No Wrap" },
-                        { value: "pre", label: "Pre" },
-                        { value: "pre-wrap", label: "Pre Wrap" },
-                        { value: "pre-line", label: "Pre Line" },
-                    ]}
-                    sectionTitle="Text Wrap"
-                    elementStyle={textWrap}
-                    updateDispatch={updateTextWrap}
-                />
-            )}
         </div>
     );
 };
