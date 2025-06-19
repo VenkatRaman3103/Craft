@@ -1,6 +1,6 @@
 import React, { useState, useRef, useEffect, useCallback } from "react";
 import "./index.scss";
-import { ElementPicker } from "./ElementPicker";
+import { ElementPicker, elementsHash } from "./ElementPicker";
 import {
     AlignCenterHorizontal,
     AlignCenterVertical,
@@ -376,8 +376,10 @@ export const Canvas: React.FC = () => {
         const selectedElement = getSelectedElement();
         if (!selectedElement) return;
 
-        const isTextElement =
-            selectedElement.type === "p" || selectedElement.type === "h1";
+        // const isTextElement =
+        //     selectedElement.type === "p" || selectedElement.type === "h1";
+
+        const isTextElement = elementsHash.text.includes(selectedElement?.type);
 
         const updatedStyles = {
             ...selectedElement.styles,
@@ -747,8 +749,10 @@ export const DimensionControlPanel = ({
     selectedElement,
     textWrap,
 }: any) => {
-    const isTextElement =
-        selectedElement?.type === "p" || selectedElement?.type === "h1";
+    // const isTextElement =
+    //     selectedElement?.type === "p" || selectedElement?.type === "h1";
+
+    const isTextElement = elementsHash.text.includes(selectedElement?.type);
 
     const isDimensionDisabled = isTextElement && textWrap === "nowrap";
 

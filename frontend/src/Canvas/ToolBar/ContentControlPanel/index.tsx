@@ -1,6 +1,7 @@
 import { ControlPanelSelect } from "@/components/canvas/ControlPanelSelect";
 import { updateTextWrap } from "@/store/toolbar/contentControl/contentControl";
 import "./index.scss";
+import { elementsHash } from "@/Canvas/ElementPicker";
 
 export const ContentControlPanel = ({
     elementContent,
@@ -15,8 +16,8 @@ export const ContentControlPanel = ({
     handleTextWrapChange: (value: string) => void;
     selectedElement: any;
 }) => {
-    const isTextElement =
-        selectedElement?.type === "p" || selectedElement?.type === "h1";
+    const isTextElement = elementsHash.text.includes(selectedElement?.type);
+    console.log(elementsHash.text, "elementsHash");
 
     return (
         <div className="content-section-container toolbar-section">

@@ -116,8 +116,127 @@ export const ElementRenderer: React.FC<ElementRendererProps> = ({
                             padding: "8px",
                         }}
                     >
-                        {element.content || "Enter Heading"}
+                        {element.content || "Enter H1"}
                     </h1>
+                );
+
+            case "h2":
+                return (
+                    <h2
+                        style={{
+                            border: "none",
+                            background: "transparent",
+                            outline: "none",
+                            width: "auto",
+                            height: "auto",
+                            margin: 0,
+                            padding: "8px",
+                        }}
+                    >
+                        {element.content || "Enter H2"}
+                    </h2>
+                );
+
+            case "h3":
+                return (
+                    <h3
+                        style={{
+                            border: "none",
+                            background: "transparent",
+                            outline: "none",
+                            width: "auto",
+                            height: "auto",
+                            margin: 0,
+                            padding: "8px",
+                        }}
+                    >
+                        {element.content || "Enter H3"}
+                    </h3>
+                );
+
+            case "span":
+                return (
+                    <span
+                        style={{
+                            border: "none",
+                            background: "transparent",
+                            outline: "none",
+                            width: "auto",
+                            height: "auto",
+                            margin: 0,
+                            padding: "8px",
+                        }}
+                    >
+                        {element.content || "Enter span"}
+                    </span>
+                );
+
+            case "strong":
+                return (
+                    <strong
+                        style={{
+                            border: "none",
+                            background: "transparent",
+                            outline: "none",
+                            width: "auto",
+                            height: "auto",
+                            margin: 0,
+                            padding: "8px",
+                        }}
+                    >
+                        {element.content || "Enter strong"}
+                    </strong>
+                );
+
+            case "em":
+                return (
+                    <em
+                        style={{
+                            border: "none",
+                            background: "transparent",
+                            outline: "none",
+                            width: "auto",
+                            height: "auto",
+                            margin: 0,
+                            padding: "8px",
+                        }}
+                    >
+                        {element.content || "Enter em"}
+                    </em>
+                );
+
+            case "blockquote":
+                return (
+                    <blockquote
+                        style={{
+                            border: "none",
+                            background: "transparent",
+                            outline: "none",
+                            width: "auto",
+                            height: "auto",
+                            margin: 0,
+                            padding: "8px",
+                        }}
+                    >
+                        {element.content || "Enter blockquote"}
+                    </blockquote>
+                );
+
+            case "code":
+                return (
+                    <code
+                        style={{
+                            border: "none",
+                            background: "transparent",
+                            outline: "none",
+                            width: "auto",
+                            height: "auto",
+                            margin: 0,
+                            padding: "8px",
+                        }}
+                    >
+                        {element.content || "Enter code"}
+                    </code>
                 );
             case "radio":
                 return (

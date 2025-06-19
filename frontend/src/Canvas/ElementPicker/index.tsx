@@ -20,7 +20,7 @@ import {
     Scan,
 } from "lucide-react";
 
-const elementsHash = {
+export const elementsHash = {
     layouts: ["div", "section", "article", "header", "footer", "main"],
     text: ["p", "h1", "h2", "h3", "span", "strong", "em", "blockquote", "code"],
     input: ["text", "textarea", "checkbox", "radio", "button", "select"],
