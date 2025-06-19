@@ -57,10 +57,8 @@
         grid-area: tool;
 
         background-color: var(--primary-color);
-        /* width: 18vw; */
         width: 17.8vw;
         height: 98.2vh;
-        /* height: auto; */
         color: white;
         display: flex;
         flex-direction: column;
@@ -75,6 +73,11 @@
 
             display: flex;
             justify-content: space-between;
+
+            background-color: var(--primary-color);
+
+            position: sticky;
+            top: 0px;
         }
 
         .header-button {
