@@ -4,6 +4,7 @@ import borderControlSlice from "./toolbar/borderControl/borderControl";
 import alignmentSlice from "./toolbar/alignmentControl/alignmentControl";
 import projectSlice from "./canvas/projectSlice";
 import dimensionControlSlice from "./toolbar/dimensionControl/dimensionControl";
+import contentControlSlice from "./toolbar/contentControl/contentControl.ts";
 
 export const store = configureStore({
     reducer: {
@@ -12,6 +13,7 @@ export const store = configureStore({
         alignmentControl: alignmentSlice,
         dimensionControl: dimensionControlSlice,
         canvasProject: projectSlice,
+        contentControl: contentControlSlice,
     },
 });
 

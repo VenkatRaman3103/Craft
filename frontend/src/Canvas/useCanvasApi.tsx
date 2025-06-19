@@ -26,14 +26,16 @@ export const useCanvasApi = ({
     const updateElementMutation = useMutation({
         mutationFn: async ({
             elementId,
-            styles,
+            ...updateData
         }: {
             elementId: string | number;
-            styles: any;
+            styles?: any;
+            content?: string;
+            [key: string]: any;
         }) => {
             const response = await axios.patch(
                 `${backendUrl}/canvas/pages/elements/${elementId}`,
-                { styles },
+                updateData,
             );
             return response.data;
         },
@@ -83,9 +85,9 @@ export const useCanvasApi = ({
 
     const batchUpdateElement = async (
         elementId: string | number,
-        styles: any,
+        updateData: any,
     ) => {
-        return updateElementMutation.mutateAsync({ elementId, styles });
+        return updateElementMutation.mutateAsync({ elementId, ...updateData });
     };
 
     const updateElementPosition = async (
@@ -143,44 +145,95 @@ export const useCanvasApi = ({
         alignItems: string,
         justifyContent: string,
         gap: number,
-        elementsCount: number,
-        elementOverFlow: any,
-        elementMinHeight: any,
-        elementMinWidth: any,
-        elementMaxHeight: any,
-        elementMaxWidth: any,
+        zIndex: number,
+        elementOverFlow: string,
+        elementMinHeight: number,
+        elementMinWidth: number,
+        elementMaxHeight: number | string,
+        elementMaxWidth: number | string,
+        textWrap: string,
     ) => {
+        const isTextElement = type === "p" || type === "h1";
+
+        const baseStyles = {
+            position: "absolute",
+            left: "50px",
+            top: "50px",
+            zIndex: zIndex,
+            borderStyle: borderStyle,
+            borderWidth: `${elementBoderWidth}px`,
+            borderRadius: `${elementRadius}px`,
+            flexDirection: flexDirection,
+            alignItems: alignItems,
+            justifyContent: justifyContent,
+            gap: `${gap}px`,
+            overflow: elementOverFlow,
+            whiteSpace: textWrap,
+        };
+        const getDefaultContent = (type: string): string => {
+            switch (type) {
+                case "p":
+                    return "Enter paragraph";
+                case "h1":
+                    return "Enter Heading";
+                case "button":
+                    return "Button";
+                case "text":
+                    return "Enter text...";
+                case "textarea":
+                    return "Enter textarea...";
+                default:
+                    return "";
+            }
+        };
+
+        const textElementStyles = isTextElement
+            ? {
+                  width: textWrap === "nowrap" ? "auto" : `${elementWidth}px`,
+                  height: textWrap === "nowrap" ? "auto" : `${elementHeight}px`,
+                  minWidth:
+                      textWrap === "nowrap" ? "auto" : `${elementMinWidth}px`,
+                  minHeight:
+                      textWrap === "nowrap" ? "auto" : `${elementMinHeight}px`,
+                  maxWidth:
+                      textWrap === "nowrap"
+                          ? "none"
+                          : elementMaxWidth === "none"
+                            ? "none"
+                            : `${elementMaxWidth}px`,
+                  maxHeight:
+                      textWrap === "nowrap"
+                          ? "none"
+                          : elementMaxHeight === "none"
+                            ? "none"
+                            : `${elementMaxHeight}px`,
+                  backgroundColor: "transparent",
+              }
+            : {
+                  width: `${elementWidth}px`,
+                  height: `${elementHeight}px`,
+                  minWidth: `${elementMinWidth}px`,
+                  minHeight: `${elementMinHeight}px`,
+                  maxWidth:
+                      elementMaxWidth === "none"
+                          ? "none"
+                          : `${elementMaxWidth}px`,
+                  maxHeight:
+                      elementMaxHeight === "none"
+                          ? "none"
+                          : `${elementMaxHeight}px`,
+                  backgroundColor: "transparent",
+              };
+
         return {
-            type: "div",
-            parentId: null,
+            type,
             styles: {
-                position: "absolute",
-                left: "100px",
-                top: "100px",
-                width: `${elementWidth}px`,
-                height: `${elementHeight}px`,
-                backgroundColor: getRandomColor(),
-                borderStyle: borderStyle,
-                borderWidth: `${elementBoderWidth}px`,
-                borderColor: "#000",
-                borderRadius: `${elementRadius}px`,
-                display: "flex",
-                flexDirection: flexDirection,
-                alignItems: alignItems,
-                justifyContent: justifyContent,
-                gap: `${gap}px`,
-                cursor: "move",
-                maxHeigth: `${elementMaxHeight}px`,
-                minHeigth: `${elementMinHeight}px`,
-                maxWidth: `${elementMaxWidth}px`,
-                minWidth: `${elementMinWidth}px`,
-                boxSizing: "border-box",
-                overFlow: `${elementOverFlow}`,
+                ...baseStyles,
+                ...textElementStyles,
             },
-            content: type === "text" ? "Text element" : "",
-            attributes: {},
-            order: elementsCount,
+            content: getDefaultContent(type),
             name: `${type}_${Date.now()}`,
+            // Add any other properties
         };
     };
 

@@ -15,7 +15,6 @@ import { useCanvasApi } from "./useCanvasApi";
 import { useDragAndDrop } from "./useDragAndDrop";
 
 // NOTE: 1 - IMPORT ACTION CREATORS
-// Import Redux action creators for the new property
 import {
     updateBoderRadius,
     updateRightWidth,
@@ -28,7 +27,6 @@ import {
     updateTopRightRadius,
     updateTopLeftRadius,
     updateBorderStyle,
-    // add new border-related action creators
 } from "@/store/toolbar/borderControl/borderControl";
 
 import {
@@ -40,11 +38,14 @@ import {
     updateElementMaxHeight,
     updateElementOverFlow,
     overflowType,
-    // add new dimension-related action creators
 } from "@/store/toolbar/dimensionControl/dimensionControl";
 
 import { ToolBarHeader } from "./ToolBar/ToolBarHeader";
 import { ControlPanelSelect } from "@/components/canvas/ControlPanelSelect";
+import {
+    updateElementContent,
+    updateTextWrap,
+} from "@/store/toolbar/contentControl/contentControl";
 
 type Actions = "moving" | "scalling" | "grouping" | "grabbing";
 
@@ -110,7 +111,10 @@ export const Canvas: React.FC = () => {
         (state: StoreState) => state.alignmentControl,
     );
 
-    // ADD NEW PROPERTY CATEGORIES HERE (spacing, typography, etc.)
+    // Content control properties
+    const { elementContent, textWrap } = useSelector(
+        (state: StoreState) => state.contentControl,
+    );
 
     // hooks
     const {
@@ -217,8 +221,6 @@ export const Canvas: React.FC = () => {
             const overflow = selectedElement.styles?.overflow || "visible";
             dispatch(updateElementOverFlow(overflow as overflowType));
 
-            // add new dimension property reading here
-
             // BORDER PROPERTIES - Read and dispatch to Redux
             const borderWidth = selectedElement.styles?.borderWidth;
             const borderRadius = selectedElement.styles?.borderRadius;
@@ -276,12 +278,14 @@ export const Canvas: React.FC = () => {
                 dispatch(updateBorderStyle(borderStyleValue));
             }
 
-            // add new border property reading here
+            // CONTENT PROPERTIES - Read and dispatch to Redux
+            const content = selectedElement.content || "";
+            dispatch(updateElementContent(content));
 
-            // ADD NEW PROPERTY CATEGORIES READING HERE (spacing, typography, etc.)
+            const whiteSpace = selectedElement.styles?.whiteSpace || "normal";
+            dispatch(updateTextWrap(whiteSpace));
         } else {
             // RESET VALUES WHEN NO ELEMENT IS SELECTED
-            // Add reset actions for new properties
             dispatch(updateElementOverFlow("visible"));
             dispatch(updateElementWidth(100));
             dispatch(updateElementHeight(100));
@@ -289,7 +293,8 @@ export const Canvas: React.FC = () => {
             dispatch(updateElementMinHeight(0));
             dispatch(updateElementMaxWidth("none"));
             dispatch(updateElementMaxHeight("none"));
-            // add new property resets here
+            dispatch(updateElementContent(""));
+            dispatch(updateTextWrap("normal"));
         }
     }, [selectedId, elements, dispatch]);
 
@@ -297,6 +302,11 @@ export const Canvas: React.FC = () => {
         if (selectedId === null) return null;
         return findElementById(elements, selectedId);
     }, [selectedId, elements, findElementById]);
+
+    useEffect(() => {
+        console.log("Content in Redux:", elementContent);
+        console.log("Text Wrap in Redux:", textWrap);
+    }, [elementContent, textWrap]);
 
     // NOTE: 4 - ELEMENT STYLE WRITING (WRITE FROM REDUX TO ELEMENT STYLES)
     // This function takes Redux state and applies it to the selected element
@@ -307,19 +317,41 @@ export const Canvas: React.FC = () => {
         const selectedElement = getSelectedElement();
         if (!selectedElement) return;
 
+        const isTextElement =
+            selectedElement.type === "p" || selectedElement.type === "h1";
+
         const updatedStyles = {
             ...selectedElement.styles,
             // DIMENSION PROPERTIES
-            width: `${elementWidth}px`,
-            height: `${elementHeight}px`,
-            minWidth: `${elementMinWidth}px`,
-            minHeight: `${elementMinHeight}px`,
+            width:
+                isTextElement && textWrap === "nowrap"
+                    ? "auto"
+                    : `${elementWidth}px`,
+            height:
+                isTextElement && textWrap === "nowrap"
+                    ? "auto"
+                    : `${elementHeight}px`,
+            minWidth:
+                isTextElement && textWrap === "nowrap"
+                    ? "auto"
+                    : `${elementMinWidth}px`,
+            minHeight:
+                isTextElement && textWrap === "nowrap"
+                    ? "auto"
+                    : `${elementMinHeight}px`,
             maxWidth:
-                elementMaxWidth === "none" ? "none" : `${elementMaxWidth}px`,
+                isTextElement && textWrap === "nowrap"
+                    ? "none"
+                    : elementMaxWidth === "none"
+                      ? "none"
+                      : `${elementMaxWidth}px`,
             maxHeight:
-                elementMaxHeight === "none" ? "none" : `${elementMaxHeight}px`,
+                isTextElement && textWrap === "nowrap"
+                    ? "none"
+                    : elementMaxHeight === "none"
+                      ? "none"
+                      : `${elementMaxHeight}px`,
             overflow: elementOverFlow || "visible",
-            // add new dimension properties here
 
             // BORDER PROPERTIES
             borderStyle: borderStyle,
@@ -331,39 +363,43 @@ export const Canvas: React.FC = () => {
                 toggleAllSide_radius === "all"
                     ? `${elementRadius}px`
                     : `${topLeftRadius}px ${topRightRadius}px ${bottomRightRadius}px ${bottomLeftRadius}px`,
-            // add new border properties here
 
             // ALIGNMENT PROPERTIES
             flexDirection: flexDirection,
             alignItems: alignItems,
             justifyContent: justifyContent,
             gap: `${gap}px`,
-            // add new alignment properties here
 
-            // ADD NEW PROPERTY CATEGORIES HERE (spacing, typography, etc.)
+            whiteSpace: textWrap,
+
+            backgroundColor: isTextElement
+                ? "transparent"
+                : selectedElement.styles?.backgroundColor || "transparent",
+        };
+
+        const updatePayload = {
+            styles: updatedStyles,
+            content: elementContent,
         };
 
         try {
             await updateElementMutation.mutateAsync({
                 elementId: selectedId,
-                styles: updatedStyles,
+                ...updatePayload,
             });
         } catch (error) {
             console.error("Failed to update element styles:", error);
         }
     }, [
         selectedId,
-        // DIMENSION DEPENDENCIES
         elementWidth,
         elementHeight,
         elementMinWidth,
         elementMinHeight,
         elementMaxWidth,
         elementMaxHeight,
+        elementContent,
         elementOverFlow,
-        // add new dimension dependencies here
-
-        // BORDER DEPENDENCIES
         borderStyle,
         elementBoderWidth,
         topWidth,
@@ -377,17 +413,11 @@ export const Canvas: React.FC = () => {
         bottomLeftRadius,
         toggleAllSide_width,
         toggleAllSide_radius,
-        // add new border dependencies here
-
-        // ALIGNMENT DEPENDENCIES
         flexDirection,
         alignItems,
         justifyContent,
         gap,
-        // add new alignment dependencies here
-
-        // ADD NEW PROPERTY CATEGORY DEPENDENCIES HERE
-
+        textWrap,
         getSelectedElement,
         updateElementMutation,
     ]);
@@ -413,7 +443,7 @@ export const Canvas: React.FC = () => {
                 elementMinWidth,
                 elementMaxHeight,
                 elementMaxWidth,
-                // add new property parameters here
+                textWrap,
             );
 
             try {
@@ -440,7 +470,7 @@ export const Canvas: React.FC = () => {
             createDefaultElement,
             createElementMutation,
             elementOverFlow,
-            // add new property dependencies here
+            textWrap,
         ],
     );
 
@@ -504,6 +534,127 @@ export const Canvas: React.FC = () => {
                 }
             };
 
+            const renderElementContent = () => {
+                console.log(element.type, "elementType");
+                switch (element.type) {
+                    case "text":
+                        return (
+                            <input
+                                type="text"
+                                placeholder={
+                                    element.attributes?.placeholder ||
+                                    "Enter text..."
+                                }
+                                defaultValue={element.content}
+                                style={{
+                                    border: "none",
+                                    background: "transparent",
+                                    outline: "none",
+                                    width: "100%",
+                                    height: "100%",
+                                }}
+                            />
+                        );
+                    case "textarea":
+                        return (
+                            <textarea
+                                placeholder={
+                                    element.attributes?.placeholder ||
+                                    "Enter textarea..."
+                                }
+                                defaultValue={element.content}
+                                style={{
+                                    border: "none",
+                                    background: "transparent",
+                                    outline: "none",
+                                    width: "100%",
+                                    height: "100%",
+                                    resize: "none",
+                                }}
+                            />
+                        );
+                    case "checkbox":
+                        return (
+                            <input
+                                type="checkbox"
+                                defaultValue={element.content}
+                                style={{
+                                    border: "none",
+                                    background: "transparent",
+                                    outline: "none",
+                                    width: "100%",
+                                    height: "100%",
+                                }}
+                            />
+                        );
+                    case "p":
+                        return (
+                            <p
+                                style={{
+                                    border: "none",
+                                    background: "transparent",
+                                    outline: "none",
+                                    width: "auto",
+                                    height: "auto",
+                                    margin: 0,
+                                    padding: "8px",
+                                    minWidth: "50px",
+                                }}
+                            >
+                                {element.content || "Enter paragraph"}
+                            </p>
+                        );
+                    case "h1":
+                        return (
+                            <h1
+                                style={{
+                                    border: "none",
+                                    background: "transparent",
+                                    outline: "none",
+                                    width: "auto",
+                                    height: "auto",
+                                    margin: 0,
+                                    padding: "8px",
+                                    minWidth: "50px",
+                                }}
+                            >
+                                {element.content || "Enter Heading"}
+                            </h1>
+                        );
+                    case "radio":
+                        return (
+                            <input
+                                type="radio"
+                                defaultValue={element.content}
+                                style={{
+                                    border: "none",
+                                    background: "transparent",
+                                    outline: "none",
+                                    width: "100%",
+                                    height: "100%",
+                                }}
+                            />
+                        );
+                    case "button":
+                        return <button>{element.content || "Button"}</button>;
+                    default:
+                        return (
+                            <>
+                                {element.content && (
+                                    <span>{element.content}</span>
+                                )}
+                                {element.children?.length > 0 && (
+                                    <>
+                                        {element.children.map((child: any) =>
+                                            renderElement(child, level + 1),
+                                        )}
+                                    </>
+                                )}
+                            </>
+                        );
+                }
+            };
+
             return (
                 <div
                     key={element.id}
@@ -516,14 +667,7 @@ export const Canvas: React.FC = () => {
                     }}
                     title={element.name}
                 >
-                    {element.content && <span>{element.content}</span>}
-                    {element.children?.length > 0 && (
-                        <>
-                            {element.children.map((child: any) =>
-                                renderElement(child, level + 1),
-                            )}
-                        </>
-                    )}
+                    {renderElementContent()}
                 </div>
             );
         },
@@ -554,7 +698,13 @@ export const Canvas: React.FC = () => {
         dispatch(updateElementHeight(value));
     };
 
-    // ADD NEW PROPERTY HANDLERS HERE
+    const handleContentChange = (value: string) => {
+        dispatch(updateElementContent(value));
+    };
+
+    const handleTextWrapChange = (value: string) => {
+        dispatch(updateTextWrap(value));
+    };
 
     return (
         <div className="figma-container">
@@ -631,6 +781,16 @@ export const Canvas: React.FC = () => {
                         elementMaxWidth={elementMaxWidth}
                         elementMinHeight={elementMinHeight}
                         elementMaxHeight={elementMaxHeight}
+                        selectedElement={getSelectedElement()}
+                        textWrap={textWrap}
+                    />
+
+                    <ContentControlPanel
+                        elementContent={elementContent}
+                        handleContentChange={handleContentChange}
+                        textWrap={textWrap}
+                        handleTextWrapChange={handleTextWrapChange}
+                        selectedElement={getSelectedElement()}
                     />
 
                     <BorderControlPanel
@@ -638,19 +798,15 @@ export const Canvas: React.FC = () => {
                         toggleAllSide_width={toggleAllSide_width}
                         setToggleAllSide_radius={setToggleAllSide_radius}
                         setToggleAllSide_width={setToggleAllSide_width}
-                        // add new border props here
                     />
 
                     <AlignmentControlPanel
                         selectedId={selectedId}
                         elements={elements}
                         setElements={() => {}}
-                        // add new alignment props here
                     />
 
                     <FontsControlPanel />
-
-                    {/* ADD NEW CONTROL PANELS HERE */}
                 </div>
             </div>
         </div>
@@ -669,7 +825,14 @@ export const DimensionControlPanel = ({
     handleHeightChange,
     handleWidthChange,
     elementOverFlow,
+    selectedElement,
+    textWrap,
 }: any) => {
+    const isTextElement =
+        selectedElement?.type === "p" || selectedElement?.type === "h1";
+
+    const isDimensionDisabled = isTextElement && textWrap === "nowrap";
+
     return (
         <div className="dimenstion-cotainer toolbar-section">
             <div className="heading">Dimensions</div>
@@ -678,12 +841,15 @@ export const DimensionControlPanel = ({
                     <label>H</label>
                     <div className="divider"></div>
                     <input
-                        value={elementHeight}
-                        type="number"
+                        value={isDimensionDisabled ? "auto" : elementHeight}
+                        type={isDimensionDisabled ? "text" : "number"}
                         className="dimension-field"
                         onChange={(e) =>
+                            !isDimensionDisabled &&
                             handleHeightChange(Number(e.target.value))
                         }
+                        disabled={isDimensionDisabled}
+                        placeholder={isDimensionDisabled ? "auto" : ""}
                     />
                     <div className="divider"></div>
                     <MetricSelection />
@@ -692,12 +858,15 @@ export const DimensionControlPanel = ({
                     <label>W</label>
                     <div className="divider"></div>
                     <input
-                        value={elementWidth}
-                        type="number"
+                        value={isDimensionDisabled ? "auto" : elementWidth}
+                        type={isDimensionDisabled ? "text" : "number"}
                         className="dimension-field"
                         onChange={(e) =>
+                            !isDimensionDisabled &&
                             handleWidthChange(Number(e.target.value))
                         }
+                        disabled={isDimensionDisabled}
+                        placeholder={isDimensionDisabled ? "auto" : ""}
                     />
                     <div className="divider"></div>
                     <MetricSelection />
@@ -705,41 +874,45 @@ export const DimensionControlPanel = ({
                 <div className="dimension">0</div>
             </div>
 
-            <div className="border-width-sub-section">
-                <div className="sub-heading">Max</div>
-                <div className="border-width-tools-container">
-                    <div className="boder-width-adjustments-container">
-                        <div className="boder-width-adjustments">
-                            <ControlPanelInput
-                                value={elementMaxWidth}
-                                updateDispatch={updateElementMaxWidth}
-                            />
-                            <ControlPanelInput
-                                value={elementMaxHeight}
-                                updateDispatch={updateElementMaxHeight}
-                            />
+            {!isDimensionDisabled && (
+                <>
+                    <div className="border-width-sub-section">
+                        <div className="sub-heading">Max</div>
+                        <div className="border-width-tools-container">
+                            <div className="boder-width-adjustments-container">
+                                <div className="boder-width-adjustments">
+                                    <ControlPanelInput
+                                        value={elementMaxWidth}
+                                        updateDispatch={updateElementMaxWidth}
+                                    />
+                                    <ControlPanelInput
+                                        value={elementMaxHeight}
+                                        updateDispatch={updateElementMaxHeight}
+                                    />
+                                </div>
+                            </div>
                         </div>
                     </div>
-                </div>
-            </div>
 
-            <div className="border-width-sub-section">
-                <div className="sub-heading">Min</div>
-                <div className="border-width-tools-container">
-                    <div className="boder-width-adjustments-container">
-                        <div className="boder-width-adjustments">
-                            <ControlPanelInput
-                                value={elementMinWidth}
-                                updateDispatch={updateElementMinWidth}
-                            />
-                            <ControlPanelInput
-                                value={elementMinHeight}
-                                updateDispatch={updateElementMinHeight}
-                            />
+                    <div className="border-width-sub-section">
+                        <div className="sub-heading">Min</div>
+                        <div className="border-width-tools-container">
+                            <div className="boder-width-adjustments-container">
+                                <div className="boder-width-adjustments">
+                                    <ControlPanelInput
+                                        value={elementMinWidth}
+                                        updateDispatch={updateElementMinWidth}
+                                    />
+                                    <ControlPanelInput
+                                        value={elementMinHeight}
+                                        updateDispatch={updateElementMinHeight}
+                                    />
+                                </div>
+                            </div>
                         </div>
                     </div>
-                </div>
-            </div>
+                </>
+            )}
 
             <ControlPanelSelect
                 options={[
@@ -775,6 +948,58 @@ export const ControlPanelInput = ({ value, updateDispatch }: InputType) => {
                     dispatch(updateDispatch(Number(e.target.value)))
                 }
             />
+        </div>
+    );
+};
+
+export const ContentControlPanel = ({
+    elementContent,
+    handleContentChange,
+    textWrap,
+    handleTextWrapChange,
+    selectedElement,
+}: {
+    elementContent: string;
+    handleContentChange: (value: string) => void;
+    textWrap: string;
+    handleTextWrapChange: (value: string) => void;
+    selectedElement: any;
+}) => {
+    const isTextElement =
+        selectedElement?.type === "p" || selectedElement?.type === "h1";
+
+    return (
+        <div className="content-section-container toolbar-section">
+            <div className="heading">Content</div>
+            <div className="content-field-container">
+                <div className="content-field">
+                    <label>Text</label>
+                    <div className="divider"></div>
+                    <textarea
+                        value={elementContent}
+                        className="content-textarea"
+                        onChange={(e) => handleContentChange(e.target.value)}
+                        placeholder="Enter text content..."
+                        rows={3}
+                    />
+                </div>
+            </div>
+
+            {/* Add Text Wrap Control for text elements */}
+            {isTextElement && (
+                <ControlPanelSelect
+                    options={[
+                        { value: "normal", label: "Wrap" },
+                        { value: "nowrap", label: "No Wrap" },
+                        { value: "pre", label: "Pre" },
+                        { value: "pre-wrap", label: "Pre Wrap" },
+                        { value: "pre-line", label: "Pre Line" },
+                    ]}
+                    sectionTitle="Text Wrap"
+                    elementStyle={textWrap}
+                    updateDispatch={updateTextWrap}
+                />
+            )}
         </div>
     );
 };
