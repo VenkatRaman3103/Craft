@@ -8,7 +8,14 @@
     font-size: 14px;
 }
 
+.content-sub-section-container {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
 .content-textarea {
+    width: 65%;
     background-color: var(--secondary-color);
     color: white;
     border: none;
