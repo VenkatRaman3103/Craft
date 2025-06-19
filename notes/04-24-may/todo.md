@@ -1,4 +1,0 @@
-- [ ] aligment
-- [ ] backend
-- [ ] filtree
-- [ ] grouping
