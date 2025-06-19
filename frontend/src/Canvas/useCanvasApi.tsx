@@ -152,6 +152,14 @@ export const useCanvasApi = ({
         elementMaxHeight: number | string,
         elementMaxWidth: number | string,
         textWrap: string,
+        fontFamily: string,
+        fontWeight: string,
+        fontSize: number,
+        fontStyle: string,
+        textDecoration: string,
+        textAlign: string,
+        lineHeight: number,
+        letterSpacing: number,
     ) => {
         const isTextElement = type === "p" || type === "h1";
 
@@ -169,6 +177,14 @@ export const useCanvasApi = ({
             gap: `${gap}px`,
             overflow: elementOverFlow,
             whiteSpace: textWrap,
+            fontFamily,
+            fontWeight,
+            fontSize: `${fontSize}px`,
+            fontStyle,
+            textDecoration,
+            textAlign,
+            lineHeight,
+            letterSpacing: `${letterSpacing}px`,
         };
         const getDefaultContent = (type: string): string => {
             switch (type) {

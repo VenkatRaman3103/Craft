@@ -5,6 +5,7 @@ import alignmentSlice from "./toolbar/alignmentControl/alignmentControl";
 import projectSlice from "./canvas/projectSlice";
 import dimensionControlSlice from "./toolbar/dimensionControl/dimensionControl";
 import contentControlSlice from "./toolbar/contentControl/contentControl.ts";
+import fontControlSlice from "./toolbar/fontsControl/fontsControl.ts";
 
 export const store = configureStore({
     reducer: {
@@ -14,6 +15,7 @@ export const store = configureStore({
         dimensionControl: dimensionControlSlice,
         canvasProject: projectSlice,
         contentControl: contentControlSlice,
+        fontControl: fontControlSlice,
     },
 });
 

@@ -1,23 +1,7 @@
 import React, { useState, useRef, useEffect, useCallback } from "react";
 import "./index.scss";
 import { ElementPicker, elementsHash } from "./ElementPicker";
-import {
-    AlignCenterHorizontal,
-    AlignCenterVertical,
-    AlignEndHorizontal,
-    AlignEndVertical,
-    AlignHorizontalSpaceAround,
-    AlignHorizontalSpaceBetween,
-    AlignStartHorizontal,
-    AlignStartVertical,
-    AlignVerticalJustifyCenter,
-    ArrowLeft,
-    ArrowUp,
-    Minus,
-    RotateCcw,
-    ZoomIn,
-    ZoomOut,
-} from "lucide-react";
+import { Minus, RotateCcw, ZoomIn, ZoomOut } from "lucide-react";
 import { StoreState } from "@/store/store";
 import { BorderControlPanel } from "./ToolBar/BroderControlPanel";
 import { useSelector, useDispatch } from "react-redux";
@@ -45,6 +29,17 @@ import {
     updateTopLeftRadius,
     updateBorderStyle,
 } from "@/store/toolbar/borderControl/borderControl";
+
+import {
+    updateFontFamily,
+    updateFontWeight,
+    updateFontSize,
+    updateFontStyle,
+    updateTextDecoration,
+    updateTextAlign,
+    updateLineHeight,
+    updateLetterSpacing,
+} from "@/store/toolbar/fontsControl/fontsControl";
 
 import {
     updateElementWidth,
@@ -131,6 +126,7 @@ export const Canvas: React.FC = () => {
         elementOverFlow,
     } = useSelector((state: StoreState) => state.dimensionControl);
 
+    // Alignment control
     const {
         type: alignType,
         flexDirection,
@@ -144,6 +140,18 @@ export const Canvas: React.FC = () => {
     const { elementContent, textWrap } = useSelector(
         (state: StoreState) => state.contentControl,
     );
+
+    // fonts control
+    const {
+        fontFamily,
+        fontWeight,
+        fontSize,
+        fontStyle,
+        textDecoration,
+        textAlign,
+        lineHeight,
+        letterSpacing,
+    } = useSelector((state: StoreState) => state.fontControl);
 
     // hooks
     const {
@@ -336,6 +344,38 @@ export const Canvas: React.FC = () => {
 
             const whiteSpace = selectedElement.styles?.whiteSpace || "normal";
             dispatch(updateTextWrap(whiteSpace));
+
+            // FONTS PROPERTIES
+            const elementFontFamily =
+                selectedElement.styles?.fontFamily || "Arial, sans-serif";
+            const elementFontWeight =
+                selectedElement.styles?.fontWeight || "normal";
+            const elementFontSize = selectedElement.styles?.fontSize
+                ? parseInt(selectedElement.styles.fontSize.replace("px", ""))
+                : 16;
+            const elementFontStyle =
+                selectedElement.styles?.fontStyle || "normal";
+            const elementTextDecoration =
+                selectedElement.styles?.textDecoration || "none";
+            const elementTextAlign =
+                selectedElement.styles?.textAlign || "left";
+            const elementLineHeight = selectedElement.styles?.lineHeight
+                ? parseFloat(selectedElement.styles.lineHeight.toString())
+                : 1.5;
+            const elementLetterSpacing = selectedElement.styles?.letterSpacing
+                ? parseFloat(
+                      selectedElement.styles.letterSpacing.replace("px", ""),
+                  )
+                : 0;
+
+            dispatch(updateFontFamily(elementFontFamily));
+            dispatch(updateFontWeight(elementFontWeight));
+            dispatch(updateFontSize(elementFontSize));
+            dispatch(updateFontStyle(elementFontStyle));
+            dispatch(updateTextDecoration(elementTextDecoration));
+            dispatch(updateTextAlign(elementTextAlign));
+            dispatch(updateLineHeight(elementLineHeight));
+            dispatch(updateLetterSpacing(elementLetterSpacing));
         } else {
             // RESET VALUES WHEN NO ELEMENT IS SELECTED
             dispatch(updateElementOverFlow("visible"));
@@ -353,6 +393,15 @@ export const Canvas: React.FC = () => {
             dispatch(updateGap(0));
             dispatch(updateAlignType("flex"));
             dispatch(updateIsReveresed(false));
+
+            dispatch(updateFontFamily("Arial, sans-serif"));
+            dispatch(updateFontWeight("normal"));
+            dispatch(updateFontSize(16));
+            dispatch(updateFontStyle("normal"));
+            dispatch(updateTextDecoration("none"));
+            dispatch(updateTextAlign("left"));
+            dispatch(updateLineHeight(1.5));
+            dispatch(updateLetterSpacing(0));
         }
     }, [selectedId, elements, dispatch]);
 
@@ -375,9 +424,6 @@ export const Canvas: React.FC = () => {
 
         const selectedElement = getSelectedElement();
         if (!selectedElement) return;
-
-        // const isTextElement =
-        //     selectedElement.type === "p" || selectedElement.type === "h1";
 
         const isTextElement = elementsHash.text.includes(selectedElement?.type);
 
@@ -435,6 +481,16 @@ export const Canvas: React.FC = () => {
             // TEXT PROPERTIES
             whiteSpace: textWrap,
 
+            // FONTS PROPERTIES
+            fontFamily: fontFamily,
+            fontWeight: fontWeight,
+            fontSize: `${fontSize}px`,
+            fontStyle: fontStyle,
+            textDecoration: textDecoration,
+            textAlign: textAlign,
+            lineHeight: lineHeight,
+            letterSpacing: `${letterSpacing}px`,
+
             backgroundColor: isTextElement
                 ? "transparent"
                 : selectedElement.styles?.backgroundColor || "transparent",
@@ -484,6 +540,14 @@ export const Canvas: React.FC = () => {
         getSelectedElement,
         updateElementMutation,
         getComputedFlexDirection,
+        fontFamily,
+        fontWeight,
+        fontSize,
+        fontStyle,
+        textDecoration,
+        textAlign,
+        lineHeight,
+        letterSpacing,
     ]);
 
     // NOTE: 5 - ELEMENT CREATION WITH DEFAULT VALUES
@@ -508,6 +572,14 @@ export const Canvas: React.FC = () => {
                 elementMaxWidth,
                 textWrap,
                 alignType,
+                fontFamily,
+                fontWeight,
+                fontSize,
+                fontStyle,
+                textDecoration,
+                textAlign,
+                lineHeight,
+                letterSpacing,
             );
 
             try {
@@ -530,6 +602,14 @@ export const Canvas: React.FC = () => {
             justifyContent,
             gap,
             alignType,
+            fontFamily,
+            fontWeight,
+            fontSize,
+            fontStyle,
+            textDecoration,
+            textAlign,
+            lineHeight,
+            letterSpacing,
             elements.length,
             createDefaultElement,
             createElementMutation,
