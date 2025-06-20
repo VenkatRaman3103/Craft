@@ -147,7 +147,7 @@ export const ColorControlPanel: React.FC<ColorControlPanelProps> = ({
 
     if (!selectedElement) {
         return (
-            <div className="control-panel-wrapper">
+            <div className="control-panel-wrapper toolbar-section">
                 <div className="control-header-wrapper">
                     {/* <Palette size={16} /> */}
                     <span>Colors</span>

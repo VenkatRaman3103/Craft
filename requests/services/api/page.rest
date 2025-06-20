@@ -1,5 +1,5 @@
 # host
-http://localhost:5000/services
+http://localhost:5000/api
 
 # curl options
  --silent
@@ -21,7 +21,7 @@ Content-Type: application/json; charset=utf-8
 User-Agent: VRC
 
 # query
-GET /api/page/f9c8069a-f4b4-4d24-8b44-72337f552f2a
+GET /page/f9c8069a-f4b4-4d24-8b44-72337f552f2a
 
 # body
 # {
@@ -29,4 +29,5 @@ GET /api/page/f9c8069a-f4b4-4d24-8b44-72337f552f2a
 #     "label": "Test2 url label",
 #     "value": "https://google.com"
 # }
+
 

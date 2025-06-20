@@ -21,11 +21,20 @@ import {
 } from "lucide-react";
 
 export const elementsHash = {
-    layouts: ["div", "section", "article", "header", "footer", "main"],
+    layouts: [
+        "div",
+        "section",
+        "article",
+        "header",
+        "footer",
+        "main",
+        "ul",
+        "ol",
+    ],
     text: ["p", "h1", "h2", "h3", "span", "strong", "em", "blockquote", "code"],
     input: ["text", "textarea", "checkbox", "radio", "button", "select"],
     media: ["img", "video", "audio", "iframe"],
-    list: ["ul", "ol", "li"],
+    list: ["ul", "ol"],
     semantic: ["nav", "aside", "figure", "figcaption", "form", "label"],
     interactive: ["details", "summary", "dialog", "progress", "meter"],
     table: ["table", "thead", "tbody", "tfoot", "tr", "th", "td"],

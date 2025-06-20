@@ -102,7 +102,7 @@ export const Page = () => {
                 >
                     {openApiPreview && (
                         <div className={`api-wrapper`}>
-                            <ApiViewer />
+                            {/* <ApiViewer /> */}
                         </div>
                     )}
                 </div>

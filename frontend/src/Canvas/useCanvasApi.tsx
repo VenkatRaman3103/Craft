@@ -152,6 +152,7 @@ export const useCanvasApi = ({
         elementMaxHeight: number | string,
         elementMaxWidth: number | string,
         textWrap: string,
+        alignType: string,
         fontFamily: string,
         fontWeight: string,
         fontSize: number,
@@ -160,8 +161,32 @@ export const useCanvasApi = ({
         textAlign: string,
         lineHeight: number,
         letterSpacing: number,
+        backgroundColor: string,
+        borderColor: string,
+        textColor: string,
+        useGradient: boolean,
+        gradientBackground: string,
     ) => {
-        const isTextElement = type === "p" || type === "h1";
+        // Define element categories
+        const textElements = [
+            "p",
+            "h1",
+            "h2",
+            "h3",
+            "span",
+            "strong",
+            "em",
+            "blockquote",
+            "code",
+        ];
+        const listElements = ["ul", "ol"];
+        const inputElements = ["text", "textarea", "checkbox", "radio"];
+        const interactiveElements = ["button"];
+
+        const isTextElement = textElements.includes(type);
+        const isListElement = listElements.includes(type);
+        const isInputElement = inputElements.includes(type);
+        const isInteractiveElement = interactiveElements.includes(type);
 
         const baseStyles = {
             position: "absolute",
@@ -170,7 +195,9 @@ export const useCanvasApi = ({
             zIndex: zIndex,
             borderStyle: borderStyle,
             borderWidth: `${elementBoderWidth}px`,
+            borderColor: borderColor,
             borderRadius: `${elementRadius}px`,
+            display: alignType,
             flexDirection: flexDirection,
             alignItems: alignItems,
             justifyContent: justifyContent,
@@ -185,71 +212,134 @@ export const useCanvasApi = ({
             textAlign,
             lineHeight,
             letterSpacing: `${letterSpacing}px`,
+            color: textColor,
         };
-        const getDefaultContent = (type: string): string => {
-            switch (type) {
+
+        const getDefaultContent = (elementType: string): string => {
+            switch (elementType) {
+                case "ul":
+                case "ol":
+                    return "[]";
                 case "p":
                     return "Enter paragraph";
                 case "h1":
-                    return "Enter Heading";
+                    return "Heading 1";
+                case "h2":
+                    return "Heading 2";
+                case "h3":
+                    return "Heading 3";
+                case "span":
+                    return "Span text";
+                case "strong":
+                    return "Strong text";
+                case "em":
+                    return "Emphasized text";
+                case "blockquote":
+                    return "Quote text";
+                case "code":
+                    return "Code snippet";
                 case "button":
                     return "Button";
                 case "text":
                     return "Enter text...";
                 case "textarea":
                     return "Enter textarea...";
+                case "checkbox":
+                case "radio":
+                    return "";
                 default:
                     return "";
             }
         };
 
-        const textElementStyles = isTextElement
-            ? {
-                  width: textWrap === "nowrap" ? "auto" : `${elementWidth}px`,
-                  height: textWrap === "nowrap" ? "auto" : `${elementHeight}px`,
-                  minWidth:
-                      textWrap === "nowrap" ? "auto" : `${elementMinWidth}px`,
-                  minHeight:
-                      textWrap === "nowrap" ? "auto" : `${elementMinHeight}px`,
-                  maxWidth:
-                      textWrap === "nowrap"
-                          ? "none"
-                          : elementMaxWidth === "none"
-                            ? "none"
-                            : `${elementMaxWidth}px`,
-                  maxHeight:
-                      textWrap === "nowrap"
-                          ? "none"
-                          : elementMaxHeight === "none"
-                            ? "none"
-                            : `${elementMaxHeight}px`,
-                  backgroundColor: "transparent",
-              }
-            : {
-                  width: `${elementWidth}px`,
-                  height: `${elementHeight}px`,
-                  minWidth: `${elementMinWidth}px`,
-                  minHeight: `${elementMinHeight}px`,
-                  maxWidth:
-                      elementMaxWidth === "none"
+        let elementSpecificStyles = {};
+
+        if (isListElement) {
+            elementSpecificStyles = {
+                width: "200px",
+                height: "auto",
+                minWidth: "100px",
+                minHeight: "auto",
+                maxWidth:
+                    elementMaxWidth === "none"
+                        ? "none"
+                        : `${elementMaxWidth}px`,
+                maxHeight:
+                    elementMaxHeight === "none"
+                        ? "none"
+                        : `${elementMaxHeight}px`,
+                backgroundColor: useGradient ? undefined : "transparent",
+                background: useGradient ? gradientBackground : undefined,
+            };
+        } else if (isTextElement) {
+            elementSpecificStyles = {
+                width: textWrap === "nowrap" ? "auto" : `${elementWidth}px`,
+                height: textWrap === "nowrap" ? "auto" : `${elementHeight}px`,
+                minWidth:
+                    textWrap === "nowrap" ? "auto" : `${elementMinWidth}px`,
+                minHeight:
+                    textWrap === "nowrap" ? "auto" : `${elementMinHeight}px`,
+                maxWidth:
+                    textWrap === "nowrap"
+                        ? "none"
+                        : elementMaxWidth === "none"
                           ? "none"
                           : `${elementMaxWidth}px`,
-                  maxHeight:
-                      elementMaxHeight === "none"
+                maxHeight:
+                    textWrap === "nowrap"
+                        ? "none"
+                        : elementMaxHeight === "none"
                           ? "none"
                           : `${elementMaxHeight}px`,
-                  backgroundColor: "transparent",
-              };
+                backgroundColor: useGradient ? undefined : "transparent",
+                background: useGradient ? gradientBackground : undefined,
+            };
+        } else if (isInputElement) {
+            elementSpecificStyles = {
+                width: type === "textarea" ? `${elementWidth}px` : "auto",
+                height: type === "textarea" ? `${elementHeight}px` : "auto",
+                minWidth: type === "textarea" ? `${elementMinWidth}px` : "auto",
+                minHeight:
+                    type === "textarea" ? `${elementMinHeight}px` : "auto",
+                maxWidth:
+                    elementMaxWidth === "none"
+                        ? "none"
+                        : `${elementMaxWidth}px`,
+                maxHeight:
+                    elementMaxHeight === "none"
+                        ? "none"
+                        : `${elementMaxHeight}px`,
+                backgroundColor: useGradient ? undefined : backgroundColor,
+                background: useGradient ? gradientBackground : undefined,
+            };
+        } else {
+            elementSpecificStyles = {
+                width: `${elementWidth}px`,
+                height: `${elementHeight}px`,
+                minWidth: `${elementMinWidth}px`,
+                minHeight: `${elementMinHeight}px`,
+                maxWidth:
+                    elementMaxWidth === "none"
+                        ? "none"
+                        : `${elementMaxWidth}px`,
+                maxHeight:
+                    elementMaxHeight === "none"
+                        ? "none"
+                        : `${elementMaxHeight}px`,
+                backgroundColor: useGradient ? undefined : backgroundColor,
+                background: useGradient ? gradientBackground : undefined,
+            };
+        }
 
         return {
             type,
             styles: {
                 ...baseStyles,
-                ...textElementStyles,
+                ...elementSpecificStyles,
             },
             content: getDefaultContent(type),
             name: `${type}_${Date.now()}`,
-            // Add any other properties
+            attributes: {},
         };
     };
 

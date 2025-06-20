@@ -35,9 +35,90 @@ export const ElementRenderer: React.FC<ElementRendererProps> = ({
         [isDragging, element.id, setSelectedId],
     );
 
+    const renderListItems = useCallback(
+        (listType: "ul" | "ol") => {
+            let listItems: string[] = [];
+
+            try {
+                if (element.content) {
+                    const parsed = JSON.parse(element.content);
+                    if (Array.isArray(parsed)) {
+                        listItems = parsed;
+                    }
+                }
+            } catch {
+                listItems = [];
+            }
+
+            if (listItems.length === 0) {
+                return (
+                    <li
+                        style={{
+                            color: "#999",
+                            padding: "4px 0",
+                            listStyleType:
+                                listType === "ul" ? "disc" : "decimal",
+                        }}
+                    >
+                        Add list items
+                    </li>
+                );
+            }
+
+            return listItems.map((item, index) => (
+                <li
+                    key={`${element.id}-item-${index}`}
+                    style={{
+                        padding: "4px 0",
+                        margin: 0,
+                        listStyleType: listType === "ul" ? "disc" : "decimal",
+                        listStylePosition: "inside",
+                    }}
+                >
+                    {item || `List item ${index + 1}`}
+                </li>
+            ));
+        },
+        [element.content, element.id],
+    );
+
     const renderElementContent = useCallback(() => {
         console.log(element.type, "elementType");
         switch (element.type) {
+            case "ul":
+                return (
+                    <ul
+                        style={{
+                            margin: 0,
+                            padding: "8px 8px 8px 16px",
+                            listStyleType: "disc",
+                            listStylePosition: "inside",
+                            width: "100%",
+                            height: "100%",
+                            minHeight: "40px",
+                        }}
+                    >
+                        {renderListItems("ul")}
+                    </ul>
+                );
+
+            case "ol":
+                return (
+                    <ol
+                        style={{
+                            margin: 0,
+                            padding: "8px 8px 8px 16px",
+                            listStyleType: "decimal",
+                            listStylePosition: "inside",
+                            width: "100%",
+                            height: "100%",
+                            minHeight: "40px",
+                        }}
+                    >
+                        {renderListItems("ol")}
+                    </ol>
+                );
+
             case "text":
                 return (
                     <input
@@ -270,7 +351,7 @@ export const ElementRenderer: React.FC<ElementRendererProps> = ({
                     </>
                 );
         }
-    }, [element, level, renderElement]);
+    }, [element, level, renderElement, renderListItems]);
 
     return (
         <div
@@ -289,7 +370,6 @@ export const ElementRenderer: React.FC<ElementRendererProps> = ({
     );
 };
 
-// Hook for using the element renderer
 export const useElementRenderer = (
     isDragging: boolean,
     activeAction: "moving" | "scalling" | "grouping" | "grabbing",

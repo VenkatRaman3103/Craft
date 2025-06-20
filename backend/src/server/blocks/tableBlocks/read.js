@@ -31,3 +31,55 @@ export const getTableById = async (req, res) => {
         res.status(500).json(errorMessage);
     }
 };
+
+export async function getTableData(block_id) {
+    try {
+        const columns = await db.query.tableColumns.findMany({
+            where: (tableColumns, { eq }) =>
+                eq(tableColumns.table_id, block_id),
+        });
+
+        const rows = await db.query.tableRows.findMany({
+            where: (tableRows, { eq }) => eq(tableRows.table_id, block_id),
+        });
+
+        const rowsWithNames = rows.map((row, index) => ({
+            ...row,
+            name: row.value || `Row ${index + 1}`,
+        }));
+
+        const tableData = {
+            columns: columns,
+            rows: rowsWithNames,
+            grid: [],
+        };
+
+        for (const row of rowsWithNames) {
+            const rowEntries = await db.query.tableEntries.findMany({
+                where: (tableEntries, { eq }) =>
+                    eq(tableEntries.row_id, row.row_id),
+            });
+
+            const rowData = columns.map((column) => {
+                const entry = rowEntries.find(
+                    (entry) => entry.column_id === column.column_id,
+                );
+                return entry ? entry.value : null;
+            });
+
+            tableData.grid.push({
+                row_id: row.row_id,
+                cells: rowData,
+            });
+        }
+
+        return tableData;
+    } catch (error) {
+        console.error("Error fetching table data:", error);
+        return {
+            columns: [],
+            rows: [],
+            grid: [],
+        };
+    }
+}
