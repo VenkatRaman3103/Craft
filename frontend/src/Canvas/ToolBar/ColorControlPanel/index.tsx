@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import { Palette, ChevronDown, ChevronUp } from "lucide-react";
+import { Palette, ChevronDown, ChevronUp, Minus } from "lucide-react";
 import { StoreState } from "@/store/store";
 import {
     updateBackgroundColor,
@@ -13,6 +13,40 @@ import {
     updateUseGradient,
 } from "@/store/toolbar/colorControl/colorControl";
 import "./index.scss";
+
+export type ControlPanelSelectType = {
+    options: any;
+    sectionTitle: string;
+    elementStyle: any;
+    updateDispatch: any;
+};
+
+export const ControlPanelSelect = ({
+    options,
+    sectionTitle,
+    elementStyle,
+    updateDispatch,
+}: ControlPanelSelectType) => {
+    const dispatch = useDispatch();
+    return (
+        <div className="border-width-sub-section">
+            <div className="sub-heading">{sectionTitle}</div>
+            <div className="border-width-tools-container">
+                <select
+                    className="select-drop-down"
+                    value={elementStyle}
+                    onChange={(e) => dispatch(updateDispatch(e.target.value))}
+                >
+                    {options.map(({ label, value }) => (
+                        <option value={value} key={value}>
+                            {label}
+                        </option>
+                    ))}
+                </select>
+            </div>
+        </div>
+    );
+};
 
 interface ColorControlPanelProps {
     selectedElement?: any;
@@ -115,7 +149,7 @@ export const ColorControlPanel: React.FC<ColorControlPanelProps> = ({
         return (
             <div className="control-panel-wrapper">
                 <div className="control-header-wrapper">
-                    <Palette size={16} />
+                    {/* <Palette size={16} /> */}
                     <span>Colors</span>
                 </div>
                 <div className="control-content">
@@ -128,9 +162,9 @@ export const ColorControlPanel: React.FC<ColorControlPanelProps> = ({
     }
 
     return (
-        <div className="control-panel">
+        <div className="control-panel toolbar-section">
             <div className="control-header clickable">
-                <Palette size={16} />
+                {/* <Palette size={16} /> */}
                 <span>Colors</span>
             </div>
 
@@ -140,7 +174,7 @@ export const ColorControlPanel: React.FC<ColorControlPanelProps> = ({
                         className={`color-tab ${activeColorType === "background" ? "active" : ""}`}
                         onClick={() => setActiveColorType("background")}
                     >
-                        Background
+                        bg
                     </button>
                     <button
                         className={`color-tab ${activeColorType === "border" ? "active" : ""}`}
@@ -194,33 +228,14 @@ export const ColorControlPanel: React.FC<ColorControlPanelProps> = ({
                                     onChange={(color) =>
                                         dispatch(updateGradientEnd(color))
                                     }
-                                    showPresets={false}
+                                    // showPresets={false}
                                 />
-                                <div className="gradient-direction">
-                                    <label className="color-label">
-                                        Direction
-                                    </label>
-                                    <select
-                                        value={gradientDirection}
-                                        onChange={(e) =>
-                                            dispatch(
-                                                updateGradientDirection(
-                                                    e.target.value,
-                                                ),
-                                            )
-                                        }
-                                        className="gradient-select"
-                                    >
-                                        {gradientDirections.map((dir) => (
-                                            <option
-                                                key={dir.value}
-                                                value={dir.value}
-                                            >
-                                                {dir.label}
-                                            </option>
-                                        ))}
-                                    </select>
-                                </div>
+                                <ControlPanelSelect
+                                    options={gradientDirections}
+                                    sectionTitle="Direction"
+                                    elementStyle={gradientDirection}
+                                    updateDispatch={updateGradientDirection}
+                                />
                             </>
                         ) : (
                             <ColorPicker

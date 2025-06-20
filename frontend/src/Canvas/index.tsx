@@ -896,19 +896,6 @@ export const Canvas: React.FC = () => {
                         selectedElement={getSelectedElement()}
                     />
 
-                    <BorderControlPanel
-                        toggleAllSide_radius={toggleAllSide_radius}
-                        toggleAllSide_width={toggleAllSide_width}
-                        setToggleAllSide_radius={setToggleAllSide_radius}
-                        setToggleAllSide_width={setToggleAllSide_width}
-                    />
-
-                    <AlignmentControlPanel
-                        selectedId={selectedId}
-                        elements={elements}
-                        setElements={() => {}}
-                    />
-
                     <ColorControlPanel
                         selectedElement={getSelectedElement()}
                         backgroundColor={backgroundColor}
@@ -929,6 +916,19 @@ export const Canvas: React.FC = () => {
                             handleGradientDirectionChange
                         }
                         onUseGradientChange={handleUseGradientChange}
+                    />
+
+                    <BorderControlPanel
+                        toggleAllSide_radius={toggleAllSide_radius}
+                        toggleAllSide_width={toggleAllSide_width}
+                        setToggleAllSide_radius={setToggleAllSide_radius}
+                        setToggleAllSide_width={setToggleAllSide_width}
+                    />
+
+                    <AlignmentControlPanel
+                        selectedId={selectedId}
+                        elements={elements}
+                        setElements={() => {}}
                     />
 
                     <FontsControlPanel />
