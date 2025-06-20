@@ -68,6 +68,8 @@ import {
     updateTextWrap,
 } from "@/store/toolbar/contentControl/contentControl";
 import { ContentControlPanel } from "./ToolBar/ContentControlPanel";
+import { DimensionControlPanel } from "./ToolBar/DimensionControlPanel";
+import { ZoomingControl } from "./Zooming";
 
 type Actions = "moving" | "scalling" | "grouping" | "grabbing";
 
@@ -90,12 +92,6 @@ export const Canvas: React.FC = () => {
     >("all");
 
     const canvasRef = useRef<HTMLDivElement | null>(null);
-
-    // Zoom constants
-    const maxZoomLevel = 3;
-    const minZoomLevel = 0.3;
-    const zoomStepper = 0.1;
-    const ZoomIconSize = 16;
 
     // NOTE: 2 - REDUX STATE SELECTORS
     // Add new property selectors here by category
@@ -639,19 +635,6 @@ export const Canvas: React.FC = () => {
         [],
     );
 
-    // Zoom functions
-    const handleZoomIn = useCallback(() => {
-        setZoomLevel((prev) => Math.min(prev + zoomStepper, maxZoomLevel));
-    }, []);
-
-    const handleZoomOut = useCallback(() => {
-        setZoomLevel((prev) => Math.max(prev - zoomStepper, minZoomLevel));
-    }, []);
-
-    const handleZoomReset = useCallback(() => {
-        setZoomLevel(1);
-    }, []);
-
     const getElementStyle = useCallback(
         (element: any) => {
             return {
@@ -726,34 +709,12 @@ export const Canvas: React.FC = () => {
                 </div>
             </div>
 
-            <div className="status-bar-container">
-                <ScreenSizeSwitcher screen={screen} setScreen={setScreen} />
-
-                <div className="zoom-buttons-container">
-                    <div
-                        className="zoom-out-btn zoom-btn"
-                        onClick={handleZoomOut}
-                    >
-                        <ZoomOut size={ZoomIconSize} />
-                    </div>
-                    {zoomLevel !== 1 && (
-                        <div
-                            className="zoom-reset-btn zoom-btn"
-                            onClick={handleZoomReset}
-                        >
-                            <RotateCcw size={ZoomIconSize} />
-                        </div>
-                    )}
-                    <div
-                        className="zoom-in-btn zoom-btn"
-                        onClick={handleZoomIn}
-                    >
-                        <ZoomIn size={ZoomIconSize} />
-                    </div>
-                </div>
-
-                <div className="publish-container">publish</div>
-            </div>
+            <ZoomingControl
+                screen={screen}
+                setScreen={setScreen}
+                zoomLevel={zoomLevel}
+                setZoomLevel={setZoomLevel}
+            />
 
             <ElementPicker
                 addElement={addElement}
@@ -812,122 +773,6 @@ export const Canvas: React.FC = () => {
                     <FontsControlPanel />
                 </div>
             </div>
-        </div>
-    );
-};
-
-export const DimensionControlPanel = ({
-    elementHeight,
-    elementWidth,
-    elementMaxWidth,
-    elementMinWidth,
-    elementMaxHeight,
-    elementMinHeight,
-    handleHeightChange,
-    handleWidthChange,
-    elementOverFlow,
-    selectedElement,
-    textWrap,
-}: any) => {
-    // const isTextElement =
-    //     selectedElement?.type === "p" || selectedElement?.type === "h1";
-
-    const isTextElement = elementsHash.text.includes(selectedElement?.type);
-
-    const isDimensionDisabled = isTextElement && textWrap === "nowrap";
-
-    return (
-        <div className="dimenstion-cotainer toolbar-section">
-            <div className="heading">Dimensions</div>
-            <div className="dimensions">
-                <div className="element-height dimension">
-                    <label>H</label>
-                    <div className="divider"></div>
-                    <input
-                        value={isDimensionDisabled ? "auto" : elementHeight}
-                        type={isDimensionDisabled ? "text" : "number"}
-                        className="dimension-field"
-                        onChange={(e) =>
-                            !isDimensionDisabled &&
-                            handleHeightChange(Number(e.target.value))
-                        }
-                        disabled={isDimensionDisabled}
-                        placeholder={isDimensionDisabled ? "auto" : ""}
-                    />
-                    <div className="divider"></div>
-                    <MetricSelection />
-                </div>
-                <div className="element-width dimension">
-                    <label>W</label>
-                    <div className="divider"></div>
-                    <input
-                        value={isDimensionDisabled ? "auto" : elementWidth}
-                        type={isDimensionDisabled ? "text" : "number"}
-                        className="dimension-field"
-                        onChange={(e) =>
-                            !isDimensionDisabled &&
-                            handleWidthChange(Number(e.target.value))
-                        }
-                        disabled={isDimensionDisabled}
-                        placeholder={isDimensionDisabled ? "auto" : ""}
-                    />
-                    <div className="divider"></div>
-                    <MetricSelection />
-                </div>
-                <div className="dimension">0</div>
-            </div>
-
-            {!isDimensionDisabled && (
-                <>
-                    <div className="border-width-sub-section">
-                        <div className="sub-heading">Max</div>
-                        <div className="border-width-tools-container">
-                            <div className="boder-width-adjustments-container">
-                                <div className="boder-width-adjustments">
-                                    <ControlPanelInput
-                                        value={elementMaxWidth}
-                                        updateDispatch={updateElementMaxWidth}
-                                    />
-                                    <ControlPanelInput
-                                        value={elementMaxHeight}
-                                        updateDispatch={updateElementMaxHeight}
-                                    />
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div className="border-width-sub-section">
-                        <div className="sub-heading">Min</div>
-                        <div className="border-width-tools-container">
-                            <div className="boder-width-adjustments-container">
-                                <div className="boder-width-adjustments">
-                                    <ControlPanelInput
-                                        value={elementMinWidth}
-                                        updateDispatch={updateElementMinWidth}
-                                    />
-                                    <ControlPanelInput
-                                        value={elementMinHeight}
-                                        updateDispatch={updateElementMinHeight}
-                                    />
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </>
-            )}
-
-            <ControlPanelSelect
-                options={[
-                    { value: "visible", label: "visible" },
-                    { value: "hidden", label: "hidden" },
-                    { value: "scroll", label: "scroll" },
-                    { value: "auto", label: "auto" },
-                ]}
-                sectionTitle="Overflow"
-                elementStyle={elementOverFlow}
-                updateDispatch={updateElementOverFlow}
-            />
         </div>
     );
 };
