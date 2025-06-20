@@ -1,15 +1,13 @@
 import React, { useState, useRef, useEffect, useCallback } from "react";
 import "./index.scss";
 import { ElementPicker, elementsHash } from "./ElementPicker";
-import { Minus, RotateCcw, ZoomIn, ZoomOut } from "lucide-react";
+import { Minus } from "lucide-react";
 import { StoreState } from "@/store/store";
 import { BorderControlPanel } from "./ToolBar/BroderControlPanel";
 import { useSelector, useDispatch } from "react-redux";
 import { FontsControlPanel } from "./ToolBar/FontsControlPanel";
 import { useParams } from "react-router";
 import { AlignmentControlPanel } from "./ToolBar/AlignmentControlPanel";
-import { ScreenSizeSwitcher } from "./ScreenSizeSwitcher";
-import { MetricSelection } from "./MetricSelector";
 import { CanvasElement } from "@/Types/canvas/CanvasElement";
 import { useCanvasApi } from "./useCanvasApi";
 import { useDragAndDrop } from "./useDragAndDrop";
@@ -61,6 +59,18 @@ import {
     updateGap,
 } from "@/store/toolbar/alignmentControl/alignmentControl";
 
+// NOTE: ADD COLOR CONTROL IMPORTS
+import {
+    updateBackgroundColor,
+    updateBorderColor,
+    updateTextColor,
+    updateShadowColor,
+    updateGradientStart,
+    updateGradientEnd,
+    updateGradientDirection,
+    updateUseGradient,
+} from "@/store/toolbar/colorControl/colorControl";
+
 import { ToolBarHeader } from "./ToolBar/ToolBarHeader";
 import { ControlPanelSelect } from "@/components/canvas/ControlPanelSelect";
 import {
@@ -69,6 +79,7 @@ import {
 } from "@/store/toolbar/contentControl/contentControl";
 import { ContentControlPanel } from "./ToolBar/ContentControlPanel";
 import { DimensionControlPanel } from "./ToolBar/DimensionControlPanel";
+import { ColorControlPanel } from "./ToolBar/ColorControlPanel";
 import { ZoomingControl } from "./Zooming";
 
 type Actions = "moving" | "scalling" | "grouping" | "grabbing";
@@ -149,6 +160,18 @@ export const Canvas: React.FC = () => {
         letterSpacing,
     } = useSelector((state: StoreState) => state.fontControl);
 
+    // color control
+    const {
+        backgroundColor,
+        borderColor,
+        textColor,
+        shadowColor,
+        gradientStart,
+        gradientEnd,
+        gradientDirection,
+        useGradient,
+    } = useSelector((state: StoreState) => state.colorControl);
+
     // hooks
     const {
         elements,
@@ -204,6 +227,20 @@ export const Canvas: React.FC = () => {
             };
         }
     }, [isDragging, handleMouseMove, handleMouseUp]);
+
+    // Helper function to get computed background
+    const getComputedBackground = useCallback(() => {
+        if (useGradient) {
+            return `linear-gradient(${gradientDirection}, ${gradientStart}, ${gradientEnd})`;
+        }
+        return backgroundColor;
+    }, [
+        useGradient,
+        gradientDirection,
+        gradientStart,
+        gradientEnd,
+        backgroundColor,
+    ]);
 
     // NOTE: 3 - ELEMENT STYLE READING
     useEffect(() => {
@@ -372,6 +409,46 @@ export const Canvas: React.FC = () => {
             dispatch(updateTextAlign(elementTextAlign));
             dispatch(updateLineHeight(elementLineHeight));
             dispatch(updateLetterSpacing(elementLetterSpacing));
+
+            // COLOR PROPERTIES
+            const elementBackgroundColor =
+                selectedElement.styles?.backgroundColor || "#ffffff";
+            const elementBorderColor =
+                selectedElement.styles?.borderColor || "#000000";
+            const elementTextColor = selectedElement.styles?.color || "#000000";
+            const elementBoxShadow = selectedElement.styles?.boxShadow || "";
+
+            const elementBackground =
+                selectedElement.styles?.background ||
+                selectedElement.styles?.backgroundColor ||
+                "#ffffff";
+            if (elementBackground.includes("linear-gradient")) {
+                dispatch(updateUseGradient(true));
+                const gradientMatch = elementBackground.match(
+                    /linear-gradient\((.+?),\s*(.+?),\s*(.+?)\)/,
+                );
+                if (gradientMatch) {
+                    const [, direction, startColor, endColor] = gradientMatch;
+                    dispatch(updateGradientDirection(direction.trim()));
+                    dispatch(updateGradientStart(startColor.trim()));
+                    dispatch(updateGradientEnd(endColor.trim()));
+                }
+            } else {
+                dispatch(updateUseGradient(false));
+                dispatch(updateBackgroundColor(elementBackground));
+            }
+
+            dispatch(updateBorderColor(elementBorderColor));
+            dispatch(updateTextColor(elementTextColor));
+
+            if (elementBoxShadow) {
+                const shadowColorMatch = elementBoxShadow.match(
+                    /rgba?\([^)]+\)|#[a-fA-F0-9]{3,6}/,
+                );
+                if (shadowColorMatch) {
+                    dispatch(updateShadowColor(shadowColorMatch[0]));
+                }
+            }
         } else {
             // RESET VALUES WHEN NO ELEMENT IS SELECTED
             dispatch(updateElementOverFlow("visible"));
@@ -398,6 +475,15 @@ export const Canvas: React.FC = () => {
             dispatch(updateTextAlign("left"));
             dispatch(updateLineHeight(1.5));
             dispatch(updateLetterSpacing(0));
+
+            dispatch(updateBackgroundColor("#ffffff"));
+            dispatch(updateBorderColor("#000000"));
+            dispatch(updateTextColor("#000000"));
+            dispatch(updateShadowColor("#000000"));
+            dispatch(updateGradientStart("#ffffff"));
+            dispatch(updateGradientEnd("#000000"));
+            dispatch(updateGradientDirection("to right"));
+            dispatch(updateUseGradient(false));
         }
     }, [selectedId, elements, dispatch]);
 
@@ -458,6 +544,7 @@ export const Canvas: React.FC = () => {
 
             // BORDER PROPERTIES
             borderStyle: borderStyle,
+            borderColor: borderColor,
             borderWidth:
                 toggleAllSide_width === "all"
                     ? `${elementBoderWidth}px`
@@ -476,6 +563,7 @@ export const Canvas: React.FC = () => {
 
             // TEXT PROPERTIES
             whiteSpace: textWrap,
+            color: textColor,
 
             // FONTS PROPERTIES
             fontFamily: fontFamily,
@@ -487,9 +575,13 @@ export const Canvas: React.FC = () => {
             lineHeight: lineHeight,
             letterSpacing: `${letterSpacing}px`,
 
-            backgroundColor: isTextElement
-                ? "transparent"
-                : selectedElement.styles?.backgroundColor || "transparent",
+            // COLOR PROPERTIES
+            background: useGradient ? getComputedBackground() : undefined,
+            backgroundColor: useGradient
+                ? undefined
+                : isTextElement
+                  ? "transparent"
+                  : backgroundColor,
         };
 
         const updatePayload = {
@@ -516,6 +608,7 @@ export const Canvas: React.FC = () => {
         elementContent,
         elementOverFlow,
         borderStyle,
+        borderColor,
         elementBoderWidth,
         topWidth,
         bottomWidth,
@@ -533,9 +626,7 @@ export const Canvas: React.FC = () => {
         justifyContent,
         gap,
         textWrap,
-        getSelectedElement,
-        updateElementMutation,
-        getComputedFlexDirection,
+        textColor,
         fontFamily,
         fontWeight,
         fontSize,
@@ -544,6 +635,12 @@ export const Canvas: React.FC = () => {
         textAlign,
         lineHeight,
         letterSpacing,
+        backgroundColor,
+        useGradient,
+        getComputedBackground,
+        getSelectedElement,
+        updateElementMutation,
+        getComputedFlexDirection,
     ]);
 
     // NOTE: 5 - ELEMENT CREATION WITH DEFAULT VALUES
@@ -576,6 +673,11 @@ export const Canvas: React.FC = () => {
                 textAlign,
                 lineHeight,
                 letterSpacing,
+                backgroundColor,
+                borderColor,
+                textColor,
+                useGradient,
+                getComputedBackground(),
             );
 
             try {
@@ -592,6 +694,7 @@ export const Canvas: React.FC = () => {
             elementMaxHeight,
             elementMaxWidth,
             borderStyle,
+            borderColor,
             elementBoderWidth,
             elementRadius,
             alignItems,
@@ -606,6 +709,10 @@ export const Canvas: React.FC = () => {
             textAlign,
             lineHeight,
             letterSpacing,
+            backgroundColor,
+            textColor,
+            useGradient,
+            getComputedBackground,
             elements.length,
             createDefaultElement,
             createElementMutation,
@@ -692,6 +799,38 @@ export const Canvas: React.FC = () => {
         dispatch(updateTextWrap(value));
     };
 
+    const handleBackgroundColorChange = (value: string) => {
+        dispatch(updateBackgroundColor(value));
+    };
+
+    const handleBorderColorChange = (value: string) => {
+        dispatch(updateBorderColor(value));
+    };
+
+    const handleTextColorChange = (value: string) => {
+        dispatch(updateTextColor(value));
+    };
+
+    const handleShadowColorChange = (value: string) => {
+        dispatch(updateShadowColor(value));
+    };
+
+    const handleGradientStartChange = (value: string) => {
+        dispatch(updateGradientStart(value));
+    };
+
+    const handleGradientEndChange = (value: string) => {
+        dispatch(updateGradientEnd(value));
+    };
+
+    const handleGradientDirectionChange = (value: string) => {
+        dispatch(updateGradientDirection(value));
+    };
+
+    const handleUseGradientChange = (value: boolean) => {
+        dispatch(updateUseGradient(value));
+    };
+
     return (
         <div className="figma-container">
             <div
@@ -723,7 +862,7 @@ export const Canvas: React.FC = () => {
                 selectedId={selectedId}
             />
 
-            {/* NOTE: 7 - CONTROL PANELS */}
+            {/* NOTE: 8 - CONTROL PANELS */}
             <div className="toolbar-container">
                 <div className="toolbar">
                     <ToolBarHeader
@@ -768,6 +907,28 @@ export const Canvas: React.FC = () => {
                         selectedId={selectedId}
                         elements={elements}
                         setElements={() => {}}
+                    />
+
+                    <ColorControlPanel
+                        selectedElement={getSelectedElement()}
+                        backgroundColor={backgroundColor}
+                        borderColor={borderColor}
+                        textColor={textColor}
+                        shadowColor={shadowColor}
+                        gradientStart={gradientStart}
+                        gradientEnd={gradientEnd}
+                        gradientDirection={gradientDirection}
+                        useGradient={useGradient}
+                        onBackgroundColorChange={handleBackgroundColorChange}
+                        onBorderColorChange={handleBorderColorChange}
+                        onTextColorChange={handleTextColorChange}
+                        onShadowColorChange={handleShadowColorChange}
+                        onGradientStartChange={handleGradientStartChange}
+                        onGradientEndChange={handleGradientEndChange}
+                        onGradientDirectionChange={
+                            handleGradientDirectionChange
+                        }
+                        onUseGradientChange={handleUseGradientChange}
                     />
 
                     <FontsControlPanel />

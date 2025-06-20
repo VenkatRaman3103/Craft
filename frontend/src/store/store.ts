@@ -6,6 +6,7 @@ import projectSlice from "./canvas/projectSlice";
 import dimensionControlSlice from "./toolbar/dimensionControl/dimensionControl";
 import contentControlSlice from "./toolbar/contentControl/contentControl.ts";
 import fontControlSlice from "./toolbar/fontsControl/fontsControl.ts";
+import colorControlSlice from "./toolbar/colorControl/colorControl.ts";
 
 export const store = configureStore({
     reducer: {
@@ -16,6 +17,7 @@ export const store = configureStore({
         canvasProject: projectSlice,
         contentControl: contentControlSlice,
         fontControl: fontControlSlice,
+        colorControl: colorControlSlice,
     },
 });
 
