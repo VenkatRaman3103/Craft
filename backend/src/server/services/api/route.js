@@ -3,6 +3,8 @@ import { getPageDatById } from "../../pages/read.js";
 import { getBlockWithNestedContent } from "../../blocks/read.js";
 import { getArrayTemplates } from "../../blocks/arrayBlocks/read.js";
 import { getTableData } from "../../blocks/tableBlocks/read.js";
+import { getApiBlockData } from "../../blocks/apiBlocks/route.js";
+import { getReferenceBlockData } from "../../blocks/referenceBlocks/read.js";
 export const apiService = express.Router();
 
 async function formatData(block) {
@@ -70,6 +72,45 @@ async function formatData(block) {
                     columns: tableData.columns,
                     rows: tableData.rows,
                     grid: tableData.grid,
+                };
+            } else if (item.item_type === "reference") {
+                const fieldName = item.reference.name;
+                const referenceData = await getReferenceBlockData(
+                    item.reference.block_id,
+                );
+
+                blockData[fieldName] = {
+                    type: "reference_block",
+                    label: item.reference.label,
+                    description: item.reference.description,
+                    block_id: item.reference.block_id,
+                    name: item.reference.name,
+                    scope: item.reference.scope,
+                    block_type: item.reference.block_type,
+                    created_at:
+                        item.reference.created_at || item.reference.createdAt,
+                    edited_at:
+                        item.reference.edited_at || item.reference.editedAt,
+                    collectionsList: referenceData.collectionsList,
+                    ...referenceData,
+                };
+            } else if (item.item_type === "api") {
+                const fieldName = item.api.name;
+                const apiData = await getApiBlockData(item.api.block_id);
+
+                blockData[fieldName] = {
+                    type: "api_block",
+                    label: item.api.label,
+                    description: item.api.description,
+                    block_id: item.api.block_id,
+                    name: item.api.name,
+                    scope: item.api.scope,
+                    block_type: item.api.block_type,
+                    created_at: item.api.created_at || item.api.createdAt,
+                    edited_at: item.api.edited_at || item.api.editedAt,
+                    url: apiData.url,
+                    response: apiData.response,
+                    ...apiData,
                 };
             } else if (item.item_type === "text_field") {
                 let fieldName = item.text_field.name;
@@ -290,54 +331,118 @@ async function getPageItemsData(data) {
     for (const item of pageItems) {
         let blockData;
         if (item.item_type === "normal") {
-            const temp = await getBlockWithNestedContent(item.normal?.block_id);
-            const formattedData = await formatData(temp);
-            if (formattedData) {
-                const blockName = Object.keys(formattedData)[0];
-                result[blockName] = formattedData[blockName];
+            if (item.normal && item.normal.block_id) {
+                const temp = await getBlockWithNestedContent(
+                    item.normal.block_id,
+                );
+                const formattedData = await formatData(temp);
+                if (formattedData) {
+                    const blockName = Object.keys(formattedData)[0];
+                    result[blockName] = formattedData[blockName];
+                }
+            } else {
+                console.warn("Normal item missing block_id:", item);
+                continue;
             }
         } else if (item.item_type === "array") {
-            const templatesData = [];
-            const temp = await getArrayTemplates(item.array.block_id);
-            const templateArr = [];
+            if (item.array && item.array.block_id) {
+                const templatesData = [];
+                const temp = await getArrayTemplates(item.array.block_id);
+                const templateArr = [];
 
-            temp.map((templateItem) => {
-                templateArr.push({
-                    name: "template",
-                    block_items: templateItem.templateItems,
+                temp.map((templateItem) => {
+                    templateArr.push({
+                        name: "template",
+                        block_items: templateItem.templateItems,
+                    });
                 });
-            });
 
-            for (const block of templateArr) {
-                const formattedTemplate = await formatData(block);
-                if (formattedTemplate && formattedTemplate.template) {
-                    templatesData.push(formattedTemplate.template);
-                } else {
-                    templatesData.push(formattedTemplate);
+                for (const block of templateArr) {
+                    const formattedTemplate = await formatData(block);
+                    if (formattedTemplate && formattedTemplate.template) {
+                        templatesData.push(formattedTemplate.template);
+                    } else {
+                        templatesData.push(formattedTemplate);
+                    }
                 }
+
+                result[item.array.name] = {
+                    type: "array_block",
+                    items: templatesData,
+                };
+            } else {
+                console.warn("Array item missing block_id:", item);
+                continue;
             }
-
-            result[item.array.name] = {
-                type: "array_block",
-                items: templatesData,
-            };
         } else if (item.item_type === "table") {
-            const tableData = await getTableData(item.table.block_id);
+            if (item.table && item.table.block_id) {
+                const tableData = await getTableData(item.table.block_id);
 
-            result[item.table.name] = {
-                type: "table_block",
-                label: item.table.label,
-                description: item.table.description,
-                block_id: item.table.block_id,
-                name: item.table.name,
-                scope: item.table.scope,
-                block_type: item.table.block_type,
-                created_at: item.table.created_at || item.table.createdAt,
-                edited_at: item.table.edited_at || item.table.editedAt,
-                columns: tableData.columns,
-                rows: tableData.rows,
-                grid: tableData.grid,
-            };
+                result[item.table.name] = {
+                    type: "table_block",
+                    label: item.table.label,
+                    description: item.table.description,
+                    block_id: item.table.block_id,
+                    name: item.table.name,
+                    scope: item.table.scope,
+                    block_type: item.table.block_type,
+                    created_at: item.table.created_at || item.table.createdAt,
+                    edited_at: item.table.edited_at || item.table.editedAt,
+                    columns: tableData.columns,
+                    rows: tableData.rows,
+                    grid: tableData.grid,
+                };
+            } else {
+                console.warn("Table item missing block_id:", item);
+                continue;
+            }
+        } else if (item.item_type === "reference") {
+            if (item.reference && item.reference.block_id) {
+                const referenceData = await getReferenceBlockData(
+                    item.reference.block_id,
+                );
+
+                result[item.reference.name] = {
+                    type: "reference_block",
+                    label: item.reference.label,
+                    description: item.reference.description,
+                    block_id: item.reference.block_id,
+                    name: item.reference.name,
+                    scope: item.reference.scope,
+                    block_type: item.reference.block_type,
+                    created_at:
+                        item.reference.created_at || item.reference.createdAt,
+                    edited_at:
+                        item.reference.edited_at || item.reference.editedAt,
+                    collectionsList: referenceData.collectionsList,
+                    ...referenceData,
+                };
+            } else {
+                console.warn("Reference item missing block_id:", item);
+                continue;
+            }
+        } else if (item.item_type === "api") {
+            if (item.api && item.api.block_id) {
+                const apiData = await getApiBlockData(item.api.block_id);
+
+                result[item.api.name] = {
+                    type: "api_block",
+                    label: item.api.label,
+                    description: item.api.description,
+                    block_id: item.api.block_id,
+                    name: item.api.name,
+                    scope: item.api.scope,
+                    block_type: item.api.block_type,
+                    created_at: item.api.created_at || item.api.createdAt,
+                    edited_at: item.api.edited_at || item.api.editedAt,
+                    url: apiData.url,
+                    response: apiData.response,
+                    ...apiData,
+                };
+            } else {
+                console.warn("API item missing block_id:", item);
+                continue;
+            }
         }
     }
 

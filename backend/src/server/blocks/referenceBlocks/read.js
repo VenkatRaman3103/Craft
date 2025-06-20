@@ -49,3 +49,73 @@ export const getReferenceBlock = async (req, res) => {
         res.status(500).json(errorMessage);
     }
 };
+
+export async function getReferenceBlockData_drop(block_id) {
+    try {
+        const referenceBlockData = await db.query.referenceBlock.findFirst({
+            where: (block, { eq }) => eq(block.block_id, block_id),
+        });
+
+        if (!referenceBlockData) {
+            return {
+                collectionsList: [],
+            };
+        }
+
+        const collectionsList = await db.select().from(collections);
+        const collectionWithPages = await Promise.all(
+            collectionsList.map(async (collection) => {
+                const pages = await getPages(collection.collection_id);
+                return {
+                    ...collection,
+                    pages: pages.map((page) => page.pages),
+                };
+            }),
+        );
+
+        return {
+            ...referenceBlockData,
+            collectionsList: collectionWithPages,
+        };
+    } catch (error) {
+        console.error("Error fetching reference block data:", error);
+        return {
+            collectionsList: [],
+        };
+    }
+}
+
+export async function getReferenceBlockData(block_id) {
+    try {
+        const referenceBlockData = await db.query.referenceBlock.findFirst({
+            where: (block, { eq }) => eq(block.block_id, block_id),
+        });
+
+        if (!referenceBlockData) {
+            return {
+                collectionsList: [],
+            };
+        }
+
+        const collectionsList = await db.select().from(collections);
+        const collectionWithPages = await Promise.all(
+            collectionsList.map(async (collection) => {
+                const pages = await getPages(collection.collection_id);
+                return {
+                    ...collection,
+                    pages: pages.map((page) => page.pages),
+                };
+            }),
+        );
+
+        return {
+            ...referenceBlockData,
+            collectionsList: collectionWithPages,
+        };
+    } catch (error) {
+        console.error("Error fetching reference block data:", error);
+        return {
+            collectionsList: [],
+        };
+    }
+}

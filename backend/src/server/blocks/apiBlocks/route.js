@@ -141,3 +141,28 @@ apiBlockRouter.patch("/api/:block_id/response", async (req, res) => {
         res.status(500).json(errorMessage);
     }
 });
+
+export async function getApiBlockData(block_id) {
+    try {
+        const apiBlockData = await db.query.apiBlocks.findFirst({
+            where: (apiBlocks, { eq }) => eq(apiBlocks.block_id, block_id),
+        });
+
+        if (!apiBlockData) {
+            return {
+                name: null,
+                url: null,
+                response: null,
+            };
+        }
+
+        return apiBlockData;
+    } catch (error) {
+        console.error("Error fetching API block data:", error);
+        return {
+            name: null,
+            url: null,
+            response: null,
+        };
+    }
+}
