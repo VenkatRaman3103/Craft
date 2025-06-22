@@ -9,8 +9,9 @@ import {
     RefreshCw,
     Settings,
     Save,
-    FolderOpen,
-    ArrowLeft,
+    Edit3,
+    Check,
+    X,
 } from "lucide-react";
 import "./index.scss";
 import { ParamsPanel } from "./ParamsPanel";
@@ -74,8 +75,6 @@ export const ApiEditor: React.FC = () => {
     const [showResults, setShowResults] = useState<boolean>(false);
     const [showPreview, setShowPreview] = useState<boolean>(false);
     const [showParams, setShowParams] = useState<boolean>(false);
-    const [showConfigurations, setShowConfigurations] =
-        useState<boolean>(false);
     const [apiUrl, setApiUrl] = useState<string>("");
     const [isLoading, setIsLoading] = useState<boolean>(false);
     const [error, setError] = useState<string>("");
@@ -83,6 +82,10 @@ export const ApiEditor: React.FC = () => {
 
     const [configName, setConfigName] = useState<string>("");
     const [configDescription, setConfigDescription] = useState<string>("");
+    const [isEditingConfig, setIsEditingConfig] = useState<boolean>(false);
+    const [tempConfigName, setTempConfigName] = useState<string>("");
+    const [tempConfigDescription, setTempConfigDescription] =
+        useState<string>("");
 
     const currentConfigId =
         api_id === "new" ? null : parseInt(api_id || "0", 10);
@@ -294,6 +297,26 @@ export const ApiEditor: React.FC = () => {
         }
     };
 
+    const startEditingConfig = () => {
+        setTempConfigName(configName);
+        setTempConfigDescription(configDescription);
+        setIsEditingConfig(true);
+    };
+
+    const cancelEditingConfig = () => {
+        setTempConfigName("");
+        setTempConfigDescription("");
+        setIsEditingConfig(false);
+    };
+
+    const confirmEditingConfig = () => {
+        setConfigName(tempConfigName);
+        setConfigDescription(tempConfigDescription);
+        setIsEditingConfig(false);
+        setTempConfigName("");
+        setTempConfigDescription("");
+    };
+
     const saveConfiguration = async () => {
         if (!configName.trim() || !apiUrl.trim()) {
             setError("Configuration name and API URL are required");
@@ -334,18 +357,6 @@ export const ApiEditor: React.FC = () => {
             setError(`Failed to save configuration: ${err.message}`);
         }
     };
-
-    const loadConfiguration = (configId: number) => {
-        navigate(`/api-layer/${configId}`);
-    };
-
-    const newConfiguration = () => {
-        navigate("/api-layer/new");
-    };
-
-    // const goBack = () => {
-    //     navigate("/api-layer");
-    // };
 
     const addOperation = async () => {
         const newOp: Operation = {
@@ -612,37 +623,30 @@ export const ApiEditor: React.FC = () => {
             <div className="api-editor__left-panel">
                 <div className="drop-section config-section">
                     <div className="config-header">
-                        <div className="config-title-row">
-                            {/* <button */}
-                            {/*     onClick={goBack} */}
-                            {/*     className="btn btn--secondary btn--sm" */}
-                            {/*     title="Back to configurations list" */}
-                            {/* > */}
-                            {/*     <ArrowLeft size={16} /> */}
-                            {/* </button> */}
-                            <h3 className="config-title">
-                                {isNewConfig
-                                    ? "New Configuration"
-                                    : configName || "Unnamed Configuration"}
-                            </h3>
+                        <div className="config-title-section">
+                            <div className="config-display">
+                                <div className="config-title-row">
+                                    <h3 className="config-title">
+                                        {isNewConfig
+                                            ? "New Configuration"
+                                            : configName ||
+                                              "Unnamed Configuration"}
+                                    </h3>
+                                    <button
+                                        onClick={startEditingConfig}
+                                        className="btn btn--secondary btn--sm edit-config-btn"
+                                    >
+                                        <Edit3 size={16} />
+                                    </button>
+                                </div>
+                                {configDescription && (
+                                    <p className="config-description-display">
+                                        {configDescription}
+                                    </p>
+                                )}
+                            </div>
                         </div>
                         <div className="config-actions">
-                            <button
-                                onClick={() =>
-                                    setShowConfigurations(!showConfigurations)
-                                }
-                                className="btn btn--secondary btn--sm"
-                            >
-                                <FolderOpen size={16} />
-                                Load
-                            </button>
-                            <button
-                                onClick={newConfiguration}
-                                className="btn btn--secondary btn--sm"
-                            >
-                                <Plus size={16} />
-                                New
-                            </button>
                             <button
                                 onClick={saveConfiguration}
                                 className="btn btn--success btn--sm"
@@ -655,45 +659,6 @@ export const ApiEditor: React.FC = () => {
                                 Save
                             </button>
                         </div>
-                    </div>
-
-                    {showConfigurations && (
-                        <div className="configurations-list">
-                            <h4>Load Configuration:</h4>
-                            {configurations?.map((config) => (
-                                <div
-                                    key={config.id}
-                                    className={`config-item ${currentConfigId === config.id ? "active" : ""}`}
-                                    onClick={() => loadConfiguration(config.id)}
-                                >
-                                    <div className="config-item-name">
-                                        {config.name}
-                                    </div>
-                                    <div className="config-item-url">
-                                        {config.apiUrl}
-                                    </div>
-                                </div>
-                            ))}
-                        </div>
-                    )}
-
-                    <div className="config-form">
-                        <input
-                            type="text"
-                            placeholder="Configuration name"
-                            value={configName}
-                            onChange={(e) => setConfigName(e.target.value)}
-                            className="input config-name-input"
-                        />
-                        <textarea
-                            placeholder="Description (optional)"
-                            value={configDescription}
-                            onChange={(e) =>
-                                setConfigDescription(e.target.value)
-                            }
-                            className="textarea config-description"
-                            rows={2}
-                        />
                     </div>
                 </div>
 
@@ -815,6 +780,79 @@ export const ApiEditor: React.FC = () => {
                     </button>
                 )}
             </div>
+
+            {/* Edit Configuration Modal */}
+            {isEditingConfig && (
+                <div className="modal-overlay" onClick={cancelEditingConfig}>
+                    <div
+                        className="modal-content"
+                        onClick={(e) => e.stopPropagation()}
+                    >
+                        <div className="modal-header">
+                            <h3 className="modal-title">Edit Configuration</h3>
+                            <button
+                                onClick={cancelEditingConfig}
+                                className="modal-close-btn"
+                            >
+                                <X size={20} />
+                            </button>
+                        </div>
+                        <div className="modal-body">
+                            <div className="form-group">
+                                <label
+                                    htmlFor="config-name"
+                                    className="form-label"
+                                >
+                                    Configuration Name *
+                                </label>
+                                <input
+                                    id="config-name"
+                                    type="text"
+                                    placeholder="Enter configuration name"
+                                    value={tempConfigName}
+                                    onChange={(e) =>
+                                        setTempConfigName(e.target.value)
+                                    }
+                                    className="input modal-input"
+                                />
+                            </div>
+                            <div className="form-group">
+                                <label
+                                    htmlFor="config-description"
+                                    className="form-label"
+                                >
+                                    Description
+                                </label>
+                                <textarea
+                                    id="config-description"
+                                    placeholder="Enter description (optional)"
+                                    value={tempConfigDescription}
+                                    onChange={(e) =>
+                                        setTempConfigDescription(e.target.value)
+                                    }
+                                    className="textarea modal-textarea"
+                                    rows={4}
+                                />
+                            </div>
+                        </div>
+                        <div className="modal-footer">
+                            <button
+                                onClick={cancelEditingConfig}
+                                className="btn btn--secondary"
+                            >
+                                Cancel
+                            </button>
+                            <button
+                                onClick={confirmEditingConfig}
+                                className="btn btn--success"
+                                disabled={!tempConfigName.trim()}
+                            >
+                                Save Changes
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            )}
 
             <div className="api-editor__right-panel">
                 {showResults ? (
