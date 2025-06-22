@@ -124,7 +124,7 @@ export const ElementPicker = ({
 
                 <div className="elements-container" ref={elementsContainerRef}>
                     <div className="elements">
-                        <div className="section element-type-section">
+                        <div className="element-section element-type-section">
                             <div
                                 className={`elements-type ${showTypeSelector ? "active" : ""}`}
                                 onClick={() => setShowTypeSelector(true)}
@@ -146,7 +146,7 @@ export const ElementPicker = ({
                                 ))}
                             </div>
                         </div>
-                        <div className="section">
+                        <div className="element-section">
                             {/* for moving the elements */}
                             <button
                                 className={`tool-button move ${activeAction == "moving" ? "active" : ""}`}
@@ -240,7 +240,7 @@ export const ElementPicker = ({
                             </button>
                         </div>
 
-                        <div className="section">
+                        <div className="element-section">
                             <button className="tool-button comment">
                                 <MessageCircle
                                     strokeWidth={iconStrockWidth}
@@ -249,7 +249,7 @@ export const ElementPicker = ({
                             </button>
                         </div>
 
-                        <div className="section">
+                        <div className="element-section">
                             <button className="tool-button plugins">
                                 <Blocks
                                     strokeWidth={iconStrockWidth}
