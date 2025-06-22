@@ -343,9 +343,9 @@ export const ApiEditor: React.FC = () => {
         navigate("/api-layer/new");
     };
 
-    const goBack = () => {
-        navigate("/api-layer");
-    };
+    // const goBack = () => {
+    //     navigate("/api-layer");
+    // };
 
     const addOperation = async () => {
         const newOp: Operation = {
@@ -613,13 +613,13 @@ export const ApiEditor: React.FC = () => {
                 <div className="drop-section config-section">
                     <div className="config-header">
                         <div className="config-title-row">
-                            <button
-                                onClick={goBack}
-                                className="btn btn--secondary btn--sm"
-                                title="Back to configurations list"
-                            >
-                                <ArrowLeft size={16} />
-                            </button>
+                            {/* <button */}
+                            {/*     onClick={goBack} */}
+                            {/*     className="btn btn--secondary btn--sm" */}
+                            {/*     title="Back to configurations list" */}
+                            {/* > */}
+                            {/*     <ArrowLeft size={16} /> */}
+                            {/* </button> */}
                             <h3 className="config-title">
                                 {isNewConfig
                                     ? "New Configuration"
