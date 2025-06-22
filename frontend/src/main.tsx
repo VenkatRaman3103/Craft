@@ -11,6 +11,7 @@ import { Provider } from "react-redux";
 import { store } from "./store/store.ts";
 import { Projects } from "./Pages/Canvas/Projects/index.tsx";
 import { Project } from "./Pages/Canvas/Project/index.tsx";
+import { ApiEditor } from "./ApiLayer/index.tsx";
 
 const rootElement = document.getElementById("root");
 
@@ -43,6 +44,7 @@ createRoot(rootElement).render(
                             element={<Canvas />}
                         />
                         <Route path="/canvas/projects" element={<Projects />} />
+                        <Route path="/api" element={<ApiEditor />} />
 
                         {/* list all the pages */}
                         <Route
