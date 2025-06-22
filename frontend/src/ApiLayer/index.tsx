@@ -1,4 +1,4 @@
-import React, { useState, useMemo } from "react";
+import React, { useState, useMemo, useEffect } from "react";
 import {
     Plus,
     Trash2,
@@ -8,10 +8,23 @@ import {
     EyeOff,
     RefreshCw,
     Settings,
+    Save,
+    FolderOpen,
 } from "lucide-react";
 import "./index.scss";
 import { ParamsPanel } from "./ParamsPanel";
 import { OperationsPanel } from "./OperationPanel";
+import {
+    useApiConfigurations,
+    useApiConfigurationWithDetails,
+    useCreateApiConfiguration,
+    useUpdateApiConfiguration,
+    useUpdateApiOperation,
+    useCreateApiOperation,
+    useDeleteApiOperation,
+    useSaveApiResult,
+    useUpdateApiOperationOrders,
+} from "./useApiEditor.ts";
 
 interface MapField {
     from: string;
@@ -29,6 +42,7 @@ interface Operation {
     value: string;
     customCode: string;
     mapFields: MapField[];
+    executionOrder?: number;
 }
 
 interface Field {
@@ -56,10 +70,58 @@ export const ApiEditor: React.FC = () => {
     const [showResults, setShowResults] = useState<boolean>(false);
     const [showPreview, setShowPreview] = useState<boolean>(false);
     const [showParams, setShowParams] = useState<boolean>(false);
+    const [showConfigurations, setShowConfigurations] =
+        useState<boolean>(false);
     const [apiUrl, setApiUrl] = useState<string>("");
     const [isLoading, setIsLoading] = useState<boolean>(false);
     const [error, setError] = useState<string>("");
     const [paramValues, setParamValues] = useState<ApiParamValue>({});
+
+    const [currentConfigId, setCurrentConfigId] = useState<number | null>(null);
+    const [configName, setConfigName] = useState<string>("");
+    const [configDescription, setConfigDescription] = useState<string>("");
+    const [isNewConfig, setIsNewConfig] = useState<boolean>(true);
+
+    const { data: configurations } = useApiConfigurations();
+    const { data: configDetails, isLoading: isLoadingConfig } =
+        useApiConfigurationWithDetails(currentConfigId || 0);
+    const createConfigMutation = useCreateApiConfiguration();
+    const updateConfigMutation = useUpdateApiConfiguration();
+    const createOperationMutation = useCreateApiOperation();
+    const updateOperationMutation = useUpdateApiOperation();
+    const deleteOperationMutation = useDeleteApiOperation();
+    const saveResultMutation = useSaveApiResult();
+    const updateOperationOrdersMutation = useUpdateApiOperationOrders();
+
+    useEffect(() => {
+        if (configDetails) {
+            const {
+                configuration,
+                parameters,
+                operations: dbOperations,
+            } = configDetails;
+            setConfigName(configuration.name);
+            setConfigDescription(configuration.description || "");
+            setApiUrl(configuration.apiUrl);
+
+            const convertedOperations = dbOperations.map((op) => ({
+                id: op.id,
+                type: op.type,
+                conditionType: op.conditionType,
+                field: op.field || "",
+                operator: op.operator || "===",
+                value: op.value || "",
+                customCode: op.customCode || "",
+                mapFields: op.mapFields || [
+                    { from: "", to: "", value: "", type: "copy" as const },
+                ],
+                executionOrder: op.executionOrder,
+            }));
+
+            setOperations(convertedOperations);
+            setIsNewConfig(false);
+        }
+    }, [configDetails]);
 
     const availableFields: Field[] = useMemo(() => {
         if (jsonData.length === 0) return [];
@@ -90,6 +152,19 @@ export const ApiEditor: React.FC = () => {
         extractFields(firstItem);
         return fields;
     }, [jsonData]);
+
+    const availableParams: ApiParam[] = useMemo(() => {
+        if (configDetails?.parameters) {
+            return configDetails.parameters.map((param) => ({
+                name: param.name,
+                description: param.description || "",
+                type: param.type,
+                defaultValue: param.defaultValue,
+                options: param.options,
+            }));
+        }
+        return [];
+    }, [configDetails]);
 
     const buildApiUrl = () => {
         if (!apiUrl.trim()) return "";
@@ -132,6 +207,7 @@ export const ApiEditor: React.FC = () => {
 
         setIsLoading(true);
         setError("");
+        const startTime = Date.now();
 
         try {
             const response = await fetch(finalUrl);
@@ -141,6 +217,7 @@ export const ApiEditor: React.FC = () => {
             }
 
             const data = await response.json();
+            const responseTime = Date.now() - startTime;
 
             let processedData = data;
 
@@ -159,15 +236,99 @@ export const ApiEditor: React.FC = () => {
             setJsonData(processedData);
             setShowPreview(true);
             setError("");
+
+            if (currentConfigId) {
+                saveResultMutation.mutate({
+                    configId: currentConfigId,
+                    parameterValues: paramValues,
+                    rawData: data,
+                    processedData: processedData,
+                    responseStatus: response.status,
+                    responseTime: responseTime,
+                });
+            }
         } catch (err: any) {
             setError(`Failed to fetch data: ${err.message}`);
             setJsonData([]);
+
+            if (currentConfigId) {
+                saveResultMutation.mutate({
+                    configId: currentConfigId,
+                    parameterValues: paramValues,
+                    errorMessage: err.message,
+                    responseStatus: 0,
+                });
+            }
         } finally {
             setIsLoading(false);
         }
     };
 
-    const addOperation = () => {
+    const saveConfiguration = async () => {
+        if (!configName.trim() || !apiUrl.trim()) {
+            setError("Configuration name and API URL are required");
+            return;
+        }
+
+        try {
+            const configData = {
+                name: configName.trim(),
+                description: configDescription.trim(),
+                apiUrl: apiUrl.trim(),
+                operations: operations.map((op, index) => ({
+                    type: op.type,
+                    conditionType: op.conditionType,
+                    field: op.field,
+                    operator: op.operator,
+                    value: op.value,
+                    customCode: op.customCode,
+                    mapFields: op.mapFields,
+                    executionOrder: index,
+                })),
+            };
+
+            if (isNewConfig) {
+                const result =
+                    await createConfigMutation.mutateAsync(configData);
+                setCurrentConfigId(result.data.configuration.id);
+                setIsNewConfig(false);
+            } else if (currentConfigId) {
+                await updateConfigMutation.mutateAsync({
+                    id: currentConfigId,
+                    data: configData,
+                });
+            }
+
+            setError("");
+        } catch (err: any) {
+            setError(`Failed to save configuration: ${err.message}`);
+        }
+    };
+
+    const loadConfiguration = (configId: number) => {
+        setCurrentConfigId(configId);
+        setShowConfigurations(false);
+        setJsonData([]);
+        setResult([]);
+        setShowResults(false);
+        setParamValues({});
+    };
+
+    const newConfiguration = () => {
+        setCurrentConfigId(null);
+        setConfigName("");
+        setConfigDescription("");
+        setApiUrl("");
+        setOperations([]);
+        setJsonData([]);
+        setResult([]);
+        setShowResults(false);
+        setParamValues({});
+        setIsNewConfig(true);
+        setShowConfigurations(false);
+    };
+
+    const addOperation = async () => {
         const newOp: Operation = {
             id: Date.now(),
             type: "filter",
@@ -177,18 +338,74 @@ export const ApiEditor: React.FC = () => {
             value: "",
             customCode: "",
             mapFields: [{ from: "", to: "", value: "", type: "copy" }],
+            executionOrder: operations.length,
         };
+
+        if (currentConfigId && !isNewConfig) {
+            try {
+                const result = await createOperationMutation.mutateAsync({
+                    configId: currentConfigId,
+                    data: {
+                        type: newOp.type,
+                        conditionType: newOp.conditionType,
+                        field: newOp.field,
+                        operator: newOp.operator,
+                        value: newOp.value,
+                        customCode: newOp.customCode,
+                        mapFields: newOp.mapFields,
+                        executionOrder: newOp.executionOrder || 0,
+                    },
+                });
+                newOp.id = result.data.id;
+            } catch (err) {
+                console.error("Failed to save operation:", err);
+            }
+        }
+
         setOperations([...operations, newOp]);
     };
 
-    const updateOperation = (id: number, updates: Partial<Operation>) => {
-        setOperations(
-            operations.map((op) => (op.id === id ? { ...op, ...updates } : op)),
+    const updateOperation = async (id: number, updates: Partial<Operation>) => {
+        const updatedOperations = operations.map((op) =>
+            op.id === id ? { ...op, ...updates } : op,
         );
+        setOperations(updatedOperations);
+
+        if (currentConfigId && !isNewConfig) {
+            try {
+                await updateOperationMutation.mutateAsync({
+                    id,
+                    configId: currentConfigId,
+                    data: {
+                        type: updates.type,
+                        conditionType: updates.conditionType,
+                        field: updates.field,
+                        operator: updates.operator,
+                        value: updates.value,
+                        customCode: updates.customCode,
+                        mapFields: updates.mapFields,
+                        executionOrder: updates.executionOrder,
+                    },
+                });
+            } catch (err) {
+                console.error("Failed to update operation:", err);
+            }
+        }
     };
 
-    const removeOperation = (id: number) => {
+    const removeOperation = async (id: number) => {
         setOperations(operations.filter((op) => op.id !== id));
+
+        if (currentConfigId && !isNewConfig) {
+            try {
+                await deleteOperationMutation.mutateAsync({
+                    id,
+                    configId: currentConfigId,
+                });
+            } catch (err) {
+                console.error("Failed to delete operation:", err);
+            }
+        }
     };
 
     const addMapField = (operationId: number) => {
@@ -342,6 +559,15 @@ export const ApiEditor: React.FC = () => {
 
             setResult(result);
             setShowResults(true);
+
+            if (currentConfigId) {
+                saveResultMutation.mutate({
+                    configId: currentConfigId,
+                    parameterValues: paramValues,
+                    processedData: result,
+                    rawData: jsonData,
+                });
+            }
         } catch (error: any) {
             alert(`Error executing operations: ${error.message}`);
         }
@@ -354,6 +580,86 @@ export const ApiEditor: React.FC = () => {
     return (
         <div className="api-editor">
             <div className="api-editor__left-panel">
+                <div className="drop-section config-section">
+                    <div className="config-header">
+                        <h3 className="config-title">
+                            {isNewConfig
+                                ? "New Configuration"
+                                : configName || "Unnamed Configuration"}
+                        </h3>
+                        <div className="config-actions">
+                            <button
+                                onClick={() =>
+                                    setShowConfigurations(!showConfigurations)
+                                }
+                                className="btn btn--secondary btn--sm"
+                            >
+                                <FolderOpen size={16} />
+                                Load
+                            </button>
+                            <button
+                                onClick={newConfiguration}
+                                className="btn btn--secondary btn--sm"
+                            >
+                                <Plus size={16} />
+                                New
+                            </button>
+                            <button
+                                onClick={saveConfiguration}
+                                className="btn btn--success btn--sm"
+                                disabled={
+                                    createConfigMutation.isPending ||
+                                    updateConfigMutation.isPending
+                                }
+                            >
+                                <Save size={16} />
+                                Save
+                            </button>
+                        </div>
+                    </div>
+
+                    {showConfigurations && (
+                        <div className="configurations-list">
+                            <h4>Load Configuration:</h4>
+                            {configurations?.map((config) => (
+                                <div
+                                    key={config.id}
+                                    className={`config-item ${currentConfigId === config.id ? "active" : ""}`}
+                                    onClick={() => loadConfiguration(config.id)}
+                                >
+                                    <div className="config-item-name">
+                                        {config.name}
+                                    </div>
+                                    <div className="config-item-url">
+                                        {config.apiUrl}
+                                    </div>
+                                </div>
+                            ))}
+                        </div>
+                    )}
+
+                    {(isNewConfig || currentConfigId) && (
+                        <div className="config-form">
+                            <input
+                                type="text"
+                                placeholder="Configuration name"
+                                value={configName}
+                                onChange={(e) => setConfigName(e.target.value)}
+                                className="input config-name-input"
+                            />
+                            <textarea
+                                placeholder="Description (optional)"
+                                value={configDescription}
+                                onChange={(e) =>
+                                    setConfigDescription(e.target.value)
+                                }
+                                className="textarea config-description"
+                                rows={2}
+                            />
+                        </div>
+                    )}
+                </div>
+
                 <div className="drop-section data-input-section">
                     <div className="section__controls">
                         <div className="api-input-group">
@@ -374,15 +680,19 @@ export const ApiEditor: React.FC = () => {
                                     : "No data loaded"}
                             </span>
                             <div className="url-action-buttons">
-                                <button
-                                    onClick={() => setShowParams(!showParams)}
-                                    className={`btn btn--params ${showParams ? "btn--params--active" : ""}`}
-                                >
-                                    <Settings size={16} />
-                                    Params{" "}
-                                    {activeParamsCount > 0 &&
-                                        `(${activeParamsCount})`}
-                                </button>
+                                {availableParams.length > 0 && (
+                                    <button
+                                        onClick={() =>
+                                            setShowParams(!showParams)
+                                        }
+                                        className={`btn btn--params ${showParams ? "btn--params--active" : ""}`}
+                                    >
+                                        <Settings size={16} />
+                                        Params{" "}
+                                        {activeParamsCount > 0 &&
+                                            `(${activeParamsCount})`}
+                                    </button>
+                                )}
                                 <button
                                     onClick={fetchApiData}
                                     className="btn btn--primary"
@@ -401,8 +711,9 @@ export const ApiEditor: React.FC = () => {
                             </div>
                         </div>
 
-                        {showParams && (
+                        {showParams && availableParams.length > 0 && (
                             <ParamsPanel
+                                availableParams={availableParams}
                                 paramValues={paramValues}
                                 updateParamValue={updateParamValue}
                                 clearParam={clearParam}

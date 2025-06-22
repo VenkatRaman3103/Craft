@@ -23,6 +23,7 @@ import { apiBlockRouter } from "./blocks/apiBlocks/route.js";
 import { canvasRouter } from "./canvas/route.js";
 import { canvasElements } from "../db/schema/canvas/canvasElements.js";
 import { elementStyles } from "../db/schema/canvas/elementStyles.js";
+import { apiEditorRouter } from "./apiLayer/route.js";
 
 dotenv.config();
 
@@ -156,6 +157,9 @@ app.use("/api", fieldRoute);
 
 // collectionItems
 app.use("/api", collectionItemsRouter);
+
+// api layer
+app.use("/api", apiEditorRouter);
 
 // services
 // api

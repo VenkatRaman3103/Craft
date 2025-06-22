@@ -1,14 +1,32 @@
-import { availableParams } from "@/Data/apiEditor";
 import { Trash2 } from "lucide-react";
 
+interface ApiParam {
+    name: string;
+    description: string;
+    type: "string" | "number" | "boolean" | "date";
+    defaultValue?: string;
+    options?: string[];
+}
+
+interface ParamsPanelProps {
+    availableParams: ApiParam[];
+    paramValues: Record<string, string>;
+    updateParamValue: (paramName: string, value: string) => void;
+    clearParam: (paramName: string) => void;
+    clearAllParams: () => void;
+    buildApiUrl: () => string;
+    apiUrl: string;
+}
+
 export const ParamsPanel = ({
+    availableParams,
     paramValues,
     updateParamValue,
     clearParam,
     clearAllParams,
     buildApiUrl,
     apiUrl,
-}: any) => {
+}: ParamsPanelProps) => {
     const activeParamsCount = Object.values(paramValues).filter(Boolean).length;
 
     return (
