@@ -1,0 +1,237 @@
+.data-preview {
+  border: 1px solid var(--base-color-1);
+  border-radius: var(--border-radius);
+  background: var(--white-color);
+  overflow: hidden;
+  font-family: sans-serif;
+  color: white;
+}
+
+.data-preview__header {
+  display: flex;
+  justify-content: flex-end;
+  padding: var(--spacing-3) var(--spacing-4);
+  background: var(--primary-color);
+  border-bottom: 1px solid var(--base-color-1);
+}
+
+.data-preview__toggle {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-2);
+  padding: var(--spacing-2) var(--spacing-3);
+  background: var(--white-color);
+  border: 1px solid var(--base-color-1);
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 14px;
+  color: white;
+  transition: all 0.2s ease;
+
+  &:hover {
+    background: var(--primary-color);
+  }
+
+  &:focus {
+    outline: 2px solid var(--dark-blue);
+    outline-offset: 2px;
+  }
+}
+
+.data-preview__content {
+  max-height: 600px;
+  overflow: auto;
+}
+
+.structured-view {
+  padding: var(--spacing-4);
+}
+
+.json-view {
+  position: relative;
+  padding: var(--spacing-4);
+
+  &__copy-btn {
+    position: absolute;
+    top: var(--spacing-2);
+    right: var(--spacing-2);
+    padding: 4px;
+    background: var(--white-color);
+    border: 1px solid var(--base-color-1);
+    border-radius: 4px;
+    cursor: pointer;
+    opacity: 0.7;
+    transition: opacity 0.2s ease;
+    color: white;
+
+    &:hover {
+      opacity: 1;
+      background: var(--primary-color);
+    }
+
+    &:focus {
+      outline: 2px solid var(--dark-blue);
+      outline-offset: 2px;
+    }
+  }
+
+  &__content {
+    font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', 'Consolas', monospace;
+    font-size: 13px;
+    line-height: 1.4;
+    margin: 0;
+    padding: 0;
+    color: white;
+    overflow-x: auto;
+  }
+}
+
+.data-group {
+  margin-bottom: var(--spacing-2);
+
+  &__children {
+    /* margin-left: 20px; */
+    /* border-left: 1px solid var(--base-color-1); */
+    /* padding-left: var(--spacing-4); */
+    /* margin-top: 4px; */
+  }
+}
+
+.data-row {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  padding: 4px 0;
+  border-radius: 4px;
+  transition: background-color 0.2s ease;
+
+  &:hover {
+    background: var(--primary-color);
+  }
+
+  &__key {
+    display: flex;
+    justify-content: end;
+    align-items: center;
+    gap: var(--spacing-2);
+    flex: 1;
+    min-width: 0;
+  }
+
+  &__value {
+    display: flex;
+    justify-content: start;
+    align-items: center;
+    gap: var(--spacing-2);
+    flex: 1;
+    min-width: 0;
+  }
+
+  &__expand-btn {
+    padding: 2px;
+    background: none;
+    border: none;
+    cursor: pointer;
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 2px;
+    transition: all 0.2s ease;
+    opacity: 0.7;
+
+    &:hover {
+      background: var(--primary-color);
+      opacity: 1;
+    }
+
+    &:focus {
+      outline: 2px solid var(--dark-blue);
+      outline-offset: 2px;
+    }
+  }
+
+  &__copy-btn {
+    padding: 2px;
+    background: none;
+    border: none;
+    cursor: pointer;
+    color: white;
+    opacity: 0;
+    transition: all 0.2s ease;
+    border-radius: 2px;
+
+    &:hover {
+      opacity: 1;
+      background: var(--primary-color);
+    }
+
+    &:focus {
+      outline: 2px solid var(--dark-blue);
+      outline-offset: 2px;
+      opacity: 1;
+    }
+
+    &.copied {
+      color: white;
+      opacity: 1;
+    }
+  }
+
+  &:hover &__copy-btn {
+    opacity: 0.7;
+  }
+
+  &__path {
+    font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', 'Consolas', monospace;
+    font-size: 13px;
+    color: white;
+    font-weight: 500;
+    word-break: break-all;
+  }
+
+  &--expandable &__path {
+    font-weight: 600;
+  }
+}
+
+.data-value {
+  font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', 'Consolas', monospace;
+  font-size: 13px;
+  padding: 2px var(--spacing-2);
+  border-radius: 4px;
+  word-break: break-all;
+  text-align: right;
+
+  &--string {
+    color: white;
+    background: var(--primary-color);
+  }
+
+  &--number {
+    color: white;
+    background: var(--secondary-color);
+  }
+
+  &--boolean {
+    color: white;
+    background: var(--base-color-1);
+  }
+
+  &--null {
+    color: white;
+    background: var(--base-color-1);
+    font-style: italic;
+    opacity: 0.7;
+  }
+
+  &--array {
+    color: white;
+    background: var(--base-color-2);
+  }
+
+  &--object {
+    color: white;
+    background: var(--base-color-1);
+  }
+}

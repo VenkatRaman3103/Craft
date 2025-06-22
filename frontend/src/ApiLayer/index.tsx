@@ -28,6 +28,7 @@ import {
     useUpdateApiOperationOrders,
 } from "./useApiEditor.ts";
 import { availableParams } from "@/Data/apiEditor.ts";
+import DataPreview from "./DataPreview/index.tsx";
 
 interface MapField {
     from: string;
@@ -901,11 +902,11 @@ export const ApiEditor: React.FC = () => {
                             </div>
                         </div>
 
-                        <div className="results-display">
-                            <pre className="results-display__content">
-                                {JSON.stringify(result, null, 2)}
-                            </pre>
-                        </div>
+                        <DataPreview
+                            data={result}
+                            maxDepth={10}
+                            showCopyButton={true}
+                        />
                     </div>
                 ) : (
                     <div className="empty-state">
@@ -924,3 +925,12 @@ export const ApiEditor: React.FC = () => {
         </div>
     );
 };
+// a:{
+//     name: "foo"
+//     b:{
+//         name:"bar"
+//         c:{
+//         name:"bob"
+//         }
+//     }
+// }
