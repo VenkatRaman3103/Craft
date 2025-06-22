@@ -45,6 +45,10 @@ createRoot(rootElement).render(
                         />
                         <Route path="/canvas/projects" element={<Projects />} />
                         <Route path="/api" element={<ApiEditor />} />
+                        <Route
+                            path="/api-layer/:api_id"
+                            element={<ApiEditor />}
+                        />
 
                         {/* list all the pages */}
                         <Route

@@ -1,7 +1,7 @@
 import React, { useState, useMemo, useEffect } from "react";
+import { useParams, useNavigate } from "react-router-dom";
 import {
     Plus,
-    Trash2,
     Play,
     Upload,
     Eye,
@@ -10,6 +10,7 @@ import {
     Settings,
     Save,
     FolderOpen,
+    ArrowLeft,
 } from "lucide-react";
 import "./index.scss";
 import { ParamsPanel } from "./ParamsPanel";
@@ -64,6 +65,9 @@ interface ApiParamValue {
 }
 
 export const ApiEditor: React.FC = () => {
+    const { api_id } = useParams<{ api_id: string }>();
+    const navigate = useNavigate();
+
     const [jsonData, setJsonData] = useState<any[]>([]);
     const [operations, setOperations] = useState<Operation[]>([]);
     const [result, setResult] = useState<any[]>([]);
@@ -77,14 +81,17 @@ export const ApiEditor: React.FC = () => {
     const [error, setError] = useState<string>("");
     const [paramValues, setParamValues] = useState<ApiParamValue>({});
 
-    const [currentConfigId, setCurrentConfigId] = useState<number | null>(null);
     const [configName, setConfigName] = useState<string>("");
     const [configDescription, setConfigDescription] = useState<string>("");
-    const [isNewConfig, setIsNewConfig] = useState<boolean>(true);
+
+    const currentConfigId =
+        api_id === "new" ? null : parseInt(api_id || "0", 10);
+    const isNewConfig = api_id === "new";
+    const isValidConfigId = currentConfigId && !isNaN(currentConfigId);
 
     const { data: configurations } = useApiConfigurations();
     const { data: configDetails, isLoading: isLoadingConfig } =
-        useApiConfigurationWithDetails(currentConfigId || 0);
+        useApiConfigurationWithDetails(isValidConfigId ? currentConfigId : 0);
     const createConfigMutation = useCreateApiConfiguration();
     const updateConfigMutation = useUpdateApiConfiguration();
     const createOperationMutation = useCreateApiOperation();
@@ -94,7 +101,17 @@ export const ApiEditor: React.FC = () => {
     const updateOperationOrdersMutation = useUpdateApiOperationOrders();
 
     useEffect(() => {
-        if (configDetails) {
+        if (
+            api_id &&
+            api_id !== "new" &&
+            (!currentConfigId || isNaN(currentConfigId))
+        ) {
+            setError("Invalid API configuration ID");
+        }
+    }, [api_id, currentConfigId]);
+
+    useEffect(() => {
+        if (configDetails && isValidConfigId) {
             const {
                 configuration,
                 parameters,
@@ -119,9 +136,22 @@ export const ApiEditor: React.FC = () => {
             }));
 
             setOperations(convertedOperations);
-            setIsNewConfig(false);
         }
-    }, [configDetails]);
+    }, [configDetails, isValidConfigId]);
+
+    useEffect(() => {
+        if (isNewConfig) {
+            setConfigName("");
+            setConfigDescription("");
+            setApiUrl("");
+            setOperations([]);
+            setJsonData([]);
+            setResult([]);
+            setShowResults(false);
+            setParamValues({});
+            setError("");
+        }
+    }, [isNewConfig]);
 
     const availableFields: Field[] = useMemo(() => {
         if (jsonData.length === 0) return [];
@@ -237,7 +267,7 @@ export const ApiEditor: React.FC = () => {
             setShowPreview(true);
             setError("");
 
-            if (currentConfigId) {
+            if (isValidConfigId) {
                 saveResultMutation.mutate({
                     configId: currentConfigId,
                     parameterValues: paramValues,
@@ -251,7 +281,7 @@ export const ApiEditor: React.FC = () => {
             setError(`Failed to fetch data: ${err.message}`);
             setJsonData([]);
 
-            if (currentConfigId) {
+            if (isValidConfigId) {
                 saveResultMutation.mutate({
                     configId: currentConfigId,
                     parameterValues: paramValues,
@@ -290,9 +320,9 @@ export const ApiEditor: React.FC = () => {
             if (isNewConfig) {
                 const result =
                     await createConfigMutation.mutateAsync(configData);
-                setCurrentConfigId(result.data.configuration.id);
-                setIsNewConfig(false);
-            } else if (currentConfigId) {
+                const newConfigId = result.data.configuration.id;
+                navigate(`/api-layer/${newConfigId}`, { replace: true });
+            } else if (isValidConfigId) {
                 await updateConfigMutation.mutateAsync({
                     id: currentConfigId,
                     data: configData,
@@ -306,26 +336,15 @@ export const ApiEditor: React.FC = () => {
     };
 
     const loadConfiguration = (configId: number) => {
-        setCurrentConfigId(configId);
-        setShowConfigurations(false);
-        setJsonData([]);
-        setResult([]);
-        setShowResults(false);
-        setParamValues({});
+        navigate(`/api-layer/${configId}`);
     };
 
     const newConfiguration = () => {
-        setCurrentConfigId(null);
-        setConfigName("");
-        setConfigDescription("");
-        setApiUrl("");
-        setOperations([]);
-        setJsonData([]);
-        setResult([]);
-        setShowResults(false);
-        setParamValues({});
-        setIsNewConfig(true);
-        setShowConfigurations(false);
+        navigate("/api-layer/new");
+    };
+
+    const goBack = () => {
+        navigate("/api-layer");
     };
 
     const addOperation = async () => {
@@ -341,7 +360,7 @@ export const ApiEditor: React.FC = () => {
             executionOrder: operations.length,
         };
 
-        if (currentConfigId && !isNewConfig) {
+        if (isValidConfigId) {
             try {
                 const result = await createOperationMutation.mutateAsync({
                     configId: currentConfigId,
@@ -371,7 +390,7 @@ export const ApiEditor: React.FC = () => {
         );
         setOperations(updatedOperations);
 
-        if (currentConfigId && !isNewConfig) {
+        if (isValidConfigId) {
             try {
                 await updateOperationMutation.mutateAsync({
                     id,
@@ -396,7 +415,7 @@ export const ApiEditor: React.FC = () => {
     const removeOperation = async (id: number) => {
         setOperations(operations.filter((op) => op.id !== id));
 
-        if (currentConfigId && !isNewConfig) {
+        if (isValidConfigId) {
             try {
                 await deleteOperationMutation.mutateAsync({
                     id,
@@ -560,7 +579,7 @@ export const ApiEditor: React.FC = () => {
             setResult(result);
             setShowResults(true);
 
-            if (currentConfigId) {
+            if (isValidConfigId) {
                 saveResultMutation.mutate({
                     configId: currentConfigId,
                     parameterValues: paramValues,
@@ -577,16 +596,36 @@ export const ApiEditor: React.FC = () => {
         (key) => paramValues[key] && paramValues[key].trim(),
     ).length;
 
+    if (isLoadingConfig && isValidConfigId) {
+        return (
+            <div className="api-editor">
+                <div className="loading-state">
+                    <RefreshCw size={24} className="spinning" />
+                    <p>Loading configuration...</p>
+                </div>
+            </div>
+        );
+    }
+
     return (
         <div className="api-editor">
             <div className="api-editor__left-panel">
                 <div className="drop-section config-section">
                     <div className="config-header">
-                        <h3 className="config-title">
-                            {isNewConfig
-                                ? "New Configuration"
-                                : configName || "Unnamed Configuration"}
-                        </h3>
+                        <div className="config-title-row">
+                            <button
+                                onClick={goBack}
+                                className="btn btn--secondary btn--sm"
+                                title="Back to configurations list"
+                            >
+                                <ArrowLeft size={16} />
+                            </button>
+                            <h3 className="config-title">
+                                {isNewConfig
+                                    ? "New Configuration"
+                                    : configName || "Unnamed Configuration"}
+                            </h3>
+                        </div>
                         <div className="config-actions">
                             <button
                                 onClick={() =>
@@ -638,26 +677,24 @@ export const ApiEditor: React.FC = () => {
                         </div>
                     )}
 
-                    {(isNewConfig || currentConfigId) && (
-                        <div className="config-form">
-                            <input
-                                type="text"
-                                placeholder="Configuration name"
-                                value={configName}
-                                onChange={(e) => setConfigName(e.target.value)}
-                                className="input config-name-input"
-                            />
-                            <textarea
-                                placeholder="Description (optional)"
-                                value={configDescription}
-                                onChange={(e) =>
-                                    setConfigDescription(e.target.value)
-                                }
-                                className="textarea config-description"
-                                rows={2}
-                            />
-                        </div>
-                    )}
+                    <div className="config-form">
+                        <input
+                            type="text"
+                            placeholder="Configuration name"
+                            value={configName}
+                            onChange={(e) => setConfigName(e.target.value)}
+                            className="input config-name-input"
+                        />
+                        <textarea
+                            placeholder="Description (optional)"
+                            value={configDescription}
+                            onChange={(e) =>
+                                setConfigDescription(e.target.value)
+                            }
+                            className="textarea config-description"
+                            rows={2}
+                        />
+                    </div>
                 </div>
 
                 <div className="drop-section data-input-section">
