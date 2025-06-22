@@ -249,7 +249,7 @@
 
 .operation-card {
   border: 1px solid var(--border-color);
-  background-color: var(--primary-color);
+  background-color: var(--base-color);
   padding: var(--spacing-5);
   border-radius: var(--border-radius-lg);
   margin-bottom: var(--spacing-4);
@@ -342,10 +342,11 @@
 }
 
 .results-display {
+  height: 100%;
   background-color: var(--primary-color);
   border: 1px solid var(--border-color);
   border-radius: var(--border-radius);
-  max-height: 24rem;
+  /* max-height: 24rem; */
   overflow: auto;
 
   &__content {
@@ -592,11 +593,21 @@
 }
 
 .btn--execute {
+  width: 100%;
   background-color: var(--secondary-color);
   color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 
   &:hover {
     background-color: white;
     color: black;
   }
+}
+
+.operations-section {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
 }
