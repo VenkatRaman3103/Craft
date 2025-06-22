@@ -1,9 +1,16 @@
 import React, { useState, useEffect } from "react";
 import { ControlPanelSelect } from "@/components/canvas/ControlPanelSelect";
-import { updateTextWrap } from "@/store/toolbar/contentControl/contentControl";
+import { ToggleButton } from "@/components/canvas/ToggleButton";
+import {
+    ContentSourceType,
+    updateContentSource,
+    updateTextWrap,
+} from "@/store/toolbar/contentControl/contentControl";
 import { Plus, Minus } from "lucide-react";
 import "./index.scss";
 import { elementsHash } from "@/Canvas/ElementPicker";
+import { useSelector, useDispatch } from "react-redux";
+import { StoreState } from "@/store/store";
 
 export const ContentControlPanel = ({
     elementContent,
@@ -18,6 +25,11 @@ export const ContentControlPanel = ({
     handleTextWrapChange: (value: string) => void;
     selectedElement: any;
 }) => {
+    const dispatch = useDispatch();
+    const { contentSource } = useSelector(
+        (state: StoreState) => state.contentControl,
+    );
+
     const isTextElement = elementsHash.text.includes(selectedElement?.type);
     const isListElement =
         selectedElement?.type === "ul" || selectedElement?.type === "ol";
@@ -27,6 +39,12 @@ export const ContentControlPanel = ({
     const [currentElementId, setCurrentElementId] = useState<
         string | number | null
     >(null);
+
+    const contentSourceOptions = [
+        { value: "raw" as ContentSourceType, label: "Raw" },
+        { value: "api" as ContentSourceType, label: "API" },
+        { value: "cms" as ContentSourceType, label: "CMS" },
+    ];
 
     useEffect(() => {
         if (isListElement && selectedElement?.id) {
@@ -104,13 +122,44 @@ export const ContentControlPanel = ({
         }
     };
 
-    console.log(elementsHash.text, "elementsHash");
+    const handleContentSourceChange = (newSource: ContentSourceType) => {
+        dispatch(updateContentSource(newSource));
+    };
 
-    return (
-        <div className="content-section-container toolbar-section">
-            <div className="heading">Content</div>
-            <div className="content-sub-section-container">
-                {isListElement ? (
+    const renderContentInput = () => {
+        switch (contentSource) {
+            case "api":
+                return (
+                    <div className="content-field-container">
+                        <label>API Endpoint</label>
+                        <input
+                            type="url"
+                            value={elementContent}
+                            className="content-input"
+                            onChange={(e) =>
+                                handleContentChange(e.target.value)
+                            }
+                            placeholder="Enter API endpoint URL..."
+                        />
+                    </div>
+                );
+            case "cms":
+                return (
+                    <div className="content-field-container">
+                        <label>CMS Content ID</label>
+                        <input
+                            type="text"
+                            value={elementContent}
+                            className="content-input"
+                            onChange={(e) =>
+                                handleContentChange(e.target.value)
+                            }
+                            placeholder="Enter CMS content identifier..."
+                        />
+                    </div>
+                );
+            default: // raw
+                return isListElement ? (
                     <div className="list-content-container">
                         <div className="add-item-container">
                             <input
@@ -179,7 +228,31 @@ export const ContentControlPanel = ({
                             rows={3}
                         />
                     </div>
-                )}
+                );
+        }
+    };
+
+    console.log(elementsHash.text, "elementsHash");
+
+    return (
+        <div className="content-section-container toolbar-section">
+            <div className="heading">Content</div>
+            <div className="content-sub-section-container">
+                {/* Content Source Toggle */}
+                <div className="content-source-section">
+                    <label className="content-source-label">
+                        Content Source
+                    </label>
+                    <ToggleButton
+                        options={contentSourceOptions}
+                        value={contentSource}
+                        onChange={handleContentSourceChange}
+                        className="content-source-toggle"
+                    />
+                </div>
+
+                {/* Content Input based on source */}
+                {renderContentInput()}
 
                 {isTextElement && (
                     <ControlPanelSelect

@@ -81,8 +81,16 @@ function buildElementTree(elements) {
 export const createNewElement = async (req, res) => {
     const { pageId } = req.params;
     const { elementData } = req.body;
-    const { type, parentId, styles, content, attributes, order, name } =
-        elementData;
+    const {
+        type,
+        parentId,
+        styles,
+        content,
+        contentSource, // Add this line
+        attributes,
+        order,
+        name,
+    } = elementData;
 
     try {
         const response = await db
@@ -93,6 +101,7 @@ export const createNewElement = async (req, res) => {
                     parentId: parentId || null,
                     type,
                     content: content || "",
+                    contentSource: contentSource || "raw", // Add this line
                     styles: styles || getDefaultStyles(type),
                     attributes: attributes || {},
                     order: order || 0,
@@ -120,6 +129,7 @@ export const createNewGroup = async (req, res) => {
         parentId,
         styles,
         content,
+        contentSource, // Add this line
         attributes,
         order,
         name,
@@ -143,6 +153,7 @@ export const createNewGroup = async (req, res) => {
                         parentId: parentId || null,
                         type: type || "group",
                         content: content || "",
+                        contentSource: contentSource || "raw", // Add this line
                         styles: styles || getDefaultStyles("group"),
                         attributes: attributes || {},
                         order: order || 0,
@@ -215,25 +226,63 @@ elementsRouter.get("/elements/:pageId", getElement);
 elementsRouter.post("/elements/:pageId", createNewElement);
 elementsRouter.post("/elements/:pageId/group", createNewGroup);
 
-// getting the data from db and generating the html and bind css stylling with tags using name as class
-function generateHTML(elements, depth = 0) {
-    return elements
-        .map((element) => {
-            const tag = getHTMLTag(element.type);
-            const attrs = generateAttributes(element);
-            const content = element.content || "";
+// Function to resolve content based on source type
+async function resolveContent(element) {
+    const { content, contentSource } = element;
 
-            if (element.children && element.children.length > 0) {
-                const childrenHTML = generateHTML(element.children, depth + 1);
-                return `<${tag}${attrs}>${content}${childrenHTML}</${tag}>`;
-            } else {
-                if (["img", "input", "br", "hr"].includes(tag)) {
-                    return `<${tag}${attrs} />`;
+    switch (contentSource) {
+        case "api":
+            try {
+                // Make API call to fetch content
+                const response = await fetch(content);
+                if (response.ok) {
+                    const data = await response.json();
+                    return JSON.stringify(data); // or format as needed
                 }
-                return `<${tag}${attrs}>${content}</${tag}>`;
+                return `Error loading API content from ${content}`;
+            } catch (error) {
+                return `Error: ${error.message}`;
             }
-        })
-        .join("\n");
+
+        case "cms":
+            try {
+                // Here you would integrate with your CMS
+                // This is a placeholder - replace with your actual CMS integration
+                // For example, if using Strapi, Contentful, etc.
+                return `CMS Content ID: ${content}`;
+            } catch (error) {
+                return `Error loading CMS content: ${error.message}`;
+            }
+
+        case "raw":
+        default:
+            return content;
+    }
+}
+
+// getting the data from db and generating the html and bind css stylling with tags using name as class
+async function generateHTML(elements, depth = 0) {
+    const htmlPromises = elements.map(async (element) => {
+        const tag = getHTMLTag(element.type);
+        const attrs = generateAttributes(element);
+        const resolvedContent = await resolveContent(element);
+
+        if (element.children && element.children.length > 0) {
+            const childrenHTML = await generateHTML(
+                element.children,
+                depth + 1,
+            );
+            return `<${tag}${attrs}>${resolvedContent}${childrenHTML}</${tag}>`;
+        } else {
+            if (["img", "input", "br", "hr"].includes(tag)) {
+                return `<${tag}${attrs} />`;
+            }
+            return `<${tag}${attrs}>${resolvedContent}</${tag}>`;
+        }
+    });
+
+    const htmlResults = await Promise.all(htmlPromises);
+    return htmlResults.join("\n");
 }
 
 function generateCSS(elements) {
@@ -308,7 +357,7 @@ export const generatePageHTML = async (req, res) => {
 
         const elementTree = buildElementTree(allElements);
 
-        const htmlContent = generateHTML(elementTree);
+        const htmlContent = await generateHTML(elementTree); // Made async
         const cssContent = generateCSS(elementTree);
 
         const fullHTML = `
@@ -355,12 +404,14 @@ export const updateElement = async (req, res) => {
     const { elementId } = req.params;
     try {
         const updates = req.body;
+        console.log(updates, "<-- updates");
 
         const updatedElement = await db
             .update(elements)
             .set({
                 ...updates,
                 updatedAt: new Date(),
+                contentSource: updates.contentSource,
             })
             .where(eq(elements.id, elementId))
             .returning();

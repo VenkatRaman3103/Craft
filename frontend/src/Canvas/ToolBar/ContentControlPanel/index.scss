@@ -103,3 +103,39 @@
 .list-field {
     background-color: var(--secondary-color);
 }
+
+.content-source-section {
+    margin-bottom: 16px;
+
+    .content-source-label {
+        display: block;
+        font-size: 12px;
+        font-weight: 500;
+        color: #374151;
+        margin-bottom: 8px;
+    }
+
+    .content-source-toggle {
+        width: 100%;
+    }
+}
+
+.content-input {
+    width: 100%;
+    padding: 8px 12px;
+    border: 1px solid #d1d5db;
+    border-radius: 4px;
+    font-size: 12px;
+    background-color: white;
+    transition: border-color 0.2s ease;
+
+    &:focus {
+        outline: none;
+        border-color: #007bff;
+        box-shadow: 0 0 0 2px rgba(0, 123, 255, 0.1);
+    }
+
+    &::placeholder {
+        color: #9ca3af;
+    }
+}

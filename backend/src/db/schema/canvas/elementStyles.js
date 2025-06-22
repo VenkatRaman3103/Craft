@@ -34,4 +34,6 @@ export const elementStyles = pgTable("element_styles", {
 
     createdAt: timestamp("created_at").defaultNow(),
     updatedAt: timestamp("updated_at").defaultNow(),
+
+    contentSource: varchar("content_source", { length: 10 }).default("raw"),
 });

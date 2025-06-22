@@ -81,6 +81,7 @@ import { ContentControlPanel } from "./ToolBar/ContentControlPanel";
 import { DimensionControlPanel } from "./ToolBar/DimensionControlPanel";
 import { ColorControlPanel } from "./ToolBar/ColorControlPanel";
 import { ZoomingControl } from "./Zooming";
+import { updateContentSource } from "@/store/toolbar/contentControl/contentControl";
 
 type Actions = "moving" | "scalling" | "grouping" | "grabbing";
 
@@ -144,7 +145,7 @@ export const Canvas: React.FC = () => {
     } = useSelector((state: StoreState) => state.alignmentControl);
 
     // Content control properties
-    const { elementContent, textWrap } = useSelector(
+    const { elementContent, textWrap, contentSource } = useSelector(
         (state: StoreState) => state.contentControl,
     );
 
@@ -449,6 +450,9 @@ export const Canvas: React.FC = () => {
                     dispatch(updateShadowColor(shadowColorMatch[0]));
                 }
             }
+
+            const elementContentSource = selectedElement.contentSource || "raw";
+            dispatch(updateContentSource(elementContentSource));
         } else {
             // RESET VALUES WHEN NO ELEMENT IS SELECTED
             dispatch(updateElementOverFlow("visible"));
@@ -484,6 +488,8 @@ export const Canvas: React.FC = () => {
             dispatch(updateGradientEnd("#000000"));
             dispatch(updateGradientDirection("to right"));
             dispatch(updateUseGradient(false));
+
+            dispatch(updateContentSource("raw"));
         }
     }, [selectedId, elements, dispatch]);
 
@@ -587,6 +593,7 @@ export const Canvas: React.FC = () => {
         const updatePayload = {
             styles: updatedStyles,
             content: elementContent,
+            contentSource: contentSource,
         };
 
         try {
@@ -606,6 +613,7 @@ export const Canvas: React.FC = () => {
         elementMaxWidth,
         elementMaxHeight,
         elementContent,
+        contentSource,
         elementOverFlow,
         borderStyle,
         borderColor,
@@ -678,6 +686,7 @@ export const Canvas: React.FC = () => {
                 textColor,
                 useGradient,
                 getComputedBackground(),
+                contentSource,
             );
 
             try {
@@ -719,6 +728,7 @@ export const Canvas: React.FC = () => {
             elementOverFlow,
             textWrap,
             getComputedFlexDirection,
+            contentSource,
         ],
     );
 
@@ -872,20 +882,6 @@ export const Canvas: React.FC = () => {
                         createElementMutation={createElementMutation}
                         deleteSelected={deleteSelected}
                         deleteElementMutation={deleteElementMutation}
-                    />
-
-                    <DimensionControlPanel
-                        elementHeight={elementHeight}
-                        handleHeightChange={handleHeightChange}
-                        elementWidth={elementWidth}
-                        handleWidthChange={handleWidthChange}
-                        elementOverFlow={elementOverFlow}
-                        elementMinWidth={elementMinWidth}
-                        elementMaxWidth={elementMaxWidth}
-                        elementMinHeight={elementMinHeight}
-                        elementMaxHeight={elementMaxHeight}
-                        selectedElement={getSelectedElement()}
-                        textWrap={textWrap}
                     />
 
                     <ContentControlPanel

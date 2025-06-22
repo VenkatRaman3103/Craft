@@ -44,6 +44,7 @@ export const elements = pgTable("elements", {
 
     createdAt: timestamp("created_at").defaultNow(),
     updatedAt: timestamp("updated_at").defaultNow(),
+    contentSource: text("content_source"),
 });
 
 export const elementsRelations = relations(elements, ({ one, many }) => ({
