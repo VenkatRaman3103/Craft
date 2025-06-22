@@ -462,7 +462,7 @@ export const Explorer = ({ children }: { children: React.ReactNode }) => {
             Icon: DraftingCompass,
             actionKey: "edit",
             label: "Edit",
-            url: "/api",
+            url: "/api-layer",
         },
         {
             Icon: Folder,
