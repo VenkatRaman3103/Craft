@@ -75,7 +75,7 @@ export const ParamsPanel = ({
                                             e.target.value,
                                         )
                                     }
-                                    className="input"
+                                    className="input-field"
                                 />
                             )}
 

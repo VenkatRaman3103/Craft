@@ -17,7 +17,7 @@ export const OperationsPanel = ({
             {operations.map((op, index) => (
                 <div
                     key={op.id}
-                    className={`operation-card ${index + 1 == 0 || index + 1 != operations.lenght ? "connection" : ""}`}
+                    className={`operation-card ${index > 0 || index + 1 <= operations.lenght ? "connection" : ""}`}
                 >
                     <div className="operation-card__header">
                         <div className="operation-card__header-wrapper">
