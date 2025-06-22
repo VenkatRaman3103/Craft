@@ -1,4 +1,3 @@
-// hooks/useApiEditor.ts
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import {
     apiEditorService,
@@ -9,6 +8,8 @@ import {
     CreateApiConfigurationRequest,
     ApiConfigurationWithDetails,
 } from "@/api/apiEditorService";
+import axios from "axios";
+import { backendUrl } from "@/config";
 
 // Query Keys
 export const apiEditorKeys = {
@@ -20,6 +21,8 @@ export const apiEditorKeys = {
         [...apiEditorKeys.configuration(id), "details"] as const,
     parameters: (configId: number) =>
         [...apiEditorKeys.configuration(configId), "parameters"] as const,
+    parameterValues: (configId: number) =>
+        [...apiEditorKeys.configuration(configId), "parameterValues"] as const,
     operations: (configId: number) =>
         [...apiEditorKeys.configuration(configId), "operations"] as const,
     results: (configId: number) =>
@@ -218,6 +221,161 @@ export const useDeleteApiParameter = () => {
             });
             queryClient.invalidateQueries({
                 queryKey: apiEditorKeys.configurationDetails(configId),
+            });
+        },
+    });
+};
+
+// Parameter Values Methods
+export const getParameterValuesByConfigId = async (configId: number) => {
+    const response = await axios.get(
+        `${backendUrl}/api-config/${configId}/parameter-values`,
+    );
+    return response.data;
+};
+
+export const createParameterValue = async (
+    configId: number,
+    parameterName: string,
+    value: string,
+) => {
+    const response = await axios.post(
+        `${backendUrl}/api-config/${configId}/parameter-values`,
+        {
+            parameterName,
+            value,
+        },
+    );
+    return response.data;
+};
+
+export const updateParameterValue = async (
+    configId: number,
+    parameterName: string,
+    value: string,
+) => {
+    const response = await axios.patch(
+        `${backendUrl}/api-config/${configId}/parameter-values/${parameterName}`,
+        {
+            value,
+        },
+    );
+    return response.data;
+};
+
+export const deleteParameterValue = async (
+    configId: number,
+    parameterName: string,
+) => {
+    const response = await axios.delete(
+        `${backendUrl}/api-config/${configId}/parameter-values/${parameterName}`,
+    );
+    return response.data;
+};
+
+export const saveMultipleParameterValues = async (
+    configId: number,
+    parameterValues: Record<string, string>,
+) => {
+    // Save each parameter value
+    const promises = Object.entries(parameterValues).map(
+        ([paramName, value]) => {
+            if (value && value.trim()) {
+                return createParameterValue(configId, paramName, value.trim());
+            }
+            return Promise.resolve();
+        },
+    );
+
+    await Promise.all(promises.filter(Boolean));
+    return { success: true };
+};
+
+// Parameter Values Hooks
+export const useApiParameterValues = (configId: number) => {
+    return useQuery({
+        queryKey: apiEditorKeys.parameterValues(configId),
+        queryFn: () => getParameterValuesByConfigId(configId), // Use the function directly
+        select: (data) => data.data || {},
+        enabled: !!configId,
+    });
+};
+
+export const useCreateApiParameterValue = () => {
+    const queryClient = useQueryClient();
+
+    return useMutation({
+        mutationFn: ({
+            configId,
+            parameterName,
+            value,
+        }: {
+            configId: number;
+            parameterName: string;
+            value: string;
+        }) => createParameterValue(configId, parameterName, value), // Use the function directly
+        onSuccess: (_, { configId }) => {
+            queryClient.invalidateQueries({
+                queryKey: apiEditorKeys.parameterValues(configId),
+            });
+        },
+    });
+};
+
+export const useUpdateApiParameterValue = () => {
+    const queryClient = useQueryClient();
+
+    return useMutation({
+        mutationFn: ({
+            configId,
+            parameterName,
+            value,
+        }: {
+            configId: number;
+            parameterName: string;
+            value: string;
+        }) => updateParameterValue(configId, parameterName, value), // Use the function directly
+        onSuccess: (_, { configId }) => {
+            queryClient.invalidateQueries({
+                queryKey: apiEditorKeys.parameterValues(configId),
+            });
+        },
+    });
+};
+
+export const useDeleteApiParameterValue = () => {
+    const queryClient = useQueryClient();
+
+    return useMutation({
+        mutationFn: ({
+            configId,
+            parameterName,
+        }: {
+            configId: number;
+            parameterName: string;
+        }) => deleteParameterValue(configId, parameterName), // Use the function directly
+        onSuccess: (_, { configId }) => {
+            queryClient.invalidateQueries({
+                queryKey: apiEditorKeys.parameterValues(configId),
+            });
+        },
+    });
+};
+
+export const useSaveMultipleParameterValues = () => {
+    const queryClient = useQueryClient();
+
+    return useMutation({
+        mutationFn: ({
+            configId,
+            parameterValues,
+        }: {
+            configId: number;
+            parameterValues: Record<string, string>;
+        }) => saveMultipleParameterValues(configId, parameterValues), // Use the function directly
+        onSuccess: (_, { configId }) => {
+            queryClient.invalidateQueries({
+                queryKey: apiEditorKeys.parameterValues(configId),
             });
         },
     });

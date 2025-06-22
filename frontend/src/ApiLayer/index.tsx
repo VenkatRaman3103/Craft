@@ -27,6 +27,7 @@ import {
     useSaveApiResult,
     useUpdateApiOperationOrders,
 } from "./useApiEditor.ts";
+import { availableParams } from "@/Data/apiEditor.ts";
 
 interface MapField {
     from: string;
@@ -103,6 +104,34 @@ export const ApiEditor: React.FC = () => {
     const saveResultMutation = useSaveApiResult();
     const updateOperationOrdersMutation = useUpdateApiOperationOrders();
 
+    const parseUrlParameters = (
+        url: string,
+    ): { baseUrl: string; params: ApiParamValue } => {
+        try {
+            const urlObj = new URL(url);
+            const params: ApiParamValue = {};
+
+            urlObj.searchParams.forEach((value, key) => {
+                params[key] = value;
+            });
+
+            const baseUrl = `${urlObj.protocol}//${urlObj.host}${urlObj.pathname}`;
+
+            return { baseUrl, params };
+        } catch (error) {
+            return { baseUrl: url, params: {} };
+        }
+    };
+
+    const getBaseUrl = (url: string): string => {
+        try {
+            const urlObj = new URL(url);
+            return `${urlObj.protocol}//${urlObj.host}${urlObj.pathname}`;
+        } catch (error) {
+            return url;
+        }
+    };
+
     useEffect(() => {
         if (
             api_id &&
@@ -122,7 +151,12 @@ export const ApiEditor: React.FC = () => {
             } = configDetails;
             setConfigName(configuration.name);
             setConfigDescription(configuration.description || "");
-            setApiUrl(configuration.apiUrl);
+
+            const { baseUrl, params } = parseUrlParameters(
+                configuration.apiUrl,
+            );
+            setApiUrl(baseUrl);
+            setParamValues(params);
 
             const convertedOperations = dbOperations.map((op) => ({
                 id: op.id,
@@ -156,6 +190,16 @@ export const ApiEditor: React.FC = () => {
         }
     }, [isNewConfig]);
 
+    const handleApiUrlChange = (newUrl: string) => {
+        const { baseUrl, params } = parseUrlParameters(newUrl);
+        setApiUrl(baseUrl);
+
+        setParamValues((prevParams) => ({
+            ...prevParams,
+            ...params,
+        }));
+    };
+
     const availableFields: Field[] = useMemo(() => {
         if (jsonData.length === 0) return [];
         const firstItem = jsonData[0];
@@ -185,19 +229,6 @@ export const ApiEditor: React.FC = () => {
         extractFields(firstItem);
         return fields;
     }, [jsonData]);
-
-    const availableParams: ApiParam[] = useMemo(() => {
-        if (configDetails?.parameters) {
-            return configDetails.parameters.map((param) => ({
-                name: param.name,
-                description: param.description || "",
-                type: param.type,
-                defaultValue: param.defaultValue,
-                options: param.options,
-            }));
-        }
-        return [];
-    }, [configDetails]);
 
     const buildApiUrl = () => {
         if (!apiUrl.trim()) return "";
@@ -324,10 +355,12 @@ export const ApiEditor: React.FC = () => {
         }
 
         try {
+            const fullApiUrl = buildApiUrl();
+
             const configData = {
                 name: configName.trim(),
                 description: configDescription.trim(),
-                apiUrl: apiUrl.trim(),
+                apiUrl: fullApiUrl,
                 operations: operations.map((op, index) => ({
                     type: op.type,
                     conditionType: op.conditionType,
@@ -669,7 +702,9 @@ export const ApiEditor: React.FC = () => {
                                 type="text"
                                 placeholder="Enter API URL (e.g., https://api.example.com/page/123)"
                                 value={apiUrl}
-                                onChange={(e) => setApiUrl(e.target.value)}
+                                onChange={(e) =>
+                                    handleApiUrlChange(e.target.value)
+                                }
                                 className="input api-url-input"
                                 disabled={isLoading}
                             />
@@ -781,7 +816,6 @@ export const ApiEditor: React.FC = () => {
                 )}
             </div>
 
-            {/* Edit Configuration Modal */}
             {isEditingConfig && (
                 <div className="modal-overlay" onClick={cancelEditingConfig}>
                     <div

@@ -1,4 +1,5 @@
 import { Trash2 } from "lucide-react";
+import "./index.scss";
 
 interface ApiParam {
     name: string;
