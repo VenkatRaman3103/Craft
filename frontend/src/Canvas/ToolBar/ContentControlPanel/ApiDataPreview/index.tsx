@@ -6,8 +6,8 @@ interface DataPreviewProps {
     data: any;
     maxDepth?: number;
     showCopyButton?: boolean;
-    onKeySelect?: (keyPath: string) => void; // New prop for key selection
-    selectedKey?: string; // New prop for highlighting selected key
+    onKeySelect?: (keyPath: string) => void;
+    selectedKey?: string;
 }
 
 interface DataItemProps {

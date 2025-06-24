@@ -290,7 +290,7 @@ export const ApiContentControl = ({
     });
     const [apiData, setApiData] = useState();
     const [showPreview, setShowPreview] = useState(false);
-    const [selectedKey, setSelectedKey] = useState(""); // New state for selected key
+    const [selectedKey, setSelectedKey] = useState("");
 
     const dispatch = useDispatch();
     const { contentSourceId } = useSelector(
@@ -320,12 +320,10 @@ export const ApiContentControl = ({
         setShowPreview(false);
     };
 
-    // Handler for when a key is selected from ApiDataPreview
     const handleKeySelection = (keyPath: string) => {
         setSelectedKey(keyPath);
     };
 
-    // Handler for manual text field changes
     const handleSelectedKeyChange = (
         e: React.ChangeEvent<HTMLInputElement>,
     ) => {
