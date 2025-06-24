@@ -19,6 +19,7 @@ export const apiConfigurations = pgTable("api_configurations", {
     createdAt: timestamp("created_at").defaultNow(),
     updatedAt: timestamp("updated_at").defaultNow(),
     metadata: jsonb("metadata"),
+    result: jsonb("result"),
 });
 
 export const apiParameters = pgTable("api_parameters", {

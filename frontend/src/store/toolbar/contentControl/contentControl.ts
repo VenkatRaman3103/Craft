@@ -7,12 +7,15 @@ interface ContentControlState {
     textWrap: string;
 
     contentSource: ContentSourceType;
+
+    contentSourceId: string | undefined;
 }
 
 const initialState: ContentControlState = {
     elementContent: "",
     textWrap: "normal",
     contentSource: "raw",
+    contentSourceId: undefined,
 };
 
 const contentControlSlice = createSlice({
@@ -31,10 +34,21 @@ const contentControlSlice = createSlice({
         ) => {
             state.contentSource = action.payload;
         },
+
+        updateContentSourceId: (
+            state,
+            action: PayloadAction<string | undefined>,
+        ) => {
+            state.contentSourceId = action.payload;
+        },
     },
 });
 
-export const { updateElementContent, updateTextWrap, updateContentSource } =
-    contentControlSlice.actions;
+export const {
+    updateElementContent,
+    updateTextWrap,
+    updateContentSource,
+    updateContentSourceId,
+} = contentControlSlice.actions;
 
 export default contentControlSlice.reducer;

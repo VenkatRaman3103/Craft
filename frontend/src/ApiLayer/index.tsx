@@ -362,6 +362,7 @@ export const ApiEditor: React.FC = () => {
                 name: configName.trim(),
                 description: configDescription.trim(),
                 apiUrl: fullApiUrl,
+                result: result,
                 operations: operations.map((op, index) => ({
                     type: op.type,
                     conditionType: op.conditionType,
@@ -901,7 +902,6 @@ export const ApiEditor: React.FC = () => {
                                 </span>
                             </div>
                         </div>
-
                         <DataPreview
                             data={result}
                             maxDepth={10}
@@ -925,12 +925,3 @@ export const ApiEditor: React.FC = () => {
         </div>
     );
 };
-// a:{
-//     name: "foo"
-//     b:{
-//         name:"bar"
-//         c:{
-//         name:"bob"
-//         }
-//     }
-// }

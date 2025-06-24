@@ -1,5 +1,5 @@
 # host
-http://localhost:5000/api
+http://localhost:5000
 
 # curl options
  --silent
@@ -22,7 +22,8 @@ User-Agent: VRC
 
 # query
 # GET /setup-test-data
-GET /test/5b1c7d78-ed6c-42e8-97cd-0889d0041001
+
+GET /services/api/page/f9c8069a-f4b4-4d24-8b44-72337f552f2a
 
 # body
 # {

@@ -12,6 +12,8 @@ export const updateApiConfiguration = async (req, res) => {
         const id = parseInt(req.params.id);
         const updateData = req.body;
 
+        console.log(updateData, "<--resultData");
+
         if (!id || isNaN(id)) {
             return res.status(400).json({
                 error: "Valid configuration ID is required",

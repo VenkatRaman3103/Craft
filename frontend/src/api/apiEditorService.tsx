@@ -68,6 +68,7 @@ export interface CreateApiConfigurationRequest {
     name: string;
     description?: string;
     apiUrl: string;
+    results: any;
     parameters?: Omit<ApiParameter, "id" | "configId" | "createdAt">[];
     operations?: Omit<ApiOperation, "id" | "configId" | "createdAt">[];
     metadata?: any;
@@ -84,6 +85,7 @@ export const apiEditorService = {
         data: CreateApiConfigurationRequest,
     ): Promise<{ data: ApiConfigurationWithDetails }> => {
         const response = await apiClient.post("/api-config", data);
+        console.log(data, "<--resultData");
         return response.data;
     },
 

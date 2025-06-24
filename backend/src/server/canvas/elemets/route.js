@@ -86,7 +86,8 @@ export const createNewElement = async (req, res) => {
         parentId,
         styles,
         content,
-        contentSource, // Add this line
+        contentSource,
+        contentSourceId,
         attributes,
         order,
         name,
@@ -102,6 +103,7 @@ export const createNewElement = async (req, res) => {
                     type,
                     content: content || "",
                     contentSource: contentSource || "raw", // Add this line
+                    contentSourceId: contentSourceId || "",
                     styles: styles || getDefaultStyles(type),
                     attributes: attributes || {},
                     order: order || 0,
@@ -130,6 +132,7 @@ export const createNewGroup = async (req, res) => {
         styles,
         content,
         contentSource, // Add this line
+        contentSourceId,
         attributes,
         order,
         name,
@@ -153,7 +156,8 @@ export const createNewGroup = async (req, res) => {
                         parentId: parentId || null,
                         type: type || "group",
                         content: content || "",
-                        contentSource: contentSource || "raw", // Add this line
+                        contentSource: contentSource || "raw",
+                        contentSourceId: contentSourceId || "",
                         styles: styles || getDefaultStyles("group"),
                         attributes: attributes || {},
                         order: order || 0,
@@ -412,6 +416,7 @@ export const updateElement = async (req, res) => {
                 ...updates,
                 updatedAt: new Date(),
                 contentSource: updates.contentSource,
+                contentSourceId: updates.contentSourceId,
             })
             .where(eq(elements.id, elementId))
             .returning();

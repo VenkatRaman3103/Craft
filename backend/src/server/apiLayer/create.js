@@ -13,10 +13,13 @@ export const createApiConfiguration = async (req, res) => {
             name,
             description,
             apiUrl,
+            result: resultData,
             parameters = [],
             operations = [],
             metadata,
         } = req.body;
+
+        console.log(resultData, "<--resultData");
 
         if (!name || !apiUrl) {
             return res.status(400).json({

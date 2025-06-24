@@ -74,6 +74,7 @@ import {
 import { ToolBarHeader } from "./ToolBar/ToolBarHeader";
 import { ControlPanelSelect } from "@/components/canvas/ControlPanelSelect";
 import {
+    updateContentSourceId,
     updateElementContent,
     updateTextWrap,
 } from "@/store/toolbar/contentControl/contentControl";
@@ -145,9 +146,8 @@ export const Canvas: React.FC = () => {
     } = useSelector((state: StoreState) => state.alignmentControl);
 
     // Content control properties
-    const { elementContent, textWrap, contentSource } = useSelector(
-        (state: StoreState) => state.contentControl,
-    );
+    const { elementContent, textWrap, contentSource, contentSourceId } =
+        useSelector((state: StoreState) => state.contentControl);
 
     // fonts control
     const {
@@ -453,6 +453,10 @@ export const Canvas: React.FC = () => {
 
             const elementContentSource = selectedElement.contentSource || "raw";
             dispatch(updateContentSource(elementContentSource));
+
+            const elementContentSourceId =
+                selectedElement.contentSourceId || "";
+            dispatch(updateContentSourceId(elementContentSourceId));
         } else {
             // RESET VALUES WHEN NO ELEMENT IS SELECTED
             dispatch(updateElementOverFlow("visible"));
@@ -490,6 +494,7 @@ export const Canvas: React.FC = () => {
             dispatch(updateUseGradient(false));
 
             dispatch(updateContentSource("raw"));
+            dispatch(updateContentSourceId(""));
         }
     }, [selectedId, elements, dispatch]);
 
@@ -594,6 +599,7 @@ export const Canvas: React.FC = () => {
             styles: updatedStyles,
             content: elementContent,
             contentSource: contentSource,
+            contentSourceId: contentSourceId,
         };
 
         try {
@@ -614,6 +620,7 @@ export const Canvas: React.FC = () => {
         elementMaxHeight,
         elementContent,
         contentSource,
+        contentSourceId,
         elementOverFlow,
         borderStyle,
         borderColor,
@@ -687,6 +694,7 @@ export const Canvas: React.FC = () => {
                 useGradient,
                 getComputedBackground(),
                 contentSource,
+                contentSourceId,
             );
 
             try {
@@ -729,6 +737,7 @@ export const Canvas: React.FC = () => {
             textWrap,
             getComputedFlexDirection,
             contentSource,
+            contentSourceId,
         ],
     );
 

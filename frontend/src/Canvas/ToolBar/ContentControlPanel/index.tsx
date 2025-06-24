@@ -4,6 +4,7 @@ import { ToggleButton } from "@/components/canvas/ToggleButton";
 import {
     ContentSourceType,
     updateContentSource,
+    updateContentSourceId,
     updateTextWrap,
 } from "@/store/toolbar/contentControl/contentControl";
 import { Plus, Minus } from "lucide-react";
@@ -11,6 +12,12 @@ import "./index.scss";
 import { elementsHash } from "@/Canvas/ElementPicker";
 import { useSelector, useDispatch } from "react-redux";
 import { StoreState } from "@/store/store";
+import { getAllApiConfigurations } from "@/api/apiLayer/getAllApiConfigurations";
+import { useQuery } from "@tanstack/react-query";
+import axios from "axios";
+import { backendUrl } from "@/config";
+import DataPreview from "@/ApiLayer/DataPreview";
+import ApiDataPreview from "./ApiDataPreview";
 
 export const ContentControlPanel = ({
     elementContent,
@@ -26,7 +33,7 @@ export const ContentControlPanel = ({
     selectedElement: any;
 }) => {
     const dispatch = useDispatch();
-    const { contentSource } = useSelector(
+    const { contentSource, contentSourceId } = useSelector(
         (state: StoreState) => state.contentControl,
     );
 
@@ -130,18 +137,11 @@ export const ContentControlPanel = ({
         switch (contentSource) {
             case "api":
                 return (
-                    <div className="content-field-container">
-                        <label>API Endpoint</label>
-                        <input
-                            type="url"
-                            value={elementContent}
-                            className="content-input"
-                            onChange={(e) =>
-                                handleContentChange(e.target.value)
-                            }
-                            placeholder="Enter API endpoint URL..."
-                        />
-                    </div>
+                    <ApiContentControl
+                        elementContent={elementContent}
+                        handleContentChange={handleContentChange}
+                        contentSource={contentSource}
+                    />
                 );
             case "cms":
                 return (
@@ -233,6 +233,7 @@ export const ContentControlPanel = ({
     };
 
     console.log(elementsHash.text, "elementsHash");
+    console.log(contentSourceId, "constentSourseId");
 
     return (
         <div className="content-section-container toolbar-section">
@@ -269,6 +270,145 @@ export const ContentControlPanel = ({
                     />
                 )}
             </div>
+        </div>
+    );
+};
+
+export const ApiContentControl = ({
+    elementContent,
+    handleContentChange,
+    contentSource,
+}: any) => {
+    const {
+        data: listOfApis,
+        isLoading,
+        isError,
+        error,
+    } = useQuery({
+        queryFn: () => getAllApiConfigurations(),
+        queryKey: ["api-configurations"],
+    });
+    const [apiData, setApiData] = useState();
+    const [showPreview, setShowPreview] = useState(false);
+    const [selectedKey, setSelectedKey] = useState(""); // New state for selected key
+
+    const dispatch = useDispatch();
+    const { contentSourceId } = useSelector(
+        (state: StoreState) => state.contentControl,
+    );
+
+    function handleContentSourceId(id) {
+        dispatch(updateContentSourceId(id));
+    }
+
+    const handleFetchData = async () => {
+        try {
+            const response = await axios.get(
+                `${backendUrl}/api-config/${contentSourceId}`,
+            );
+            setApiData(response.data.data);
+        } catch (error) {
+            console.error("Error fetching data:", error);
+        }
+    };
+
+    const handleShowPreview = () => {
+        setShowPreview(true);
+    };
+
+    const closePreview = () => {
+        setShowPreview(false);
+    };
+
+    // Handler for when a key is selected from ApiDataPreview
+    const handleKeySelection = (keyPath: string) => {
+        setSelectedKey(keyPath);
+    };
+
+    // Handler for manual text field changes
+    const handleSelectedKeyChange = (
+        e: React.ChangeEvent<HTMLInputElement>,
+    ) => {
+        setSelectedKey(e.target.value);
+    };
+
+    return (
+        <div>
+            <div className="content-field-container">
+                <label>API Endpoint</label>
+            </div>
+            <input
+                type="text"
+                className="content-input-field"
+                value={
+                    listOfApis?.data.filter((item) => {
+                        return item.id == String(contentSourceId);
+                    })[0]?.apiUrl || ""
+                }
+                readOnly
+            />
+            <select
+                value={contentSourceId}
+                onChange={(e) => handleContentSourceId(e.target.value)}
+            >
+                <option value="">Select an API configuration</option>
+                {listOfApis?.data?.map((item) => (
+                    <option key={item.id} value={item.id}>
+                        {item.name}
+                    </option>
+                ))}
+            </select>
+            <button onClick={handleFetchData} disabled={!contentSourceId}>
+                Fetch
+            </button>
+
+            <div className="content-field-container">
+                <label>Selected Key Path</label>
+            </div>
+            <input
+                type="text"
+                className="content-input-field"
+                value={selectedKey}
+                onChange={handleSelectedKeyChange}
+                placeholder="Select a key from preview or type manually"
+            />
+
+            {apiData && (
+                <button
+                    onClick={handleShowPreview}
+                    className="show-preview-button"
+                >
+                    Show Preview
+                </button>
+            )}
+
+            {showPreview && (
+                <div className="modal-overlay" onClick={closePreview}>
+                    <div
+                        className="modal-content"
+                        onClick={(e) => e.stopPropagation()}
+                    >
+                        <div className="modal-header">
+                            <h3>API Data Preview</h3>
+                            <button
+                                className="close-button"
+                                onClick={closePreview}
+                            >
+                                ×
+                            </button>
+                        </div>
+                        <div className="modal-body">
+                            {apiData && (
+                                <ApiDataPreview
+                                    data={apiData}
+                                    onKeySelect={handleKeySelection}
+                                    selectedKey={selectedKey}
+                                />
+                            )}
+                        </div>
+                    </div>
+                </div>
+            )}
         </div>
     );
 };

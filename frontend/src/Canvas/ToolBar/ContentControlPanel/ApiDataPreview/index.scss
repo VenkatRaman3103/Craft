@@ -1,0 +1,54 @@
+.data-row {
+    &--selected {
+        border: 3px solid #2196f3;
+
+        .data-row__path {
+            color: #1976d2;
+            font-weight: 600;
+        }
+    }
+}
+
+.data-row__path {
+    &--clickable {
+        cursor: pointer;
+        user-select: none;
+        transition: all 0.2s ease;
+        padding: 2px 4px;
+        border-radius: 3px;
+
+        &:hover {
+            background-color: #f5f5f5;
+            color: #1976d2;
+        }
+    }
+}
+
+// Optional: Add some spacing for the new text field in ApiContentControl
+.content-field-container {
+    margin-top: 16px;
+    margin-bottom: 8px;
+
+    label {
+        display: block;
+        font-weight: 500;
+        color: #333;
+        margin-bottom: 4px;
+    }
+}
+
+.content-input-field {
+    width: 100%;
+    padding: 8px 12px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    font-size: 14px;
+    transition: border-color 0.2s ease;
+
+    &:focus {
+        outline: none;
+        border-color: #2196f3;
+        box-shadow: 0 0 0 2px rgba(33, 150, 243, 0.1);
+    }
+
+}
