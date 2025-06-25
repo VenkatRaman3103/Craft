@@ -5,6 +5,7 @@ import {
     ContentSourceType,
     updateContentSource,
     updateContentSourceId,
+    updateKeyPath,
     updateTextWrap,
 } from "@/store/toolbar/contentControl/contentControl";
 import { Plus, Minus } from "lucide-react";
@@ -33,7 +34,7 @@ export const ContentControlPanel = ({
     selectedElement: any;
 }) => {
     const dispatch = useDispatch();
-    const { contentSource, contentSourceId } = useSelector(
+    const { contentSource, contentSourceId, keyPath } = useSelector(
         (state: StoreState) => state.contentControl,
     );
 
@@ -141,6 +142,7 @@ export const ContentControlPanel = ({
                         elementContent={elementContent}
                         handleContentChange={handleContentChange}
                         contentSource={contentSource}
+                        selectedElement={selectedElement}
                     />
                 );
             case "cms":
@@ -278,6 +280,7 @@ export const ApiContentControl = ({
     elementContent,
     handleContentChange,
     contentSource,
+    selectedElement,
 }: any) => {
     const {
         data: listOfApis,
@@ -288,13 +291,14 @@ export const ApiContentControl = ({
         queryFn: () => getAllApiConfigurations(),
         queryKey: ["api-configurations"],
     });
+
     const [apiData, setApiData] = useState();
     const [showPreview, setShowPreview] = useState(false);
-    const [selectedKey, setSelectedKey] = useState(elementContent || "");
     const [resolvedValue, setResolvedValue] = useState("");
+    const [isInitialLoad, setIsInitialLoad] = useState(true);
 
     const dispatch = useDispatch();
-    const { contentSourceId } = useSelector(
+    const { contentSourceId, keyPath } = useSelector(
         (state: StoreState) => state.contentControl,
     );
 
@@ -303,22 +307,46 @@ export const ApiContentControl = ({
     }
 
     const handleFetchData = async () => {
+        if (!contentSourceId) return;
+
         try {
             const response = await axios.get(
                 `${backendUrl}/api-config/${contentSourceId}`,
             );
             setApiData(response.data.data);
-            // Clear resolved value when new data is fetched
             setResolvedValue("");
-            // If there's already a selected key, resolve its value with new data
-            if (selectedKey) {
-                const value = resolveKeyPath(response.data.data, selectedKey);
-                setResolvedValue(formatValueForDisplay(value));
+            if (keyPath) {
+                const value = resolveKeyPath(response.data.data, keyPath);
+                const formattedValue = formatValueForDisplay(value);
+                setResolvedValue(formattedValue);
+                handleContentChange(formattedValue);
             }
         } catch (error) {
             console.error("Error fetching data:", error);
         }
     };
+
+    useEffect(() => {
+        if (contentSourceId && isInitialLoad) {
+            handleFetchData();
+            setIsInitialLoad(false);
+        }
+    }, [contentSourceId, isInitialLoad]);
+
+    useEffect(() => {
+        if (contentSourceId && !isInitialLoad) {
+            handleFetchData();
+        }
+    }, [elementContent, contentSourceId]);
+
+    useEffect(() => {
+        if (contentSourceId) {
+            handleFetchData();
+        } else {
+            setApiData(undefined);
+            setResolvedValue("");
+        }
+    }, [contentSourceId]);
 
     const handleShowPreview = () => {
         setShowPreview(true);
@@ -329,11 +357,12 @@ export const ApiContentControl = ({
     };
 
     const handleKeySelection = (keyPath: string) => {
-        setSelectedKey(keyPath);
-        // Resolve value immediately when key is selected from preview
+        dispatch(updateKeyPath(keyPath));
         if (apiData) {
             const value = resolveKeyPath(apiData, keyPath);
-            setResolvedValue(formatValueForDisplay(value));
+            const formattedValue = formatValueForDisplay(value);
+            setResolvedValue(formattedValue);
+            handleContentChange(formattedValue);
         }
     };
 
@@ -341,33 +370,38 @@ export const ApiContentControl = ({
         e: React.ChangeEvent<HTMLInputElement>,
     ) => {
         const newKeyPath = e.target.value;
-        setSelectedKey(newKeyPath);
-        // Resolve value as user types
+        dispatch(updateKeyPath(newKeyPath));
         if (apiData && newKeyPath.trim()) {
             const value = resolveKeyPath(apiData, newKeyPath);
-            setResolvedValue(formatValueForDisplay(value));
+            const formattedValue = formatValueForDisplay(value);
+            setResolvedValue(formattedValue);
+            handleContentChange(formattedValue);
         } else {
             setResolvedValue("");
+            handleContentChange("");
         }
     };
 
     const handleUpdateKeyPath = () => {
-        handleContentChange(selectedKey);
+        if (apiData && keyPath && keyPath.trim()) {
+            const value = resolveKeyPath(apiData, keyPath);
+            const formattedValue = formatValueForDisplay(value);
+            handleContentChange(formattedValue);
+        } else {
+            handleContentChange("");
+        }
     };
 
-    // Helper function to resolve key path in nested object
     const resolveKeyPath = (data: any, keyPath: string): any => {
         if (!keyPath || !data) return undefined;
 
         try {
-            // Handle array notation like data[0] or nested like data.items[0].name
             const keys = keyPath.split(/\.|\[|\]/).filter((key) => key !== "");
             let result = data;
 
             for (const key of keys) {
                 if (result === null || result === undefined) return undefined;
 
-                // Check if key is a number (array index)
                 if (!isNaN(Number(key))) {
                     result = result[Number(key)];
                 } else {
@@ -382,7 +416,6 @@ export const ApiContentControl = ({
         }
     };
 
-    // Helper function to format value for display
     const formatValueForDisplay = (value: any): string => {
         if (value === null) return "null";
         if (value === undefined) return "undefined";
@@ -394,6 +427,17 @@ export const ApiContentControl = ({
         if (typeof value === "object") return JSON.stringify(value, null, 2);
         return String(value);
     };
+
+    React.useEffect(() => {
+        if (apiData && keyPath) {
+            const value = resolveKeyPath(apiData, keyPath);
+            const formattedValue = formatValueForDisplay(value);
+            setResolvedValue(formattedValue);
+            handleContentChange(formattedValue);
+        } else if (!keyPath) {
+            setResolvedValue("");
+        }
+    }, [keyPath, apiData, handleContentChange]);
 
     return (
         <div>
@@ -411,8 +455,17 @@ export const ApiContentControl = ({
                     </option>
                 ))}
             </select>
-            <button onClick={handleFetchData} disabled={!contentSourceId}>
-                Fetch
+
+            <button
+                onClick={handleFetchData}
+                disabled={!contentSourceId}
+                style={{
+                    marginLeft: "8px",
+                    fontSize: "12px",
+                    padding: "4px 8px",
+                }}
+            >
+                Refresh
             </button>
 
             <div className="content-field-container">
@@ -422,15 +475,15 @@ export const ApiContentControl = ({
                 <input
                     type="text"
                     className="content-input-field"
-                    value={selectedKey}
+                    value={keyPath || ""}
                     onChange={handleSelectedKeyChange}
                     placeholder="Enter key path (e.g., data.items[0].name)"
                 />
                 <button
                     onClick={handleUpdateKeyPath}
-                    disabled={!selectedKey.trim()}
+                    disabled={!keyPath || !keyPath.trim()}
                     className={`update-button ${
-                        selectedKey.trim() ? "enabled" : "disabled"
+                        keyPath && keyPath.trim() ? "enabled" : "disabled"
                     }`}
                 >
                     Update
@@ -479,7 +532,7 @@ export const ApiContentControl = ({
                                 <ApiDataPreview
                                     data={apiData}
                                     onKeySelect={handleKeySelection}
-                                    selectedKey={selectedKey}
+                                    selectedKey={keyPath || ""}
                                 />
                             )}
                         </div>

@@ -47,6 +47,7 @@ export const elements = pgTable("elements", {
     contentSource: text("content_source"),
 
     contentSourceId: text("content_source_id"),
+    keyPath: text("key_path"),
 });
 
 export const elementsRelations = relations(elements, ({ one, many }) => ({

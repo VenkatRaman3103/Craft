@@ -37,6 +37,7 @@ export const useCanvasApi = ({
                 `${backendUrl}/canvas/pages/elements/${elementId}`,
                 updateData,
             );
+            console.log(updateData, "<--updateData");
             return response.data;
         },
         onSuccess: () => {
@@ -70,6 +71,7 @@ export const useCanvasApi = ({
                 `${backendUrl}/canvas/pages/elements/${pageId}`,
                 { elementData },
             );
+            console.log(elementData, "<--elementData");
             return response.data;
         },
         onSuccess: (data) => {

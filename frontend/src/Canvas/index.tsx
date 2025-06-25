@@ -76,6 +76,7 @@ import { ControlPanelSelect } from "@/components/canvas/ControlPanelSelect";
 import {
     updateContentSourceId,
     updateElementContent,
+    updateKeyPath,
     updateTextWrap,
 } from "@/store/toolbar/contentControl/contentControl";
 import { ContentControlPanel } from "./ToolBar/ContentControlPanel";
@@ -146,8 +147,13 @@ export const Canvas: React.FC = () => {
     } = useSelector((state: StoreState) => state.alignmentControl);
 
     // Content control properties
-    const { elementContent, textWrap, contentSource, contentSourceId } =
-        useSelector((state: StoreState) => state.contentControl);
+    const {
+        elementContent,
+        textWrap,
+        contentSource,
+        contentSourceId,
+        keyPath,
+    } = useSelector((state: StoreState) => state.contentControl);
 
     // fonts control
     const {
@@ -457,6 +463,9 @@ export const Canvas: React.FC = () => {
             const elementContentSourceId =
                 selectedElement.contentSourceId || "";
             dispatch(updateContentSourceId(elementContentSourceId));
+
+            const elementKeyPath = selectedElement.keyPath || "";
+            dispatch(updateKeyPath(elementKeyPath));
         } else {
             // RESET VALUES WHEN NO ELEMENT IS SELECTED
             dispatch(updateElementOverFlow("visible"));
@@ -495,6 +504,7 @@ export const Canvas: React.FC = () => {
 
             dispatch(updateContentSource("raw"));
             dispatch(updateContentSourceId(""));
+            dispatch(updateKeyPath(""));
         }
     }, [selectedId, elements, dispatch]);
 
@@ -600,6 +610,7 @@ export const Canvas: React.FC = () => {
             content: elementContent,
             contentSource: contentSource,
             contentSourceId: contentSourceId,
+            keyPath: keyPath,
         };
 
         try {
@@ -620,6 +631,7 @@ export const Canvas: React.FC = () => {
         elementMaxHeight,
         elementContent,
         contentSource,
+        keyPath,
         contentSourceId,
         elementOverFlow,
         borderStyle,
@@ -695,6 +707,7 @@ export const Canvas: React.FC = () => {
                 getComputedBackground(),
                 contentSource,
                 contentSourceId,
+                keyPath,
             );
 
             try {
@@ -717,6 +730,7 @@ export const Canvas: React.FC = () => {
             alignItems,
             justifyContent,
             gap,
+            keyPath,
             alignType,
             fontFamily,
             fontWeight,

@@ -7,8 +7,8 @@ interface ContentControlState {
     textWrap: string;
 
     contentSource: ContentSourceType;
-
     contentSourceId: string | undefined;
+    keyPath: string | undefined;
 }
 
 const initialState: ContentControlState = {
@@ -16,6 +16,7 @@ const initialState: ContentControlState = {
     textWrap: "normal",
     contentSource: "raw",
     contentSourceId: undefined,
+    keyPath: undefined,
 };
 
 const contentControlSlice = createSlice({
@@ -41,6 +42,10 @@ const contentControlSlice = createSlice({
         ) => {
             state.contentSourceId = action.payload;
         },
+
+        updateKeyPath: (state, action: PayloadAction<string | undefined>) => {
+            state.keyPath = action.payload;
+        },
     },
 });
 
@@ -49,6 +54,7 @@ export const {
     updateTextWrap,
     updateContentSource,
     updateContentSourceId,
+    updateKeyPath,
 } = contentControlSlice.actions;
 
 export default contentControlSlice.reducer;
