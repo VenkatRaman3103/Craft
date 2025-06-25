@@ -24,9 +24,7 @@
     }
 }
 
-// Optional: Add some spacing for the new text field in ApiContentControl
 .content-field-container {
-    margin-top: 16px;
     margin-bottom: 8px;
 
     label {
@@ -35,20 +33,4 @@
         color: #333;
         margin-bottom: 4px;
     }
-}
-
-.content-input-field {
-    width: 100%;
-    padding: 8px 12px;
-    border: 1px solid #ddd;
-    border-radius: 4px;
-    font-size: 14px;
-    transition: border-color 0.2s ease;
-
-    &:focus {
-        outline: none;
-        border-color: #2196f3;
-        box-shadow: 0 0 0 2px rgba(33, 150, 243, 0.1);
-    }
-
 }

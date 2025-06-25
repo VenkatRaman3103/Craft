@@ -242,17 +242,12 @@ export const ContentControlPanel = ({
             <div className="heading">Content</div>
             <div className="content-sub-section-container">
                 {/* Content Source Toggle */}
-                <div className="content-source-section">
-                    <label className="content-source-label">
-                        Content Source
-                    </label>
-                    <ToggleButton
-                        options={contentSourceOptions}
-                        value={contentSource}
-                        onChange={handleContentSourceChange}
-                        className="content-source-toggle"
-                    />
-                </div>
+                <ToggleButton
+                    options={contentSourceOptions}
+                    value={contentSource}
+                    onChange={handleContentSourceChange}
+                    className="content-source-toggle"
+                />
 
                 {/* Content Input based on source */}
                 {renderContentInput()}
@@ -444,34 +439,28 @@ export const ApiContentControl = ({
             <div className="content-field-container">
                 <label>API Configuration</label>
             </div>
-            <select
-                value={contentSourceId}
-                onChange={(e) => handleContentSourceId(e.target.value)}
-            >
-                <option value="">Select an API configuration</option>
-                {listOfApis?.data?.map((item) => (
-                    <option key={item.id} value={item.id}>
-                        {item.name}
-                    </option>
-                ))}
-            </select>
+            <div className="input-container">
+                <select
+                    value={contentSourceId}
+                    onChange={(e) => handleContentSourceId(e.target.value)}
+                    className="select-input"
+                >
+                    {listOfApis?.data?.map((item) => (
+                        <option key={item.id} value={item.id}>
+                            {item.name}
+                        </option>
+                    ))}
+                </select>
 
-            <button
-                onClick={handleFetchData}
-                disabled={!contentSourceId}
-                style={{
-                    marginLeft: "8px",
-                    fontSize: "12px",
-                    padding: "4px 8px",
-                }}
-            >
-                Refresh
-            </button>
+                <div className="update-button" onClick={handleFetchData}>
+                    Refresh
+                </div>
+            </div>
 
             <div className="content-field-container">
                 <label>Key Path</label>
             </div>
-            <div className="key-path-input-container">
+            <div className="input-container">
                 <input
                     type="text"
                     className="content-input-field"
