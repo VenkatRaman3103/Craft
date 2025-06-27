@@ -56,7 +56,7 @@ export async function getPagesForCollection(req, res) {
 export const getAllCollections = async (req, res) => {
     try {
         const response = await db.select().from(collections);
-        res.json(response);
+        res.status(200).json(response);
     } catch (error) {
         const errorMessage = {
             error,

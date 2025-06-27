@@ -2,7 +2,7 @@ import { backendUrl } from "@/config";
 import axios from "axios";
 
 export const getAllCollections = async () => {
-    const response = await axios.get(`${backendUrl}/collections`);
+    const response = await axios.get(`${backendUrl}/collections/all`);
     return response.data.filter(
         (collection) => collection.reference_id == null,
     );

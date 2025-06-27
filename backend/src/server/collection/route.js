@@ -7,4 +7,4 @@ export const collectionRouter = express.Router();
 collectionRouter.get("/collection/:collection_id", getPagesForCollection);
 
 // React: GET
-collectionRouter.get("/collection", getAllCollections);
+collectionRouter.get("/collections", getAllCollections);
