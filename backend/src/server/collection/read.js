@@ -51,3 +51,19 @@ export async function getPagesForCollection(req, res) {
         });
     }
 }
+
+// for reading all the collections
+export const getAllCollections = async (req, res) => {
+    try {
+        const response = await db.select().from(collections);
+        res.json(response);
+    } catch (error) {
+        const errorMessage = {
+            error,
+            message: `Error in creating the block`,
+            origin: "backend/getAllCollections/GET",
+        };
+        console.log(errorMessage);
+        res.status(500).json(errorMessage);
+    }
+};

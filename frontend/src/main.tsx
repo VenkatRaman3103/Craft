@@ -13,6 +13,7 @@ import { Projects } from "./Pages/Canvas/Projects/index.tsx";
 import { Project } from "./Pages/Canvas/Project/index.tsx";
 import { ApiEditor } from "./ApiLayer/index.tsx";
 import { ApiProjects } from "./Pages/ApiLayer/Projects/index.tsx";
+import { DBLayer } from "./Pages/DBLayer/index.tsx";
 
 const rootElement = document.getElementById("root");
 
@@ -58,6 +59,9 @@ createRoot(rootElement).render(
                             path="/canvas/projects/:project_id"
                             element={<Project />}
                         />
+
+                        {/* DB layer */}
+                        <Route path="/db-layer" element={<DBLayer />} />
                     </Routes>
                 </Explorer>
             </QueryClientProvider>

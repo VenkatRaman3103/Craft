@@ -25,7 +25,9 @@ const ApiDataPreview: React.FC<DataPreviewProps> = ({
     onKeySelect,
     selectedKey = "",
 }) => {
-    const [viewMode, setViewMode] = useState<"structured" | "json">("json");
+    const [viewMode, setViewMode] = useState<"structured" | "json">(
+        "structured",
+    );
     const [copiedPath, setCopiedPath] = useState<string>("");
 
     const copyToClipboard = (text: string, path: string) => {

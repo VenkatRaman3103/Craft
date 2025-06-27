@@ -603,6 +603,9 @@
   align-items: center;
   justify-content: center;
 
+  position: sticky;
+  bottom: 0px;
+
   &:hover {
     background-color: white;
     color: black;
