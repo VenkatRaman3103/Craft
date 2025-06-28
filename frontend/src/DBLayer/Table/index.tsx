@@ -13,13 +13,16 @@ export type CollectionType = {
     type: string | null;
 };
 
-const columnOrder: (keyof CollectionType)[] = [
+const essentialColumns: (keyof CollectionType)[] = [
     "name",
+    "status",
+    "createdAt",
+];
+
+const additionalColumns: (keyof CollectionType)[] = [
     "slug",
     "collection_id",
-    "createdAt",
     "reference_id",
-    "status",
     "type",
 ];
 
@@ -28,11 +31,16 @@ type SortDirection = "asc" | "desc";
 export const Table = () => {
     const [sortColumn, setSortColumn] = useState<keyof CollectionType>("name");
     const [sortDirection, setSortDirection] = useState<SortDirection>("asc");
+    const [showAdditionalColumns, setShowAdditionalColumns] = useState(false);
 
     const { data = [] } = useQuery({
         queryFn: () => getAllCollections(),
         queryKey: ["db-table"],
     });
+
+    const visibleColumns = showAdditionalColumns
+        ? [...essentialColumns, ...additionalColumns]
+        : essentialColumns;
 
     const handleSort = (column: keyof CollectionType) => {
         if (sortColumn === column) {
@@ -46,12 +54,10 @@ export const Table = () => {
     const sortedData = [...data].sort((a, b) => {
         const aValue = a[sortColumn];
         const bValue = b[sortColumn];
-
         if (aValue === null || aValue === undefined) return 1;
         if (bValue === null || bValue === undefined) return -1;
 
         let comparison = 0;
-
         if (sortColumn === "createdAt") {
             comparison =
                 new Date(aValue).getTime() - new Date(bValue).getTime();
@@ -60,7 +66,6 @@ export const Table = () => {
         } else {
             comparison = String(aValue).localeCompare(String(bValue));
         }
-
         return sortDirection === "asc" ? comparison : -comparison;
     });
 
@@ -69,13 +74,26 @@ export const Table = () => {
         return sortDirection === "asc" ? "↑" : "↓";
     };
 
+    const toggleAdditionalColumns = () => {
+        setShowAdditionalColumns(!showAdditionalColumns);
+    };
+
     return (
         <div className="table-container">
+            <div className="table-controls">
+                <button
+                    onClick={toggleAdditionalColumns}
+                    className="toggle-columns-btn"
+                >
+                    {showAdditionalColumns ? "Show Less" : "Show More"}
+                </button>
+            </div>
+
             <table className="data-table">
                 <thead>
                     <tr>
                         <th className="table-header">S.No</th>
-                        {columnOrder.map((colName) => (
+                        {visibleColumns.map((colName) => (
                             <th
                                 key={colName}
                                 className={`table-header sortable ${sortColumn === colName ? "active" : ""}`}
@@ -98,7 +116,7 @@ export const Table = () => {
                     {sortedData.map((row: CollectionType, ind) => (
                         <tr key={row.collection_id} className="table-row">
                             <td className="table-cell">{ind + 1}</td>
-                            {columnOrder.map((colName) => (
+                            {visibleColumns.map((colName) => (
                                 <td key={colName} className="table-cell">
                                     {row[colName] || "nil"}
                                 </td>
