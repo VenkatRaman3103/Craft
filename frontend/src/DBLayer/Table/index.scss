@@ -1,0 +1,85 @@
+.table-container {
+    width: 100%;
+    overflow-x: auto;
+
+    .data-table {
+        width: 100%;
+        border-collapse: collapse;
+        font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif;
+
+        .table-header {
+            border: 1px solid var(--secondary-color);
+            padding: 12px 8px;
+            background-color: var(--primary-color);
+            font-weight: 600;
+            text-align: left;
+            color: #f8f9fa;
+
+            &.sortable {
+                user-select: none;
+
+                &:hover {
+                    background-color: var(--secondary-color);
+                    cursor: pointer;
+                }
+
+                &.active {
+                    background-color: var(--secondary-color);
+                    color: #ffffff;
+                }
+            }
+
+            .header-content {
+                display: flex;
+                align-items: center;
+                gap: 8px;
+                justify-content: space-between;
+
+                .sort-button {
+                    background: none;
+                    border: none;
+                    cursor: pointer;
+                    font-size: 14px;
+                    padding: 2px 4px;
+                    border-radius: 3px;
+                    transition: background-color 0.2s ease;
+                    color: #f8f9fa;
+
+                    &:hover {
+                        background-color: rgba(255, 255, 255, 0.1);
+                    }
+
+                    &:focus {
+                        outline: 2px solid var(--secondary-color);
+                        outline-offset: 1px;
+                    }
+                }
+            }
+        }
+
+        .table-row {
+            transition: background-color 0.2s ease;
+
+            &:nth-child(even) {
+                background-color: var(--primary-color);
+            }
+
+            &:hover {
+                background-color: var(--secondary-color);
+            }
+
+            .table-cell {
+                border: 1px solid var(--secondary-color);
+                padding: 10px 8px;
+                background-color: var(--base-color);
+                color: #f8f9fa;
+
+                &:first-child {
+                    font-weight: 500;
+                    text-align: center;
+                    color: #adb5bd;
+                }
+            }
+        }
+    }
+}
