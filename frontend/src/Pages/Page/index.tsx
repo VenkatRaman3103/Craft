@@ -9,6 +9,8 @@ import { backendUrl } from "@/config";
 import { FieldsAndBlocksList } from "@/Components/FieldsAndBlocksList";
 import { SideBar } from "@/Components/SideBar";
 import { ApiViewer } from "@/Components/ApiViewer";
+import DataPreview from "@/ApiLayer/DataPreview";
+import { getApiData } from "@/api/getApiData";
 
 export const Page = () => {
     const { page_id } = useParams();
@@ -26,6 +28,13 @@ export const Page = () => {
         queryFn: () => fetchPageData(page_id),
         enabled: !!page_id,
     });
+
+    // to preview api data
+    const { data: apiData } = useQuery({
+        queryKey: ["api-data"],
+        queryFn: () => getApiData(page_id),
+    });
+    console.log(apiData, "apiData");
 
     useEffect(() => {
         async function fetchParentCollection() {
@@ -103,6 +112,7 @@ export const Page = () => {
                     {openApiPreview && (
                         <div className={`api-wrapper`}>
                             {/* <ApiViewer /> */}
+                            <DataPreview data={apiData} />
                         </div>
                     )}
                 </div>

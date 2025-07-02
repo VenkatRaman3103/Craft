@@ -6,8 +6,8 @@ import { ColumnConfig } from "../TableConfigurations/collections";
 export interface TableProps<T> {
     queryKey: string[];
     queryFn: () => Promise<T[]>;
-    columns: ColumnConfig<T>[];
-    defaultSortColumn?: keyof T;
+    columns: ColumnConfig<T>[] | any;
+    defaultSortColumn?: keyof T | string;
     defaultSortDirection?: "asc" | "desc";
     showSerialNumber?: boolean;
     toggleableColumns?: boolean;
@@ -18,7 +18,7 @@ export interface TableProps<T> {
 
 type SortDirection = "asc" | "desc";
 
-export function Table<T extends Record<string, any>>({
+export const Table = <T extends Record<string, any>>({
     queryKey,
     queryFn,
     columns,
@@ -29,7 +29,7 @@ export function Table<T extends Record<string, any>>({
     className = "",
     emptyMessage = "No data available",
     getRowKey,
-}: TableProps<T>) {
+}: TableProps<T>) => {
     const [sortColumn, setSortColumn] = useState<keyof T>(
         defaultSortColumn || columns[0]?.key,
     );
@@ -193,4 +193,4 @@ export function Table<T extends Record<string, any>>({
             </table>
         </div>
     );
-}
+};

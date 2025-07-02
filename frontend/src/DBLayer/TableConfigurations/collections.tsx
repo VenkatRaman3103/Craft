@@ -8,6 +8,7 @@ export type CollectionType = {
     slug: string;
     status: string;
     type: string | null;
+    page_id?: string | any;
 };
 
 export interface ColumnConfig<T> {
