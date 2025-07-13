@@ -3,7 +3,7 @@ import { db } from "../server.js";
 import { mediaBuckets, uploads } from "../../db/schema/index.js";
 import { readAllBuckets } from "./read.js";
 import { createNewBucket } from "./create.js";
-import { deleteBucketById } from "./delete.js";
+import { deleteBucketById, deleteBucketByIds } from "./delete.js";
 
 export const mediaBucketRouter = express.Router();
 
@@ -15,6 +15,7 @@ mediaBucketRouter.post("/media-buckets", createNewBucket);
 
 // delete
 mediaBucketRouter.delete("/media-buckets/:id", deleteBucketById);
+mediaBucketRouter.delete("/media-buckets", deleteBucketByIds);
 
 // uploads
 mediaBucketRouter.get("/uploads", async (req, res) => {
