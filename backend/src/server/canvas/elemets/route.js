@@ -408,7 +408,6 @@ export const updateElement = async (req, res) => {
     const { elementId } = req.params;
     try {
         const updates = req.body;
-        console.log(updates, "<-- updates");
 
         const updatedElement = await db
             .update(elements)
