@@ -21,10 +21,11 @@ Content-Type: application/json; charset=utf-8
 User-Agent: VRC
 
 # query
-POST /media-buckets  
+PATCH /media-buckets/2a94de5a-3e92-45fd-844d-07efa91ac1f5/name
 
 # body
 {
-    "name": "foo media bucket"
+    "name": "batman"
 }
+
 

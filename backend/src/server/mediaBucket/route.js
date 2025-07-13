@@ -4,6 +4,7 @@ import { mediaBuckets, uploads } from "../../db/schema/index.js";
 import { readAllBuckets } from "./read.js";
 import { createNewBucket } from "./create.js";
 import { deleteBucketById, deleteBucketByIds } from "./delete.js";
+import { newNameForMediaBucket } from "./update.js";
 
 export const mediaBucketRouter = express.Router();
 
@@ -16,6 +17,9 @@ mediaBucketRouter.post("/media-buckets", createNewBucket);
 // delete
 mediaBucketRouter.delete("/media-buckets/:id", deleteBucketById);
 mediaBucketRouter.delete("/media-buckets", deleteBucketByIds);
+
+// update
+mediaBucketRouter.patch("/media-buckets/:id/name", newNameForMediaBucket);
 
 // uploads
 mediaBucketRouter.get("/uploads", async (req, res) => {
