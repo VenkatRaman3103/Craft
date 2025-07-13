@@ -96,6 +96,7 @@ export const Canvas: React.FC = () => {
         "desktop",
     );
     const [zoomLevel, setZoomLevel] = useState(1);
+    const [isReadingElement, setIsReadingElement] = useState(false);
 
     // Toggle states
     const [toggleAllSide_radius, setToggleAllSide_radius] = useState<
@@ -108,7 +109,6 @@ export const Canvas: React.FC = () => {
     const canvasRef = useRef<HTMLDivElement | null>(null);
 
     // NOTE: 2 - REDUX STATE SELECTORS
-    // Add new property selectors here by category
 
     // Border control properties
     const {
@@ -235,7 +235,6 @@ export const Canvas: React.FC = () => {
         }
     }, [isDragging, handleMouseMove, handleMouseUp]);
 
-    // Helper function to get computed background
     const getComputedBackground = useCallback(() => {
         if (useGradient) {
             return `linear-gradient(${gradientDirection}, ${gradientStart}, ${gradientEnd})`;
@@ -251,6 +250,7 @@ export const Canvas: React.FC = () => {
 
     // NOTE: 3 - ELEMENT STYLE READING
     useEffect(() => {
+        setIsReadingElement(true);
         const selectedElement = getSelectedElement();
         if (selectedElement) {
             // DIMENSION PROPERTIES
@@ -467,7 +467,7 @@ export const Canvas: React.FC = () => {
             const elementKeyPath = selectedElement.keyPath || "";
             dispatch(updateKeyPath(elementKeyPath));
         } else {
-            // RESET VALUES WHEN NO ELEMENT IS SELECTED
+            // reset values when no element is selected
             dispatch(updateElementOverFlow("visible"));
             dispatch(updateElementWidth(100));
             dispatch(updateElementHeight(100));
@@ -506,6 +506,10 @@ export const Canvas: React.FC = () => {
             dispatch(updateContentSourceId(""));
             dispatch(updateKeyPath(""));
         }
+
+        setTimeout(() => {
+            setIsReadingElement(false);
+        }, 100);
     }, [selectedId, elements, dispatch]);
 
     const getSelectedElement = useCallback(() => {
@@ -668,6 +672,67 @@ export const Canvas: React.FC = () => {
         getSelectedElement,
         updateElementMutation,
         getComputedFlexDirection,
+    ]);
+
+    // auto save
+    useEffect(() => {
+        if (selectedId !== null && !isReadingElement && !isDragging) {
+            const debounceTimer = setTimeout(() => {
+                updateElementStyles();
+            }, 200);
+
+            return () => clearTimeout(debounceTimer);
+        }
+    }, [
+        elementWidth,
+        elementHeight,
+        elementMinWidth,
+        elementMinHeight,
+        elementMaxWidth,
+        elementMaxHeight,
+        elementContent,
+        contentSource,
+        keyPath,
+        contentSourceId,
+        elementOverFlow,
+        borderStyle,
+        borderColor,
+        elementBoderWidth,
+        topWidth,
+        bottomWidth,
+        leftWidth,
+        rightWidth,
+        elementRadius,
+        topLeftRadius,
+        topRightRadius,
+        bottomRightRadius,
+        bottomLeftRadius,
+        toggleAllSide_width,
+        toggleAllSide_radius,
+        alignType,
+        alignItems,
+        justifyContent,
+        gap,
+        textWrap,
+        textColor,
+        fontFamily,
+        fontWeight,
+        fontSize,
+        fontStyle,
+        textDecoration,
+        textAlign,
+        lineHeight,
+        letterSpacing,
+        backgroundColor,
+        useGradient,
+        gradientStart,
+        gradientEnd,
+        gradientDirection,
+        shadowColor,
+        selectedId,
+        isReadingElement,
+        isDragging,
+        updateElementStyles,
     ]);
 
     // NOTE: 5 - ELEMENT CREATION WITH DEFAULT VALUES
@@ -913,6 +978,20 @@ export const Canvas: React.FC = () => {
                         textWrap={textWrap}
                         handleTextWrapChange={handleTextWrapChange}
                         selectedElement={getSelectedElement()}
+                    />
+
+                    <DimensionControlPanel
+                        elementHeight={elementHeight}
+                        elementWidth={elementWidth}
+                        elementMaxWidth={elementMaxWidth}
+                        elementMinWidth={elementMinWidth}
+                        elementMaxHeight={elementMaxHeight}
+                        elementMinHeight={elementMinHeight}
+                        handleHeightChange={handleHeightChange}
+                        handleWidthChange={handleWidthChange}
+                        elementOverFlow={elementOverFlow}
+                        selectedElement={getSelectedElement()}
+                        textWrap={textWrap}
                     />
 
                     <ColorControlPanel

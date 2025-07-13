@@ -41,23 +41,23 @@ createRoot(rootElement).render(
                             element={<Collection />}
                         />
                         <Route path="/pages/:page_id" element={<Page />} />
+
+                        {/* figma layer */}
+                        <Route path="/canvas/projects" element={<Projects />} />
+                        <Route
+                            path="/canvas/projects/:project_id"
+                            element={<Project />}
+                        />
                         <Route
                             path="/canvas/pages/:page_id"
                             element={<Canvas />}
                         />
-                        <Route path="/canvas/projects" element={<Projects />} />
 
                         {/* api layer */}
                         <Route path="/api-layer" element={<ApiProjects />} />
                         <Route
                             path="/api-layer/:api_id"
                             element={<ApiEditor />}
-                        />
-
-                        {/* list all the pages */}
-                        <Route
-                            path="/canvas/projects/:project_id"
-                            element={<Project />}
                         />
 
                         {/* DB layer */}
