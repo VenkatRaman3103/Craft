@@ -43,3 +43,6 @@ export * from "./canvas/pagesCanvas/schema.js";
 export * from "./canvas/pagesCanvas/relations.js";
 
 export * from "./canvas/elements/schema.js";
+
+// media bucket
+export * from "./uploads/uploads.js";
