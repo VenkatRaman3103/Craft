@@ -25,6 +25,7 @@ POST /media-buckets
 
 # body
 {
-    "name": "foo media bucket"
+    "name": "bob media bucket",
+    "parent_id":"c62ff0a1-c70e-4c8d-b816-a5a76d33d114"
 }
 

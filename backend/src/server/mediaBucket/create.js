@@ -3,14 +3,14 @@ import { db } from "../server.js";
 
 // create new bucket
 export const createNewBucket = async (req, res) => {
-    const { name, parentId } = req.body;
+    const { name, parent_id } = req.body;
     try {
         const response = await db
             .insert(mediaBuckets)
             .values([
                 {
                     name,
-                    parentId: parentId ? parentId : null,
+                    parentId: parent_id ? parent_id : null,
                 },
             ])
             .returning();
