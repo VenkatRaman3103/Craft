@@ -46,3 +46,4 @@ export * from "./canvas/elements/schema.js";
 
 // media bucket
 export * from "./uploads/uploads.js";
+export * from "./uploads/mediaBuckets.js";
