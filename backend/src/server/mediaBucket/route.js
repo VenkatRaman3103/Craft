@@ -1,12 +1,12 @@
 import express from "express";
 import { db } from "../server.js";
-import { mediaBucket } from "../../db/schema/index.js";
+import { uploads } from "../../db/schema/index.js";
 
 export const mediaBucketRouter = express.Router();
 
-mediaBucketRouter.get("/media-bucket", async (req, res) => {
+mediaBucketRouter.get("/uploads", async (req, res) => {
     try {
-        const response = await db.select().from(mediaBucket);
+        const response = await db.select().from(uploads);
         res.json(response);
     } catch (error) {
         res.status(500).json({ error: `Internal server error ${error}` });

@@ -2,7 +2,7 @@
 
 import { pgTable, text, uuid } from "drizzle-orm/pg-core";
 
-export const mediaBucket = pgTable("media_bucket", {
+export const uploads = pgTable("uploads", {
     id: uuid("id").primaryKey(),
     name: text("name"),
     path: text("path"),
