@@ -34,6 +34,7 @@ import { referenceBlockRouter } from "./blocks/referenceBlocks/route.js";
 import { apiBlockRouter } from "./blocks/apiBlocks/route.js";
 import { canvasRouter } from "./canvas/route.js";
 import { apiEditorRouter } from "./apiLayer/route.js";
+import { mediaBucketRouter } from "./mediaBucket/route.js";
 
 dotenv.config();
 
@@ -152,6 +153,8 @@ app.use("/services", apiService);
 app.use("/api", canvasRouter);
 app.use("/api", move);
 app.use("/api", testRoute);
+// media bucket
+app.use("/api", mediaBucketRouter);
 
 // image uploads
 const storage = multer.diskStorage({
