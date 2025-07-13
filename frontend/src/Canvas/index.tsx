@@ -84,6 +84,7 @@ import { DimensionControlPanel } from "./ToolBar/DimensionControlPanel";
 import { ColorControlPanel } from "./ToolBar/ColorControlPanel";
 import { ZoomingControl } from "./Zooming";
 import { updateContentSource } from "@/store/toolbar/contentControl/contentControl";
+import { backendUrl } from "@/config";
 
 type Actions = "moving" | "scalling" | "grouping" | "grabbing";
 
@@ -972,6 +973,8 @@ export const Canvas: React.FC = () => {
                         deleteElementMutation={deleteElementMutation}
                     />
 
+                    <ImageUpload />
+
                     <ContentControlPanel
                         elementContent={elementContent}
                         handleContentChange={handleContentChange}
@@ -1058,3 +1061,61 @@ export const ControlPanelInput = ({ value, updateDispatch }: InputType) => {
         </div>
     );
 };
+
+const ImageUpload = () => {
+    const [file, setFile] = useState(null);
+    const [preview, setPreview] = useState(null);
+
+    const handleFileChange = (event) => {
+        const selectedFile = event.target.files[0];
+        if (!selectedFile) return;
+
+        setFile(selectedFile);
+        setPreview(URL.createObjectURL(selectedFile));
+    };
+
+    const handleUpload = async () => {
+        if (!file) return;
+
+        const formData = new FormData();
+        formData.append("image", file);
+
+        try {
+            const res = await fetch(`${backendUrl}/uploads`, {
+                method: "POST",
+                body: formData,
+            });
+
+            const data = await res.json();
+            console.log("Image uploaded:", data.filePath);
+
+            // Optionally reset the form
+            setFile(null);
+            setPreview(null);
+        } catch (error) {
+            console.error("Upload failed:", error);
+        }
+    };
+
+    return (
+        <div>
+            <input type="file" accept="image/*" onChange={handleFileChange} />
+            {preview && (
+                <div style={{ marginTop: "10px" }}>
+                    <img
+                        src={preview}
+                        alt="Preview"
+                        style={{ maxWidth: "200px" }}
+                    />
+                </div>
+            )}
+            {file && (
+                <button onClick={handleUpload} style={{ marginTop: "10px" }}>
+                    Save
+                </button>
+            )}
+        </div>
+    );
+};
+
+export default ImageUpload;

@@ -14,6 +14,7 @@ import { Project } from "./Pages/Canvas/Project/index.tsx";
 import { ApiEditor } from "./ApiLayer/index.tsx";
 import { ApiProjects } from "./Pages/ApiLayer/Projects/index.tsx";
 import { DBLayer } from "./Pages/DBLayer/index.tsx";
+import { MediaBucket } from "./Pages/MediaBucket/index.tsx";
 
 const rootElement = document.getElementById("root");
 
@@ -59,6 +60,9 @@ createRoot(rootElement).render(
                             path="/api-layer/:api_id"
                             element={<ApiEditor />}
                         />
+
+                        {/* media bucket */}
+                        <Route path="/media-bucket" element={<MediaBucket />} />
 
                         {/* DB layer */}
                         <Route path="/db-layer" element={<DBLayer />} />
