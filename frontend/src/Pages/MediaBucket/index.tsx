@@ -2,12 +2,13 @@ import { getAllMediaBuckets } from "@/api/mediaBuckets/getAllMediaBuckets";
 import { useQuery } from "@tanstack/react-query";
 import "./index.scss";
 import { EllipsisVertical, Folder, Pencil, Trash2 } from "lucide-react";
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
 export const MediaBucket = () => {
     // local state
     const [activeBucket, setActiveBucket] = useState<null | string>(null);
 
+    // query
     const { data } = useQuery({
         queryKey: ["media-buckets"],
         queryFn: getAllMediaBuckets,
@@ -30,9 +31,23 @@ export const MediaBucket = () => {
 export const Bucket = ({ data, setActiveBucket, activeBucket }) => {
     const [toggleMenu, setToggleMenu] = useState(false);
 
-    /// handlers
+    const menuRef = useRef<HTMLDivElement | null>(null);
 
-    // menu
+    useEffect(() => {
+        function handleClickOutsideMenu(event) {
+            if (menuRef.current && !menuRef?.current.contains(event?.target)) {
+                setToggleMenu(false);
+            }
+        }
+        document.addEventListener("mousedown", handleClickOutsideMenu);
+
+        return () => {
+            document.removeEventListener("mousedown", handleClickOutsideMenu);
+        };
+    }, [menuRef]);
+
+    /// HANDLERS
+    // to toggle menu
     function handleToggleMenu() {
         setActiveBucket(data.id);
         setToggleMenu(!toggleMenu);
@@ -48,7 +63,9 @@ export const Bucket = ({ data, setActiveBucket, activeBucket }) => {
                             onClick={handleToggleMenu}
                         />
                     </div>
-                    {toggleMenu && activeBucket === data.id && <BucketMenu />}
+                    {toggleMenu && activeBucket === data.id && (
+                        <BucketMenu menuRef={menuRef} />
+                    )}
                     <div className="bucket-heading-marking">
                         <Folder size={13} />
                         Folder
@@ -69,9 +86,9 @@ export const Bucket = ({ data, setActiveBucket, activeBucket }) => {
     );
 };
 
-export const BucketMenu = () => {
+export const BucketMenu = ({ menuRef }) => {
     return (
-        <div className="bucket-menu-container">
+        <div className="bucket-menu-container" ref={menuRef}>
             <div className="bucket-menu-items-container">
                 <div className="bucket-menu-edit-item-container bucket-menu-item">
                     <div>rename</div>
