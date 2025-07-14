@@ -1,9 +1,12 @@
+// # media-buckets , # uploads
+
 import { getAllMediaBuckets } from "@/api/mediaBuckets/getAllMediaBuckets";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import "./index.scss";
 import { EllipsisVertical, Folder, Pencil, Trash2 } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 import { deleteMediaBucketById } from "@/api/mediaBuckets/deleteMediaBucketById";
+import { createMediaBucket } from "@/api/mediaBuckets/createMediaBucket";
 
 export const MediaBucket = () => {
     // local state
@@ -19,6 +22,15 @@ export const MediaBucket = () => {
 
     // MUTATIONS
     // create mutation
+    const createMutation = useMutation({
+        mutationFn: () => createMediaBucket(),
+        onSuccess: () => {
+            queryClient.invalidateQueries({
+                queryKey: ["media-buckets"],
+            });
+        },
+    });
+
     // delete mutation
     const deleteMutation = useMutation({
         mutationFn: (id) => deleteMediaBucketById(id),
@@ -31,6 +43,16 @@ export const MediaBucket = () => {
 
     // update mutation
 
+    /// HANDLERS
+    // create new bucket
+    function handleCreateBucket() {
+        createMutation.mutate();
+    }
+
+    // delete bucket based on the id
+    function handleDeleteBucket() {
+        deleteMutation.mutate(activeBucket);
+    }
     return (
         <div className="media-buckets-container">
             {data?.map((item, ind) => (
@@ -40,6 +62,7 @@ export const MediaBucket = () => {
                     setActiveBucket={setActiveBucket}
                     activeBucket={activeBucket}
                     deleteMutation={deleteMutation}
+                    handleDeleteBucket={handleDeleteBucket}
                 />
             ))}
         </div>
@@ -50,8 +73,10 @@ export const Bucket = ({
     data,
     setActiveBucket,
     activeBucket,
-    deleteMutation,
+    handleDeleteBucket,
 }) => {
+    const [showPrompt, setShowPrompt] = useState(false);
+
     const [toggleMenu, setToggleMenu] = useState(false);
 
     const menuRef = useRef<HTMLDivElement | null>(null);
@@ -74,11 +99,6 @@ export const Bucket = ({
     function handleToggleMenu() {
         setActiveBucket(data.id);
         setToggleMenu(!toggleMenu);
-    }
-
-    // delete bucket based on the id
-    function handleDeleteBucket() {
-        deleteMutation.mutate(activeBucket);
     }
 
     return (
