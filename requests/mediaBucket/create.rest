@@ -25,6 +25,6 @@ POST /media-buckets
 
 # body
 {
-    "name": "foo media bucket"
+    "name": "bar media bucket"
 }
 

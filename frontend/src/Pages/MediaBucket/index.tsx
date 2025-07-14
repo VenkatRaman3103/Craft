@@ -1,8 +1,9 @@
 import { getAllMediaBuckets } from "@/api/mediaBuckets/getAllMediaBuckets";
-import { useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import "./index.scss";
 import { EllipsisVertical, Folder, Pencil, Trash2 } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
+import { deleteMediaBucketById } from "@/api/mediaBuckets/deleteMediaBucketById";
 
 export const MediaBucket = () => {
     // local state
@@ -14,6 +15,22 @@ export const MediaBucket = () => {
         queryFn: getAllMediaBuckets,
     });
 
+    const queryClient = useQueryClient();
+
+    // MUTATIONS
+    // create mutation
+    // delete mutation
+    const deleteMutation = useMutation({
+        mutationFn: (id) => deleteMediaBucketById(id),
+        onSuccess: () => {
+            queryClient.invalidateQueries({
+                queryKey: ["media-buckets"],
+            });
+        },
+    });
+
+    // update mutation
+
     return (
         <div className="media-buckets-container">
             {data?.map((item, ind) => (
@@ -22,13 +39,19 @@ export const MediaBucket = () => {
                     data={item}
                     setActiveBucket={setActiveBucket}
                     activeBucket={activeBucket}
+                    deleteMutation={deleteMutation}
                 />
             ))}
         </div>
     );
 };
 
-export const Bucket = ({ data, setActiveBucket, activeBucket }) => {
+export const Bucket = ({
+    data,
+    setActiveBucket,
+    activeBucket,
+    deleteMutation,
+}) => {
     const [toggleMenu, setToggleMenu] = useState(false);
 
     const menuRef = useRef<HTMLDivElement | null>(null);
@@ -53,6 +76,11 @@ export const Bucket = ({ data, setActiveBucket, activeBucket }) => {
         setToggleMenu(!toggleMenu);
     }
 
+    // delete bucket based on the id
+    function handleDeleteBucket() {
+        deleteMutation.mutate(activeBucket);
+    }
+
     return (
         <div>
             <div className="bucket-container">
@@ -64,7 +92,10 @@ export const Bucket = ({ data, setActiveBucket, activeBucket }) => {
                         />
                     </div>
                     {toggleMenu && activeBucket === data.id && (
-                        <BucketMenu menuRef={menuRef} />
+                        <BucketMenu
+                            menuRef={menuRef}
+                            handleDeleteBucket={handleDeleteBucket}
+                        />
                     )}
                     <div className="bucket-heading-marking">
                         <Folder size={13} />
@@ -86,7 +117,7 @@ export const Bucket = ({ data, setActiveBucket, activeBucket }) => {
     );
 };
 
-export const BucketMenu = ({ menuRef }) => {
+export const BucketMenu = ({ menuRef, handleDeleteBucket }) => {
     return (
         <div className="bucket-menu-container" ref={menuRef}>
             <div className="bucket-menu-items-container">
@@ -94,7 +125,10 @@ export const BucketMenu = ({ menuRef }) => {
                     <div>rename</div>
                     <Pencil className="bucket-menu-edit-icon" size={18} />
                 </div>
-                <div className="bucket-menu-delete-item-container bucket-menu-item">
+                <div
+                    className="bucket-menu-delete-item-container bucket-menu-item"
+                    onClick={handleDeleteBucket}
+                >
                     <div>delete</div>
                     <Trash2 className="bucket-menu-delete-icon" size={18} />
                 </div>
