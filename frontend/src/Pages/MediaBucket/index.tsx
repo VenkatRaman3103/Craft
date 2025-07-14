@@ -11,6 +11,9 @@ import { createMediaBucket } from "@/api/mediaBuckets/createMediaBucket";
 export const MediaBucket = () => {
     // local state
     const [activeBucket, setActiveBucket] = useState<null | string>(null);
+    const [showPrompt, setShowPrompt] = useState(false);
+
+    const [newBucketName, setNewBucketName] = useState("");
 
     // query
     const { data } = useQuery({
@@ -23,11 +26,13 @@ export const MediaBucket = () => {
     // MUTATIONS
     // create mutation
     const createMutation = useMutation({
-        mutationFn: () => createMediaBucket(),
+        mutationFn: (name) => createMediaBucket(name),
         onSuccess: () => {
             queryClient.invalidateQueries({
                 queryKey: ["media-buckets"],
             });
+            setShowPrompt(false);
+            setNewBucketName("");
         },
     });
 
@@ -46,13 +51,14 @@ export const MediaBucket = () => {
     /// HANDLERS
     // create new bucket
     function handleCreateBucket() {
-        createMutation.mutate();
+        createMutation.mutate(newBucketName);
     }
 
     // delete bucket based on the id
     function handleDeleteBucket() {
         deleteMutation.mutate(activeBucket);
     }
+
     return (
         <div className="media-buckets-container">
             {data?.map((item, ind) => (
@@ -65,6 +71,54 @@ export const MediaBucket = () => {
                     handleDeleteBucket={handleDeleteBucket}
                 />
             ))}
+            <button
+                className="create-prompt-btn"
+                onClick={() => setShowPrompt(!showPrompt)}
+            >
+                add bucket
+            </button>
+            {showPrompt && (
+                <BucketPrompt
+                    newBucketName={newBucketName}
+                    setNewBucketName={setNewBucketName}
+                    handleCreateBucket={handleCreateBucket}
+                    setShowPrompt={setShowPrompt}
+                />
+            )}
+        </div>
+    );
+};
+
+export const BucketPrompt = ({
+    newBucketName,
+    setNewBucketName,
+    handleCreateBucket,
+    setShowPrompt,
+}) => {
+    return (
+        <div className="create-prompt-cotainer">
+            <div className="create-prompt-name-wrapper">
+                <div className="create-prompt-name-label">name</div>
+                <input
+                    onChange={(e) => setNewBucketName(e.target.value)}
+                    value={newBucketName}
+                    className="create-prompt-name-input"
+                />
+            </div>
+            <div className="create-prompt-button-wrapper">
+                <button
+                    className="create-prompt-button create"
+                    onClick={handleCreateBucket}
+                >
+                    create
+                </button>
+                <button
+                    className="create-prompt-button cancel"
+                    onClick={() => setShowPrompt(false)}
+                >
+                    cancel
+                </button>
+            </div>
         </div>
     );
 };
@@ -75,8 +129,6 @@ export const Bucket = ({
     activeBucket,
     handleDeleteBucket,
 }) => {
-    const [showPrompt, setShowPrompt] = useState(false);
-
     const [toggleMenu, setToggleMenu] = useState(false);
 
     const menuRef = useRef<HTMLDivElement | null>(null);
