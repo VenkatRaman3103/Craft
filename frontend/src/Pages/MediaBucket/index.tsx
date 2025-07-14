@@ -1,7 +1,7 @@
 import { getAllMediaBuckets } from "@/api/mediaBuckets/getAllMediaBuckets";
 import { useQuery } from "@tanstack/react-query";
 import "./index.scss";
-import { EllipsisVertical, Folder } from "lucide-react";
+import { EllipsisVertical, Folder, Pencil, Trash2 } from "lucide-react";
 import { useState } from "react";
 
 export const MediaBucket = () => {
@@ -72,7 +72,16 @@ export const Bucket = ({ data, setActiveBucket, activeBucket }) => {
 export const BucketMenu = () => {
     return (
         <div className="bucket-menu-container">
-            <div>menu</div>
+            <div className="bucket-menu-items-container">
+                <div className="bucket-menu-edit-item-container bucket-menu-item">
+                    <div>rename</div>
+                    <Pencil className="bucket-menu-edit-icon" size={18} />
+                </div>
+                <div className="bucket-menu-delete-item-container bucket-menu-item">
+                    <div>delete</div>
+                    <Trash2 className="bucket-menu-delete-icon" size={18} />
+                </div>
+            </div>
         </div>
     );
 };

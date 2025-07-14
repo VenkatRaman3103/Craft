@@ -46,12 +46,56 @@
             z-index: 2;
 
             width: 200px;
-            height: 150px;
+            height: auto;
+            padding: 10px;
 
             background-color: var(--base-color);
             border: 1px solid var(--border-color);
 
             border-radius: 10px;
+
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+
+            .bucket-menu-item {
+                width: calc(100% - 20px);
+                height: 40px;
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+
+                cursor: pointer;
+                padding-left: 10px;
+                padding-right: 10px;
+
+                border-radius: 5px;
+
+                &:hover {
+                    background-color: var(--primary-color);
+                }
+            }
+
+            .bucket-menu-items-container {
+                color: var(--light-font);
+
+                .bucket-menu-edit-item-container {
+                    &:hover {
+                        color: white;
+                    }
+                }
+
+                .bucket-menu-delete-item-container {
+                    &:hover {
+                        color: var(--light-red);
+
+                        .bucket-menu-delete-icon {
+                            color: var(--red);
+                        }
+                    }
+
+                }
+            }
         }
 
         .bucket-heading-marking {
