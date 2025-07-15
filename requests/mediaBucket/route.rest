@@ -21,9 +21,9 @@ Content-Type: application/json; charset=utf-8
 User-Agent: VRC
 
 # query
-GET /media-buckets  
+# GET /media-buckets  
 # GET /media-buckets/root  
-# GET /media-buckets/87a97032-e6cd-4930-8789-7f495ae03da7  
+GET /media-buckets/87a97032-e6cd-4930-8789-7f495ae03da7  
 
 # body
 # {

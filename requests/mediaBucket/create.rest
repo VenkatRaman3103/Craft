@@ -26,8 +26,7 @@ POST /media-buckets/87a97032-e6cd-4930-8789-7f495ae03da7
 
 # body
 {
-    "name": "jerry",
-    "parentId": "87a97032-e6cd-4930-8789-7f495ae03da7"
+    "name": "jerry"
 }
 
 

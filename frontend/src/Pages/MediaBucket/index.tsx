@@ -77,6 +77,7 @@ export const MediaBucket = () => {
     }
 
     const bucketsToRender = bucket_id ? data?.childBuckets : data;
+    console.log(data, bucket_id, "dataMedia");
 
     return (
         <div>

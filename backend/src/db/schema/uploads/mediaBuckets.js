@@ -2,7 +2,7 @@
 
 import { relations } from "drizzle-orm";
 import { pgTable, text, uuid } from "drizzle-orm/pg-core";
-import { uploads } from "./uploads";
+import { uploads } from "./uploads.js";
 
 export const mediaBuckets = pgTable("media_buckets", {
     id: uuid("id").primaryKey().defaultRandom(),
