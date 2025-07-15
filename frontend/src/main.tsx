@@ -68,7 +68,7 @@ createRoot(rootElement).render(
                         />
 
                         <Route
-                            path="/media-buckets/:bucket_id"
+                            path="/media-buckets/:media_bucket_id"
                             element={<MediaBucket />}
                         />
 
