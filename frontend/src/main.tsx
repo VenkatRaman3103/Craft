@@ -67,6 +67,11 @@ createRoot(rootElement).render(
                             element={<MediaBucket />}
                         />
 
+                        <Route
+                            path="/media-buckets/:bucket_id"
+                            element={<MediaBucket />}
+                        />
+
                         {/* DB layer */}
                         <Route path="/db-layer" element={<DBLayer />} />
                     </Routes>

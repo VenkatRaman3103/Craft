@@ -8,20 +8,27 @@ import { useEffect, useRef, useState } from "react";
 import { deleteMediaBucketById } from "@/api/mediaBuckets/deleteMediaBucketById";
 import { createMediaBucket } from "@/api/mediaBuckets/createMediaBucket";
 import { updateNameOfBucket } from "@/api/mediaBuckets/updateNameOfBucket";
+import { useParams } from "react-router";
 
 export const MediaBucket = () => {
+    const { bucket_id } = useParams();
+
+    // local state
     const [activeBucket, setActiveBucket] = useState<null | string>(null);
     const [showPrompt, setShowPrompt] = useState(false);
     const [type, setType] = useState("create");
     const [newBucketName, setNewBucketName] = useState("");
 
+    // query
     const { data } = useQuery({
         queryKey: ["media-buckets"],
-        queryFn: getAllMediaBuckets,
+        queryFn: async () => getAllMediaBuckets(bucket_id),
     });
 
     const queryClient = useQueryClient();
 
+    // MUTATIONS
+    // create mutation
     const createMutation = useMutation({
         mutationFn: (name) => createMediaBucket(name),
         onSuccess: () => {
@@ -31,6 +38,7 @@ export const MediaBucket = () => {
         },
     });
 
+    // delete mutation
     const deleteMutation = useMutation({
         mutationFn: (id) => deleteMediaBucketById(id),
         onSuccess: () => {
@@ -38,6 +46,7 @@ export const MediaBucket = () => {
         },
     });
 
+    // update mutation
     const updateNameMutation = useMutation({
         mutationFn: (body) => updateNameOfBucket(body.id, body.name),
         onSuccess: () => {
@@ -47,14 +56,18 @@ export const MediaBucket = () => {
         },
     });
 
+    /// HANDLERS
+    // create new bucket
     function handleCreateBucket() {
         createMutation.mutate(newBucketName);
     }
 
+    // delete bucket based on the id
     function handleDeleteBucket() {
         deleteMutation.mutate(activeBucket);
     }
 
+    // rename bucket's name
     function handleRenameBucket() {
         const body = {
             id: activeBucket,
@@ -158,6 +171,7 @@ export const Bucket = ({
     setNewBucketName,
 }) => {
     const [toggleMenu, setToggleMenu] = useState(false);
+
     const menuRef = useRef<HTMLDivElement | null>(null);
 
     useEffect(() => {
@@ -166,13 +180,15 @@ export const Bucket = ({
                 setToggleMenu(false);
             }
         }
-
         document.addEventListener("mousedown", handleClickOutsideMenu);
+
         return () => {
             document.removeEventListener("mousedown", handleClickOutsideMenu);
         };
-    }, []);
+    }, [menuRef]);
 
+    /// HANDLERS
+    // to toggle menu
     function handleToggleMenu() {
         setActiveBucket(data.id);
         setToggleMenu(!toggleMenu);
