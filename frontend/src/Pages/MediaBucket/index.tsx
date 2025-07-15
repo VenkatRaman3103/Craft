@@ -83,7 +83,7 @@ export const MediaBucket = () => {
                 onClick={() => {
                     setType("create");
                     setShowPrompt(!showPrompt);
-                    setNewBucketName(""); // reset input
+                    setNewBucketName("");
                 }}
             >
                 add bucket
