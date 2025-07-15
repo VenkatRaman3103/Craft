@@ -1,7 +1,7 @@
 import express from "express";
 import { db } from "../server.js";
 import { mediaBuckets, uploads } from "../../db/schema/index.js";
-import { readAllBuckets } from "./read.js";
+import { readAllBuckets, readAllRootBuckets, readBucketById } from "./read.js";
 import { createNewBucket } from "./create.js";
 import { deleteBucketById, deleteBucketByIds } from "./delete.js";
 import { newNameForMediaBucket } from "./update.js";
@@ -9,7 +9,9 @@ import { newNameForMediaBucket } from "./update.js";
 export const mediaBucketRouter = express.Router();
 
 // media buckets
-mediaBucketRouter.get("/media-buckets", readAllBuckets);
+mediaBucketRouter.get("/media-buckets", readAllBuckets); // all media buckets
+mediaBucketRouter.get("/media-buckets/root", readAllRootBuckets); // root buckets
+mediaBucketRouter.get("/media-buckets/:id", readBucketById); // media buckets with child buckets
 
 // create new buckets
 mediaBucketRouter.post("/media-buckets", createNewBucket);
