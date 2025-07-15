@@ -76,9 +76,11 @@ export const MediaBucket = () => {
         updateNameMutation.mutate(body);
     }
 
+    const bucketsToRender = bucket_id ? data?.childBuckets : data;
+
     return (
         <div className="media-buckets-container">
-            {data?.map((item, ind) => (
+            {bucketsToRender?.map((item, ind) => (
                 <Bucket
                     key={ind}
                     data={item}

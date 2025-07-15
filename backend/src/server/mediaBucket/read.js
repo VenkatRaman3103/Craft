@@ -40,12 +40,23 @@ export const readAllRootBuckets = async (req, res) => {
 export const readBucketById = async (req, res) => {
     const { id } = req.params;
     try {
-        const response = await db
+        // parent bucket
+        const parentBucket = await db
+            .select()
+            .from(mediaBuckets)
+            .where(eq(mediaBuckets.id, id))
+            .limit(1);
+
+        // child buckets
+        const childBuckets = await db
             .select()
             .from(mediaBuckets)
             .where(eq(mediaBuckets.parentId, id));
 
-        res.json(response);
+        res.json({
+            ...parentBucket[0],
+            childBuckets,
+        });
     } catch (error) {
         const erroMessage = {
             error,
