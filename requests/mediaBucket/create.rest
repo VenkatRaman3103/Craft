@@ -21,12 +21,13 @@ Content-Type: application/json; charset=utf-8
 User-Agent: VRC
 
 # query
-POST /media-buckets  
+# POST /media-buckets  
+POST /media-buckets/87a97032-e6cd-4930-8789-7f495ae03da7  
 
 # body
 {
-    "name": "nested 3",
-    "parent_id":"87a97032-e6cd-4930-8789-7f495ae03da7"
+    "name": "jerry",
+    "parentId": "87a97032-e6cd-4930-8789-7f495ae03da7"
 }
 
 

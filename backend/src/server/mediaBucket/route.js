@@ -2,7 +2,7 @@ import express from "express";
 import { db } from "../server.js";
 import { mediaBuckets, uploads } from "../../db/schema/index.js";
 import { readAllBuckets, readAllRootBuckets, readBucketById } from "./read.js";
-import { createNewBucket } from "./create.js";
+import { createNewBucket, createNewChildBucket } from "./create.js";
 import { deleteBucketById, deleteBucketByIds } from "./delete.js";
 import { newNameForMediaBucket } from "./update.js";
 
@@ -15,6 +15,7 @@ mediaBucketRouter.get("/media-buckets/:id", readBucketById); // media buckets wi
 
 // create new buckets
 mediaBucketRouter.post("/media-buckets", createNewBucket);
+mediaBucketRouter.post("/media-buckets/:parent_id", createNewChildBucket);
 
 // delete
 mediaBucketRouter.delete("/media-buckets/:id", deleteBucketById);

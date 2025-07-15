@@ -30,7 +30,7 @@ export const MediaBucket = () => {
     // MUTATIONS
     // create mutation
     const createMutation = useMutation({
-        mutationFn: (name) => createMediaBucket(name),
+        mutationFn: (name) => createMediaBucket(name, bucket_id),
         onSuccess: () => {
             queryClient.invalidateQueries({ queryKey: ["media-buckets"] });
             setShowPrompt(false);
@@ -79,41 +79,50 @@ export const MediaBucket = () => {
     const bucketsToRender = bucket_id ? data?.childBuckets : data;
 
     return (
-        <div className="media-buckets-container">
-            {bucketsToRender?.map((item, ind) => (
-                <Bucket
-                    key={ind}
-                    data={item}
-                    setActiveBucket={setActiveBucket}
-                    activeBucket={activeBucket}
-                    handleDeleteBucket={handleDeleteBucket}
-                    setType={setType}
-                    setShowPrompt={setShowPrompt}
-                    setNewBucketName={setNewBucketName}
-                />
-            ))}
-
-            <button
-                className="create-prompt-btn"
-                onClick={() => {
-                    setType("create");
-                    setShowPrompt(!showPrompt);
-                    setNewBucketName("");
-                }}
-            >
-                add bucket
-            </button>
-
-            {showPrompt && (
-                <BucketPrompt
-                    newBucketName={newBucketName}
-                    setNewBucketName={setNewBucketName}
-                    handleCreateBucket={handleCreateBucket}
-                    setShowPrompt={setShowPrompt}
-                    handleRenameBucket={handleRenameBucket}
-                    type={type}
-                />
+        <div>
+            {bucket_id && (
+                <div className="media-bucket-intro-cotainer">
+                    <div className="media-bucket-intro-heading">
+                        {data?.name}
+                    </div>
+                </div>
             )}
+            <div className="media-buckets-container">
+                {bucketsToRender?.map((item, ind) => (
+                    <Bucket
+                        key={ind}
+                        data={item}
+                        setActiveBucket={setActiveBucket}
+                        activeBucket={activeBucket}
+                        handleDeleteBucket={handleDeleteBucket}
+                        setType={setType}
+                        setShowPrompt={setShowPrompt}
+                        setNewBucketName={setNewBucketName}
+                    />
+                ))}
+
+                <button
+                    className="create-prompt-btn"
+                    onClick={() => {
+                        setType("create");
+                        setShowPrompt(!showPrompt);
+                        setNewBucketName("");
+                    }}
+                >
+                    add bucket
+                </button>
+
+                {showPrompt && (
+                    <BucketPrompt
+                        newBucketName={newBucketName}
+                        setNewBucketName={setNewBucketName}
+                        handleCreateBucket={handleCreateBucket}
+                        setShowPrompt={setShowPrompt}
+                        handleRenameBucket={handleRenameBucket}
+                        type={type}
+                    />
+                )}
+            </div>
         </div>
     );
 };
