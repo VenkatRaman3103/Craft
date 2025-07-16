@@ -1,7 +1,14 @@
 .image-upload {
     padding: 20px;
-    border: 1px solid #ddd;
+    border: 1px solid var(--border-color);
     border-radius: 8px;
+
+    background-color: var(--primary-color);
+
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
 
     h3 {
         margin-top: 0;
@@ -10,10 +17,14 @@
 
     .file-input {
         margin-bottom: 10px;
-        width: 100%;
+        width: calc(100% - 16px);
         padding: 8px;
-        border: 1px solid #ccc;
+        border: 1px solid var(--border-color);
         border-radius: 4px;
+
+        display: flex;
+        align-items: center;
+        justify-content: center;
 
         &:disabled {
             opacity: 0.6;
@@ -34,11 +45,15 @@
         margin-top: 10px;
         margin-bottom: 10px;
 
+        display: flex;
+        align-items: center;
+        flex-direction: column;
+        justify-content: center;
+
         .preview-image {
-            max-width: 200px;
-            max-height: 200px;
+            max-width: 300px;
+            max-height: 300px;
             object-fit: contain;
-            border: 1px solid #ccc;
             border-radius: 4px;
             display: block;
         }
