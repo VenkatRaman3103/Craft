@@ -50,26 +50,46 @@ export const ControlPanelSelect = ({
 
 interface ColorControlPanelProps {
     selectedElement?: any;
+    backgroundColor: string;
+    borderColor: string;
+    textColor: string;
+    shadowColor: string;
+    gradientStart: string;
+    gradientEnd: string;
+    gradientDirection: string;
+    useGradient: boolean;
+    onBackgroundColorChange: (color: string) => void;
+    onBorderColorChange: (color: string) => void;
+    onTextColorChange: (color: string) => void;
+    onShadowColorChange: (color: string) => void;
+    onGradientStartChange: (color: string) => void;
+    onGradientEndChange: (color: string) => void;
+    onGradientDirectionChange: (direction: string) => void;
+    onUseGradientChange: (useGradient: boolean) => void;
 }
 
 export const ColorControlPanel: React.FC<ColorControlPanelProps> = ({
     selectedElement,
+    backgroundColor,
+    borderColor,
+    textColor,
+    shadowColor,
+    gradientStart,
+    gradientEnd,
+    gradientDirection,
+    useGradient,
+    onBackgroundColorChange,
+    onBorderColorChange,
+    onTextColorChange,
+    onShadowColorChange,
+    onGradientStartChange,
+    onGradientEndChange,
+    onGradientDirectionChange,
+    onUseGradientChange,
 }) => {
-    const dispatch = useDispatch();
     const [activeColorType, setActiveColorType] = useState<
         "background" | "border" | "text" | "shadow"
     >("background");
-
-    const {
-        backgroundColor,
-        borderColor,
-        textColor,
-        shadowColor,
-        gradientStart,
-        gradientEnd,
-        gradientDirection,
-        useGradient,
-    } = useSelector((state: StoreState) => state.colorControl);
 
     const gradientDirections = [
         { label: "To Right", value: "to right" },
@@ -145,6 +165,26 @@ export const ColorControlPanel: React.FC<ColorControlPanelProps> = ({
         </div>
     );
 
+    // Custom ControlPanelSelect for gradient direction to use the prop handler
+    const GradientDirectionSelect = () => (
+        <div className="border-width-sub-section">
+            <div className="sub-heading">Direction</div>
+            <div className="border-width-tools-container">
+                <select
+                    className="select-drop-down"
+                    value={gradientDirection}
+                    onChange={(e) => onGradientDirectionChange(e.target.value)}
+                >
+                    {gradientDirections.map(({ label, value }) => (
+                        <option value={value} key={value}>
+                            {label}
+                        </option>
+                    ))}
+                </select>
+            </div>
+        </div>
+    );
+
     if (!selectedElement) {
         return (
             <div className="control-panel-wrapper toolbar-section">
@@ -204,9 +244,7 @@ export const ColorControlPanel: React.FC<ColorControlPanelProps> = ({
                                     type="checkbox"
                                     checked={useGradient}
                                     onChange={(e) =>
-                                        dispatch(
-                                            updateUseGradient(e.target.checked),
-                                        )
+                                        onUseGradientChange(e.target.checked)
                                     }
                                 />
                                 Use Gradient
@@ -218,32 +256,20 @@ export const ColorControlPanel: React.FC<ColorControlPanelProps> = ({
                                 <ColorPicker
                                     label="Gradient Start"
                                     value={gradientStart}
-                                    onChange={(color) =>
-                                        dispatch(updateGradientStart(color))
-                                    }
+                                    onChange={onGradientStartChange}
                                 />
                                 <ColorPicker
                                     label="Gradient End"
                                     value={gradientEnd}
-                                    onChange={(color) =>
-                                        dispatch(updateGradientEnd(color))
-                                    }
-                                    // showPresets={false}
+                                    onChange={onGradientEndChange}
                                 />
-                                <ControlPanelSelect
-                                    options={gradientDirections}
-                                    sectionTitle="Direction"
-                                    elementStyle={gradientDirection}
-                                    updateDispatch={updateGradientDirection}
-                                />
+                                <GradientDirectionSelect />
                             </>
                         ) : (
                             <ColorPicker
                                 label="Background Color"
                                 value={backgroundColor}
-                                onChange={(color) =>
-                                    dispatch(updateBackgroundColor(color))
-                                }
+                                onChange={onBackgroundColorChange}
                             />
                         )}
                     </div>
@@ -254,9 +280,7 @@ export const ColorControlPanel: React.FC<ColorControlPanelProps> = ({
                         <ColorPicker
                             label="Border Color"
                             value={borderColor}
-                            onChange={(color) =>
-                                dispatch(updateBorderColor(color))
-                            }
+                            onChange={onBorderColorChange}
                         />
                     </div>
                 )}
@@ -266,9 +290,7 @@ export const ColorControlPanel: React.FC<ColorControlPanelProps> = ({
                         <ColorPicker
                             label="Text Color"
                             value={textColor}
-                            onChange={(color) =>
-                                dispatch(updateTextColor(color))
-                            }
+                            onChange={onTextColorChange}
                         />
                     </div>
                 )}
@@ -278,9 +300,7 @@ export const ColorControlPanel: React.FC<ColorControlPanelProps> = ({
                         <ColorPicker
                             label="Shadow Color"
                             value={shadowColor}
-                            onChange={(color) =>
-                                dispatch(updateShadowColor(color))
-                            }
+                            onChange={onShadowColorChange}
                         />
                     </div>
                 )}
