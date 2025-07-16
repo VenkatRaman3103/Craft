@@ -1,23 +1,23 @@
-// # uploads, # media-bucket
-
 import { relations } from "drizzle-orm";
-import { pgTable, text, uuid } from "drizzle-orm/pg-core";
+import { pgTable, text, uuid, timestamp } from "drizzle-orm/pg-core";
 import { mediaBuckets } from "./mediaBuckets.js";
 
 export const uploads = pgTable("uploads", {
     id: uuid("id").primaryKey(),
-    name: text("name"),
-    path: text("path"),
-    mimeType: text("mime_type"),
-    mediaBucketId: uuid("media_bucket_id").references(() => mediaBuckets.id),
+    name: text("name").notNull(),
+    path: text("path").notNull(),
+    mimeType: text("mime_type").notNull(),
+    mediaBucketId: uuid("media_bucket_id").references(() => mediaBuckets.id, {
+        onDelete: "cascade",
+    }),
+    createdAt: timestamp("created_at").defaultNow(),
+    updatedAt: timestamp("updated_at").defaultNow(),
 });
 
-// relations one to one relation with mediaBuckets
-// uploads |- 1:1 ->mediaBuckets
-
+// uploads |- many:1 -> mediaBuckets
 export const uploadsRelations = relations(uploads, ({ one }) => ({
-    mediaBuckets: one(uploads, {
-        fields: [uploads.id],
+    mediaBucket: one(mediaBuckets, {
+        fields: [uploads.mediaBucketId],
         references: [mediaBuckets.id],
     }),
 }));

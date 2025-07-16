@@ -13,9 +13,22 @@
     }
 }
 
+.list-medias-container {
+    width: 100%;
+    height: auto;
+    padding: 50px;
+}
+
+.image-upload-section {
+    width: 100%;
+    height: auto;
+    padding: 50px;
+}
+
 .media-buckets-container {
     width: 100%;
-    height: 100%;
+    /* height: 100%; */
+    height: auto;
     padding: 50px;
     display: flex;
     flex-wrap: wrap;

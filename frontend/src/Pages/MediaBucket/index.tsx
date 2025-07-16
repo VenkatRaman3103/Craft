@@ -9,23 +9,33 @@ import { deleteMediaBucketById } from "@/api/mediaBuckets/deleteMediaBucketById"
 import { createMediaBucket } from "@/api/mediaBuckets/createMediaBucket";
 import { updateNameOfBucket } from "@/api/mediaBuckets/updateNameOfBucket";
 import { useParams } from "react-router";
+import ImageUpload from "@/Components/ImageUpload";
+import { ListOfMedias } from "@/Components/ListOfMedias";
+import { getAllMedia } from "@/api/mediaBuckets/uploads/getAllMedia";
 
 export const MediaBucket = () => {
     const { bucket_id } = useParams();
-
     // local state
     const [activeBucket, setActiveBucket] = useState<null | string>(null);
     const [showPrompt, setShowPrompt] = useState(false);
     const [type, setType] = useState("create");
     const [newBucketName, setNewBucketName] = useState("");
+    const [showImageUpload, setShowImageUpload] = useState(false);
 
-    // query
+    /// query
+    const queryClient = useQueryClient();
+
+    // media buckets
     const { data } = useQuery({
         queryKey: ["media-buckets"],
         queryFn: async () => getAllMediaBuckets(bucket_id),
     });
 
-    const queryClient = useQueryClient();
+    // medias
+    const { data: mediaData } = useQuery({
+        queryKey: ["medias"],
+        queryFn: async () => getAllMedia(bucket_id),
+    });
 
     // MUTATIONS
     // create mutation
@@ -76,8 +86,14 @@ export const MediaBucket = () => {
         updateNameMutation.mutate(body);
     }
 
+    // Handle successful image upload
+    const handleUploadSuccess = (uploadData) => {
+        // Optionally refresh bucket data or show success message
+        queryClient.invalidateQueries({ queryKey: ["media-buckets"] });
+        setShowImageUpload(false);
+    };
+
     const bucketsToRender = bucket_id ? data?.childBuckets : data;
-    console.log(data, bucket_id, "dataMedia");
 
     return (
         <div>
@@ -88,6 +104,7 @@ export const MediaBucket = () => {
                     </div>
                 </div>
             )}
+
             <div className="media-buckets-container">
                 {bucketsToRender?.map((item, ind) => (
                     <Bucket
@@ -121,6 +138,38 @@ export const MediaBucket = () => {
                         setShowPrompt={setShowPrompt}
                         handleRenameBucket={handleRenameBucket}
                         type={type}
+                    />
+                )}
+            </div>
+
+            <div className="list-medias-container">
+                <ListOfMedias medias={mediaData} />
+            </div>
+
+            {/* Image Upload Section */}
+            <div className="image-upload-section" style={{ margin: "20px 0" }}>
+                <button
+                    className="upload-toggle-btn"
+                    onClick={() => setShowImageUpload(!showImageUpload)}
+                    style={{
+                        padding: "10px 20px",
+                        backgroundColor: showImageUpload
+                            ? "#dc3545"
+                            : "#28a745",
+                        color: "white",
+                        border: "none",
+                        borderRadius: "4px",
+                        cursor: "pointer",
+                        marginBottom: "10px",
+                    }}
+                >
+                    {showImageUpload ? "Cancel Upload" : "Upload Image"}
+                </button>
+
+                {showImageUpload && (
+                    <ImageUpload
+                        mediaBucketId={bucket_id}
+                        onUploadSuccess={handleUploadSuccess}
                     />
                 )}
             </div>

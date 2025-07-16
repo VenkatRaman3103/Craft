@@ -5,12 +5,8 @@ import { drizzle } from "drizzle-orm/node-postgres";
 import pg from "pg";
 import path from "path";
 import { fileURLToPath } from "url";
-import multer from "multer";
-import fs from "fs";
 
-// Get __dirname in ES module context
 const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
 
 import { eq } from "drizzle-orm";
 import * as schema from "../db/schema/index.js";
@@ -35,6 +31,7 @@ import { apiBlockRouter } from "./blocks/apiBlocks/route.js";
 import { canvasRouter } from "./canvas/route.js";
 import { apiEditorRouter } from "./apiLayer/route.js";
 import { mediaBucketRouter } from "./mediaBucket/route.js";
+import { uploadsRouter } from "./mediaBucket/uploads/route.js";
 
 dotenv.config();
 
@@ -153,54 +150,8 @@ app.use("/services", apiService);
 app.use("/api", canvasRouter);
 app.use("/api", move);
 app.use("/api", testRoute);
-// media bucket
 app.use("/api", mediaBucketRouter);
-
-// image uploads
-const storage = multer.diskStorage({
-    destination: (req, file, cb) => {
-        const uploadDir = path.join(__dirname, "..", "public", "uploads");
-        if (!fs.existsSync(uploadDir)) {
-            fs.mkdirSync(uploadDir, { recursive: true });
-        }
-        cb(null, uploadDir);
-    },
-    filename: (req, file, cb) => {
-        const uniqueSuffix = Date.now() + "-" + Math.round(Math.random() * 1e9);
-        cb(
-            null,
-            file.fieldname +
-                "-" +
-                uniqueSuffix +
-                path.extname(file.originalname),
-        );
-    },
-});
-
-const upload = multer({ storage: storage });
-
-app.use(
-    "/api/uploads",
-    express.static(path.join(__dirname, "..", "public", "uploads")),
-);
-
-app.post("/api/uploads", upload.single("image"), (req, res) => {
-    try {
-        if (!req.file) {
-            return res.status(400).json({ error: "No file uploaded" });
-        }
-
-        const filePath = `/api/uploads/${req.file.filename}`;
-        res.json({
-            success: true,
-            filePath: filePath,
-            filename: req.file.filename,
-        });
-    } catch (error) {
-        console.error("Upload error:", error);
-        res.status(500).json({ error: "Failed to upload file" });
-    }
-});
+app.use("/api", uploadsRouter);
 
 // Example API query with nested relations
 app.get("/api/get/pages", async (req, res) => {

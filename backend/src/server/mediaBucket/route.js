@@ -8,23 +8,39 @@ import { newNameForMediaBucket } from "./update.js";
 
 export const mediaBucketRouter = express.Router();
 
-// media buckets
+// Media buckets
 mediaBucketRouter.get("/media-buckets", readAllBuckets); // all media buckets
 mediaBucketRouter.get("/media-buckets/root", readAllRootBuckets); // root buckets
 mediaBucketRouter.get("/media-buckets/:id", readBucketById); // media buckets with child buckets
 
-// create new buckets
+// Create new buckets
 mediaBucketRouter.post("/media-buckets", createNewBucket);
 mediaBucketRouter.post("/media-buckets/:parent_id", createNewChildBucket);
 
-// delete
+// Delete
 mediaBucketRouter.delete("/media-buckets/:id", deleteBucketById);
 mediaBucketRouter.delete("/media-buckets", deleteBucketByIds);
 
-// update
+// Update
 mediaBucketRouter.patch("/media-buckets/:id/name", newNameForMediaBucket);
 
-// uploads
+// Get uploads for a specific media bucket
+mediaBucketRouter.get("/media-buckets/:id/uploads", async (req, res) => {
+    try {
+        const { id } = req.params;
+        const response = await db.query.uploads.findMany({
+            where: (uploads, { eq }) => eq(uploads.mediaBucketId, id),
+            with: {
+                mediaBucket: true,
+            },
+        });
+        res.json(response);
+    } catch (error) {
+        res.status(500).json({ error: `Internal server error ${error}` });
+    }
+});
+
+// Get all uploads (moved from uploads functionality)
 mediaBucketRouter.get("/uploads", async (req, res) => {
     try {
         const response = await db.select().from(uploads);
