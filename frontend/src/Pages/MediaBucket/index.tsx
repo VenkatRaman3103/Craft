@@ -12,6 +12,7 @@ import { useParams } from "react-router";
 import ImageUpload from "@/Components/ImageUpload";
 import { ListOfMedias } from "@/Components/ListOfMedias";
 import { getAllMedia } from "@/api/mediaBuckets/uploads/getAllMedia";
+import { deleteMediaById } from "@/api/mediaBuckets/uploads/deleteMediaById";
 
 export const MediaBucket = () => {
     const { bucket_id } = useParams();
@@ -37,7 +38,7 @@ export const MediaBucket = () => {
         queryFn: async () => getAllMedia(bucket_id),
     });
 
-    // MUTATIONS
+    // MUTATIONS for buckets
     // create mutation
     const createMutation = useMutation({
         mutationFn: (name) => createMediaBucket(name, bucket_id),
@@ -66,6 +67,14 @@ export const MediaBucket = () => {
         },
     });
 
+    // MUTATIONS for media
+    const deleteMediaMutation = useMutation({
+        mutationFn: (media_id) => deleteMediaById(media_id),
+        onSuccess: () => {
+            queryClient.invalidateQueries({ queryKey: ["medias"] });
+        },
+    });
+
     /// HANDLERS
     // create new bucket
     function handleCreateBucket() {
@@ -89,9 +98,16 @@ export const MediaBucket = () => {
     // Handle successful image upload
     const handleUploadSuccess = (uploadData) => {
         // Optionally refresh bucket data or show success message
-        queryClient.invalidateQueries({ queryKey: ["media-buckets"] });
+        queryClient.invalidateQueries({
+            queryKey: ["media-buckets", "medias"],
+        });
         setShowImageUpload(false);
     };
+
+    // delete media based on the id
+    function handleDeleteMediaById(media_id) {
+        deleteMediaMutation.mutate(media_id);
+    }
 
     const bucketsToRender = bucket_id ? data?.childBuckets : data;
 
@@ -143,7 +159,10 @@ export const MediaBucket = () => {
             </div>
 
             <div className="list-medias-container">
-                <ListOfMedias medias={mediaData} />
+                <ListOfMedias
+                    medias={mediaData}
+                    handleDeleteMediaById={handleDeleteMediaById}
+                />
             </div>
 
             {/* Image Upload Section */}
