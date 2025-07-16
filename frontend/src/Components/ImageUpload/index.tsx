@@ -83,7 +83,7 @@ const ImageUpload = ({ mediaBucketId = null, onUploadSuccess }: any) => {
 
     return (
         <div className="image-upload">
-            <h3>Upload Image - {mediaBucketId}</h3>
+            <h3>Upload Image</h3>
 
             <input
                 type="file"
