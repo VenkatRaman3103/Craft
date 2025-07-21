@@ -15,6 +15,7 @@ import { ApiEditor } from "./ApiLayer/index.tsx";
 import { ApiProjects } from "./Pages/ApiLayer/Projects/index.tsx";
 import { DBLayer } from "./Pages/DBLayer/index.tsx";
 import { MediaBucket } from "./Pages/MediaBucket/index.tsx";
+import { Paper } from "./Paper/index.tsx";
 
 const rootElement = document.getElementById("root");
 
@@ -74,6 +75,9 @@ createRoot(rootElement).render(
 
                         {/* DB layer */}
                         <Route path="/db-layer" element={<DBLayer />} />
+
+                        {/* sketchbook */}
+                        <Route path="/sketchbook" element={<Paper />} />
                     </Routes>
                 </Explorer>
             </QueryClientProvider>
