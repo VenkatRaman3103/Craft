@@ -58,6 +58,7 @@ export const Page = () => {
         }
 
         if (parentCollectionId) {
+            //
             getLocalFields();
         }
     }, [pageData, parentCollectionId]);
