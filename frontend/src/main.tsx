@@ -77,6 +77,7 @@ createRoot(rootElement).render(
                         <Route path="/db-layer" element={<DBLayer />} />
 
                         {/* sketchbook */}
+                        <Route path="/sketchbook/paper" element={<Paper />} />
                         <Route path="/sketchbook" element={<Paper />} />
                     </Routes>
                 </Explorer>

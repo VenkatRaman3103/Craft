@@ -1,6 +1,10 @@
 import React, { useState } from "react";
 import { v4 as uuid } from "uuid";
 import "./index.scss";
+import { Select } from "./Drawer/Select";
+
+const dummyData = ["option1", "option2", "option3"];
+const defaultValue = dummyData[0];
 
 export const Paper = () => {
     return (
@@ -31,6 +35,23 @@ export const Sketch = () => {
     function addElement() {
         setElements([...elements, createNewTag()]);
     }
+
+    const updateClassName = (uid: string, newClassName: string) => {
+        const updateTree = (nodes) =>
+            nodes.map((node) =>
+                node.uid === uid
+                    ? {
+                          ...node,
+                          attributes: {
+                              ...node.attributes,
+                              className: newClassName,
+                          },
+                          children: updateTree(node.children),
+                      }
+                    : { ...node, children: updateTree(node.children) },
+            );
+        setElements((prev) => updateTree(prev));
+    };
 
     function addChild(uid) {
         function addChildToTree(nodes) {
@@ -73,6 +94,18 @@ export const Sketch = () => {
         return (
             <div>
                 <Tag {...node.attributes} style={node.style}>
+                    <input
+                        value={node.attributes.className}
+                        onChange={(e) =>
+                            updateClassName(node.uid, e.target.value)
+                        }
+                        placeholder="Edit className"
+                        style={{
+                            marginBottom: "10px",
+                            display: "block",
+                            padding: "4px",
+                        }}
+                    />
                     <button onClick={() => addChild(node.uid)}>
                         add child
                     </button>
@@ -80,9 +113,9 @@ export const Sketch = () => {
                         delete element
                     </button>
                     <div className="element">element</div>
-                    {node.children.map((node, i) => (
+                    {node.children.map((child, i) => (
                         <React.Fragment key={i}>
-                            {renderDocument(node)}
+                            {renderDocument(child)}
                         </React.Fragment>
                     ))}
                 </Tag>
@@ -91,11 +124,20 @@ export const Sketch = () => {
     }
 
     return (
-        <div>
-            <button onClick={addElement}>Add element</button>
-            {elements.map((tag, i) => (
-                <React.Fragment key={i}>{renderDocument(tag)}</React.Fragment>
-            ))}
-        </div>
+        <>
+            <div>
+                <button onClick={addElement}>Add element</button>
+                {elements.map((tag, i) => (
+                    <React.Fragment key={i}>
+                        {renderDocument(tag)}
+                    </React.Fragment>
+                ))}
+            </div>
+            <Select
+                options={dummyData}
+                defaultValue={dummyData[0]}
+                update={""}
+            />
+        </>
     );
 };
