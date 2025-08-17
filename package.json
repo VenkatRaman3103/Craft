@@ -1,10 +1,10 @@
 {
     "name": "@venkatraman3103/craft",
-    "version": "1.0.2",
+    "version": "1.0.3",
     "type": "module",
     "main": "cli.js",
     "bin": {
-        "create-craft-app": "./cli.js"
+        "create-craft-app": "cli.js"
     },
     "scripts": {
         "test": "echo \"Error: no test specified\" && exit 1"
@@ -23,10 +23,9 @@
     "license": "ISC",
     "description": "A CLI to scaffold a Payload-style CMS",
     "files": [
-        "backend",
-        "frontend",
         "cli.js",
-        "templates"
+        "frontend/dist/",
+        "backend/dist/"
     ],
     "publishConfig": {
         "access": "public"

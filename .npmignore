@@ -4,3 +4,24 @@ LICENSE
 .env
 *.log
 .git/
+
+# Exclude source code and dev files
+frontend/src/
+frontend/node_modules/
+frontend/package*.json
+frontend/*.config.*
+frontend/tsconfig*.json
+frontend/vitest*
+frontend/eslint*
+frontend/README.md
+
+backend/src/
+backend/node_modules/
+backend/package*.json
+backend/*.config.*
+backend/eslint*
+backend/nodemon.json
+
+# But KEEP the built/dist folders
+# frontend/dist/ - don't exclude this!
+# backend/dist/ - don't exclude this!
