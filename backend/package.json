@@ -4,7 +4,7 @@
     "main": "index.js",
     "scripts": {
         "test": "vitest run",
-        "dev": "nodemon --inspect --legacy-watch --watch src/ --ignore 'node_modules/**/*' --ignore '.git/**/*' ./src/server/server.js",
+        "dev": "nodemon --inspect --legacy-watch --watch src/ --ignore 'node_modules/**/*' --ignore '.git/**/*' ./src/index.js",
         "db:migrate": "drizzle-kit migrate",
         "db:generate": "drizzle-kit generate",
         "db:drop": "drizzle-kit drop",
