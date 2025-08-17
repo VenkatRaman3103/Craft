@@ -1,7 +1,7 @@
 // import { ConfigManager } from "./ConfigManager";
 
 import { Connection } from "./server/server.js";
-import { ConfigManager } from "./user_files/ConfigManager.js";
+import { ConfigManager } from "./files/ConfigManager.js";
 
 // --- file ---
 const config = new ConfigManager();

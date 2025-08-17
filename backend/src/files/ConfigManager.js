@@ -10,7 +10,8 @@ export class ConfigManager {
         this.config_file_name = "cms.config.js";
         this.working_directory = process.cwd();
 
-        this.temp_path = "/home/venkat/Code/Projects/Craft/project";
+        // this.temp_path = "/home/venkat/Code/Projects/Craft/project";
+        this.temp_path = "/home/venkat/Code/Projects/Craft/Craft/backend/tmp/";
 
         this.config_path = path.join(this.temp_path, this.config_file_name);
     }
