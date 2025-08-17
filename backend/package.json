@@ -1,9 +1,9 @@
 {
-    "name": "backend",
-    "version": "1.0.0",
+    "name": "@venkatraman3103/craft",
+    "version": "1.0.06",
     "main": "index.js",
     "scripts": {
-        "test": "echo \"Error: no test specified\" && exit 1",
+        "test": "vitest run",
         "dev": "nodemon --inspect --legacy-watch --watch src/ --ignore 'node_modules/**/*' --ignore '.git/**/*' ./src/server/server.js",
         "db:migrate": "drizzle-kit migrate",
         "db:generate": "drizzle-kit generate",
@@ -18,11 +18,13 @@
     "license": "ISC",
     "description": "",
     "dependencies": {
+        "commander": "^14.0.0",
         "cors": "^2.8.5",
         "dotenv": "^16.4.7",
         "drizzle-kit": "^0.30.5",
         "drizzle-orm": "^0.40.0",
         "express": "^4.21.2",
+        "fs-extra": "^11.3.1",
         "multer": "^2.0.1",
         "pg": "^8.13.3",
         "uuid": "^11.1.0"
@@ -37,9 +39,17 @@
         "eslint": "^9.21.0",
         "eslint_d": "^14.3.0",
         "globals": "^16.0.0",
+        "msw": "^2.10.5",
         "nodemon": "^3.1.9",
         "prettier": "^3.5.3",
         "tsconfig-paths": "^4.2.0",
-        "typescript-eslint": "^8.24.1"
+        "typescript-eslint": "^8.24.1",
+        "vitest": "^3.2.4"
+    },
+    "bin": {
+        "create-craft-app": "./cli.js"
+    },
+    "publishConfig": {
+        "access": "public"
     }
 }

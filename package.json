@@ -1,0 +1,34 @@
+{
+  "name": "@venkatraman3103/craft",
+  "version": "1.0.0",
+  "type": "module",
+  "main": "cli.js",
+  "bin": {
+    "create-craft-app": "./cli.js"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git@personal:VenkatRaman3103/Craft.git"
+  },
+  "keywords": ["cms", "craft", "scaffold", "node-cli"],
+  "author": "Venkat Raman",
+  "license": "ISC",
+  "description": "A CLI to scaffold a Payload-style CMS",
+  "files": [
+    "backend",
+    "frontend",
+    "cli.js",
+    "templates"
+  ],
+  "publishConfig": {
+    "access": "public"
+  },
+  "dependencies": {
+    "fs-extra": "^11.3.1",
+    "commander": "^14.0.0",
+    "dotenv": "^16.4.7"
+  }
+}

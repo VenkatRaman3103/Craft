@@ -10,6 +10,7 @@
         "noEmit": true,
         "allowSyntheticDefaultImports": true,
         "allowImportingTsExtensions": true,
+        "types": ["vitest", "node"],
         "baseUrl": ".",
         "paths": {
             "@/*": [
@@ -20,7 +21,9 @@
     "include": [
         "src",
         "vite.config.ts",
-        "eslint.config.js"
+        "eslint.config.js",
+         "src/**/*.test.tsx",
+         "src/**/*.test.ts"   
     ],
     "exclude": [
         "node_modules",
