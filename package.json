@@ -1,6 +1,6 @@
 {
   "name": "@venkatraman3103/craft",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "type": "module",
   "main": "cli.js",
   "bin": {
@@ -13,7 +13,12 @@
     "type": "git",
     "url": "git@personal:VenkatRaman3103/Craft.git"
   },
-  "keywords": ["cms", "craft", "scaffold", "node-cli"],
+  "keywords": [
+    "cms",
+    "craft",
+    "scaffold",
+    "node-cli"
+  ],
   "author": "Venkat Raman",
   "license": "ISC",
   "description": "A CLI to scaffold a Payload-style CMS",
