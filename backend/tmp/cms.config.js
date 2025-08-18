@@ -1,6 +1,6 @@
-import { Blog } from "./Blog";
+import { collection } from "./ParentCollection/collection.js";
 
-export default cmsConfig({
+export const cmsConfig = () => ({
     // Admin Panel / UI Settings
     adminPanel: {
         icon: "default",
@@ -11,24 +11,7 @@ export default cmsConfig({
     },
 
     // Collections
-    collections: [
-        Blog,
-        {
-            name: "user",
-            slug: "user",
-            fields: [
-                {
-                    name: "title",
-                    type: "text",
-                    required: true,
-                },
-                {
-                    name: "body",
-                    type: "text",
-                },
-            ],
-        },
-    ],
+    collections: [collection],
 
     // Database
     database: {
@@ -128,6 +111,4 @@ export default cmsConfig({
         defaultTimezone: "UTC",
         enableDebug: false,
     },
-
-    // Misc Settings
 });

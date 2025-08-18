@@ -1,0 +1,12 @@
+import { Page } from "./pages/page.js";
+
+export const collection = {
+    slug: "parent",
+    name: "Parent",
+    collection_type: "pages", // "template" | "pages"
+    item_type: "mutli", // "mutli" | "single"
+    pages: [Page],
+    blocks: [],
+    fields: [],
+    child_collections: [],
+};

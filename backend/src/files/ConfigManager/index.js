@@ -1,3 +1,4 @@
+import { cmsConfig } from "../../../tmp/cms.config.js";
 import path from "path";
 import { fileURLToPath } from "url";
 import fs from "fs";
@@ -33,14 +34,27 @@ export class ConfigManager {
 
     load_config() {
         if (!fs.existsSync(this.config_path)) {
-            console.log(this.config_path);
+            console.log("Creating config file", this.config_path);
+
             const config_content = this.get_default_config_content();
             fs.writeFileSync(this.config_path, config_content, "utf8");
+
+            console.log("Config file created", config_content);
+        } else {
+            console.log("Config file exists", fs.existsSync(this.config_path));
         }
-        console.log(fs.existsSync(this.config_path));
     }
 
     log() {
+        console.log(this.__filename);
+        console.log(this.__dirname);
         console.log(this.config_path);
+    }
+
+    // read the config file
+    read_config() {
+        const config_content = cmsConfig();
+
+        return config_content;
     }
 }
