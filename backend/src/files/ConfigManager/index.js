@@ -17,6 +17,7 @@ export class ConfigManager {
         this.config_path = path.join(this.temp_path, this.config_file_name);
     }
 
+    // private
     get_default_config_content() {
         const config_file_path = path.join(
             this.__dirname,
