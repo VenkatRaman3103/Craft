@@ -11,7 +11,39 @@ export const cmsConfig = () => ({
     },
 
     // Collections
-    collections: [collection],
+    collections: [
+        {
+            slug: "world",
+            name: "parent",
+            collection_type: "pages", // "template" | "pages"
+            item_type: "mutli", // "mutli" | "single"
+            pages: [],
+            blocks: [],
+            fields: [],
+            child_collections: [],
+        },
+        {
+            slug: "hello",
+            name: "parent",
+            collection_type: "pages", // "template" | "pages"
+            item_type: "mutli", // "mutli" | "single"
+            pages: [],
+            blocks: [],
+            fields: [],
+            child_collections: [],
+        },
+        collection,
+        {
+            slug: "parent_1",
+            name: "parent_1",
+            collection_type: "pages", // "template" | "pages"
+            item_type: "mutli", // "mutli" | "single"
+            pages: [],
+            blocks: [],
+            fields: [],
+            child_collections: [],
+        },
+    ],
 
     // Database
     database: {

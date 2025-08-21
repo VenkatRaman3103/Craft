@@ -1,3 +1,3 @@
-import { collections } from "./collections/schema.js";
+import { collectionsTable } from "./collections/schema.js";
 
-export { collections };
+export { collectionsTable };

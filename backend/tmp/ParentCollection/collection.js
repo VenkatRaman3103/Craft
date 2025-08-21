@@ -2,7 +2,7 @@ import { Page } from "./pages/page.js";
 
 export const collection = {
     slug: "parent",
-    name: "Parent",
+    name: "parent",
     collection_type: "pages", // "template" | "pages"
     item_type: "mutli", // "mutli" | "single"
     pages: [Page],
