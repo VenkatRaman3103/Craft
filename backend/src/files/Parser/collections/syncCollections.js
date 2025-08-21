@@ -5,13 +5,16 @@ import { eq } from "drizzle-orm";
 export async function syncCollections(collections) {
     const response = [];
 
+    // collections from db
     const dbCollections = await db.select().from(collectionsTable);
 
+    // comparing config with db for insert and update operations
     for (let config_col of collections) {
         let dbCol = dbCollections.find((col) => col.slug === config_col.slug);
         console.log(dbCol, config_col, "dbCollections");
 
         if (dbCol) {
+            // update: if any other data apart from `slug` is changed
             if (
                 config_col.name != dbCol.name ||
                 config_col.description != dbCol.description ||
@@ -42,7 +45,9 @@ export async function syncCollections(collections) {
 
                 response.push(update_message);
             }
-        } else {
+        }
+        // insert: if collection from config is not in db
+        else {
             const insert_response = await db
                 .insert(collectionsTable)
                 .values({
@@ -65,6 +70,7 @@ export async function syncCollections(collections) {
         }
     }
 
+    // comparing db with config for delete operations
     for (let dbCol of dbCollections) {
         const exists = collections.find((col) => col.slug === dbCol.slug);
         if (!exists) {
