@@ -13,36 +13,48 @@ export const cmsConfig = () => ({
     // Collections
     collections: [
         {
-            slug: "world",
+            slug: "parent",
             name: "parent",
             collection_type: "pages", // "template" | "pages"
             item_type: "mutli", // "mutli" | "single"
             pages: [],
             blocks: [],
             fields: [],
-            child_collections: [],
+            child_collections: [
+                {
+                    slug: "child_1",
+                    name: "child_1",
+                    collection_type: "pages",
+                    item_type: "mutli",
+                    pages: [],
+                    blocks: [],
+                    fields: [],
+                    child_collections: [],
+                },
+                {
+                    slug: "child_2",
+                    name: "child_2",
+                    collection_type: "pages",
+                    item_type: "mutli",
+                    pages: [],
+                    blocks: [],
+                    fields: [],
+                    child_collections: [],
+                },
+                {
+                    slug: "child_3",
+                    name: "child_3",
+                    collection_type: "pages",
+                    item_type: "mutli",
+                    pages: [],
+                    blocks: [],
+                    fields: [],
+                    child_collections: [],
+                },
+            ],
         },
-        {
-            slug: "hello",
-            name: "parent",
-            collection_type: "pages", // "template" | "pages"
-            item_type: "mutli", // "mutli" | "single"
-            pages: [],
-            blocks: [],
-            fields: [],
-            child_collections: [],
-        },
-        collection,
-        {
-            slug: "parent_1",
-            name: "parent_1",
-            collection_type: "pages", // "template" | "pages"
-            item_type: "mutli", // "mutli" | "single"
-            pages: [],
-            blocks: [],
-            fields: [],
-            child_collections: [],
-        },
+        ///
+        // collection,
     ],
 
     // Database

@@ -2,16 +2,31 @@ import { db } from "../../../server/server.js";
 import { collectionsTable } from "../../../db/schema/collections/schema.js";
 import { eq } from "drizzle-orm";
 
-export async function syncCollections(collections) {
+export function flatternCollection(acc, collections) {
+    for (let col of collections) {
+        acc.push(col);
+
+        if (col.child_collections.length > 0) {
+            flatternCollection(acc, col.child_collections);
+        }
+    }
+
+    return acc;
+}
+
+export async function syncCollections(nested_collection) {
     const response = [];
 
     // collections from db
     const dbCollections = await db.select().from(collectionsTable);
 
+    const collections = flatternCollection([], nested_collection);
+
+    console.log(collections, "collections");
+
     // comparing config with db for insert and update operations
     for (let config_col of collections) {
         let dbCol = dbCollections.find((col) => col.slug === config_col.slug);
-        console.log(dbCol, config_col, "dbCollections");
 
         if (dbCol) {
             // update: if any other data apart from `slug` is changed
