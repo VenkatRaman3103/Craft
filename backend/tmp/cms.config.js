@@ -51,6 +51,16 @@ export const cmsConfig = () => ({
                     fields: [],
                     child_collections: [],
                 },
+                {
+                    slug: "child_4",
+                    name: "child_4",
+                    collection_type: "pages",
+                    item_type: "mutli",
+                    pages: [],
+                    blocks: [],
+                    fields: [],
+                    child_collections: [],
+                },
             ],
         },
         ///
