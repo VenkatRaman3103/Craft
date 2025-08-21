@@ -8,6 +8,8 @@ export const config = new ConfigManager();
 // config.load_config();
 // console.log(config.read_config());
 
+// --- db ---
+
 // --- server ---
 if (import.meta.main) {
     const connection = new Connection();

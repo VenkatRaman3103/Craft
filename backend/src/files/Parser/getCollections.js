@@ -6,4 +6,4 @@ export const getCollections = () => {
     console.log(collections.collections);
 };
 
-getCollections();
+// getCollections();
