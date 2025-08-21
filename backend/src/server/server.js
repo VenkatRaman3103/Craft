@@ -1,23 +1,21 @@
 import express from "express";
 import cors from "cors";
 import dotenv from "dotenv";
-import { drizzle } from "drizzle-orm/node-postgres";
 import pg from "pg";
-
+import { drizzle } from "drizzle-orm/node-postgres";
 import * as schema from "../db/schema/index.js";
 
 dotenv.config();
 
-export const app = express();
+const app = express();
 app.use(cors());
 app.use(express.json());
 
 const { Pool } = pg;
+const pool = new Pool({ connectionString: process.env.DATABASE_URL });
+const db = drizzle(pool, { schema });
 
-export const pool = new Pool({ connectionString: process.env.DATABASE_URL });
-export const db = drizzle(pool, { schema });
-
-export class Connection {
+class Connection {
     constructor() {
         this.PORT = 5000;
     }
@@ -36,3 +34,5 @@ export class Connection {
             .catch((error) => console.error(`❌ Failed to connect: ${error}`));
     }
 }
+
+export { app, pool, db, Connection };
