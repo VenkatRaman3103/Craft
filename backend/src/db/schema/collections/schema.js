@@ -1,8 +1,8 @@
-import { pgTable, serial, text } from "drizzle-orm/pg-core";
+import { pgTable, text, uuid } from "drizzle-orm/pg-core";
 
 export const collections = pgTable("collections", {
-    id: serial("id").primaryKey(),
-    name: text("name"),
+    id: uuid("id").defaultRandom().primaryKey(),
+    name: text("name").notNull(),
     description: text("description"),
-    parent_collection_id: text("parent_collection_id"),
+    parentCollectionId: uuid("parent_collection_id"),
 });
