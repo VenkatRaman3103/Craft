@@ -191,9 +191,6 @@ export async function syncCollections(nested_collection) {
         }
     }
 
-    // update parent_collection_id for sub-collections
-    // const updatedSubCollections = await db.select().from(subCollectionsTable);
-
     for (let config_sub of subCollections) {
         const parent = updatedCollection.find(
             (col) => col.slug == config_sub.parent_collection_slug,
