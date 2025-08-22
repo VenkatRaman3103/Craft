@@ -4,7 +4,15 @@ export const makeRelations = (collections, parentSlug = null) => {
             return item.kind == "collections";
         });
 
-        console.log(subCollections);
+        for (let subCol of subCollections) {
+            subCol.parent_collection_slug = col.slug;
+
+            for (let item of subCol.items) {
+                item.parent_sub_collection_slug = subCol.slug;
+            }
+
+            makeRelations(subCol.items, subCol.slug);
+        }
     }
 
     return collections;

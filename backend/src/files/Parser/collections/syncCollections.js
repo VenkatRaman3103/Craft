@@ -36,7 +36,7 @@ export async function syncCollections(nested_collection) {
     const response = [];
 
     const serialized = makeRelations(nested_collection, "");
-    // console.log(JSON.stringify(serialized, null, 2), "serialized");
+    console.log(JSON.stringify(serialized, null, 2), "serialized");
 
     // collections from db
     const dbCollections = await db.select().from(collectionsTable);

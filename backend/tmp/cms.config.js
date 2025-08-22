@@ -29,11 +29,13 @@ export const cmsConfig = () => ({
                             slug: "item_1",
                             description: "description",
                             name: "item 1",
+                            elements: [],
                         },
                         {
                             slug: "item_2",
                             description: "description",
                             name: "item 2",
+                            elements: [],
                         },
                     ],
                 },
@@ -78,11 +80,13 @@ export const cmsConfig = () => ({
                             slug: "item_1",
                             description: "description",
                             name: "item 1",
+                            elements: [],
                         },
                         {
                             slug: "item_2",
                             description: "description",
                             name: "item 2",
+                            elements: [],
                         },
                     ],
                 },
@@ -108,8 +112,8 @@ export const cmsConfig = () => ({
                 },
             ],
         },
-        ///
-        // collection,
+        ////
+        // collections
     ],
 
     // Database
