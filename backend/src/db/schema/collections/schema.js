@@ -17,9 +17,18 @@ export const collectionsTable = pgTable(
     },
 );
 
-export const subCollectionsTable = pgTable("sub_collections", {
-    id: uuid("id").defaultRandom().primaryKey(),
-    name: text("name").notNull(),
-
-    slug: text("slug").notNull(),
-});
+export const subCollectionsTable = pgTable(
+    "sub_collections",
+    {
+        id: uuid("id").defaultRandom().primaryKey(),
+        name: text("name").notNull(),
+        slug: text("slug").notNull(),
+        parent_collection_slug: text("parent_collection_slug"),
+        parent_collection_id: uuid("parent_collection_id"),
+    },
+    (table) => {
+        return {
+            slugUnique: unique("sub_collections_slug_unique").on(table.slug),
+        };
+    },
+);

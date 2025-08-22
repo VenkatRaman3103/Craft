@@ -1,5 +1,8 @@
 import { db } from "../../../server/server.js";
-import { collectionsTable } from "../../../db/schema/collections/schema.js";
+import {
+    collectionsTable,
+    subCollectionsTable,
+} from "../../../db/schema/collections/schema.js";
 import { eq } from "drizzle-orm";
 import { makeRelations } from "../../Serializer/makeRelations.js";
 
@@ -19,6 +22,22 @@ export function flatternCollection(acc, arr) {
     return acc;
 }
 
+export const flatternSubCollection = (acc, arr) => {
+    for (let col of arr) {
+        if (col.elements) {
+            flatternSubCollection(
+                acc,
+                col.elements.filter((item) => item.kind == "collections"),
+            );
+        } else {
+            acc.push(col);
+            flatternSubCollection(acc, col.items);
+        }
+    }
+
+    return acc;
+};
+
 export const getCollectionId = async (slug) => {
     const collection = await db
         .select()
@@ -33,18 +52,19 @@ export async function syncCollections(nested_collection) {
 
     const serialized = makeRelations(nested_collection, "");
 
-    // collections from db
+    // collections
     const dbCollections = await db.select().from(collectionsTable);
-
     const collections = flatternCollection([], serialized);
-    console.log(collections, "serialized");
 
-    // comparing config with db for insert and update operations
+    // sub-collections
+    const dbSubCollections = await db.select().from(subCollectionsTable);
+    const subCollections = flatternSubCollection([], serialized);
+
+    // SYNC COLLECTIONS
     for (let config_col of collections) {
         let dbCol = dbCollections.find((col) => col.slug === config_col.slug);
 
         if (dbCol) {
-            // update: if any other data apart from `slug` is changed
             if (
                 config_col.name != dbCol.name ||
                 config_col.description != dbCol.description ||
@@ -60,60 +80,49 @@ export async function syncCollections(nested_collection) {
                     .where(eq(collectionsTable.slug, config_col.slug))
                     .returning();
 
-                const update_message = {
+                response.push({
                     update: {
                         collection: dbCol.slug,
-                        reponse: update_response[0],
+                        response: update_response[0],
                     },
-                };
-
-                response.push(update_message);
+                });
             }
-        }
-        // insert: if collection from config is not in db
-        else {
+        } else {
             const insert_response = await db
                 .insert(collectionsTable)
                 .values({
                     slug: config_col.slug,
                     name: config_col.name,
-                    collection_type: config_col.collection_type,
-                    item_type: config_col.item_type,
+                    description: config_col.description,
                 })
                 .onConflictDoNothing({ target: collectionsTable.slug })
                 .returning();
 
-            const insert_message = {
+            response.push({
                 insert: {
                     collection: config_col.slug,
-                    reponse: insert_response[0],
+                    response: insert_response[0],
                 },
-            };
-
-            response.push(insert_message);
+            });
         }
     }
 
-    // updating parent collection id
+    // update parent_collection_id for collections
     const updatedCollection = await db.select().from(collectionsTable);
-
     for (let config_col of collections) {
         const parent = updatedCollection.find(
             (updated_col) =>
                 updated_col.slug == config_col.parent_collection_slug,
         );
-
         if (parent) {
             await db
                 .update(collectionsTable)
-                .set({
-                    parent_collection_id: parent.id,
-                })
+                .set({ parent_collection_id: parent.id })
                 .where(eq(collectionsTable.slug, config_col.slug));
         }
     }
 
-    // comparing db with config for delete operations
+    // delete collections not in config
     for (let dbCol of dbCollections) {
         const exists = collections.find((col) => col.slug === dbCol.slug);
         if (!exists) {
@@ -122,14 +131,96 @@ export async function syncCollections(nested_collection) {
                 .where(eq(collectionsTable.slug, dbCol.slug))
                 .returning();
 
-            const delete_message = {
+            response.push({
                 delete: {
                     collection: dbCol.slug,
-                    reponse: delete_response[0],
+                    response: delete_response[0],
                 },
-            };
+            });
+        }
+    }
 
-            response.push(delete_message);
+    // SYNC SUB-COLLECTIONS
+    for (let config_sub of subCollections) {
+        let dbSub = dbSubCollections.find(
+            (sub) => sub.slug === config_sub.slug,
+        );
+
+        if (dbSub) {
+            if (
+                config_sub.name != dbSub.name ||
+                config_sub.slug != dbSub.slug ||
+                config_sub.parent_collection_slug !=
+                    dbSub.parent_collection_slug
+            ) {
+                const update_response = await db
+                    .update(subCollectionsTable)
+                    .set({
+                        name: config_sub.name,
+                        slug: config_sub.slug,
+                        parent_collection_slug:
+                            config_sub.parent_collection_slug,
+                    })
+                    .where(eq(subCollectionsTable.slug, config_sub.slug))
+                    .returning();
+
+                response.push({
+                    update: {
+                        subCollection: dbSub.slug,
+                        response: update_response[0],
+                    },
+                });
+            }
+        } else {
+            const insert_response = await db
+                .insert(subCollectionsTable)
+                .values({
+                    slug: config_sub.slug,
+                    name: config_sub.name,
+                    parent_collection_slug: config_sub.parent_collection_slug,
+                })
+                .onConflictDoNothing({ target: subCollectionsTable.slug })
+                .returning();
+
+            response.push({
+                insert: {
+                    subCollection: config_sub.slug,
+                    response: insert_response[0],
+                },
+            });
+        }
+    }
+
+    // update parent_collection_id for sub-collections
+    // const updatedSubCollections = await db.select().from(subCollectionsTable);
+
+    for (let config_sub of subCollections) {
+        const parent = updatedCollection.find(
+            (col) => col.slug == config_sub.parent_collection_slug,
+        );
+        if (parent) {
+            await db
+                .update(subCollectionsTable)
+                .set({ parent_collection_id: parent.id })
+                .where(eq(subCollectionsTable.slug, config_sub.slug));
+        }
+    }
+
+    // delete sub-collections not in config
+    for (let dbSub of dbSubCollections) {
+        const exists = subCollections.find((sub) => sub.slug === dbSub.slug);
+        if (!exists) {
+            const delete_response = await db
+                .delete(subCollectionsTable)
+                .where(eq(subCollectionsTable.slug, dbSub.slug))
+                .returning();
+
+            response.push({
+                delete: {
+                    subCollection: dbSub.slug,
+                    response: delete_response[0],
+                },
+            });
         }
     }
 

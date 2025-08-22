@@ -38,7 +38,7 @@ export class ConfigManager {
 
             console.log("Config file created");
         } else {
-            console.log("Config file exists", fs.existsSync(this.config_path));
+            console.log("Config file exists");
         }
     }
 

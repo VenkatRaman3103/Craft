@@ -15,31 +15,57 @@ export const cmsConfig = () => ({
             name: "a",
             elements: [
                 {
-                    slug: "collection",
-                    name: "collection a",
+                    slug: "1",
+                    name: "1",
                     kind: "collections",
                     items: [
                         {
-                            slug: "col_1_a",
-                            name: "col 1 a",
+                            slug: "1_1",
+                            name: "1_1",
                             elements: [],
                         },
+
                         {
-                            slug: "col_2_a",
-                            name: "col 2 a",
+                            slug: "1_2",
+                            name: "1_2",
                             elements: [],
                         },
                     ],
                 },
 
                 {
-                    slug: "some",
-                    name: "some a",
+                    slug: "2",
+                    name: "2",
                     kind: "collections",
                     items: [
                         {
-                            slug: "some_1_a",
-                            name: "some 1 a",
+                            slug: "2_1",
+                            name: "2_1",
+                            elements: [],
+                        },
+                    ],
+                },
+            ],
+        },
+
+        {
+            slug: "b",
+            name: "b",
+            elements: [
+                {
+                    slug: "4",
+                    name: "4",
+                    kind: "collections",
+                    items: [
+                        {
+                            slug: "4_1",
+                            name: "4_1",
+                            elements: [],
+                        },
+
+                        {
+                            slug: "4_2",
+                            name: "4_2",
                             elements: [],
                         },
                     ],
@@ -47,7 +73,6 @@ export const cmsConfig = () => ({
             ],
         },
     ],
-    /////
 
     // Database
     database: {
