@@ -33,7 +33,52 @@ export default cmsConfig({
     },
 
     // Content Collections
-    collections: [],
+    collections: [
+        {
+            slug: "parent",
+            name: "parent",
+            collection_type: "pages",
+            pages_type: "mutli",
+            blocks_type: "mutli",
+            fields_type: "mutli",
+            sub_collections: "mutli",
+            pages: [],
+            blocks: [],
+            fields: [],
+            sub_collections: [
+                {
+                    slug: "child_1",
+                    name: "child_1",
+                    collection_type: "pages",
+                    item_type: "mutli",
+                    pages: [],
+                    blocks: [],
+                    fields: [],
+                    sub_collections: [],
+                },
+                {
+                    slug: "child_2",
+                    name: "child_2",
+                    collection_type: "pages",
+                    item_type: "mutli",
+                    pages: [],
+                    blocks: [],
+                    fields: [],
+                    sub_collections: [],
+                },
+                {
+                    slug: "child_3",
+                    name: "child_3",
+                    collection_type: "pages",
+                    item_type: "mutli",
+                    pages: [],
+                    blocks: [],
+                    fields: [],
+                    sub_collections: [],
+                },
+            ],
+        },
+    ],
 
     // Singletons / Unique Pages
     singletons: [

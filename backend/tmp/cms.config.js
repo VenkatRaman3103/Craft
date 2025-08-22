@@ -1,5 +1,3 @@
-import { collection } from "./ParentCollection/collection.js";
-
 export const cmsConfig = () => ({
     // Admin Panel / UI Settings
     adminPanel: {
@@ -15,12 +13,12 @@ export const cmsConfig = () => ({
         {
             slug: "parent",
             name: "parent",
-            collection_type: "pages", // "template" | "pages"
-            item_type: "mutli", // "mutli" | "single"
+            collection_type: "pages",
+            item_type: "mutli",
             pages: [],
             blocks: [],
             fields: [],
-            child_collections: [
+            sub_collections: [
                 {
                     slug: "child_1",
                     name: "child_1",
@@ -29,7 +27,7 @@ export const cmsConfig = () => ({
                     pages: [],
                     blocks: [],
                     fields: [],
-                    child_collections: [],
+                    sub_collections: [],
                 },
                 {
                     slug: "child_2",
@@ -39,7 +37,7 @@ export const cmsConfig = () => ({
                     pages: [],
                     blocks: [],
                     fields: [],
-                    child_collections: [],
+                    sub_collections: [],
                 },
                 {
                     slug: "child_3",
@@ -49,17 +47,28 @@ export const cmsConfig = () => ({
                     pages: [],
                     blocks: [],
                     fields: [],
-                    child_collections: [],
+                    sub_collections: [],
                 },
+            ],
+        },
+        {
+            slug: "parent_1",
+            name: "parent",
+            collection_type: "pages",
+            item_type: "mutli",
+            pages: [],
+            blocks: [],
+            fields: [],
+            sub_collections: [
                 {
-                    slug: "child_4",
-                    name: "child_4",
+                    slug: "child_a",
+                    name: "hello",
                     collection_type: "pages",
                     item_type: "mutli",
                     pages: [],
                     blocks: [],
                     fields: [],
-                    child_collections: [],
+                    sub_collections: [],
                 },
             ],
         },

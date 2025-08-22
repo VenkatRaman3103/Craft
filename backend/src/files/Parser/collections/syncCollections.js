@@ -7,8 +7,8 @@ export function flatternCollection(acc, collections) {
     for (let col of collections) {
         acc.push(col);
 
-        if (col.child_collections.length > 0) {
-            flatternCollection(acc, col.child_collections);
+        if (col.sub_collections.length > 0) {
+            flatternCollection(acc, col.sub_collections);
         }
     }
 

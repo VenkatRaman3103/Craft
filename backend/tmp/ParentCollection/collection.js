@@ -8,5 +8,5 @@ export const collection = {
     pages: [Page],
     blocks: [],
     fields: [],
-    child_collections: [],
+    sub_collections: [],
 };

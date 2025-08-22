@@ -6,8 +6,8 @@ export const makeRelations = (collections, parentSlug = null) => {
             col.parent_collection_slug = null;
         }
 
-        if (col.child_collections.length > 0) {
-            makeRelations(col.child_collections, col.slug);
+        if (col.sub_collections.length > 0) {
+            makeRelations(col.sub_collections, col.slug);
         }
     }
 
