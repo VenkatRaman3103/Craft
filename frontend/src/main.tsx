@@ -3,8 +3,9 @@ import "./index.css";
 import { BrowserRouter, Route, Routes } from "react-router";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { Provider } from "react-redux";
-import { Collections } from "./components/Collection";
+// import { Collections } from "./components/Collection";
 import { store } from "./store";
+import { RootCollections } from "./pages/RootCollections";
 
 const rootElement = document.getElementById("root");
 
@@ -21,7 +22,7 @@ createRoot(rootElement).render(
         <Provider store={store}>
             <QueryClientProvider client={queryClient}>
                 <Routes>
-                    <Route path="/collections" element={<Collections />} />
+                    <Route path="/collections" element={<RootCollections />} />
                 </Routes>
             </QueryClientProvider>
         </Provider>
