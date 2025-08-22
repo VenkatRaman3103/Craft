@@ -1,17 +1,21 @@
 export const makeRelations = (collections, parentSlug = null) => {
     for (let col of collections) {
-        const subCollections = col.elements.filter((item) => {
-            return item.kind == "collections";
-        });
+        const children = col.elements || col.items || [];
+
+        const subCollections = children.filter(
+            (item) => item.kind === "collections",
+        );
 
         for (let subCol of subCollections) {
             subCol.parent_collection_slug = col.slug;
 
-            for (let item of subCol.items) {
+            const subChildren = subCol.elements || subCol.items || [];
+            for (let item of subChildren) {
                 item.parent_sub_collection_slug = subCol.slug;
+                item.parent_collection_slug = col.slug;
             }
 
-            makeRelations(subCol.items, subCol.slug);
+            makeRelations(subChildren, subCol.slug);
         }
     }
 

@@ -11,110 +11,43 @@ export const cmsConfig = () => ({
     // Collections
     collections: [
         {
-            slug: "parent",
-            name: "parent",
-            description: "description",
+            slug: "a",
+            name: "a",
             elements: [
                 {
-                    slug: "page_1",
-                    name: "Page 1",
-                    kind: "pages",
-                },
-                {
-                    slug: "collection_1",
-                    name: "collection_1",
+                    slug: "collection",
+                    name: "collection a",
                     kind: "collections",
                     items: [
                         {
-                            slug: "item_1",
-                            description: "description",
-                            name: "item 1",
+                            slug: "col_1_a",
+                            name: "col 1 a",
                             elements: [],
                         },
                         {
-                            slug: "item_2",
-                            description: "description",
-                            name: "item 2",
+                            slug: "col_2_a",
+                            name: "col 2 a",
                             elements: [],
                         },
                     ],
                 },
+
                 {
-                    slug: "block_1",
-                    name: "block 1",
-                    kind: "blocks",
-                },
-                {
-                    slug: "field_1",
-                    name: "field 1",
-                    kind: "fields",
-                },
-                {
-                    slug: "variable_1",
-                    name: "variable 1",
-                    kind: "variables",
-                },
-                {
-                    slug: "media_1",
-                    name: "media 1",
-                    kind: "media",
-                },
-            ],
-        },
-        {
-            slug: "parent_1",
-            name: "parent",
-            description: "description",
-            elements: [
-                {
-                    slug: "page_1",
-                    name: "Page 1",
-                    kind: "pages",
-                },
-                {
-                    slug: "collection_1",
-                    name: "sub_collection_1",
+                    slug: "some",
+                    name: "some a",
                     kind: "collections",
                     items: [
                         {
-                            slug: "item_1",
-                            description: "description",
-                            name: "item 1",
-                            elements: [],
-                        },
-                        {
-                            slug: "item_2",
-                            description: "description",
-                            name: "item 2",
+                            slug: "some_1_a",
+                            name: "some 1 a",
                             elements: [],
                         },
                     ],
                 },
-                {
-                    slug: "block_1",
-                    name: "block 1",
-                    kind: "blocks",
-                },
-                {
-                    slug: "field_1",
-                    name: "field 1",
-                    kind: "fields",
-                },
-                {
-                    slug: "variable_1",
-                    name: "variable 1",
-                    kind: "variables",
-                },
-                {
-                    slug: "media_1",
-                    name: "media 1",
-                    kind: "media",
-                },
             ],
         },
-        ////
-        // collections
     ],
+    /////
 
     // Database
     database: {
