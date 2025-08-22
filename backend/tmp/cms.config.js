@@ -1,3 +1,5 @@
+import { variable } from "./variable.js";
+
 export const cmsConfig = () => ({
     // Admin Panel / UI Settings
     adminPanel: {
@@ -47,7 +49,7 @@ export const cmsConfig = () => ({
                 },
             ],
         },
-
+        { ...variable },
         {
             slug: "b",
             name: "b",
@@ -61,12 +63,31 @@ export const cmsConfig = () => ({
                             slug: "4_1",
                             name: "4_1",
                             elements: [],
+                            admin: function some(data) {
+                                console.log(data);
+                            },
                         },
 
                         {
                             slug: "4_2",
                             name: "4_2",
                             elements: [],
+                        },
+                    ],
+                },
+                {
+                    slug: "5",
+                    name: "5",
+                    kind: "pages",
+                    items: [
+                        {
+                            slug: "5_1",
+                            name: "5_1",
+                        },
+
+                        {
+                            slug: "5_1",
+                            name: "5_1",
                         },
                     ],
                 },
