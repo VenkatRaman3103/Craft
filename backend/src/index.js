@@ -3,7 +3,10 @@ import { Connection } from "./server/server.js";
 import { ConfigManager } from "./files/ConfigManager/index.js";
 import { initialize } from "./files/Parser/initialize.js";
 
-// --- file ---
+import { fileURLToPath } from "url";
+// import { dirname } from "path";
+
+// --- config ---
 export const config = new ConfigManager();
 // config.log();
 // config.load_config();
@@ -11,10 +14,11 @@ export const config = new ConfigManager();
 
 initialize();
 
-// --- db ---
-
 // --- server ---
-if (import.meta.main) {
+const __filename = fileURLToPath(import.meta.url);
+// const __dirname = dirname(__filename);
+
+if (process.argv[1] === __filename) {
     const connection = new Connection();
     connection.server();
     connection.database();
