@@ -9,8 +9,6 @@ export const collectionsTable = pgTable(
         parent_collection_id: uuid("parent_collection_id"),
 
         slug: text("slug").notNull(),
-        collection_type: text("collection_type").notNull(),
-        item_type: text("item_type").notNull(),
     },
     (table) => {
         return {
@@ -18,3 +16,10 @@ export const collectionsTable = pgTable(
         };
     },
 );
+
+export const subCollectionsTable = pgTable("sub_collections", {
+    id: uuid("id").defaultRandom().primaryKey(),
+    name: text("name").notNull(),
+
+    slug: text("slug").notNull(),
+});

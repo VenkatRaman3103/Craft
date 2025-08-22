@@ -3,12 +3,20 @@ import { collectionsTable } from "../../../db/schema/collections/schema.js";
 import { eq } from "drizzle-orm";
 import { makeRelations } from "../../Serializer/makeRelations.js";
 
+// export const getSubCollections =  () => {
+//
+// };
+
 export function flatternCollection(acc, collections) {
     for (let col of collections) {
         acc.push(col);
 
-        if (col.sub_collections.length > 0) {
-            flatternCollection(acc, col.sub_collections);
+        const subCollections = col.elements.filter((item) => {
+            item.kind == "collections";
+        });
+
+        if (subCollections.length > 0) {
+            flatternCollection(acc, subCollections);
         }
     }
 
@@ -28,6 +36,7 @@ export async function syncCollections(nested_collection) {
     const response = [];
 
     const serialized = makeRelations(nested_collection, "");
+    // console.log(JSON.stringify(serialized, null, 2), "serialized");
 
     // collections from db
     const dbCollections = await db.select().from(collectionsTable);
@@ -43,9 +52,7 @@ export async function syncCollections(nested_collection) {
             if (
                 config_col.name != dbCol.name ||
                 config_col.description != dbCol.description ||
-                config_col.slug != dbCol.slug ||
-                config_col.collection_type != dbCol.collection_type ||
-                config_col.item_type != dbCol.item_type
+                config_col.slug != dbCol.slug
             ) {
                 const update_response = await db
                     .update(collectionsTable)

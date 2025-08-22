@@ -1,14 +1,10 @@
 export const makeRelations = (collections, parentSlug = null) => {
     for (let col of collections) {
-        if (parentSlug) {
-            col.parent_collection_slug = parentSlug;
-        } else {
-            col.parent_collection_slug = null;
-        }
+        const subCollections = col.elements.filter((item) => {
+            return item.kind == "collections";
+        });
 
-        if (col.sub_collections.length > 0) {
-            makeRelations(col.sub_collections, col.slug);
-        }
+        console.log(subCollections);
     }
 
     return collections;
