@@ -47,8 +47,8 @@ export const CollectionPreview = ({ collection }: collectionType) => {
     return (
         <div className="collection-preview">
             <h2 className="collection-heading">{name}</h2>
-            <p>
-                slug: <span className="collection-slug">{slug}</span>
+            <p className="collection-slug">
+                slug: <span>{slug}</span>
             </p>
         </div>
     );

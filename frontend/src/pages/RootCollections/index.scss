@@ -1,4 +1,4 @@
-$collection-preview-height: 150px;
+$collection-preview-height: 145px;
 $collection-preview-width: 100%;
 $collection-preview-bg: var(--primary-color);
 
@@ -52,12 +52,16 @@ $collection-preview-bg: var(--primary-color);
     color: var(--secondary-font-color);
 
     .collection-heading {
-        transition: all 100ms ease-in-out;
+        font-size: 22px;
+        font-weight: 500;
 
+        transition: all 100ms ease-in-out;
         color: var(--primary-font-color);
+        margin-bottom: 2px;
     }
 
     .collection-slug {
+        font-size: 15px;
         color: var(--secondary-font-color);
     }
 
@@ -65,9 +69,14 @@ $collection-preview-bg: var(--primary-color);
         border: 1.5px solid var(--hover-border-border);
         box-shadow: rgba(0, 0, 0, 0.3) 0px 0px 10px 5px;
 
-        .collection-heading,
-        .collection-slug {
+        .collection-heading {
             color: white;
+        }
+
+        .collection-slug {
+            span {
+                color: white;
+            }
         }
     }
 }
