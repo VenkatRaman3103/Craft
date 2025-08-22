@@ -15,8 +15,8 @@ export const RootCollections = () => {
     return (
         <Layout>
             <div className="root-collection-page">
-                <h1>Heading</h1>
-                <p>
+                <h1 className="collection-group-heading">Heading</h1>
+                <p className="collection-group-description">
                     Lorem ipsum dolor sit amet consectetur, adipisicing elit.
                     Provident accusamus dolorem eligendi odio, pariatur, sed,
                     beatae similique magni necessitatibus id saepe ullam eius

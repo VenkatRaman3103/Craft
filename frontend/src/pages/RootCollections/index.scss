@@ -7,15 +7,29 @@ $collection-preview-bg: var(--primary-color);
     flex-direction: column;
     align-items: center;
 
+
     .content {
+        margin-top: 50px;
         width: var(--cotent-width);
     }
+
 }
 
 .root-collection-page {
     display: flex;
     flex-direction: column;
     gap: 30px;
+
+    /* color: var(--primary-font-color); */
+    /* color: var(--secondary-font-color); */
+
+    .collection-group-heading {
+        color: white;
+    }
+
+    .collection-group-description {
+        color: var(--secondary-font-color);
+    }
 }
 
 .collection-grid {
@@ -35,11 +49,16 @@ $collection-preview-bg: var(--primary-color);
     border: 1.5px solid var(--idle-border-border);
     transition: all 100ms ease-in-out;
 
-    color: var(--primary-font-color);
+    color: var(--secondary-font-color);
 
-    .collection-heading .collection-slug {
+    .collection-heading {
         transition: all 100ms ease-in-out;
+
         color: var(--primary-font-color);
+    }
+
+    .collection-slug {
+        color: var(--secondary-font-color);
     }
 
     &:hover {
