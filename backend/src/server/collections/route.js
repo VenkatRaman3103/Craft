@@ -4,12 +4,13 @@ import { collectionsTable } from "../../db/schema/index.js";
 
 export const collectionsRouter = express.Router();
 
+// get all root collections
 collectionsRouter.get("/collections/root", async (req, res) => {
     try {
-        const allCollections = await db.select().from(collectionsTable);
+        const allRootCollections = await db.select().from(collectionsTable);
         // const allSubCollections = await db.select().from(subCollectionsTable);
 
-        const rootCollections = allCollections.filter(
+        const rootCollections = allRootCollections.filter(
             (col) => col.parent_collection_id == null,
         );
 
@@ -18,4 +19,9 @@ collectionsRouter.get("/collections/root", async (req, res) => {
         console.error(err);
         res.status(500).json({ error: "Failed to fetch collections" });
     }
+});
+
+// get sub collections based on the collection id
+collectionsRouter.get("/collections/:collectionId", async (req, res) => {
+    //
 });

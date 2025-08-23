@@ -221,5 +221,44 @@ export async function syncCollections(nested_collection) {
         }
     }
 
+    const tem_collections = flatternCollection([], serialized);
+
+    for (let col of tem_collections) {
+        if (col.parent_sub_collection_slug) {
+            const { id: subCollectionId } = dbSubCollections.find(
+                (item) => item.slug == col.parent_sub_collection_slug,
+            );
+
+            await db
+                .update(collectionsTable)
+                .set({
+                    sub_collection_id: subCollectionId,
+                })
+                .where(eq(collectionsTable.slug, col.slug));
+
+            console.log(
+                col.parent_sub_collection_slug,
+                subCollectionId,
+                "subCollectionId",
+            );
+        }
+    }
+
+    // // update parent_collection_id for sub-collections
+    // const updatedCollections = await db.select().from(collectionsTable);
+    //
+    // for (let config_sub of subCollections) {
+    //     const parent = updatedCollections.find(
+    //         (col) => col.slug === config_sub.parent_collection_slug,
+    //     );
+    //
+    //     if (parent) {
+    //         await db
+    //             .update(subCollectionsTable)
+    //             .set({ parent_collection_id: parent.id })
+    //             .where(eq(subCollectionsTable.slug, config_sub.slug));
+    //     }
+    // }
+
     return response;
 }

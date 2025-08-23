@@ -1,4 +1,3 @@
-import { relations } from "drizzle-orm";
 import { pgTable, text, uuid, unique } from "drizzle-orm/pg-core";
 
 // Collections
@@ -9,6 +8,7 @@ export const collectionsTable = pgTable(
         name: text("name").notNull(),
         description: text("description"),
         parent_collection_id: uuid("parent_collection_id"),
+        sub_collection_id: uuid("sub_collection_id"),
         slug: text("slug").notNull(),
     },
     (table) => {
@@ -27,6 +27,7 @@ export const subCollectionsTable = pgTable(
         slug: text("slug").notNull(),
         parent_collection_slug: text("parent_collection_slug"),
         parent_collection_id: uuid("parent_collection_id"),
+        // references collectionsTable.id
     },
     (table) => {
         return {
