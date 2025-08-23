@@ -6,6 +6,9 @@ import { Provider } from "react-redux";
 // import { Collections } from "./components/Collection";
 import { store } from "./store";
 import { RootCollections } from "./pages/RootCollections";
+import { Collections } from "./pages/Collections";
+
+import "@/styles/global.scss";
 
 const rootElement = document.getElementById("root");
 
@@ -23,6 +26,10 @@ createRoot(rootElement).render(
             <QueryClientProvider client={queryClient}>
                 <Routes>
                     <Route path="/collections" element={<RootCollections />} />
+                    <Route
+                        path="/collections/:collection_slug"
+                        element={<Collections />}
+                    />
                 </Routes>
             </QueryClientProvider>
         </Provider>
