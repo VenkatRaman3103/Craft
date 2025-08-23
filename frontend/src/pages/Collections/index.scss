@@ -1,0 +1,52 @@
+.collection-page {
+    display: flex;
+    flex-direction: column;
+    gap: 30px;
+
+    .collection-heading {
+        color: white;
+    }
+
+    .collection-description {
+        color: var(--secondary-font-color);
+    }
+
+    .collection-slug {
+        color: var(--secondary-font-color);
+
+        span {
+            color: white;
+        }
+    }
+
+    .elements-tabs {
+        width: 100%;
+        display: flex;
+        align-items: center;
+
+        gap: 30px;
+
+        .tab {
+            color: var(--secondary-font-color);
+            cursor: pointer;
+
+            position: relative;
+
+            &.active {
+                color: white;
+
+                &::after {
+                    content: "";
+                    height: 3px;
+                    width: 100%;
+                    background-color: white;
+                    position: absolute;
+                    bottom: -12px;
+                    left: 0;
+                }
+            }
+
+        }
+    }
+
+}

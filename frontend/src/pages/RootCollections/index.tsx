@@ -2,6 +2,7 @@ import { getRootCollections } from "@/api/collections/getRootCollections";
 import { useQuery } from "@tanstack/react-query";
 import { Layout } from "./layout";
 import "./index.scss";
+import { CollectionPreview } from "@/components/CollectionPreview";
 
 export const RootCollections = () => {
     const { data: rootCollections } = useQuery({
@@ -33,23 +34,3 @@ export const RootCollections = () => {
 };
 
 /// components
-
-type collectionType = {
-    collection: {
-        name: string;
-        slug: string;
-    };
-};
-
-export const CollectionPreview = ({ collection }: collectionType) => {
-    const { name, slug } = collection;
-
-    return (
-        <div className="collection-preview">
-            <h2 className="collection-heading">{name}</h2>
-            <p className="collection-slug">
-                slug: <span>{slug}</span>
-            </p>
-        </div>
-    );
-};
