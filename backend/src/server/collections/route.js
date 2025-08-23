@@ -1,6 +1,7 @@
 import express from "express";
 import { db } from "../server.js";
 import { collectionsTable } from "../../db/schema/index.js";
+import { subCollectionsTable } from "../../db/schema/index.js";
 
 export const collectionsRouter = express.Router();
 
@@ -22,6 +23,40 @@ collectionsRouter.get("/collections/root", async (req, res) => {
 });
 
 // get sub collections based on the collection id
-collectionsRouter.get("/collections/:collectionId", async (req, res) => {
-    //
+collectionsRouter.get("/collections/:collection_slug", async (req, res) => {
+    const { collection_slug } = req.params;
+
+    try {
+        let result = {};
+
+        const collection = await db.query.collectionsTable.findFirst({
+            where: (collectionsTable, { eq }) =>
+                eq(collectionsTable.slug, collection_slug),
+        });
+
+        result = { ...collection };
+
+        const allSubCollections = await db.query.subCollectionsTable.findMany({
+            where: (subCollectionsTable, { eq }) =>
+                eq(subCollectionsTable.parent_collection_id, collection.id),
+        });
+
+        const temp = [];
+
+        for (let subCol of allSubCollections) {
+            const c = await db.query.collectionsTable.findMany({
+                where: (collectionsTable, { eq }) =>
+                    eq(collectionsTable.sub_collection_id, subCol.id),
+            });
+
+            temp.push({ ...subCol, kind: "collections", collections: c });
+        }
+
+        result.elements = [...temp];
+
+        res.json(result);
+    } catch (err) {
+        console.error(err);
+        res.status(500).json({ error: "Failed to fetch collections" });
+    }
 });
