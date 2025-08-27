@@ -4,6 +4,6 @@ export const pagesTable = pgTable("pages", {
     id: uuid("id").defaultRandom().primaryKey(),
     name: text("name").notNull(),
     description: text("description"),
-    sub_collection_id: uuid("sub_collection_id"),
+    sub_page_id: uuid("sub_page_id"),
     slug: text("slug").notNull(),
 });

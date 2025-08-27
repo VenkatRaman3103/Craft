@@ -35,3 +35,20 @@ export const subCollectionsTable = pgTable(
         };
     },
 );
+
+// sub pages
+export const subPagesTable = pgTable(
+    "sub_pages",
+    {
+        id: uuid("id").defaultRandom().primaryKey(),
+        name: text("name").notNull(),
+        slug: text("slug").notNull(),
+        parent_collection_slug: text("parent_collection_slug"),
+        parent_collection_id: uuid("parent_collection_id"),
+    },
+    (table) => {
+        return {
+            slugUnique: unique("sub_pages_slug_unique").on(table.slug),
+        };
+    },
+);
