@@ -37,6 +37,8 @@ export const Collections = () => {
         return <div></div>;
     }
 
+    console.log(collectionData, "collectionData");
+
     return (
         <Layout>
             <div className="collection-page">
@@ -49,7 +51,7 @@ export const Collections = () => {
                 </p>
 
                 <div className="elements-tabs">
-                    {collectionData.elements.map(
+                    {collectionData?.elements?.map(
                         (element: any, ind: number) => {
                             return (
                                 <div
@@ -62,12 +64,13 @@ export const Collections = () => {
                         },
                     )}
                 </div>
+
                 {/* TODO: add search bar, filters and columns*/}
                 <div></div>
 
                 <div className="elements-contenr">
                     {renderElementContent(
-                        collectionData.elements[activeElement].kind,
+                        collectionData?.elements[activeElement]?.kind,
                     )}
                 </div>
             </div>

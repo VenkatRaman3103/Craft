@@ -32,3 +32,5 @@ const apiForArr = {
         }
     ]
 }
+
+export const helloWorld = ''
