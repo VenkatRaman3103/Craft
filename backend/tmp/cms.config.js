@@ -14,17 +14,32 @@ export const cmsConfig = () => ({
     collections: [
         {
             slug: "a",
-            name: "a",
+            name: "Heading",
+            description:
+                "Lorem ipsum dolor sit amet, consectetur adipiscing elit, labore et dolore magna aliqua. quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat",
             elements: [
                 {
                     slug: "1",
-                    name: "1",
+                    name: "pages",
                     kind: "collections",
                     items: [
                         {
                             slug: "1_1",
                             name: "1_1",
-                            elements: [],
+                            elements: [
+                                {
+                                    slug: "1_1_1",
+                                    name: "1_1_1",
+                                    kind: "collections",
+                                    items: [],
+                                },
+                                {
+                                    slug: "1_1_2",
+                                    name: "1_1_1",
+                                    kind: "collections",
+                                    items: [],
+                                },
+                            ],
                         },
 
                         {
@@ -37,7 +52,7 @@ export const cmsConfig = () => ({
 
                 {
                     slug: "2",
-                    name: "2",
+                    name: "products",
                     kind: "collections",
                     items: [
                         {
