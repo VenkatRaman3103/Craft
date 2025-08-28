@@ -13,7 +13,7 @@ export const cmsConfig = () => ({
     collections: [
         {
             slug: "collection_test",
-            name: "collection name",
+            name: "collection new",
             description: "collection description",
             elements: [
                 {
