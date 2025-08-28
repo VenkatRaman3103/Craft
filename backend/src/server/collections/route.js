@@ -46,7 +46,7 @@ collectionsRouter.get("/collections/:collection_slug", async (req, res) => {
         for (let subCol of allSubCollections) {
             const c = await db.query.collectionsTable.findMany({
                 where: (collectionsTable, { eq }) =>
-                    eq(collectionsTable.sub_collection_id, subCol.id),
+                    eq(collectionsTable.sub_table_id, subCol.id),
             });
 
             temp.push({ ...subCol, kind: "collections", collections: c });

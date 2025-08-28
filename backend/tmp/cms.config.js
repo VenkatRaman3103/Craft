@@ -1,5 +1,3 @@
-import { variable } from "./variable.js";
-
 export const cmsConfig = () => ({
     // Admin Panel / UI Settings
     adminPanel: {
@@ -10,135 +8,71 @@ export const cmsConfig = () => ({
         accessControl: true,
     },
 
+    //////
     // Collections
     collections: [
         {
-            slug: "a",
-            name: "Heading",
-            description:
-                "Lorem ipsum dolor sit amet, consectetur adipiscing elit, labore et dolore magna aliqua. quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat",
+            slug: "collection_test",
+            name: "collection name",
+            description: "collection description",
             elements: [
                 {
-                    slug: "1",
+                    slug: "pages",
                     name: "pages",
-                    kind: "collections",
-                    items: [
-                        {
-                            slug: "1_1",
-                            name: "1_1",
-                            elements: [
-                                {
-                                    slug: "1_1_1",
-                                    name: "1_1_1",
-                                    kind: "collections",
-                                    items: [],
-                                },
-                                {
-                                    slug: "1_1_2",
-                                    name: "1_1_1",
-                                    kind: "collections",
-                                    items: [],
-                                },
-                            ],
-                        },
-
-                        {
-                            slug: "1_2",
-                            name: "1_2",
-                            elements: [],
-                        },
-                    ],
-                },
-
-                {
-                    slug: "2",
-                    name: "products",
-                    kind: "collections",
-                    items: [
-                        {
-                            slug: "2_1",
-                            name: "2_1",
-                            elements: [],
-                        },
-                    ],
-                },
-            ],
-        },
-        { ...variable },
-        {
-            slug: "b",
-            name: "b",
-            elements: [
-                {
-                    slug: "4",
-                    name: "4",
-                    kind: "collections",
-                    items: [
-                        {
-                            slug: "4_1",
-                            name: "4_1",
-                            elements: [],
-                            admin: function some(data) {
-                                console.log(data);
-                            },
-                        },
-
-                        {
-                            slug: "4_2",
-                            name: "4_2",
-                            elements: [],
-                        },
-                    ],
-                },
-                {
-                    slug: "5",
-                    name: "5",
                     kind: "pages",
                     items: [
                         {
-                            slug: "5_1",
-                            name: "5_1",
+                            slug: "page_1",
+                            name: "Page 1",
+                            elements: [],
                         },
-
                         {
-                            slug: "5_1",
-                            name: "5_1",
+                            slug: "page_2",
+                            name: "Page 2",
+                            elements: [],
+                        },
+                        {
+                            slug: "page_3",
+                            name: "Page 3",
+                            elements: [],
+                        },
+                        {
+                            slug: "page_4",
+                            name: "foo",
+                            elements: [],
+                        },
+                        {
+                            slug: "page_5",
+                            name: "bar",
+                            elements: [],
+                        },
+                    ],
+                },
+                {
+                    slug: "collections",
+                    name: "collections",
+                    kind: "collections",
+                    items: [
+                        {
+                            slug: "collection_1",
+                            name: "Collection 1",
+                            elements: [],
+                        },
+                        {
+                            slug: "collection_2",
+                            name: "Collection 2",
+                            elements: [],
+                        },
+                        {
+                            slug: "collection_3",
+                            name: "Collection 3",
+                            elements: [],
                         },
                     ],
                 },
             ],
         },
-
-        {
-            slug: "d",
-            name: "d",
-            elements: [],
-        },
-
-        {
-            slug: "e",
-            name: "e",
-            elements: [],
-        },
-
-        {
-            slug: "f",
-            name: "f",
-            elements: [],
-        },
-
-        {
-            slug: "g",
-            name: "g",
-            elements: [],
-        },
-
-        {
-            slug: "h",
-            name: "h",
-            elements: [],
-        },
-        /////////
+        ////
     ],
 
     // Database

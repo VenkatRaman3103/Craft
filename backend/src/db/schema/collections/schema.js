@@ -8,7 +8,8 @@ export const collectionsTable = pgTable(
         name: text("name").notNull(),
         description: text("description"),
         parent_collection_id: uuid("parent_collection_id"),
-        sub_collection_id: uuid("sub_collection_id"),
+        table: text("table"),
+        sub_table_id: uuid("sub_table_id"),
         slug: text("slug").notNull(),
     },
     (table) => {
