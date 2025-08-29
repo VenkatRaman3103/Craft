@@ -85,6 +85,10 @@
     --sidebar-ring: oklch(0.708 0 0);
 }
 
+p {
+    font-size: 14px;
+}
+
 body {
     margin: 0;
 }
