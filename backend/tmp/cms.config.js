@@ -8,7 +8,7 @@ export const cmsConfig = () => ({
         accessControl: true,
     },
 
-    //////
+    ///////
     // Collections
     collections: [
         {

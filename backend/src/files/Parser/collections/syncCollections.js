@@ -295,6 +295,27 @@ export async function syncCollections(nested_collection) {
         }
     }
 
+    // update parent_collection_id for sub-pages
+    const updatedSubPage = await db.select().from(subPagesTable);
+
+    console.log(updatedSubPage, "parent <--");
+
+    for (let config_sub of subPages) {
+        const parent = updatedSubPage.find(
+            (updated_sub) =>
+                updated_sub.slug == config_sub.parent_collection_slug,
+        );
+
+        // console.log(config_sub.parent_collection_slug, "parent <--");
+
+        if (parent) {
+            await db
+                .update(subPagesTable)
+                .set({ parent_collection_id: parent.id })
+                .where(eq(subPagesTable.slug, config_sub.slug));
+        }
+    }
+
     // delete sub-pages not in config
     for (let dbSub of dbSubPages) {
         const exists = subPages.find((sub) => sub.slug === dbSub.slug);
@@ -369,6 +390,7 @@ export async function syncCollections(nested_collection) {
         const parent = updatedCollection.find(
             (col) => col.slug == config_sub.parent_collection_slug,
         );
+
         if (parent) {
             await db
                 .update(subCollectionsTable)
