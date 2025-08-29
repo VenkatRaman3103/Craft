@@ -5,9 +5,13 @@
 
     --base-color: #0a0a0a;
     --primary-color: #121212;
+    --secondary-color: #0d0d0d;
 
     --primary-font-color: #939393;
     --secondary-font-color: #5F5F5F;
+
+    --icon-color: #5f5f5f;
+
 
     --idle-border-border: #1D1D1D;
     --hover-border-border: #2B2B2B;
@@ -102,7 +106,7 @@ input:focus-visible {
         --base-color: #090909;
         --primary-color: #101011;
         /* --secondary-color: #17181b; */
-        --secondary-color: #1c1d1f;
+        /* --secondary-color: #1c1d1f; */
         /* --tertiary-color: #181a1b; */
         --tertiary-color: #1c1d1f;
 

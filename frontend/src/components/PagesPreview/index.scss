@@ -1,0 +1,48 @@
+.page-preview-container {
+    width: 100%;
+    min-height: 100px;
+
+    background-color: var(--secondary-color);
+    border: 1.5px solid var(--idle-border-border);
+
+    font-family: 18px;
+
+    &:hover {
+        background-color: var(--primary-color);
+    }
+
+    .page-preview-wrapper {
+        padding: 30px;
+
+        display: flex;
+        flex-direction: column;
+        gap: 20px;
+
+        .page-preview-header {
+            display: flex;
+            justify-content: space-between;
+
+            .page-heading {
+                font-size: 20px;
+                font-weight: 600;
+
+                display: flex;
+                align-items: center;
+
+                .page-icon {
+                    height: 20px;
+                    width: 20px;
+                    background-color: var(--icon-color);
+                    border-radius: 50%;
+                    margin-right: 10px;
+                }
+            }
+        }
+
+        .page-preview-description {
+            .page-description {
+                color: var(--secondary-font-color);
+            }
+        }
+    }
+}
