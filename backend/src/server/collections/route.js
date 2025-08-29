@@ -62,7 +62,7 @@ collectionsRouter.get("/collections/:collection_slug", async (req, res) => {
         for (let subPage of allSubPages) {
             const p = await db.query.pagesTable.findMany({
                 where: (pagesTable, { eq }) =>
-                    eq(pagesTable.sub_table_id, subPage.id),
+                    eq(pagesTable.sub_page_id, subPage.id),
             });
 
             temp.push({ ...subPage, kind: "pages", pages: p });
