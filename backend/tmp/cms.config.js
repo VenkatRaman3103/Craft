@@ -8,7 +8,7 @@ export const cmsConfig = () => ({
         accessControl: true,
     },
 
-    ///////
+    /////
     // Collections
     collections: [
         {
@@ -21,6 +21,11 @@ export const cmsConfig = () => ({
                     name: "pages",
                     kind: "pages",
                     items: [
+                        {
+                            slug: "test",
+                            name: "test",
+                            elements: [],
+                        },
                         {
                             slug: "page_1",
                             name: "Page 1",
@@ -72,7 +77,6 @@ export const cmsConfig = () => ({
                 },
             ],
         },
-        ////
     ],
 
     // Database

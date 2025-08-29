@@ -179,6 +179,7 @@ export async function syncCollections(nested_collection) {
     // SYNC PAGES
     for (let config_page of pages) {
         let dbCol = dbPages.find((col) => col.slug === config_page.slug);
+
         let isCollection = dbCollections.find(
             (col) => col.slug === config_page.slug,
         );
@@ -227,6 +228,8 @@ export async function syncCollections(nested_collection) {
             }
         }
     }
+
+    console.log(pages, "pages");
 
     // delete pages not in config
     for (let dbPage of dbPages) {
@@ -298,21 +301,31 @@ export async function syncCollections(nested_collection) {
     // update parent_collection_id for sub-pages
     const updatedSubPage = await db.select().from(subPagesTable);
 
-    console.log(updatedSubPage, "parent <--");
-
-    for (let config_sub of subPages) {
-        const parent = updatedSubPage.find(
-            (updated_sub) =>
-                updated_sub.slug == config_sub.parent_collection_slug,
-        );
-
-        // console.log(config_sub.parent_collection_slug, "parent <--");
+    for (let page of updatedSubPage) {
+        const parent = await db.query.collectionsTable.findFirst({
+            where: eq(collectionsTable.slug, page.parent_collection_slug),
+        });
 
         if (parent) {
             await db
                 .update(subPagesTable)
                 .set({ parent_collection_id: parent.id })
-                .where(eq(subPagesTable.slug, config_sub.slug));
+                .where(eq(subPagesTable.slug, page.slug));
+        }
+    }
+
+    // update sub_page_id for pages
+    for (let config_page of pages) {
+        const parent = updatedSubPage.find(
+            (updated_page) =>
+                updated_page.slug == config_page.parent_sub_pages_slug,
+        );
+
+        if (parent) {
+            await db
+                .update(pagesTable)
+                .set({ sub_page_id: parent.id })
+                .where(eq(pagesTable.slug, config_page.slug));
         }
     }
 

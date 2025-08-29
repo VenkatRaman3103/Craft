@@ -46,6 +46,8 @@ collectionsRouter.get("/collections/:collection_slug", async (req, res) => {
                 eq(subPagesTable.parent_collection_id, collection.id),
         });
 
+        console.log(allSubPages, "allSubPages");
+
         const temp = [];
 
         for (let subCol of allSubCollections) {
