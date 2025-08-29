@@ -5,6 +5,8 @@ import { getCollections } from "@/api/collections/getCollections";
 import { useParams } from "react-router";
 import { useState } from "react";
 import { CollectionPreview } from "@/components/CollectionPreview";
+import { PagesPreview } from "@/components/PagesPreview";
+import { SlugLabel } from "@/components/ui/SlugLabel";
 
 export const Collections = () => {
     // --- local state ---
@@ -21,12 +23,22 @@ export const Collections = () => {
     const renderElementContent = (kind: string) => {
         const tabContent = collectionData.elements[activeElement];
 
+        console.log(tabContent, "tabContent");
+
         switch (kind) {
             case "collections":
                 return (
                     <div className="collection-grid">
                         {tabContent.collections.map((collection: any) => (
                             <CollectionPreview collection={collection} />
+                        ))}
+                    </div>
+                );
+            case "pages":
+                return (
+                    <div className="pages-list">
+                        {tabContent.pages.map((page: any) => (
+                            <PagesPreview page={page} />
                         ))}
                     </div>
                 );
@@ -43,9 +55,8 @@ export const Collections = () => {
         <Layout>
             <div className="collection-page">
                 <h1 className="collection-heading">{collectionData.name}</h1>
-                <p className="collection-slug">
-                    slug: <span>{collectionData.slug}</span>
-                </p>
+
+                <SlugLabel label={collectionData.slug} />
                 <p className="collection-description">
                     {collectionData.description}
                 </p>
