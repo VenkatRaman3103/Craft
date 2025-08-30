@@ -30,7 +30,7 @@ export const Collections = () => {
                 return (
                     <div className="collection-grid">
                         {tabContent.collections.map((collection: any) => (
-                            <CollectionPreview collection={collection} />
+                            <CollectionPreview {...collection} />
                         ))}
                     </div>
                 );

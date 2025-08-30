@@ -6,6 +6,14 @@ type storyPropType = ComponentProps<typeof CollectionPreview>;
 
 const meta: Meta<storyPropType> = {
     component: CollectionPreview,
+    argTypes: {
+        name: {
+            control: "text",
+        },
+        slug: {
+            control: "text",
+        },
+    },
 };
 
 export default meta;
@@ -14,10 +22,8 @@ type storyType = StoryObj<storyPropType>;
 
 export const CollectionPreviewStory: storyType = {
     args: {
-        collection: {
-            name: "collection name",
-            slug: "collection-slug",
-        },
+        name: "collection name",
+        slug: "collection-slug",
     },
     render: (args) => <CollectionPreview {...args} />,
 };

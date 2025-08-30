@@ -25,7 +25,7 @@ export const RootCollections = () => {
                 </p>
                 <div className="collection-grid">
                     {rootCollections?.map((collection: any) => (
-                        <CollectionPreview collection={collection} />
+                        <CollectionPreview {...collection} />
                     ))}
                 </div>
             </div>

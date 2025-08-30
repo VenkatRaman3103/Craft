@@ -1,15 +1,11 @@
 import "./index.scss";
 
 type collectionType = {
-    collection: {
-        name: string;
-        slug: string;
-    };
+    name: string;
+    slug: string;
 };
 
-export const CollectionPreview = ({ collection }: collectionType) => {
-    const { name, slug } = collection;
-
+export const CollectionPreview = ({ name, slug }: collectionType) => {
     return (
         <div
             className="collection-preview"
