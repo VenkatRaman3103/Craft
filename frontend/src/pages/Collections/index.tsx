@@ -77,7 +77,7 @@ export const Collections = () => {
                 </div>
 
                 {/* TODO: add search bar, filters and columns*/}
-                <div></div>
+                {/* <div></div> */}
 
                 <div className="elements-contenr">
                     {renderElementContent(
