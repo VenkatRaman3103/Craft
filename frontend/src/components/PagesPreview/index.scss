@@ -5,6 +5,8 @@
     background-color: var(--secondary-color);
     border: 1.5px solid var(--idle-border-border);
 
+    border-radius: 3px;
+
     &:hover {
         background-color: var(--primary-color);
     }
