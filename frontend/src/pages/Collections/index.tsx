@@ -5,7 +5,7 @@ import { getCollections } from "@/api/collections/getCollections";
 import { useParams } from "react-router";
 import { useState } from "react";
 import { CollectionPreview } from "@/components/CollectionPreview";
-import { PagesPreview } from "@/components/PagesPreview";
+import { PagePreview } from "@/components/PagesPreview";
 import { SlugLabel } from "@/components/ui/SlugLabel";
 
 export const Collections = () => {
@@ -38,7 +38,7 @@ export const Collections = () => {
                 return (
                     <div className="pages-list">
                         {tabContent.pages.map((page: any) => (
-                            <PagesPreview page={page} />
+                            <PagePreview {...page} />
                         ))}
                     </div>
                 );
