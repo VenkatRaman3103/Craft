@@ -17,6 +17,20 @@ export const cmsConfig = () => ({
             description: "collection description",
             elements: [
                 {
+                    slug: "another-pages",
+                    name: "another-pages",
+                    kind: "pages",
+                    items: [
+                        {
+                            slug: "new_page",
+                            name: "new_page",
+                            description:
+                                "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.",
+                            elements: [],
+                        },
+                    ],
+                },
+                {
                     slug: "pages",
                     name: "pages",
                     kind: "pages",
@@ -24,31 +38,43 @@ export const cmsConfig = () => ({
                         {
                             slug: "test",
                             name: "test",
+                            description:
+                                "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.",
                             elements: [],
                         },
                         {
                             slug: "page_1",
                             name: "Page 1",
+                            description:
+                                "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.",
                             elements: [],
                         },
                         {
                             slug: "page_2",
                             name: "Page 2",
+                            description:
+                                "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.",
                             elements: [],
                         },
                         {
                             slug: "page_3",
                             name: "Page 3",
+                            description:
+                                "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.",
                             elements: [],
                         },
                         {
                             slug: "page_4",
                             name: "foo",
+                            description:
+                                "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.",
                             elements: [],
                         },
                         {
                             slug: "page_5",
                             name: "bar",
+                            description:
+                                "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.",
                             elements: [],
                         },
                     ],

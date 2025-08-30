@@ -36,20 +36,21 @@ collectionsRouter.get("/collections/:collection_slug", async (req, res) => {
 
         result = { ...collection };
 
+        // sub-collections
         const allSubCollections = await db.query.subCollectionsTable.findMany({
             where: (subCollectionsTable, { eq }) =>
                 eq(subCollectionsTable.parent_collection_id, collection.id),
         });
 
+        // sub-pages
         const allSubPages = await db.query.subPagesTable.findMany({
             where: (subPagesTable, { eq }) =>
                 eq(subPagesTable.parent_collection_id, collection.id),
         });
 
-        console.log(allSubPages, "allSubPages");
-
         const temp = [];
 
+        // push child collections based on sub-collections
         for (let subCol of allSubCollections) {
             const c = await db.query.collectionsTable.findMany({
                 where: (collectionsTable, { eq }) =>
@@ -59,6 +60,7 @@ collectionsRouter.get("/collections/:collection_slug", async (req, res) => {
             temp.push({ ...subCol, kind: "collections", collections: c });
         }
 
+        // push child pages based on sub-pages
         for (let subPage of allSubPages) {
             const p = await db.query.pagesTable.findMany({
                 where: (pagesTable, { eq }) =>
