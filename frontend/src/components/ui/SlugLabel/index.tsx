@@ -5,7 +5,7 @@ import "./index.scss";
 export const SlugLabel = ({ label }: { label: string }) => {
     return (
         <p className="slug-label">
-            slug:{" "}
+            slug:
             <span>
                 {label}
                 <Copy size={13} strokeWidth={2.25} className="copy-icon" />
