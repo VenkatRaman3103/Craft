@@ -5,6 +5,7 @@ import { Meta, StoryObj } from "@storybook/react";
 type storyPropType = ComponentProps<typeof CollectionPreview>;
 
 const meta: Meta<storyPropType> = {
+    // title: "Pages",
     component: CollectionPreview,
     argTypes: {
         name: {

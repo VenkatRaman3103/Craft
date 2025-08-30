@@ -1,7 +1,6 @@
 import { SlugLabel } from "@/components/ui/SlugLabel";
 import { ComponentProps } from "react";
 import { Meta, StoryObj } from "@storybook/react";
-import "../../index.css";
 
 type storyPropsType = ComponentProps<typeof SlugLabel>;
 
