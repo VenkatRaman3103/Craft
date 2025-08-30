@@ -8,14 +8,32 @@ export const cmsConfig = () => ({
         accessControl: true,
     },
 
-    /////
+    ///////
     // Collections
     collections: [
+        {
+            slug: "bar",
+            name: "collection new",
+            description: "collection description",
+            elements: [],
+        },
         {
             slug: "collection_test",
             name: "collection new",
             description: "collection description",
             elements: [
+                {
+                    slug: "fields",
+                    name: "fields",
+                    kind: "fields",
+                    items: [
+                        {
+                            name: "text_field",
+                            slug: "text_field",
+                            type: "text",
+                        },
+                    ],
+                },
                 {
                     slug: "another-pages",
                     name: "another-pages",
@@ -25,7 +43,7 @@ export const cmsConfig = () => ({
                             slug: "new_page",
                             name: "new_page",
                             description:
-                                "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.",
+                                "lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.",
                             elements: [],
                         },
                     ],
@@ -39,42 +57,42 @@ export const cmsConfig = () => ({
                             slug: "test",
                             name: "test",
                             description:
-                                "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.",
+                                "lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.",
                             elements: [],
                         },
                         {
                             slug: "page_1",
-                            name: "Page 1",
+                            name: "page 1",
                             description:
-                                "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.",
+                                "lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.",
                             elements: [],
                         },
                         {
                             slug: "page_2",
-                            name: "Page 2",
+                            name: "page 2",
                             description:
-                                "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.",
+                                "lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.",
                             elements: [],
                         },
                         {
                             slug: "page_3",
-                            name: "Page 3",
+                            name: "page 3",
                             description:
-                                "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.",
+                                "lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.",
                             elements: [],
                         },
                         {
                             slug: "page_4",
                             name: "foo",
                             description:
-                                "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.",
+                                "lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.",
                             elements: [],
                         },
                         {
                             slug: "page_5",
                             name: "bar",
                             description:
-                                "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.",
+                                "lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.",
                             elements: [],
                         },
                     ],
@@ -86,17 +104,17 @@ export const cmsConfig = () => ({
                     items: [
                         {
                             slug: "collection_1",
-                            name: "Collection 1",
+                            name: "collection 1",
                             elements: [],
                         },
                         {
                             slug: "collection_2",
-                            name: "Collection 2",
+                            name: "collection 2",
                             elements: [],
                         },
                         {
                             slug: "collection_3",
-                            name: "Collection 3",
+                            name: "collection 3",
                             elements: [],
                         },
                     ],

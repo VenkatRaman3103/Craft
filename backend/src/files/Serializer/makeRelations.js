@@ -38,6 +38,10 @@ export const makeRelations = (collections, parentSlug = null) => {
         }
 
         console.log(subPages, "subPages");
+
+        // sub-fields
+        const subFields = children.filter((item) => item.kind == "fields");
+        console.log(subFields, "subFields");
     }
 
     return collections;
