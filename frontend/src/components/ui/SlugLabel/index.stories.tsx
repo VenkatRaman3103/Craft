@@ -6,6 +6,7 @@ type storyPropsType = ComponentProps<typeof SlugLabel>;
 
 // meta
 const meta: Meta<storyPropsType> = {
+    title: "Components/UI/Collections",
     component: SlugLabel,
     argTypes: {
         label: {
