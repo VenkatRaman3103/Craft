@@ -7,6 +7,7 @@ import { useState } from "react";
 import { CollectionPreview } from "@/components/CollectionPreview";
 import { PagePreview } from "@/components/PagesPreview";
 import { SlugLabel } from "@/components/ui/SlugLabel";
+import { ElementsTab } from "@/components/ElementsTab";
 
 export const Collections = () => {
     // --- local state ---
@@ -60,21 +61,11 @@ export const Collections = () => {
                 <p className="collection-description">
                     {collectionData.description}
                 </p>
-
-                <div className="elements-tabs">
-                    {collectionData?.elements?.map(
-                        (element: any, ind: number) => {
-                            return (
-                                <div
-                                    className={`tab ${activeElement === ind ? "active" : ""}`}
-                                    onClick={() => setActiveElement(ind)}
-                                >
-                                    {element.name}
-                                </div>
-                            );
-                        },
-                    )}
-                </div>
+                <ElementsTab
+                    elements={collectionData?.elements}
+                    activeElement={activeElement}
+                    setActiveElement={setActiveElement}
+                />
 
                 {/* TODO: add search bar, filters and columns*/}
                 {/* <div></div> */}

@@ -12,34 +12,5 @@
     }
 
 
-    .elements-tabs {
-        width: 100%;
-        display: flex;
-        align-items: center;
-
-        gap: 30px;
-
-        .tab {
-            color: var(--secondary-font-color);
-            cursor: pointer;
-
-            position: relative;
-
-            &.active {
-                color: white;
-
-                &::after {
-                    content: "";
-                    height: 3px;
-                    width: 100%;
-                    background-color: white;
-                    position: absolute;
-                    bottom: -12px;
-                    left: 0;
-                }
-            }
-
-        }
-    }
 
 }
