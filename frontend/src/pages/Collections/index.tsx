@@ -3,48 +3,16 @@ import { Layout } from "./layout";
 import "./index.scss";
 import { getCollections } from "@/api/collections/getCollections";
 import { useParams } from "react-router";
-import { useState } from "react";
-import { CollectionPreview } from "@/components/CollectionPreview";
-import { PagePreview } from "@/components/PagesPreview";
 import { SlugLabel } from "@/components/ui/SlugLabel";
-import { ElementsTab } from "@/components/ElementsTab";
+import { Elements } from "@/components/Elements";
 
 export const Collections = () => {
-    // --- local state ---
-    const [activeElement, setActiveElement] = useState(0);
-
     const { collection_slug } = useParams();
 
-    // --- query ---
     const { data: collectionData } = useQuery({
         queryFn: () => getCollections(collection_slug),
         queryKey: ["collection"],
     });
-
-    const renderElementContent = (kind: string) => {
-        const tabContent = collectionData.elements[activeElement];
-
-        console.log(tabContent, "tabContent");
-
-        switch (kind) {
-            case "collections":
-                return (
-                    <div className="collection-grid">
-                        {tabContent.collections.map((collection: any) => (
-                            <CollectionPreview {...collection} />
-                        ))}
-                    </div>
-                );
-            case "pages":
-                return (
-                    <div className="pages-list">
-                        {tabContent.pages.map((page: any) => (
-                            <PagePreview {...page} />
-                        ))}
-                    </div>
-                );
-        }
-    };
 
     if (!collectionData) {
         return <div></div>;
@@ -58,23 +26,12 @@ export const Collections = () => {
                 <h1 className="collection-heading">{collectionData.name}</h1>
 
                 <SlugLabel label={collectionData.slug} />
+
                 <p className="collection-description">
                     {collectionData.description}
                 </p>
-                <ElementsTab
-                    elements={collectionData?.elements}
-                    activeElement={activeElement}
-                    setActiveElement={setActiveElement}
-                />
 
-                {/* TODO: add search bar, filters and columns*/}
-                {/* <div></div> */}
-
-                <div className="elements-contenr">
-                    {renderElementContent(
-                        collectionData?.elements[activeElement]?.kind,
-                    )}
-                </div>
+                <Elements elements={collectionData.elements} />
             </div>
         </Layout>
     );
