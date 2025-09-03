@@ -14,6 +14,13 @@ export const cmsConfig = () => ({
     /// groups
     groups: [
         {
+            heading: "foo",
+            name: "foo",
+            description:
+                "lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.",
+            collections: ["collection_1", "collection_2", "collection_3"],
+        },
+        {
             heading: "Hello world",
             name: "group_name",
             description:
