@@ -10,10 +10,11 @@ export const cmsConfig = () => ({
         accessControl: true,
     },
 
-    ////
+    ///////
     /// groups
     groups: [
         {
+<<<<<<< HEAD
             heading: "foo",
             name: "foo",
             description:
@@ -23,6 +24,20 @@ export const cmsConfig = () => ({
         {
             heading: "Hello world",
             name: "group_name",
+||||||| c23d8ed
+            heading: "Hello world",
+            name: "group_name",
+=======
+            heading: "foo updated",
+            name: "foo",
+            description:
+                "lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.",
+            collections: ["collection_1", "collection_2", "collection_3"],
+        },
+        {
+            heading: "bar updated",
+            name: "bar",
+>>>>>>> groups
             description:
                 "lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.",
             collections: ["collection_1", "collection_2", "collection_3"],
