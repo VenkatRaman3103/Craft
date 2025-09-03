@@ -1,3 +1,5 @@
+import { name } from "drizzle-orm";
+
 export const cmsConfig = () => ({
     // Admin Panel / UI Settings
     adminPanel: {
@@ -7,6 +9,18 @@ export const cmsConfig = () => ({
         customStyles: "",
         accessControl: true,
     },
+
+    ////
+    /// groups
+    groups: [
+        {
+            heading: "Hello world",
+            name: "group_name",
+            description:
+                "lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.",
+            collections: ["collection_1", "collection_2", "collection_3"],
+        },
+    ],
 
     ///////
     // Collections

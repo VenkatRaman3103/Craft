@@ -1,7 +1,7 @@
 import { pgTable, text, unique, uuid } from "drizzle-orm/pg-core";
 
 export const fieldsTable = pgTable(
-    "pages",
+    "fields",
     {
         id: uuid("id").defaultRandom().primaryKey(),
         name: text("name").notNull(),
