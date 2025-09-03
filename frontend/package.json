@@ -85,6 +85,8 @@
         "eslint-plugin-storybook": "^9.1.2",
         "globals": "^15.14.0",
         "jsdom": "^26.1.0",
+        "msw": "^2.11.1",
+        "msw-storybook-addon": "^2.0.5",
         "playwright": "^1.54.2",
         "postcss": "^8.5.3",
         "prettier": "^3.5.3",

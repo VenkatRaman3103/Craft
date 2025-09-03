@@ -1,8 +1,12 @@
 import type { Preview } from "@storybook/react-vite";
 import "../src/index.css";
 import "../src/styles/global.scss";
+import { initialize, mswDecorator } from "msw-storybook-addon";
+
+initialize();
 
 const preview: Preview = {
+    decorators: [mswDecorator],
     parameters: {
         controls: {
             matchers: {
