@@ -39,9 +39,16 @@ export const syncGroups = async (groups) => {
                 })
                 .where(eq(groupsTable.name, g.name));
         }
-
-        console.log(g, "groups");
     }
 
-    // TODO: delete groups
+    // delete groups
+    for (let db_group of dbGroups) {
+        const isExist = groups.find((item) => item.name == db_group.name);
+
+        if (isExist == undefined) {
+            await db
+                .delete(groupsTable)
+                .where(eq(groupsTable.name, db_group.name));
+        }
+    }
 };
