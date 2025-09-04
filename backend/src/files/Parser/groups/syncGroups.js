@@ -1,8 +1,10 @@
 import { eq } from "drizzle-orm";
-import { groupsTable } from "../../../db/schema/index.js";
+import { collectionsTable, groupsTable } from "../../../db/schema/index.js";
 import { db } from "../../../server/server.js";
+import { groupsJoinCollection } from "../../../db/schema/groups/schema.js";
 
 export const syncGroups = async (groups) => {
+    // NOTE: SYNC GROUPS
     // groups from db
     const dbGroups = await db.select().from(groupsTable);
 
@@ -49,6 +51,34 @@ export const syncGroups = async (groups) => {
             await db
                 .delete(groupsTable)
                 .where(eq(groupsTable.name, db_group.name));
+        }
+    }
+
+    // NOTE: SYNC GROUPS_COLLECTION
+    const dbCollection = await db.select().from(collectionsTable);
+    const dbGroupsCollection = await db.select().from(groupsJoinCollection);
+
+    // create groups_collections
+    for (let group of groups) {
+        let groupDB = await db.query.groupsTable.findFirst({
+            where: eq(groupsTable.name, group.name),
+        });
+
+        for (let col of group.collections) {
+            let getCollection = dbCollection.find((item) => item.slug == col);
+
+            let isExist = dbGroupsCollection.find(
+                (g) => g.collection_id == getCollection.id,
+            );
+
+            console.log(isExist, "isExist");
+
+            if (isExist == undefined) {
+                // await db.insert(groupsJoinCollection).values({
+                //     group_id: groupDB.id,
+                //     collection_id: getCollection.id,
+                // });
+            }
         }
     }
 };

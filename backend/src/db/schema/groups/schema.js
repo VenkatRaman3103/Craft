@@ -6,3 +6,9 @@ export const groupsTable = pgTable("groups", {
     description: text("description"),
     heading: text("heading"),
 });
+
+export const groupsJoinCollection = pgTable("groups_collections", {
+    id: uuid("id").defaultRandom().primaryKey(),
+    collection_id: text("collection_id").notNull(),
+    group_id: text("group_id").notNull(),
+});

@@ -10,7 +10,7 @@ export const cmsConfig = () => ({
         accessControl: true,
     },
 
-    //
+    /////
     /// groups
     groups: [
         {
@@ -24,6 +24,8 @@ export const cmsConfig = () => ({
             name: "group_name",
             heading: "Hello big bird",
             name: "group_name",
+            collections: ["collection_1", "collection_2", "collection_3"],
+            ////
         },
         {
             heading: "bar updated",
