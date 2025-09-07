@@ -3,8 +3,6 @@ import { CollectionPreview } from ".";
 import { Meta, StoryObj } from "@storybook/react";
 // bar
 
-// foo
-
 type storyPropType = ComponentProps<typeof CollectionPreview>;
 
 const meta: Meta<storyPropType> = {
