@@ -1,5 +1,6 @@
 import { config } from "../../index.js";
 import { syncCollections } from "./collections/syncCollections.js";
+import { syncGroups } from "./groups/syncGroups.js";
 
 export async function initialize() {
     // const config_data = await config.read_config();
@@ -10,7 +11,11 @@ export async function initialize() {
 
         const new_collections = await syncCollections(collections);
 
-        console.log(new_collections);
+        // console.log(new_collections);
+
+        // groups
+        const groups = config_data.groups;
+        await syncGroups(groups);
 
         // // TODO: database connection
         // const database = config_data.database;

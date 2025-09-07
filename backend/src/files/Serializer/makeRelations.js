@@ -37,11 +37,11 @@ export const makeRelations = (collections, parentSlug = null) => {
             makeRelations(subChildren, subPage.slug);
         }
 
-        console.log(subPages, "subPages");
+        // console.log(subPages, "subPages");
 
         // sub-fields
         const subFields = children.filter((item) => item.kind == "fields");
-        console.log(subFields, "subFields");
+        // console.log(subFields, "subFields");
     }
 
     return collections;
