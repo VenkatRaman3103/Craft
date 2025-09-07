@@ -1,7 +1,7 @@
 import { ComponentProps } from "react";
 import { CollectionPreview } from ".";
 import { Meta, StoryObj } from "@storybook/react";
-// foo
+// hello world
 
 type storyPropType = ComponentProps<typeof CollectionPreview>;
 
