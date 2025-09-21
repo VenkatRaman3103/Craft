@@ -11,6 +11,7 @@ node_modules
 /backend/.env
 ./backend/drizzle.config.js
 /backend/drizzle.config.js
+/requests
 /notes
 drizzle.config.js
 dist
