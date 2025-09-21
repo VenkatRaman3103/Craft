@@ -102,3 +102,24 @@ groupsRouter.put("/groups/:id", async (req, res) => {
 });
 
 // delete
+groupsRouter.delete("/groups/:id", async (req, res) => {
+    const { id } = req.params;
+
+    try {
+        const response = await db
+            .delete(groups)
+            .where(eq(groups.id, id))
+            .returning();
+
+        res.json(response[0]);
+    } catch (error) {
+        const errorMessage = {
+            origin: "groupsRouter/GET -> /groups/:id",
+            error: error,
+        };
+
+        console.log(errorMessage);
+
+        res.json(errorMessage);
+    }
+});
