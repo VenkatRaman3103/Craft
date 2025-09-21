@@ -1,10 +1,12 @@
+import { collectionsRouter } from "./Collections/route.js";
 import { groupsRouter } from "./Groups/route.js";
 import { app } from "./server.js";
 
 // define your routes here
-app.get("/api", (req, res) => {
+app.get("/api", (_, res) => {
     res.json("hello world");
 });
 
 // routes
 app.use("/api", groupsRouter);
+app.use("/api", collectionsRouter);
