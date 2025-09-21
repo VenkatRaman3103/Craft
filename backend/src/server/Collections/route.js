@@ -1,4 +1,4 @@
-import express, { response } from "express";
+import express from "express";
 import { db } from "../server.js";
 import { collections } from "../../db/schema/Collections/schema.js";
 import { eq } from "drizzle-orm";
@@ -131,6 +131,31 @@ collectionsRouter.delete("/collections/:id", async (req, res) => {
     } catch (error) {
         const errorMessage = {
             origin: "collections/GET -> /collections/:collection_id/collections",
+            error: error,
+        };
+
+        console.log(errorMessage);
+
+        res.json(errorMessage);
+    }
+});
+
+// update
+collectionsRouter.put("/collections/:id", async (req, res) => {
+    const { id } = req.params;
+    const { name, description, slug } = req.body;
+
+    try {
+        const response = await db
+            .update(collections)
+            .set({ name, description, slug })
+            .where(eq(collections.id, id))
+            .returning();
+
+        res.json(response[0]);
+    } catch (error) {
+        const errorMessage = {
+            origin: "collections/PUT -> /collections/:id",
             error: error,
         };
 
