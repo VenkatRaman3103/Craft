@@ -4,10 +4,9 @@ import { BrowserRouter, Route, Routes } from "react-router";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { Provider } from "react-redux";
 import { store } from "./store";
-import { RootCollections } from "./pages/RootCollections";
-import { Collections } from "./pages/Collections";
 
 import "@/styles/global.scss";
+import { GroupsPage } from "./pages/GroupsPage";
 
 const rootElement = document.getElementById("root");
 
@@ -24,11 +23,7 @@ createRoot(rootElement).render(
         <Provider store={store}>
             <QueryClientProvider client={queryClient}>
                 <Routes>
-                    <Route path="/collections" element={<RootCollections />} />
-                    <Route
-                        path="/collections/:collection_slug"
-                        element={<Collections />}
-                    />
+                    <Route path="/collections" element={<GroupsPage />} />
                 </Routes>
             </QueryClientProvider>
         </Provider>
