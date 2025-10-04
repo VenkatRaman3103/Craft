@@ -2,6 +2,7 @@ import express from "express";
 import { db } from "../server.js";
 import { groups } from "../../db/schema/Groups/schema.js";
 import { eq } from "drizzle-orm";
+import { collections } from "../../db/schema/index.js";
 
 export const groupsRouter = express.Router();
 
@@ -39,8 +40,26 @@ groupsRouter.post("/groups", async (req, res) => {
 // all groups
 groupsRouter.get("/groups/all", async (req, res) => {
     try {
-        const response = await db.select().from(groups);
-        res.json(response);
+        const groups_response = await db.select().from(groups);
+
+        const collections_response = await db.select().from(collections);
+
+        const data = [];
+
+        for (let group of groups_response) {
+            const children_collections = collections_response.filter(
+                (collection) => {
+                    return collection.group_id === group.id;
+                },
+            );
+
+            data.push({
+                ...group,
+                collections: children_collections,
+            });
+        }
+
+        res.json(data);
     } catch (error) {
         const errorMessage = {
             origin: "groupsRouter/GET -> /groups/all",
