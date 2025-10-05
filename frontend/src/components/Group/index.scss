@@ -1,8 +1,14 @@
-.collections {
-    width: 100%;
+.group-container {
     display: flex;
-    flex-direction: row;
-    flex-wrap: wrap;
-
+    flex-direction: column;
     gap: 20px;
+
+    .collections {
+        width: 100%;
+        display: flex;
+        flex-direction: row;
+        flex-wrap: wrap;
+
+        gap: 20px;
+    }
 }

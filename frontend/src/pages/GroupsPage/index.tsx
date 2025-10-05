@@ -4,6 +4,9 @@ import { useQuery } from "@tanstack/react-query";
 import "./index.scss";
 import { SideBar } from "@/components/SideBar";
 import { TopBar } from "@/components/TopBar";
+import { RenderModal } from "@/components/Modals/RenderModal";
+import { useSelector } from "react-redux";
+import { RootState } from "@/store";
 
 export const GroupsPage = () => {
     const { data: groupData } = useQuery({
@@ -11,7 +14,9 @@ export const GroupsPage = () => {
         queryFn: () => getGroups(),
     });
 
-    console.log(groupData, "data---");
+    const { active: isModalActive, type: modalType } = useSelector(
+        (state: RootState) => state.modalSlice,
+    );
 
     if (!groupData) {
         return <div>groups loading...</div>;
@@ -26,6 +31,7 @@ export const GroupsPage = () => {
                     <Group data={group} />
                 ))}
             </div>
+            {isModalActive && <RenderModal type={modalType} />}
         </>
     );
 };
