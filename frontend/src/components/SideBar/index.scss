@@ -7,4 +7,8 @@
     top: 0;
 
     border-right: 1px solid var(--idle-border-border);
+
+    &.active {
+        width: 100px;
+    }
 }

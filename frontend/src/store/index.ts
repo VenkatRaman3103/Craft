@@ -1,8 +1,9 @@
 import { configureStore } from "@reduxjs/toolkit";
+import { SideBarSlice } from "./SideBarSlice";
 
 export const store = configureStore({
     reducer: {
-        // counter: counterReducer,
+        sideBarSlice: SideBarSlice.reducer,
     },
 });
 
