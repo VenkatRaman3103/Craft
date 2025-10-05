@@ -6,9 +6,14 @@
     left: 0;
     top: var(--gutter-padding);
 
+    z-index: 10;
+
     border-right: 1px solid var(--idle-border-border);
+    border-top: 1px solid var(--idle-border-border);
+
+    background-color: var(--base-color);
 
     &.active {
-        width: 100px;
+        width: 300px;
     }
 }
