@@ -17,10 +17,27 @@
 
     &:hover {
         border: 1.5px solid var(--hover-border-border);
+
+        .collection-preview-wrapper .collection-slug span {
+            color: white;
+        }
     }
 
     .collection-preview-wrapper {
         height: 100%;
+
+        .collection-name {
+            font-size: 18px;
+            font-weight: 600;
+        }
+
+        .collection-slug {
+            color: var(--secondary-font-color);
+
+            span {
+                color: var(--primary-font-color)
+            }
+        }
     }
 
 
