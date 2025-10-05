@@ -4,7 +4,7 @@
 
     position: absolute;
     left: 0;
-    top: 0;
+    top: var(--gutter-padding);
 
     border-right: 1px solid var(--idle-border-border);
 

@@ -19,6 +19,8 @@
     --idle-border-border: #1D1D1D;
     --hover-border-border: #2B2B2B;
 
+    --icon-color: #5F5F5F;
+
     background-color: var(--base-color);
 
     --background: oklch(1 0 0);
