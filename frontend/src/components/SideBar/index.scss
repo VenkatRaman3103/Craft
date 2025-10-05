@@ -1,0 +1,10 @@
+.sidebar-container {
+    width: var(--gutter-padding);
+    height: 100vh;
+
+    position: absolute;
+    left: 0;
+    top: 0;
+
+    border-right: 1px solid var(--idle-border-border);
+}

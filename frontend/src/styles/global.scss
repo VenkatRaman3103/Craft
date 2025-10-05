@@ -32,3 +32,13 @@ p {
 body {
     background-color: var(--base-color);
 }
+
+.page {
+    width: calc(100vw - 180px);
+    height: 100vh;
+
+    position: relative;
+
+    padding: 30px 60px 30px calc(60px + var(--gutter-padding));
+
+}

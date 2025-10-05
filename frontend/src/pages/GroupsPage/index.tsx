@@ -2,6 +2,7 @@ import { getGroups } from "@/api/getGroups";
 import { Group } from "@/components/Group";
 import { useQuery } from "@tanstack/react-query";
 import "./index.scss";
+import { SideBar } from "@/components/SideBar";
 
 export const GroupsPage = () => {
     const { data: groupData } = useQuery({
@@ -16,7 +17,8 @@ export const GroupsPage = () => {
     }
 
     return (
-        <div>
+        <div className="page">
+            <SideBar />
             {groupData.map((group: any) => (
                 <Group data={group} />
             ))}
