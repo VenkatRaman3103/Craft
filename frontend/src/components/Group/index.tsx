@@ -1,4 +1,6 @@
+import "./index.scss";
 import { CollectionPreview } from "../CollectionPreview";
+import { NewCollection } from "../ActionButtons/NewCollection";
 
 export const Group = ({ data }: any) => {
     return (
@@ -11,6 +13,7 @@ export const Group = ({ data }: any) => {
                 {data.collections.map((collection: any) => (
                     <CollectionPreview data={collection} />
                 ))}
+                <NewCollection />
             </div>
         </div>
     );

@@ -1,6 +1,7 @@
 import { getGroups } from "@/api/getGroups";
 import { Group } from "@/components/Group";
 import { useQuery } from "@tanstack/react-query";
+import "./index.scss";
 
 export const GroupsPage = () => {
     const { data: groupData } = useQuery({
