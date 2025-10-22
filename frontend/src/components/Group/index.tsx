@@ -11,7 +11,7 @@ export const Group = ({ data }: any) => {
                 {data.collections.map((collection: any) => (
                     <CollectionPreview data={collection} />
                 ))}
-                <NewCollection />
+                <NewCollection referenceId={data.id} />
             </div>
         </div>
     );

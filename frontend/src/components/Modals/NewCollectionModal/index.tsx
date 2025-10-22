@@ -1,13 +1,13 @@
-import React, { useEffect } from "react";
+import { useEffect, useState } from "react";
 import "./index.scss";
 import { useDispatch, useSelector } from "react-redux";
-import { RootState } from "@/store";
 import { toggleModal } from "@/store/ModalSlice";
+import { RootState } from "@/store";
 
 export const NewCollectionModal = () => {
-    const { active: isModalActive } = useSelector(
-        (state: RootState) => state.modalSlice,
-    );
+    const [formData, setFormData] = useState<any>({});
+
+    const { referenceId } = useSelector((state: RootState) => state.modalSlice);
 
     const dispatch = useDispatch();
 
@@ -24,6 +24,12 @@ export const NewCollectionModal = () => {
         dispatch(toggleModal(false));
     }
 
+    function handleFormDataChange(e: any) {
+        setFormData({ ...formData, [e.target.name]: e.target.value });
+    }
+
+    console.log(formData, "formData");
+
     return (
         <div
             className="new-collection-modal-overlay"
@@ -39,7 +45,12 @@ export const NewCollectionModal = () => {
 
                 <div className="modal-section">
                     <label>Name</label>
-                    <input type="text" placeholder="Collection Name" />
+                    <input
+                        type="text"
+                        name="name"
+                        onChange={handleFormDataChange}
+                        placeholder="Collection Name"
+                    />
                     <div className="description">
                         Lorem ipsum dolor sit amet consectetur adipisicing elit.
                     </div>
@@ -47,7 +58,12 @@ export const NewCollectionModal = () => {
 
                 <div className="modal-section">
                     <label>Slug</label>
-                    <input type="text" placeholder="Collection Slug" />
+                    <input
+                        type="text"
+                        placeholder="Collection Slug"
+                        name="slug"
+                        onChange={handleFormDataChange}
+                    />
                     <div className="description">
                         Lorem ipsum dolor sit amet consectetur adipisicing elit.
                     </div>
@@ -58,6 +74,8 @@ export const NewCollectionModal = () => {
                     <textarea
                         placeholder="Collection Description"
                         className="description-textarea"
+                        name="description"
+                        onChange={handleFormDataChange}
                     />
                     <div className="description">
                         Lorem ipsum dolor sit amet consectetur adipisicing elit.

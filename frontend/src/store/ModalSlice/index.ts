@@ -3,11 +3,13 @@ import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 interface SliceState {
     active: boolean;
     type: string | null;
+    referenceId: string | null; // id of the element that opened the modal
 }
 
 const initialState: SliceState = {
     active: false,
     type: null,
+    referenceId: null,
 };
 
 export const ModalSlice = createSlice({
@@ -20,8 +22,11 @@ export const ModalSlice = createSlice({
         modalType: (state, action: PayloadAction<string>) => {
             state.type = action.payload;
         },
+        updateReferenceId: (state, action: PayloadAction<string | null>) => {
+            state.referenceId = action.payload;
+        },
     },
 });
 
-export const { modalType, toggleModal } = ModalSlice.actions;
+export const { modalType, toggleModal, updateReferenceId } = ModalSlice.actions;
 export default ModalSlice.reducer;
