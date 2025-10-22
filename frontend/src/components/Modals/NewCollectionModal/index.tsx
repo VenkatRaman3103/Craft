@@ -42,8 +42,6 @@ export const NewCollectionModal = () => {
                     <input type="text" placeholder="Collection Name" />
                     <div className="description">
                         Lorem ipsum dolor sit amet consectetur adipisicing elit.
-                        Officia animi, autem expedita dolorem laudantium, aut
-                        tenetur!
                     </div>
                 </div>
 
@@ -52,21 +50,17 @@ export const NewCollectionModal = () => {
                     <input type="text" placeholder="Collection Slug" />
                     <div className="description">
                         Lorem ipsum dolor sit amet consectetur adipisicing elit.
-                        Officia animi, autem expedita dolorem laudantium, aut
-                        tenetur!
                     </div>
                 </div>
 
                 <div className="modal-section">
                     <label>Description</label>
-                    <input
-                        type="textarea"
+                    <textarea
                         placeholder="Collection Description"
+                        className="description-textarea"
                     />
                     <div className="description">
                         Lorem ipsum dolor sit amet consectetur adipisicing elit.
-                        Officia animi, autem expedita dolorem laudantium, aut
-                        tenetur!
                     </div>
                 </div>
 

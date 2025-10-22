@@ -42,3 +42,7 @@ body {
     padding: 30px 60px 0px calc(60px + var(--gutter-padding));
 
 }
+
+textarea {
+    resize: none;
+}
