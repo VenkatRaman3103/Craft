@@ -3,9 +3,12 @@ import "./index.scss";
 import { useDispatch, useSelector } from "react-redux";
 import { toggleModal } from "@/store/ModalSlice";
 import { RootState } from "@/store";
+import { useCreateCollection } from "@/mutations/collections/create";
 
 export const NewCollectionModal = () => {
     const [formData, setFormData] = useState<any>({});
+
+    const crateCollection = useCreateCollection();
 
     const { referenceId } = useSelector((state: RootState) => state.modalSlice);
 
@@ -28,7 +31,9 @@ export const NewCollectionModal = () => {
         setFormData({ ...formData, [e.target.name]: e.target.value });
     }
 
-    console.log(formData, "formData");
+    function handleSave() {
+        crateCollection.mutate({ referenceId, ...formData });
+    }
 
     return (
         <div
@@ -86,7 +91,9 @@ export const NewCollectionModal = () => {
                     <div className="action-button" onClick={handleClickOutside}>
                         Cancel
                     </div>
-                    <div className="action-button save">Save</div>
+                    <div className="action-button save" onClick={handleSave}>
+                        Save
+                    </div>
                 </div>
             </div>
         </div>
