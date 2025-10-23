@@ -22,6 +22,8 @@ export const GroupsPage = () => {
         return <div>groups loading...</div>;
     }
 
+    console.log(groupData, "groupData");
+
     return (
         <>
             <TopBar />
