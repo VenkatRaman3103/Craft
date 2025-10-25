@@ -4,6 +4,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { toggleModal } from "@/store/ModalSlice";
 import { RootState } from "@/store";
 import { useCreateCollection } from "@/mutations/collections/create";
+import { TextField } from "@/components/Forms/Fields/TextField";
 
 export const NewCollectionModal = () => {
     const [formData, setFormData] = useState<any>({});
@@ -48,31 +49,25 @@ export const NewCollectionModal = () => {
                     <div>Add new Collection</div>
                 </div>
 
-                <div className="modal-section">
-                    <label>Name</label>
-                    <input
-                        type="text"
-                        name="name"
-                        onChange={handleFormDataChange}
-                        placeholder="Collection Name"
-                    />
-                    <div className="description">
-                        Lorem ipsum dolor sit amet consectetur adipisicing elit.
-                    </div>
-                </div>
+                <TextField
+                    label="Name"
+                    name="name"
+                    placeholder={"Collection Name"}
+                    description={
+                        "Lorem ipsum dolor sit amet consectetur adipisicing elit."
+                    }
+                    updateFormData={handleFormDataChange}
+                />
 
-                <div className="modal-section">
-                    <label>Slug</label>
-                    <input
-                        type="text"
-                        placeholder="Collection Slug"
-                        name="slug"
-                        onChange={handleFormDataChange}
-                    />
-                    <div className="description">
-                        Lorem ipsum dolor sit amet consectetur adipisicing elit.
-                    </div>
-                </div>
+                <TextField
+                    label="Slug"
+                    name="slug"
+                    placeholder={"Collection Slug"}
+                    description={
+                        "Lorem ipsum dolor sit amet consectetur adipisicing elit."
+                    }
+                    updateFormData={handleFormDataChange}
+                />
 
                 <div className="modal-section">
                     <label>Description</label>
