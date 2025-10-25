@@ -5,6 +5,7 @@ import { toggleModal } from "@/store/ModalSlice";
 import { RootState } from "@/store";
 import { useCreateCollection } from "@/mutations/collections/create";
 import { TextField } from "@/components/Forms/Fields/TextField";
+import { TextareaField } from "@/components/Forms/Fields/TextareaField";
 
 export const NewCollectionModal = () => {
     const [formData, setFormData] = useState<any>({});
@@ -69,18 +70,15 @@ export const NewCollectionModal = () => {
                     updateFormData={handleFormDataChange}
                 />
 
-                <div className="modal-section">
-                    <label>Description</label>
-                    <textarea
-                        placeholder="Collection Description"
-                        className="description-textarea"
-                        name="description"
-                        onChange={handleFormDataChange}
-                    />
-                    <div className="description">
-                        Lorem ipsum dolor sit amet consectetur adipisicing elit.
-                    </div>
-                </div>
+                <TextareaField
+                    label="Description"
+                    name="description"
+                    placeholder={"Collection Description"}
+                    description={
+                        "Lorem ipsum dolor sit amet consectetur adipisicing elit."
+                    }
+                    updateFormData={handleFormDataChange}
+                />
 
                 <div className="modal-action-button-wrapper">
                     <div className="action-button" onClick={handleClickOutside}>

@@ -1,6 +1,6 @@
 import "./index.scss";
 
-export const TextField = ({
+export const TextareaField = ({
     label,
     name,
     placeholder,
@@ -10,9 +10,9 @@ export const TextField = ({
     return (
         <div className="field-section">
             <label>{label}</label>
-            <input
-                type="text"
+            <textarea
                 placeholder={placeholder}
+                className="description-textarea"
                 name={name}
                 onChange={updateFormData}
             />

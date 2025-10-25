@@ -1,0 +1,20 @@
+.field-section {
+    padding: 20px;
+    border-bottom: 1px solid var(--idle-border-border);
+
+    display: flex;
+    flex-direction: column;
+
+    gap: 15px;
+
+    &:last-child {
+        border-bottom: none;
+    }
+
+    .description {
+        color: var(--secondary-font-color);
+        font-size: 14px;
+    }
+
+
+}
