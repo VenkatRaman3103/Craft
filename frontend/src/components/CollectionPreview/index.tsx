@@ -1,5 +1,6 @@
 import { useNavigate } from "react-router";
 import "./index.scss";
+import { Slug } from "../ui/common/Slug";
 
 export const CollectionPreview = ({ name, slug }: any) => {
     const navigate = useNavigate();
@@ -12,9 +13,7 @@ export const CollectionPreview = ({ name, slug }: any) => {
         <div className="collection-preview-container" onClick={handleNavigate}>
             <div className="collection-preview-wrapper">
                 <div className="collection-name">{name}</div>
-                <div className="collection-slug">
-                    slug: <span>{slug}</span>
-                </div>
+                <Slug slug={slug} />
                 <div className="new-collection-button-wrapper">
                     <div>+</div>
                 </div>
