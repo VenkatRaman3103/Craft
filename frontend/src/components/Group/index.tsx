@@ -9,7 +9,7 @@ export const Group = ({ data }: any) => {
             <p className="description">{data.description}</p>
             <div className="collections">
                 {data.collections.map((collection: any) => (
-                    <CollectionPreview data={collection} />
+                    <CollectionPreview {...collection} />
                 ))}
                 <NewCollection referenceId={data.id} />
             </div>
