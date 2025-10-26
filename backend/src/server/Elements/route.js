@@ -72,13 +72,14 @@ ElementsRouter.get("/elements/:parent_col_id/collections", async (req, res) => {
 // create
 // add element
 ElementsRouter.post("/elements", async (req, res) => {
-    const { name, parent_col_id } = req.body;
+    const { name, parent_col_id, type } = req.body;
 
     try {
         const response = await db
             .insert(elements)
             .values({
                 name,
+                type,
                 parent_col_id,
             })
             .returning();

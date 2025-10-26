@@ -50,6 +50,13 @@
       "when": 1761491644908,
       "tag": "0006_wooden_karen_page",
       "breakpoints": true
+    },
+    {
+      "idx": 7,
+      "version": "7",
+      "when": 1761493739163,
+      "tag": "0007_wise_starbolt",
+      "breakpoints": true
     }
   ]
 }
