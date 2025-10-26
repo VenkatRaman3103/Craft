@@ -117,6 +117,29 @@ collectionsRouter.get(
     },
 );
 
+// read one
+collectionsRouter.get("/collections/:id", async (req, res) => {
+    const { id } = req.params;
+
+    try {
+        const response = await db
+            .select()
+            .from(collections)
+            .where(eq(collections.id, id));
+
+        res.json(response);
+    } catch (error) {
+        const errorMessage = {
+            origin: "collections/GET -> /collections/:id",
+            error: error,
+        };
+
+        console.log(errorMessage);
+
+        res.json(errorMessage);
+    }
+});
+
 // delete
 collectionsRouter.delete("/collections/:id", async (req, res) => {
     const { id } = req.params;
