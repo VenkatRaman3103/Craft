@@ -22,3 +22,30 @@ ElementsRouter.get("/elements", async (_, res) => {
         res.json(errorMessage);
     }
 });
+
+// create
+// add element
+ElementsRouter.post("/elements", async (req, res) => {
+    const { name, parent_col_id } = req.body;
+
+    try {
+        const response = await db
+            .insert(elements)
+            .values({
+                name,
+                parent_col_id,
+            })
+            .returning();
+
+        res.json(response);
+    } catch (error) {
+        const errorMessage = {
+            origin: "elements/POST -> /elements",
+            error: error,
+        };
+
+        console.log(errorMessage);
+
+        res.json(errorMessage);
+    }
+});
