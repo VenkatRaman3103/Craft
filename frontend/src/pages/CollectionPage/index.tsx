@@ -5,9 +5,12 @@ import { getCollection } from "@/features/Collections/services/api";
 import { useQuery } from "@tanstack/react-query";
 import { useParams } from "react-router";
 import "./index.scss";
+import { useState } from "react";
 
 export const CollectionPage = () => {
     const { collection_id } = useParams();
+
+    const [activeTabId, setActiveTabId] = useState(1);
 
     const { data: collectionData } = useQuery({
         queryKey: ["collection", collection_id],
@@ -27,7 +30,19 @@ export const CollectionPage = () => {
             <div className="page">
                 <CollectionHeader data={collectionData} />
             </div>
-            <div className="page-content">some</div>
+            <div className="tabs-container">
+                {Array(5)
+                    .fill(0)
+                    .map((_, index) => (
+                        <div
+                            className={`tab ${activeTabId === index ? "active" : ""}`}
+                            onClick={() => setActiveTabId(index)}
+                        >
+                            item {index}
+                        </div>
+                    ))}
+            </div>
+            <div className="page-content"></div>
         </>
     );
 };
