@@ -1,12 +1,12 @@
 import { getGroups } from "@/api/getGroups";
-import { Group } from "@/components/Group";
 import { useQuery } from "@tanstack/react-query";
 import "./index.scss";
 import { SideBar } from "@/components/SideBar";
 import { TopBar } from "@/components/TopBar";
-import { RenderModal } from "@/components/Modals/RenderModal";
 import { useSelector } from "react-redux";
 import { RootState } from "@/store";
+import { Group } from "@/features/Groups";
+import { RenderModal } from "@/features/Modals/RenderModal";
 
 export const GroupsPage = () => {
     const { data: groupData } = useQuery({

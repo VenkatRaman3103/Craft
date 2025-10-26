@@ -1,6 +1,6 @@
 import { useNavigate } from "react-router";
 import "./index.scss";
-import { Slug } from "../ui/common/Slug";
+import { Slug } from "@/components/ui/common/Slug";
 
 export const CollectionPreview = ({ name, slug }: any) => {
     const navigate = useNavigate();

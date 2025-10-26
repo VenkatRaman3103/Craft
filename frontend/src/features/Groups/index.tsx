@@ -1,6 +1,6 @@
+import { NewCollection } from "@/components/ActionButtons/NewCollection";
 import "./index.scss";
-import { CollectionPreview } from "../CollectionPreview";
-import { NewCollection } from "../ActionButtons/NewCollection";
+import { CollectionPreview } from "../Collections/components/CollectionPreview";
 
 export const Group = ({ data }: any) => {
     return (

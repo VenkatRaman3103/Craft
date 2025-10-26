@@ -3,9 +3,9 @@ import "./index.scss";
 import { useDispatch, useSelector } from "react-redux";
 import { toggleModal } from "@/store/ModalSlice";
 import { RootState } from "@/store";
-import { useCreateCollection } from "@/mutations/collections/create";
 import { TextField } from "@/components/Forms/Fields/TextField";
 import { TextareaField } from "@/components/Forms/Fields/TextareaField";
+import { useCreateCollection } from "@/features/Collections/services/mutations";
 
 export const NewCollectionModal = () => {
     const [formData, setFormData] = useState<any>({});
@@ -46,7 +46,7 @@ export const NewCollectionModal = () => {
                 className="new-collection-modal-container"
                 onClick={(e) => e.stopPropagation()}
             >
-                <div className="modal-header modal-section">
+                <div className="modal-header field-section">
                     <div>Add new Collection</div>
                 </div>
 

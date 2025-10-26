@@ -1,4 +1,4 @@
-import { NewCollectionModal } from "./NewCollectionModal";
+import { NewCollectionModal } from "../Collections/components/NewCollectionModal";
 
 export const RenderModal = ({ type }: { type: string | null }) => {
     function modelaRender(type: string | null) {
