@@ -40,7 +40,7 @@ export async function getCollection(collection_id: string | undefined) {
 
         console.log("collection data", response.data);
 
-        return response.data[0];
+        return response.data;
     } catch (error) {
         const errorMessage = {
             origin: "getCollection",

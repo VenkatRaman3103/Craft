@@ -32,16 +32,14 @@ export const CollectionPage = () => {
                 <CollectionHeader data={collectionData} />
             </div>
             <div className="tabs-container">
-                {Array(5)
-                    .fill(0)
-                    .map((_, index) => (
-                        <div
-                            className={`tab ${activeTabId === index ? "active" : ""}`}
-                            onClick={() => setActiveTabId(index)}
-                        >
-                            item {index}
-                        </div>
-                    ))}
+                {collectionData.elements.map((e: any, index: number) => (
+                    <div
+                        className={`tab ${activeTabId === index ? "active" : ""}`}
+                        onClick={() => setActiveTabId(index)}
+                    >
+                        {e.name}
+                    </div>
+                ))}
 
                 <div className="tab add-new-tab">
                     <Plus />
