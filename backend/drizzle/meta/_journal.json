@@ -36,6 +36,20 @@
       "when": 1758438390370,
       "tag": "0004_rare_mandroid",
       "breakpoints": true
+    },
+    {
+      "idx": 5,
+      "version": "7",
+      "when": 1761491568893,
+      "tag": "0005_lonely_scarlet_spider",
+      "breakpoints": true
+    },
+    {
+      "idx": 6,
+      "version": "7",
+      "when": 1761491644908,
+      "tag": "0006_wooden_karen_page",
+      "breakpoints": true
     }
   ]
 }

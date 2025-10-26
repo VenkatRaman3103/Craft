@@ -1,0 +1,1 @@
+ALTER TABLE "elements" DROP COLUMN "group_id";

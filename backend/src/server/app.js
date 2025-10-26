@@ -1,4 +1,5 @@
 import { collectionsRouter } from "./Collections/route.js";
+import { ElementsRouter } from "./Elements/route.js";
 import { groupsRouter } from "./Groups/route.js";
 import { app } from "./server.js";
 
@@ -10,3 +11,4 @@ app.get("/api", (_, res) => {
 // routes
 app.use("/api", groupsRouter);
 app.use("/api", collectionsRouter);
+app.use("/api", ElementsRouter);
