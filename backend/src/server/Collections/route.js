@@ -2,6 +2,7 @@ import express from "express";
 import { db } from "../server.js";
 import { collections } from "../../db/schema/Collections/schema.js";
 import { eq } from "drizzle-orm";
+import { elements } from "../../db/schema/index.js";
 
 export const collectionsRouter = express.Router();
 
@@ -122,21 +123,27 @@ collectionsRouter.get("/collections/:id", async (req, res) => {
     const { id } = req.params;
 
     try {
-        const response = await db
+        const rows = await db
             .select()
             .from(collections)
+            .leftJoin(elements, eq(elements.parent_col_id, id))
             .where(eq(collections.id, id));
 
-        res.json(response);
+        const { collections: collection } = rows[0];
+
+        const collectionData = {
+            ...collection,
+            elements: rows.filter((r) => r.elements).map((r) => r.elements),
+        };
+
+        res.json(collectionData);
     } catch (error) {
         const errorMessage = {
             origin: "collections/GET -> /collections/:id",
             error: error,
         };
-
-        console.log(errorMessage);
-
-        res.json(errorMessage);
+        console.error(errorMessage);
+        res.status(500).json(errorMessage);
     }
 });
 
