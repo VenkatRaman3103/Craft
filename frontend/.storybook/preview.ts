@@ -1,5 +1,5 @@
 import type { Preview } from "@storybook/react-vite";
-import "../src/index.css";
+import "../src/index.scss";
 import "../src/styles/global.scss";
 import { initialize, mswDecorator } from "msw-storybook-addon";
 

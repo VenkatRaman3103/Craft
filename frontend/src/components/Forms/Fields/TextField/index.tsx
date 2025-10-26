@@ -1,12 +1,20 @@
 import "./index.scss";
 
+type TextFieldType = {
+    label: string;
+    name: string;
+    placeholder: string;
+    updateFormData: any;
+    description?: string;
+};
+
 export const TextField = ({
     label,
     name,
     placeholder,
     updateFormData, // bulk update the form data
     description,
-}: any) => {
+}: TextFieldType) => {
     return (
         <div className="field-section">
             <label>{label}</label>
