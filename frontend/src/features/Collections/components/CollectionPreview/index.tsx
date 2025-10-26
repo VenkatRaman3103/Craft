@@ -2,11 +2,11 @@ import { useNavigate } from "react-router";
 import "./index.scss";
 import { Slug } from "@/components/ui/common/Slug";
 
-export const CollectionPreview = ({ name, slug }: any) => {
+export const CollectionPreview = ({ name, slug, id }: any) => {
     const navigate = useNavigate();
 
     function handleNavigate() {
-        navigate(`/collections/${slug}`);
+        navigate(`/collections/${id}`);
     }
 
     return (

@@ -30,3 +30,21 @@ export async function createNewCollectionUnderGroups({
 
     return {};
 }
+
+// get collection with all children
+export async function getCollection(collection_id: string | undefined) {
+    try {
+        const response = await axios.get(
+            `${backendUrl}/collections/${collection_id}`,
+        );
+
+        return response.data[0];
+    } catch (error) {
+        const errorMessage = {
+            origin: "getCollection",
+            error: error,
+        };
+
+        return errorMessage;
+    }
+}
