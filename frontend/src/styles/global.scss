@@ -35,6 +35,15 @@ body {
 
 .page {
     width: calc(100vw - 180px);
+
+    position: relative;
+
+    padding: 30px 60px 0px calc(60px + var(--gutter-padding));
+
+}
+
+.page-content {
+    width: calc(100vw - 180px);
     height: 100vh;
 
     position: relative;

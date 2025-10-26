@@ -38,6 +38,8 @@ export async function getCollection(collection_id: string | undefined) {
             `${backendUrl}/collections/${collection_id}`,
         );
 
+        console.log("collection data", response.data);
+
         return response.data[0];
     } catch (error) {
         const errorMessage = {

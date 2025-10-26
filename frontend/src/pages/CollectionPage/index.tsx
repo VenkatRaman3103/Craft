@@ -14,7 +14,11 @@ export const CollectionPage = () => {
         queryFn: () => getCollection(collection_id),
     });
 
-    console.log(collectionData, "collectionData");
+    if (!collectionData) {
+        return <div>collection data loading...</div>;
+    }
+
+    console.log(collection_id, collectionData, "collectionData");
 
     return (
         <>
@@ -23,7 +27,7 @@ export const CollectionPage = () => {
             <div className="page">
                 <CollectionHeader data={collectionData} />
             </div>
-            <div className="page-content"></div>
+            <div className="page-content">some</div>
         </>
     );
 };
