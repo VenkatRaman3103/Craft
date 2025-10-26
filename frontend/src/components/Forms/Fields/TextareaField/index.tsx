@@ -1,12 +1,20 @@
 import "./index.scss";
 
+type TextareaFieldType = {
+    label: string;
+    name: string;
+    placeholder: string;
+    updateFormData: any;
+    description?: string;
+};
+
 export const TextareaField = ({
     label,
     name,
     placeholder,
     updateFormData, // bulk update the form data
     description,
-}: any) => {
+}: TextareaFieldType) => {
     return (
         <div className="field-section">
             <label>{label}</label>
