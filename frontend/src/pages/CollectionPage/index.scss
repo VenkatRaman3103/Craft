@@ -48,4 +48,15 @@
             }
         }
     }
+
+    .add-new-tab {
+
+        padding: 0 15px;
+    }
+}
+
+.action-buttons {
+    display: flex;
+    gap: 30px;
+    color: var(--secondary-font-color);
 }

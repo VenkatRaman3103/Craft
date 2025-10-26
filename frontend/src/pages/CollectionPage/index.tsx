@@ -6,6 +6,7 @@ import { useQuery } from "@tanstack/react-query";
 import { useParams } from "react-router";
 import "./index.scss";
 import { useState } from "react";
+import { Plus } from "lucide-react";
 
 export const CollectionPage = () => {
     const { collection_id } = useParams();
@@ -41,8 +42,18 @@ export const CollectionPage = () => {
                             item {index}
                         </div>
                     ))}
+
+                <div className="tab add-new-tab">
+                    <Plus />
+                </div>
             </div>
-            <div className="page-content"></div>
+            <div className="page-content">
+                <div className="action-buttons">
+                    <div className="search-bar">search bar</div>
+                    <div className="filter-button">filter button</div>
+                    <div className="columns-button">columns button</div>
+                </div>
+            </div>
         </>
     );
 };
