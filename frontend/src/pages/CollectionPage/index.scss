@@ -1,6 +1,6 @@
 .tabs-container {
     width: calc(100% - 175px);
-    height: 50px;
+    height: 40px;
     border: 1px solid var(--idle-border-border);
     margin-top: 30px;
     padding: 0px 60px 0px calc(60px + var(--gutter-padding));
@@ -50,7 +50,6 @@
     }
 
     .add-new-tab {
-
         padding: 0 15px;
     }
 }
