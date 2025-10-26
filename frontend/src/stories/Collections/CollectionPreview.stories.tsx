@@ -1,8 +1,8 @@
 import { ComponentProps } from "react";
 import { Meta, StoryObj } from "@storybook/react";
-import { CollectionPreview } from "@/components/CollectionPreview";
 import "@/styles/globals.css";
 import { MemoryRouter } from "react-router";
+import { CollectionPreview } from "@/components/CollectionPreview";
 
 type StoryPropsType = ComponentProps<typeof CollectionPreview>;
 
