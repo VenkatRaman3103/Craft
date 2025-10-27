@@ -19,7 +19,7 @@ import {
 export const CollectionPage = () => {
     const { collection_id } = useParams();
 
-    const [activeTabId, setActiveTabId] = useState(1);
+    const [activeTabId, setActiveTabId] = useState(0);
 
     const { data: collectionData } = useQuery({
         queryKey: ["collection", collection_id],

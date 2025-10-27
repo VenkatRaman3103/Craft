@@ -4,9 +4,9 @@ import { ModalWrapper } from "@/features/Modals/Wrapper";
 import { useState } from "react";
 import { useCreatNewElement } from "../../services/mutations";
 import { RootState } from "@/store";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { SelectField } from "@/components/Forms/Fields/SelectField";
-import { title } from "process";
+import { toggleModal } from "@/store/ModalSlice";
 
 export const NewElementModal = () => {
     const [formData, setFormData] = useState<any>({});
@@ -15,6 +15,8 @@ export const NewElementModal = () => {
 
     const createElement = useCreatNewElement(referenceId);
 
+    const dispatch = useDispatch();
+
     function handleFormDataChange(e: any) {
         setFormData({ ...formData, [e.target.name]: e.target.value });
     }
@@ -22,7 +24,7 @@ export const NewElementModal = () => {
     console.log(formData, "formData");
 
     function handleClose() {
-        //
+        dispatch(toggleModal(false));
     }
 
     function handleSave() {
