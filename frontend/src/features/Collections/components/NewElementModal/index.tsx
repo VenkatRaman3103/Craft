@@ -5,6 +5,8 @@ import { useState } from "react";
 import { useCreatNewElement } from "../../services/mutations";
 import { RootState } from "@/store";
 import { useSelector } from "react-redux";
+import { SelectField } from "@/components/Forms/Fields/SelectField";
+import { title } from "process";
 
 export const NewElementModal = () => {
     const [formData, setFormData] = useState<any>({});
@@ -38,6 +40,26 @@ export const NewElementModal = () => {
                     "Lorem ipsum dolor sit amet consectetur adipisicing elit."
                 }
                 updateFormData={handleFormDataChange}
+            />
+
+            <SelectField
+                label="Type"
+                name="type"
+                updateFormData={handleFormDataChange}
+                options={[
+                    {
+                        name: "Collection",
+                        value: "collection",
+                        description:
+                            "Lorem ipsum dolor sit amet consectetur adipisicing elit. Lorem ipsum dolor sit Lorem ipsum dolor sit amet ",
+                    },
+                    {
+                        name: "Page",
+                        value: "page",
+                        description:
+                            "Lorem ipsum dolor sit amet consectetur adipisicing elit. Lorem ipsum dolor sit Lorem ipsum dolor sit amet ",
+                    },
+                ]}
             />
 
             <div className="modal-action-button-wrapper">

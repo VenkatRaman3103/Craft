@@ -1,0 +1,52 @@
+.option-wrapper {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    height: 60px;
+
+    cursor: pointer;
+
+    &.selected {
+        .option-icon {
+            border: 1px solid white;
+        }
+
+        .option-content-section {
+            .description {
+                color: var(--primary-font-color);
+            }
+        }
+
+    }
+
+    &:hover {
+        .option-content-section {
+            .description {
+                color: var(--primary-font-color);
+            }
+        }
+
+    }
+
+    .option-icon {
+        height: 60px;
+        width: 50px;
+
+        background-color: var(--primary-color);
+        border: 1px solid var(--border-color);
+
+        border-radius: var(--border-radius);
+    }
+
+    .option-content-section {
+        height: 100%;
+        width: 100%;
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+
+        .option-name {
+            color: white;
+        }
+    }
+}
