@@ -20,13 +20,17 @@ export function useCreateCollection() {
 }
 
 export const useCreatNewElement = (referenceId: string | undefined | null) => {
+    console.log(referenceId, "referenceId");
+
     const queryClient = useQueryClient();
     const dispatch = useDispatch();
 
     return useMutation({
         mutationFn: (obj: NewElementType) => createNewElement(obj),
         onSuccess: () => {
-            queryClient.invalidateQueries({ queryKey: [referenceId] });
+            queryClient.invalidateQueries({
+                queryKey: ["collection", referenceId],
+            });
             dispatch(toggleModal(false));
         },
     });
