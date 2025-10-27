@@ -1,4 +1,4 @@
-import { ModalWrapper } from "@/features/Modals/ModalWrapper";
+import { ModalWrapper } from "@/features/Modals/Wrapper";
 
 export const NewElementModal = () => {
     return (

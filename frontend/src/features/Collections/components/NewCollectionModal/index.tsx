@@ -6,7 +6,8 @@ import { RootState } from "@/store";
 import { TextField } from "@/components/Forms/Fields/TextField";
 import { TextareaField } from "@/components/Forms/Fields/TextareaField";
 import { useCreateCollection } from "@/features/Collections/services/mutations";
-import { ModalWrapper } from "@/features/Modals/ModalWrapper";
+import { ModalWrapper } from "@/features/Modals/Wrapper";
+import { ModalHeader } from "@/features/Modals/Header";
 
 export const NewCollectionModal = () => {
     const [formData, setFormData] = useState<any>({});
@@ -40,9 +41,7 @@ export const NewCollectionModal = () => {
 
     return (
         <ModalWrapper>
-            <div className="modal-header field-section">
-                <div>Add new Collection</div>
-            </div>
+            <ModalHeader label="New Collection" />
 
             <TextField
                 label="Name"

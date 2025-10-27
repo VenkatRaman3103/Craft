@@ -20,12 +20,9 @@ export const ModalWrapper = ({ children }: any) => {
     }
 
     return (
-        <div
-            className="new-collection-modal-overlay"
-            onClick={handleClickOutside}
-        >
+        <div className="modal-overlay" onClick={handleClickOutside}>
             <div
-                className="new-collection-modal-container"
+                className="modal-container"
                 onClick={(e) => e.stopPropagation()}
             >
                 {children}
