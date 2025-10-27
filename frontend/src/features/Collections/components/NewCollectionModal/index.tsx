@@ -18,16 +18,7 @@ export const NewCollectionModal = () => {
 
     const dispatch = useDispatch();
 
-    useEffect(() => {
-        const originalStyle = window.getComputedStyle(document.body).overflow;
-        document.body.style.overflow = "hidden";
-
-        return () => {
-            document.body.style.overflow = originalStyle;
-        };
-    }, []);
-
-    function handleClickOutside() {
+    function handleClose() {
         dispatch(toggleModal(false));
     }
 
@@ -74,7 +65,7 @@ export const NewCollectionModal = () => {
             />
 
             <div className="modal-action-button-wrapper">
-                <div className="action-button" onClick={handleClickOutside}>
+                <div className="action-button" onClick={handleClose}>
                     Cancel
                 </div>
                 <div className="action-button save" onClick={handleSave}>

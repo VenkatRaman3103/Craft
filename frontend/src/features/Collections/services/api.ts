@@ -1,5 +1,6 @@
 import { backendUrl } from "@/config";
 import { NewCollectionType } from "@/type/NewCollection";
+import { NewElementType } from "@/type/NewElementType";
 import axios from "axios";
 
 export async function createNewCollectionUnderGroups({
@@ -44,6 +45,32 @@ export async function getCollection(collection_id: string | undefined) {
     } catch (error) {
         const errorMessage = {
             origin: "getCollection",
+            error: error,
+        };
+
+        return errorMessage;
+    }
+}
+
+export async function createNewElement({
+    name,
+    referenceId: parent_col_id,
+    type,
+}: NewElementType) {
+    console.log(name, parent_col_id, type, "createNewElement");
+    try {
+        const response = await axios.post(`${backendUrl}/elements`, {
+            name,
+            parent_col_id,
+            type,
+        });
+
+        console.log("elements data", response.data);
+
+        return response.data;
+    } catch (error) {
+        const errorMessage = {
+            origin: "createNewElement",
             error: error,
         };
 
