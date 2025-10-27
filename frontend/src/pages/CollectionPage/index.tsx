@@ -7,6 +7,14 @@ import { useParams } from "react-router";
 import "./index.scss";
 import { useState } from "react";
 import { Plus } from "lucide-react";
+import { useDispatch, useSelector } from "react-redux";
+import { RootState } from "@/store";
+import { RenderModal } from "@/features/Modals/RenderModal";
+import {
+    toggleModal,
+    updateModalType,
+    updateReferenceId,
+} from "@/store/ModalSlice";
 
 export const CollectionPage = () => {
     const { collection_id } = useParams();
@@ -18,8 +26,20 @@ export const CollectionPage = () => {
         queryFn: () => getCollection(collection_id),
     });
 
+    const { active: isModalActive, type: modalType } = useSelector(
+        (state: RootState) => state.modalSlice,
+    );
+
+    const dispatch = useDispatch();
+
     if (!collectionData) {
         return <div>collection data loading...</div>;
+    }
+
+    function handleModal() {
+        dispatch(toggleModal(!isModalActive));
+        dispatch(updateModalType("element"));
+        dispatch(updateReferenceId(collection_id));
     }
 
     console.log(collection_id, collectionData, "collectionData");
@@ -41,7 +61,7 @@ export const CollectionPage = () => {
                     </div>
                 ))}
 
-                <div className="tab add-new-tab">
+                <div className="tab add-new-tab" onClick={handleModal}>
                     <Plus />
                 </div>
             </div>
@@ -52,6 +72,8 @@ export const CollectionPage = () => {
                     <div className="columns-button">columns button</div>
                 </div>
             </div>
+
+            {isModalActive && <RenderModal type={modalType} />}
         </>
     );
 };

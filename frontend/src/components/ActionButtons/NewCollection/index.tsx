@@ -1,6 +1,10 @@
 import { useDispatch, useSelector } from "react-redux";
 import "./index.scss";
-import { modalType, toggleModal, updateReferenceId } from "@/store/ModalSlice";
+import {
+    updateModalType,
+    toggleModal,
+    updateReferenceId,
+} from "@/store/ModalSlice";
 import { RootState } from "@/store";
 
 export const NewCollection = ({
@@ -16,7 +20,7 @@ export const NewCollection = ({
 
     function handleToggleModal() {
         dispatch(toggleModal(!isModalActive));
-        dispatch(modalType("collection"));
+        dispatch(updateModalType("collection"));
         dispatch(updateReferenceId(referenceId));
     }
 

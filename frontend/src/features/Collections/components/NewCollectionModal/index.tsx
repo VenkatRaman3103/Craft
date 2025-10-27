@@ -6,6 +6,7 @@ import { RootState } from "@/store";
 import { TextField } from "@/components/Forms/Fields/TextField";
 import { TextareaField } from "@/components/Forms/Fields/TextareaField";
 import { useCreateCollection } from "@/features/Collections/services/mutations";
+import { ModalWrapper } from "@/features/Modals/ModalWrapper";
 
 export const NewCollectionModal = () => {
     const [formData, setFormData] = useState<any>({});
@@ -38,57 +39,49 @@ export const NewCollectionModal = () => {
     }
 
     return (
-        <div
-            className="new-collection-modal-overlay"
-            onClick={handleClickOutside}
-        >
-            <div
-                className="new-collection-modal-container"
-                onClick={(e) => e.stopPropagation()}
-            >
-                <div className="modal-header field-section">
-                    <div>Add new Collection</div>
+        <ModalWrapper>
+            <div className="modal-header field-section">
+                <div>Add new Collection</div>
+            </div>
+
+            <TextField
+                label="Name"
+                name="name"
+                placeholder={"Collection Name"}
+                description={
+                    "Lorem ipsum dolor sit amet consectetur adipisicing elit."
+                }
+                updateFormData={handleFormDataChange}
+            />
+
+            <TextField
+                label="Slug"
+                name="slug"
+                placeholder={"Collection Slug"}
+                description={
+                    "Lorem ipsum dolor sit amet consectetur adipisicing elit."
+                }
+                updateFormData={handleFormDataChange}
+            />
+
+            <TextareaField
+                label="Description"
+                name="description"
+                placeholder={"Collection Description"}
+                description={
+                    "Lorem ipsum dolor sit amet consectetur adipisicing elit."
+                }
+                updateFormData={handleFormDataChange}
+            />
+
+            <div className="modal-action-button-wrapper">
+                <div className="action-button" onClick={handleClickOutside}>
+                    Cancel
                 </div>
-
-                <TextField
-                    label="Name"
-                    name="name"
-                    placeholder={"Collection Name"}
-                    description={
-                        "Lorem ipsum dolor sit amet consectetur adipisicing elit."
-                    }
-                    updateFormData={handleFormDataChange}
-                />
-
-                <TextField
-                    label="Slug"
-                    name="slug"
-                    placeholder={"Collection Slug"}
-                    description={
-                        "Lorem ipsum dolor sit amet consectetur adipisicing elit."
-                    }
-                    updateFormData={handleFormDataChange}
-                />
-
-                <TextareaField
-                    label="Description"
-                    name="description"
-                    placeholder={"Collection Description"}
-                    description={
-                        "Lorem ipsum dolor sit amet consectetur adipisicing elit."
-                    }
-                    updateFormData={handleFormDataChange}
-                />
-
-                <div className="modal-action-button-wrapper">
-                    <div className="action-button" onClick={handleClickOutside}>
-                        Cancel
-                    </div>
-                    <div className="action-button save" onClick={handleSave}>
-                        Save
-                    </div>
+                <div className="action-button save" onClick={handleSave}>
+                    Save
                 </div>
             </div>
-        </div>
+        </ModalWrapper>
     );
 };
