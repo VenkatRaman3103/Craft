@@ -7,6 +7,7 @@ import { useSelector } from "react-redux";
 import { RootState } from "@/store";
 import { Group } from "@/features/Groups";
 import { RenderModal } from "@/features/Modals/RenderModal";
+import { PageWrapper } from "@/components/PageWrapper";
 
 export const GroupsPage = () => {
     const { data: groupData } = useQuery({
@@ -25,15 +26,13 @@ export const GroupsPage = () => {
     console.log(groupData, "groupData");
 
     return (
-        <>
-            <TopBar />
-            <SideBar />
+        <PageWrapper>
             <div className="page">
                 {groupData.map((group: any) => (
                     <Group data={group} />
                 ))}
             </div>
             {isModalActive && <RenderModal type={modalType} />}
-        </>
+        </PageWrapper>
     );
 };
