@@ -1,10 +1,10 @@
 .tabs-container {
-    width: calc(100% - 175px);
+    width: calc(100% - calc(var(--gutter-padding) * 2));
     height: 40px;
     border-top: 1px solid var(--idle-border-border);
     border-bottom: 1px solid var(--idle-border-border);
     margin-top: 30px;
-    padding: 0px 60px 0px calc(60px + var(--gutter-padding));
+    padding: 0px var(--gutter-padding) 0px var(--gutter-padding);
 
     display: flex;
     align-items: center;

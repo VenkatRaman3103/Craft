@@ -1,10 +1,8 @@
 .sidebar-container {
-    width: var(--gutter-padding);
+    /* width: var(--gutter-padding); */
+    width: 52px;
     height: 100vh;
-
-    position: absolute;
-    left: 0;
-    top: var(--gutter-padding);
+    margin-top: -1px;
 
     z-index: 10;
 
@@ -12,6 +10,8 @@
     border-top: 1px solid var(--idle-border-border);
 
     background-color: var(--base-color);
+
+    transition: width 0.2s ease-in-out;
 
     &.active {
         width: 300px;

@@ -47,32 +47,37 @@ export const CollectionPage = () => {
     return (
         <>
             <TopBar />
-            <SideBar />
-            <div className="page">
-                <CollectionHeader data={collectionData} />
-            </div>
-            <div className="tabs-container">
-                {collectionData.elements.map((e: any, index: number) => (
-                    <div
-                        className={`tab ${activeTabId === index ? "active" : ""}`}
-                        onClick={() => setActiveTabId(index)}
-                    >
-                        {e.name}
+            <div className="main-container">
+                <SideBar />
+                <div className="main-wrapper">
+                    <div className="page">
+                        <CollectionHeader data={collectionData} />
                     </div>
-                ))}
+                    <div className="tabs-container">
+                        {collectionData.elements.map(
+                            (e: any, index: number) => (
+                                <div
+                                    className={`tab ${activeTabId === index ? "active" : ""}`}
+                                    onClick={() => setActiveTabId(index)}
+                                >
+                                    {e.name}
+                                </div>
+                            ),
+                        )}
 
-                <div className="tab add-new-tab" onClick={handleModal}>
-                    <Plus />
+                        <div className="tab add-new-tab" onClick={handleModal}>
+                            <Plus />
+                        </div>
+                    </div>
+                    <div className="page-content">
+                        <div className="action-buttons">
+                            <div className="search-bar">search bar</div>
+                            <div className="filter-button">filter button</div>
+                            <div className="columns-button">columns button</div>
+                        </div>
+                    </div>
                 </div>
             </div>
-            <div className="page-content">
-                <div className="action-buttons">
-                    <div className="search-bar">search bar</div>
-                    <div className="filter-button">filter button</div>
-                    <div className="columns-button">columns button</div>
-                </div>
-            </div>
-
             {isModalActive && <RenderModal type={modalType} />}
         </>
     );
