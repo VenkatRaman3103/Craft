@@ -7,6 +7,7 @@ import { RootState } from "@/store";
 import { useDispatch, useSelector } from "react-redux";
 import { SelectField } from "@/components/Forms/Fields/SelectField";
 import { toggleModal } from "@/store/ModalSlice";
+import { options_data } from "./options_data";
 
 export const NewElementModal = () => {
     const [formData, setFormData] = useState<any>({});
@@ -48,20 +49,7 @@ export const NewElementModal = () => {
                 label="Type"
                 name="type"
                 updateFormData={handleFormDataChange}
-                options={[
-                    {
-                        name: "Collection",
-                        value: "collection",
-                        description:
-                            "Lorem ipsum dolor sit amet consectetur adipisicing elit. Lorem ipsum dolor sit Lorem ipsum dolor sit amet ",
-                    },
-                    {
-                        name: "Page",
-                        value: "page",
-                        description:
-                            "Lorem ipsum dolor sit amet consectetur adipisicing elit. Lorem ipsum dolor sit Lorem ipsum dolor sit amet ",
-                    },
-                ]}
+                options={options_data}
             />
 
             <div className="modal-action-button-wrapper">
