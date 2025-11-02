@@ -9,6 +9,7 @@ import { RenderModal } from "@/features/Modals/RenderModal";
 import { PageWrapper } from "@/components/PageWrapper";
 import { Tabs } from "@/features/Collections/components/Tabs";
 import { AddBtn } from "@/components/ui/Buttons/AddBtn";
+import { PagesList } from "@/features/Pages/PagesList";
 
 export const CollectionPage = () => {
     const { collection_id } = useParams();
@@ -38,25 +39,13 @@ export const CollectionPage = () => {
                 <CollectionHeader data={collectionData} />
             </div>
             <Tabs data={collectionData.elements} referenceId={collection_id} />
+
+            {/* general container */}
             <div className="page-content">
-                <div className="pages-list-container">
-                    <div className="action-buttons">
-                        <div className="search-bar">search bar</div>
-                        <div className="filter-button">filter button</div>
-                        <div className="columns-button">columns button</div>
-                        <AddBtn />
-                    </div>
-                </div>
+                {/* specif */}
+                <PagesList />
             </div>
             {isModalActive && <RenderModal type={modalType} />}
         </PageWrapper>
-    );
-};
-
-export const PagesList = () => {
-    return (
-        <div>
-            <div>pages</div>
-        </div>
     );
 };
