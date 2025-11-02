@@ -8,6 +8,7 @@ import { RootState } from "@/store";
 import { RenderModal } from "@/features/Modals/RenderModal";
 import { PageWrapper } from "@/components/PageWrapper";
 import { Tabs } from "@/features/Collections/components/Tabs";
+import { AddBtn } from "@/components/ui/Buttons/AddBtn";
 
 export const CollectionPage = () => {
     const { collection_id } = useParams();
@@ -19,6 +20,10 @@ export const CollectionPage = () => {
 
     const { active: isModalActive, type: modalType } = useSelector(
         (state: RootState) => state.modalSlice,
+    );
+
+    const { activeElementId } = useSelector(
+        (state: RootState) => state.elementSlice,
     );
 
     if (!collectionData) {
@@ -34,13 +39,24 @@ export const CollectionPage = () => {
             </div>
             <Tabs data={collectionData.elements} referenceId={collection_id} />
             <div className="page-content">
-                <div className="action-buttons">
-                    <div className="search-bar">search bar</div>
-                    <div className="filter-button">filter button</div>
-                    <div className="columns-button">columns button</div>
+                <div className="pages-list-container">
+                    <div className="action-buttons">
+                        <div className="search-bar">search bar</div>
+                        <div className="filter-button">filter button</div>
+                        <div className="columns-button">columns button</div>
+                        <AddBtn />
+                    </div>
                 </div>
             </div>
             {isModalActive && <RenderModal type={modalType} />}
         </PageWrapper>
+    );
+};
+
+export const PagesList = () => {
+    return (
+        <div>
+            <div>pages</div>
+        </div>
     );
 };
