@@ -3,18 +3,23 @@ import { RootState } from "@/store";
 import { useQuery } from "@tanstack/react-query";
 import { useSelector } from "react-redux";
 import { getPagesByElementId } from "../../service/api";
+import { Slug } from "@/components/ui/common/Slug";
+import "./index.scss";
+import { Copy } from "lucide-react";
+import { PageIcon } from "@/components/ui/Icons/PageIcon";
+import { PagePreview } from "../PagePreview";
 
 export const PagesList = () => {
     const { activeElementId } = useSelector(
         (state: RootState) => state.elementSlice,
     );
 
-    const { data } = useQuery({
+    const { data: pagesData } = useQuery({
         queryFn: () => getPagesByElementId(activeElementId),
         queryKey: [activeElementId, "pages"],
     });
 
-    console.log(data, activeElementId, "pages data");
+    console.log(pagesData, activeElementId, "pages data");
 
     return (
         <div className="pages-list-container">
@@ -24,7 +29,15 @@ export const PagesList = () => {
                 <div className="columns-button">columns button</div>
                 <AddBtn />
             </div>
-            <div className="pages-list"></div>
+            <div className="pages-list">
+                {/* TODO: add loading UI*/}
+                {!pagesData && <div>loading...</div>}
+                {/* TODO: add no item found UI*/}
+                {pagesData?.length === 0 && <div>no pages found</div>}
+                {pagesData?.map((page: any) => (
+                    <PagePreview page={page} />
+                ))}
+            </div>
         </div>
     );
 };
