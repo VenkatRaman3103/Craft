@@ -2,6 +2,7 @@ import { AddBtn } from "@/components/ui/Buttons/AddBtn";
 import { RootState } from "@/store";
 import { useQuery } from "@tanstack/react-query";
 import { useSelector } from "react-redux";
+import { getPagesByElementId } from "../../service/api";
 
 export const PagesList = () => {
     const { activeElementId } = useSelector(
@@ -9,9 +10,11 @@ export const PagesList = () => {
     );
 
     const { data } = useQuery({
-        queryFn: () => {},
+        queryFn: () => getPagesByElementId(activeElementId),
         queryKey: [activeElementId, "pages"],
     });
+
+    console.log(data, activeElementId, "pages data");
 
     return (
         <div className="pages-list-container">

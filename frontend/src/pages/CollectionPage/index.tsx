@@ -8,8 +8,7 @@ import { RootState } from "@/store";
 import { RenderModal } from "@/features/Modals/RenderModal";
 import { PageWrapper } from "@/components/PageWrapper";
 import { Tabs } from "@/features/Collections/components/Tabs";
-import { AddBtn } from "@/components/ui/Buttons/AddBtn";
-import { PagesList } from "@/features/Pages/PagesList";
+import { PagesList } from "@/features/Pages/components/PagesList";
 
 export const CollectionPage = () => {
     const { collection_id } = useParams();
