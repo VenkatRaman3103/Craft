@@ -50,7 +50,7 @@ PagesRouter.get("/pages/:parent_element_id/element", async (req, res) => {
         res.json(reponse);
     } catch (error) {
         const errorMessage = {
-            origin: "pages/POST -> /pages/:parent_element_id/element",
+            origin: "pages/GET -> /pages/:parent_element_id/element",
             error: error,
         };
 
