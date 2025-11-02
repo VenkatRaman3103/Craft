@@ -8,6 +8,7 @@ import {
 } from "@/store/ModalSlice";
 import { RootState } from "@/store";
 import { Plus } from "lucide-react";
+import "./index.scss";
 
 export const Tabs = ({
     data,
