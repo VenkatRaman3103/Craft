@@ -57,6 +57,13 @@
       "when": 1761493739163,
       "tag": "0007_wise_starbolt",
       "breakpoints": true
+    },
+    {
+      "idx": 8,
+      "version": "7",
+      "when": 1762069776652,
+      "tag": "0008_outgoing_changeling",
+      "breakpoints": true
     }
   ]
 }
