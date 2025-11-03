@@ -23,8 +23,8 @@ export const PagesList = () => {
         <div className="pages-list-container">
             <div className="action-buttons">
                 <SearchBar />
-                <div className="filter-button">filter button</div>
-                <div className="columns-button">columns button</div>
+                {/* <div className="filter-button">filter button</div> */}
+                {/* <div className="columns-button">columns button</div> */}
                 <AddBtn />
             </div>
             <div className="pages-list">

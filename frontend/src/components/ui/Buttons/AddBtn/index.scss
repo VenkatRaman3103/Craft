@@ -1,0 +1,18 @@
+.btn {
+    background-color: var(--secondary-color);
+    border: var(--idle-border-border-val);
+    border-radius: var(--border-radius);
+    color: white;
+    cursor: pointer;
+    transition: all 0.2s ease-in-out;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+}
+
+.btn-sm {
+    width: 40px;
+    height: 40px;
+}
