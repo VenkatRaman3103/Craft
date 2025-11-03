@@ -41,6 +41,7 @@ export const CollectionPage = () => {
 
             {/* general container */}
             <div className="page-content">
+                {/**/}
                 {/* specif */}
                 <PagesList />
             </div>
