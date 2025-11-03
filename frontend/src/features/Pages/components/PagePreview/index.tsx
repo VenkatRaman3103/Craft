@@ -2,6 +2,7 @@ import { Slug } from "@/components/ui/common/Slug";
 import { PageIcon } from "@/components/ui/Icons/PageIcon";
 import { Copy } from "lucide-react";
 import { PagesType } from "../../types/PagesType";
+import "./index.scss";
 
 export const PagePreview = ({ page }: { page: PagesType }) => {
     return (
@@ -12,7 +13,7 @@ export const PagePreview = ({ page }: { page: PagesType }) => {
                         <div className="icon">
                             <PageIcon />
                         </div>
-                        <div className="name">{page.name}</div>
+                        <h3 className="name">{page.name}</h3>
                     </div>
                     <div className="slug-area">
                         <Slug slug={page.slug} />
