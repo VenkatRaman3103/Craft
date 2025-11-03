@@ -3,11 +3,9 @@ import { RootState } from "@/store";
 import { useQuery } from "@tanstack/react-query";
 import { useSelector } from "react-redux";
 import { getPagesByElementId } from "../../service/api";
-import { Slug } from "@/components/ui/common/Slug";
 import "./index.scss";
-import { Copy } from "lucide-react";
-import { PageIcon } from "@/components/ui/Icons/PageIcon";
 import { PagePreview } from "../PagePreview";
+import { SearchBar } from "@/components/SearchBar";
 
 export const PagesList = () => {
     const { activeElementId } = useSelector(
@@ -24,7 +22,7 @@ export const PagesList = () => {
     return (
         <div className="pages-list-container">
             <div className="action-buttons">
-                <div className="search-bar">search bar</div>
+                <SearchBar />
                 <div className="filter-button">filter button</div>
                 <div className="columns-button">columns button</div>
                 <AddBtn />

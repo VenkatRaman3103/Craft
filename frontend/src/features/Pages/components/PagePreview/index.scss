@@ -1,5 +1,5 @@
 .page-preview-cotainer {
-    width: calc(100% - var(--gutter-padding) * 2);
+    /* width: calc(100% - var(--gutter-padding) * 2); */
     min-height: 60px;
     padding: 20px 25px;
     border: 1px solid var(--idle-border-border);
@@ -54,4 +54,3 @@
         }
     }
 }
-
