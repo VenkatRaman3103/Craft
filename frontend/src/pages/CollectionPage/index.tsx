@@ -22,10 +22,6 @@ export const CollectionPage = () => {
         (state: RootState) => state.modalSlice,
     );
 
-    const { activeElementId } = useSelector(
-        (state: RootState) => state.elementSlice,
-    );
-
     if (!collectionData) {
         return <div>collection data loading...</div>;
     }
@@ -41,7 +37,6 @@ export const CollectionPage = () => {
 
             {/* general container */}
             <div className="page-content">
-                {/**/}
                 {/* specif */}
                 <PagesList />
             </div>

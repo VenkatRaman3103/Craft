@@ -1,4 +1,3 @@
-import { AddBtn } from "@/components/ui/Buttons/AddBtn";
 import { RootState } from "@/store";
 import { useQuery } from "@tanstack/react-query";
 import { useSelector } from "react-redux";
@@ -6,6 +5,7 @@ import { getPagesByElementId } from "../../service/api";
 import "./index.scss";
 import { PagePreview } from "../PagePreview";
 import { SearchBar } from "@/components/SearchBar";
+import { NewPage } from "@/components/ActionButtons/NewPage";
 
 export const PagesList = () => {
     const { activeElementId } = useSelector(
@@ -25,7 +25,7 @@ export const PagesList = () => {
                 <SearchBar />
                 {/* <div className="filter-button">filter button</div> */}
                 {/* <div className="columns-button">columns button</div> */}
-                <AddBtn />
+                <NewPage />
             </div>
             <div className="pages-list">
                 {/* TODO: add loading UI*/}
