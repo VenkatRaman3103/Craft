@@ -36,7 +36,6 @@ export const NewPageModal = () => {
     return (
         <ModalWrapper>
             <ModalHeader label="New Page" />
-            <h1>{referenceId}</h1>
             <TextField
                 label="Name"
                 name="name"
