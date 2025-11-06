@@ -1,4 +1,4 @@
-import { SideBar } from "../SideBar";
+import { SideBar } from "@/features/SideBar/components";
 import { TopBar } from "../TopBar";
 
 export const PageWrapper = ({ children }: any) => {

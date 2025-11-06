@@ -2,8 +2,8 @@ import { useSelector } from "react-redux";
 import "./index.scss";
 import { RootState } from "@/store";
 import * as LucideIcons from "lucide-react";
-import { sidebar_items } from "./sidebar_items";
 import { useState } from "react";
+import { sidebar_items } from "../sidebar_items";
 
 export const SideBar = () => {
     const { active } = useSelector((state: RootState) => state.sideBarSlice);
