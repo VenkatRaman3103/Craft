@@ -5,6 +5,7 @@ import { collections } from "../../db/schema/Collections/schema.js";
 import { eq } from "drizzle-orm";
 import { elements } from "../../db/schema/Elements/schema.js";
 import { pages } from "../../db/schema/Pages/schema.js";
+import { makeTreeWithLinks } from "./makeTreeWithLinks.js";
 
 export const StructuredContentRouter = express.Router();
 
@@ -45,7 +46,9 @@ StructuredContentRouter.get("/structured-content", async (req, res) => {
             result.push({ ...group, collections: colResult });
         }
 
-        res.json(result);
+        const temp = makeTreeWithLinks(result);
+
+        res.json(temp);
     } catch (error) {
         res.json({
             origin: "structured-content/GET -> /structured-content",
