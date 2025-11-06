@@ -8,6 +8,7 @@ import { store } from "./store";
 import "@/styles/global.scss";
 import { GroupsPage } from "./pages/GroupsPage";
 import { CollectionPage } from "./pages/CollectionPage";
+import { PageWrapper } from "./components/PageWrapper";
 
 const rootElement = document.getElementById("root");
 
@@ -23,13 +24,15 @@ createRoot(rootElement).render(
     <BrowserRouter>
         <Provider store={store}>
             <QueryClientProvider client={queryClient}>
-                <Routes>
-                    <Route path="/collections" element={<GroupsPage />} />
-                    <Route
-                        path="/collections/:collection_id"
-                        element={<CollectionPage />}
-                    />
-                </Routes>
+                <PageWrapper>
+                    <Routes>
+                        <Route path="/collections" element={<GroupsPage />} />
+                        <Route
+                            path="/collections/:collection_id"
+                            element={<CollectionPage />}
+                        />
+                    </Routes>
+                </PageWrapper>
             </QueryClientProvider>
         </Provider>
     </BrowserRouter>,

@@ -6,7 +6,6 @@ import "./index.scss";
 import { useSelector } from "react-redux";
 import { RootState } from "@/store";
 import { RenderModal } from "@/features/Modals/RenderModal";
-import { PageWrapper } from "@/components/PageWrapper";
 import { Tabs } from "@/features/Collections/components/Tabs";
 import { PagesList } from "@/features/Pages/components/PagesList";
 
@@ -29,7 +28,7 @@ export const CollectionPage = () => {
     console.log(collection_id, collectionData, "collectionData");
 
     return (
-        <PageWrapper>
+        <>
             <div className="page">
                 <CollectionHeader data={collectionData} />
             </div>
@@ -41,6 +40,6 @@ export const CollectionPage = () => {
                 <PagesList />
             </div>
             {isModalActive && <RenderModal type={modalType} />}
-        </PageWrapper>
+        </>
     );
 };

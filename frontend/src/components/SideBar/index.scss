@@ -1,19 +1,55 @@
 .sidebar-container {
-    /* width: var(--gutter-padding); */
     width: 52px;
     height: 100vh;
     margin-top: -1px;
 
     z-index: 10;
 
-    border-right: 1px solid var(--idle-border-border);
+    border-right: none;
     border-top: 1px solid var(--idle-border-border);
-
     background-color: var(--base-color);
-
     transition: width 0.2s ease-in-out;
+
+    display: flex;
 
     &.active {
         width: 300px;
+        border-right: 1px solid var(--idle-border-border);
+    }
+
+    .sidebar-wrapper {
+        min-width: 50px;
+        height: 100%;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+
+        border-right: 1px solid var(--idle-border-border);
+
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+
+        .sidebar-item {
+            height: 50px;
+            width: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            /* border-bottom: 1px solid var(--idle-border-border); */
+            border-left: 2px solid transparent;
+
+            color: var(--secondary-font-color);
+
+            &.active {
+                border-left: 2px solid white;
+                color: white;
+            }
+        }
+    }
+
+    .sidebar-content {
+        width: 200px;
+        height: 100vh;
     }
 }
