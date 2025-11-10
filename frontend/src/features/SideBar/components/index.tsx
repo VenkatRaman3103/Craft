@@ -1,14 +1,30 @@
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import "./index.scss";
 import { RootState } from "@/store";
 import * as LucideIcons from "lucide-react";
-import { useState } from "react";
 import { sidebar_items } from "../sidebar_items";
+import { toggleSideBar, updateActiveLayer } from "@/store/SideBarSlice";
 
 export const SideBar = () => {
-    const { active } = useSelector((state: RootState) => state.sideBarSlice);
+    const { active, activeLayer } = useSelector(
+        (state: RootState) => state.sideBarSlice,
+    );
 
-    const [activeElement, setActiveElement] = useState();
+    const dispatch = useDispatch();
+
+    function handleLayerSelection(layer: string) {
+        dispatch(updateActiveLayer(layer));
+
+        if (activeLayer == layer) {
+            if (active == false) {
+                dispatch(toggleSideBar(true));
+            } else if (active == true) {
+                dispatch(toggleSideBar(false));
+            }
+        } else {
+            dispatch(toggleSideBar(true));
+        }
+    }
 
     return (
         <div className={`sidebar-container ${active ? "active" : ""}`}>
@@ -19,8 +35,8 @@ export const SideBar = () => {
                     return (
                         <div
                             key={item.name}
-                            className={`sidebar-item ${activeElement === item.name ? "active" : ""}`}
-                            onClick={() => setActiveElement(item.name)}
+                            className={`sidebar-item ${activeLayer === item.name ? "active" : ""}`}
+                            onClick={() => handleLayerSelection(item.name)}
                         >
                             <Icon size={20} />
                         </div>
