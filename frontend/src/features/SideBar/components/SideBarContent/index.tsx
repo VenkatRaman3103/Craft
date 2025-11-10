@@ -5,6 +5,8 @@ import { getStructureContent } from "../../services/api/getStructureContent";
 import "./index.scss";
 import { icons_map } from "./icons_map";
 import * as LucideIcons from "lucide-react";
+import { useState } from "react";
+import { useLocation } from "react-router";
 
 export const SideBarContent = () => {
     const { activeLayer } = useSelector(
@@ -34,22 +36,39 @@ export const SideBarContent = () => {
     );
 };
 
-export const NestedList = ({ name, type, children }: any) => {
+export const NestedList = ({ id, name, type, children }: any) => {
     const hasChildren = children && children.length > 0;
-    const Icon: any = LucideIcons[icons_map[type] as keyof typeof LucideIcons];
+    const [open, setOpen] = useState(true);
 
-    console.log(Icon, "Icon");
+    const { pathname } = useLocation();
+    const slugs = pathname.split("/");
+    const pathnameLenght = slugs.length;
+    const elementId = slugs[pathnameLenght - 1];
+
+    const Icon: any = LucideIcons[icons_map[type] as keyof typeof LucideIcons];
+    const Chevron = open ? LucideIcons.ChevronDown : LucideIcons.ChevronRight;
+
+    console.log(elementId, pathnameLenght - 1, pathname, "elementId");
 
     return (
         <div className={`nested-element-wrapper _${type}`}>
-            <div className="nested-element">
+            <div
+                className={`nested-element ${id == elementId ? "active" : ""}`}
+                onClick={() => hasChildren && setOpen(!open)}
+                style={{ cursor: hasChildren ? "pointer" : "default" }}
+            >
+                {hasChildren && <Chevron className="caret-icon" />}
                 {Icon && <Icon className="nested-icon" />}
                 {name}
             </div>
-            {hasChildren &&
-                children.map((child: any) => (
-                    <NestedList key={child.id} {...child} />
-                ))}
+
+            {hasChildren && open && (
+                <div className="nested-children">
+                    {children.map((child: any) => (
+                        <NestedList key={child.id} {...child} />
+                    ))}
+                </div>
+            )}
         </div>
     );
 };

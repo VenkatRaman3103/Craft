@@ -12,24 +12,44 @@
         color: var(--primary-font-color)
     }
 
-    .nested-element-wrapper {
-        padding: 10px 0px 0px 15px;
-        color: white;
+}
 
-        &._group {
-            padding-left: 0px;
-            color: var(--primary-font-color);
-        }
+.nested-element-wrapper {
+    padding-left: 15px;
 
-        .nested-element {
-            display: flex;
-            align-items: center;
-            gap: 7px;
-        }
+    &._group {
+        padding-left: 0px;
+    }
 
-        .nested-icon {
-            height: 15px;
-            width: 15px;
+    .nested-element {
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        padding-top: 10px;
+
+        color: var(--primary-font-color);
+
+        &.active {
+            color: white;
+            font-weight: 600;
         }
+    }
+
+    .caret-icon {
+        width: 12px;
+        height: 12px;
+
+        color: var(--hover-border-border);
+    }
+
+    .nested-icon {
+        width: 14px;
+        height: 14px;
+    }
+
+    .nested-children {
+        margin-left: 6px;
+        border-left: 1px dashed var(--hover-border-border);
+        padding-left: 10px;
     }
 }
