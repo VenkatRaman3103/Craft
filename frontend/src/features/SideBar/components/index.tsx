@@ -4,6 +4,7 @@ import { RootState } from "@/store";
 import * as LucideIcons from "lucide-react";
 import { sidebar_items } from "../sidebar_items";
 import { toggleSideBar, updateActiveLayer } from "@/store/SideBarSlice";
+import { SideBarContent } from "./SideBarContent";
 
 export const SideBar = () => {
     const { active, activeLayer } = useSelector(
@@ -43,7 +44,11 @@ export const SideBar = () => {
                     );
                 })}
             </div>
-            {active && <div className="sidebar-content"></div>}
+            {active && (
+                <div className="sidebar-content">
+                    <SideBarContent />
+                </div>
+            )}
         </div>
     );
 };
