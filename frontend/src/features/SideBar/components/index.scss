@@ -11,6 +11,7 @@
     transition: width 0.2s ease-in-out;
 
     display: flex;
+    flex-direction: row;
 
     &.active {
         width: 300px;
@@ -29,6 +30,19 @@
         display: flex;
         flex-direction: column;
         align-items: center;
+
+        .sidebar-toggle-btn {
+            width: var(--gutter-padding);
+            height: var(--gutter-padding);
+
+            border-bottom: 1px solid var(--idle-border-border);
+
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            color: var(--icon-color);
+        }
 
         .sidebar-item {
             height: 50px;

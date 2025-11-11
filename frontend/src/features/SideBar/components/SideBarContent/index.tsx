@@ -26,7 +26,6 @@ export const SideBarContent = () => {
 
     return (
         <div className="sidebar-content-container">
-            <div className="sidebar-content-header">{activeLayer}</div>
             <div className="sidebar-content-wrapper">
                 {structuredContent.map((element: any) => (
                     <NestedList {...element} />

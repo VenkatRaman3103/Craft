@@ -11,6 +11,12 @@ export const SideBar = () => {
         (state: RootState) => state.sideBarSlice,
     );
 
+    function handleToggleSideBar() {
+        dispatch(toggleSideBar(!active));
+    }
+
+    console.log(active, "active");
+
     const dispatch = useDispatch();
 
     function handleLayerSelection(layer: string) {
@@ -30,6 +36,12 @@ export const SideBar = () => {
     return (
         <div className={`sidebar-container ${active ? "active" : ""}`}>
             <div className="sidebar-wrapper">
+                <div
+                    className="sidebar-toggle-btn"
+                    onClick={handleToggleSideBar}
+                >
+                    <LucideIcons.PanelLeft size={18} />
+                </div>
                 {sidebar_items.map((item: any) => {
                     const Icon: any =
                         LucideIcons[item.icon as keyof typeof LucideIcons];

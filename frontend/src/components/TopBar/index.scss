@@ -4,19 +4,5 @@
 
     border-bottom: 1px solid var(--idle-border-border);
 
-    .topbar-wrapper {
-
-        .sidebar-toggle-btn {
-            width: var(--gutter-padding);
-            height: var(--gutter-padding);
-
-            border-right: 1px solid var(--idle-border-border);
-
-            display: flex;
-            align-items: center;
-            justify-content: center;
-
-            color: var(--icon-color);
-        }
-    }
+    .topbar-wrapper {}
 }
