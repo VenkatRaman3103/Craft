@@ -18,6 +18,9 @@ export const useCreateNewPage = (referenceId: string | undefined | null) => {
                 queryKey: [referenceId, "pages"],
             });
 
+            queryClient.invalidateQueries({
+                queryKey: ["structured-content"],
+            });
             dispatch(toggleModal(false));
         },
     });

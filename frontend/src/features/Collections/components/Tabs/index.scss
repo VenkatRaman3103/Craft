@@ -1,5 +1,5 @@
 .tabs-container {
-    width: calc(100% - calc(var(--gutter-padding) * 2));
+    min-width: calc(100% - calc(var(--gutter-padding) * 2));
     height: 40px;
     border-top: 1px solid var(--idle-border-border);
     border-bottom: 1px solid var(--idle-border-border);
@@ -8,6 +8,8 @@
 
     display: flex;
     align-items: center;
+    overflow: scroll;
+    scrollbar-width: none;
 
     .tab {
         position: relative;
@@ -21,6 +23,8 @@
 
         padding: 0 30px;
         cursor: pointer;
+
+        white-space: nowrap;
 
         &:hover {
             color: white;
@@ -53,4 +57,8 @@
     .add-new-tab {
         padding: 0 15px;
     }
+}
+
+.tabs-container::-webkit-scrollbar {
+    display: none;
 }

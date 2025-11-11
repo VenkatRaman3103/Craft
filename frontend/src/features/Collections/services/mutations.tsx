@@ -31,6 +31,9 @@ export const useCreatNewElement = (referenceId: string | undefined | null) => {
             queryClient.invalidateQueries({
                 queryKey: ["collection", referenceId],
             });
+            queryClient.invalidateQueries({
+                queryKey: ["structured-content"],
+            });
             dispatch(toggleModal(false));
         },
     });

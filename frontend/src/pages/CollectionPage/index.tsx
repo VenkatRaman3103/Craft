@@ -32,7 +32,7 @@ export const CollectionPage = () => {
             <div className="page">
                 <CollectionHeader data={collectionData} />
             </div>
-            <Tabs data={collectionData.elements} referenceId={collection_id} />
+            <Tabs data={collectionData?.elements} referenceId={collection_id} />
 
             {/* general container */}
             <div className="page-content">

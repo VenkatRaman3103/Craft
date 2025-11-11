@@ -26,11 +26,11 @@ export const Tabs = ({
         (state: RootState) => state.modalSlice,
     );
 
-    // const {}
-
     useEffect(() => {
-        setActiveTabId(data[0].id);
-        dispatch(updateActiveElementId(data[0].id));
+        if (data.length > 0) {
+            setActiveTabId(data[0].id);
+            dispatch(updateActiveElementId(data[0].id));
+        }
     }, []);
 
     function handleModal() {
@@ -43,6 +43,8 @@ export const Tabs = ({
         setActiveTabId(tabId);
         dispatch(updateActiveElementId(tabId));
     }
+
+    console.log(data, "data elements");
 
     return (
         <div className="tabs-container">
