@@ -3,10 +3,10 @@ import { useQuery } from "@tanstack/react-query";
 import { useSelector } from "react-redux";
 import { getStructureContent } from "../../services/api/getStructureContent";
 import "./index.scss";
-import { icons_map } from "./icons_map";
 import * as LucideIcons from "lucide-react";
 import { useState } from "react";
 import { useLocation } from "react-router";
+import { icons_map } from "../../services/data/icons_map";
 
 export const SideBarContent = () => {
     const { activeLayer } = useSelector(
@@ -26,6 +26,7 @@ export const SideBarContent = () => {
 
     return (
         <div className="sidebar-content-container">
+            <div className="sidebar-content-header">{activeLayer}</div>
             <div className="sidebar-content-wrapper">
                 {structuredContent.map((element: any) => (
                     <NestedList {...element} />

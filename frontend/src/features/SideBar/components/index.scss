@@ -14,7 +14,7 @@
     flex-direction: row;
 
     &.active {
-        width: 300px;
+        width: auto;
         border-right: 1px solid var(--idle-border-border);
     }
 
@@ -44,26 +44,10 @@
             color: var(--icon-color);
         }
 
-        .sidebar-item {
-            height: 50px;
-            width: 100%;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            /* border-bottom: 1px solid var(--idle-border-border); */
-            border-left: 2px solid transparent;
-
-            color: var(--secondary-font-color);
-
-            &.active {
-                border-left: 2px solid white;
-                color: white;
-            }
-        }
     }
 
     .sidebar-content {
-        width: 300px;
+        min-width: 300px;
         height: 100vh;
     }
 }

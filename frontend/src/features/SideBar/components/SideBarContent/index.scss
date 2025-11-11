@@ -4,8 +4,8 @@
 
     .sidebar-content-header {
         padding-bottom: 10px;
-        border-bottom: 1px solid var(--idle-border-border);
-        margin-bottom: 10px;
+        font-size: 16px;
+        font-weight: 600;
     }
 
     .sidebar-group {
@@ -16,6 +16,7 @@
 
 .nested-element-wrapper {
     padding-left: 15px;
+    user-select: none;
 
     &._group {
         padding-left: 0px;
