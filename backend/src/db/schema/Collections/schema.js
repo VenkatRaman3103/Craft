@@ -6,7 +6,7 @@ export const collections = pgTable("collections", {
     description: text("description"),
     slug: text("slug").notNull(),
     group_id: text("group_id"),
-    parent_col_id: text("parent_col_id"),
+    parent_ele_id: text("parent_ele_id"),
     created_at: timestamp("created_at").notNull().defaultNow(),
     updated_at: timestamp("updated_at").notNull().defaultNow(),
 });

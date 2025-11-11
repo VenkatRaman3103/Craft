@@ -32,6 +32,42 @@ export async function createNewCollectionUnderGroups({
     return {};
 }
 
+export async function createNewCollectionUnderElement({
+    referenceId: element_id,
+    name,
+    description,
+    slug,
+}: NewCollectionType) {
+    console.log(
+        element_id,
+        name,
+        description,
+        slug,
+        "new collection under element",
+    );
+    try {
+        const response = await axios.post(
+            `${backendUrl}/collections/${element_id}/elements`,
+            {
+                name,
+                description,
+                slug,
+            },
+        );
+
+        console.log("new collection created under element", response.data);
+    } catch (error) {
+        const errorMessage = {
+            origin: "createNewCollectionUnderGroups",
+            error: error,
+        };
+
+        return errorMessage;
+    }
+
+    return {};
+}
+
 // get collection with all children
 export async function getCollection(collection_id: string | undefined) {
     try {

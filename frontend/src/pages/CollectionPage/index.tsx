@@ -6,7 +6,7 @@ import "./index.scss";
 import { useSelector } from "react-redux";
 import { RootState } from "@/store";
 import { RenderModal } from "@/features/Modals/RenderModal";
-import { Tabs } from "@/features/Collections/components/Tabs";
+import { Elements } from "@/features/Collections/components/Elements";
 import { PagesList } from "@/features/Pages/components/PagesList";
 
 export const CollectionPage = () => {
@@ -30,7 +30,10 @@ export const CollectionPage = () => {
             <div className="page">
                 <CollectionHeader data={collectionData} />
             </div>
-            <Tabs data={collectionData?.elements} referenceId={collection_id} />
+            <Elements
+                data={collectionData?.elements}
+                referenceId={collection_id}
+            />
 
             {/* general container */}
             <div className="page-content">

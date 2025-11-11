@@ -1,0 +1,1 @@
+ALTER TABLE "collections" RENAME COLUMN "parent_col_id" TO "parent_ele_id";

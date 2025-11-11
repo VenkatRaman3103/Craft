@@ -4,13 +4,16 @@ import {
     updateModalType,
     toggleModal,
     updateReferenceId,
+    updateParentType,
 } from "@/store/ModalSlice";
 import { RootState } from "@/store";
 
 export const NewCollection = ({
     referenceId,
+    parentType = "group",
 }: {
     referenceId: string | null;
+    parentType: string;
 }) => {
     const dispatch = useDispatch();
 
@@ -22,6 +25,7 @@ export const NewCollection = ({
         dispatch(toggleModal(!isModalActive));
         dispatch(updateModalType("collection"));
         dispatch(updateReferenceId(referenceId));
+        dispatch(updateParentType(parentType));
     }
 
     return (

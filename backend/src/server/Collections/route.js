@@ -36,11 +36,11 @@ collectionsRouter.post("/collections/:group_id/groups", async (req, res) => {
     }
 });
 
-// under collections
+// under elements
 collectionsRouter.post(
-    "/collections/:collection_id/collections",
+    "/collections/:element_id/elements",
     async (req, res) => {
-        const { collection_id } = req.params;
+        const { element_id } = req.params;
         const { name, description, slug } = req.body;
 
         try {
@@ -50,7 +50,7 @@ collectionsRouter.post(
                     name,
                     description,
                     slug,
-                    parent_col_id: collection_id,
+                    parent_ele_id: element_id,
                 })
                 .returning();
 

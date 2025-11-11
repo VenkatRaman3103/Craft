@@ -9,9 +9,12 @@ import {
 import { RootState } from "@/store";
 import { Plus } from "lucide-react";
 import "./index.scss";
-import { updateActiveElementId } from "@/store/ElementSlice";
+import {
+    updateActiveElementId,
+    updateActiveElementType,
+} from "@/store/ElementSlice";
 
-export const Tabs = ({
+export const Elements = ({
     data,
     referenceId,
 }: {
@@ -39,9 +42,16 @@ export const Tabs = ({
         dispatch(updateReferenceId(referenceId));
     }
 
-    function handleTabClick(tabId: string) {
+    function handleTabClick({
+        tabId,
+        elementType,
+    }: {
+        tabId: string;
+        elementType: string;
+    }) {
         setActiveTabId(tabId);
         dispatch(updateActiveElementId(tabId));
+        dispatch(updateActiveElementType(elementType));
     }
 
     return (
@@ -49,9 +59,11 @@ export const Tabs = ({
             {data.map((e: any) => (
                 <div
                     className={`tab ${activeTabId === e.id ? "active" : ""}`}
-                    onClick={() => handleTabClick(e.id)}
+                    onClick={() =>
+                        handleTabClick({ tabId: e.id, elementType: e.type })
+                    }
                 >
-                    {e.name}
+                    {e.name} - {e.type}
                 </div>
             ))}
 

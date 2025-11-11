@@ -10,11 +10,13 @@ import { ModalWrapper } from "@/features/Modals/Wrapper";
 import { ModalHeader } from "@/features/Modals/Header";
 
 export const NewCollectionModal = () => {
+    const { referenceId, parentType } = useSelector(
+        (state: RootState) => state.modalSlice,
+    );
+
     const [formData, setFormData] = useState<any>({});
 
-    const crateCollection = useCreateCollection();
-
-    const { referenceId } = useSelector((state: RootState) => state.modalSlice);
+    const crateCollection = useCreateCollection(parentType);
 
     const dispatch = useDispatch();
 

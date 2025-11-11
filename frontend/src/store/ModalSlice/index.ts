@@ -4,12 +4,14 @@ interface SliceState {
     active: boolean;
     type: string | null;
     referenceId: string | null | undefined; // id of the element that opened the modal
+    parentType?: string | undefined | null;
 }
 
 const initialState: SliceState = {
     active: false,
     type: null,
     referenceId: null,
+    parentType: null,
 };
 
 export const ModalSlice = createSlice({
@@ -28,9 +30,19 @@ export const ModalSlice = createSlice({
         ) => {
             state.referenceId = action.payload;
         },
+        updateParentType: (
+            state,
+            action: PayloadAction<string | null | undefined>,
+        ) => {
+            state.parentType = action.payload;
+        },
     },
 });
 
-export const { updateModalType, toggleModal, updateReferenceId } =
-    ModalSlice.actions;
+export const {
+    updateModalType,
+    toggleModal,
+    updateReferenceId,
+    updateParentType,
+} = ModalSlice.actions;
 export default ModalSlice.reducer;
