@@ -31,8 +31,6 @@ export const NewPageModal = () => {
         createPage.mutate({ element_id: referenceId, ...formData });
     }
 
-    console.log(referenceId, "referenceId");
-
     return (
         <ModalWrapper>
             <ModalHeader label="New Page" />

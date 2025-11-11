@@ -18,8 +18,6 @@ export const SideBarContent = () => {
         queryKey: ["structured-content"],
     });
 
-    console.log(structuredContent, "structuredContent");
-
     if (!structuredContent) {
         return <></>;
     }
@@ -47,8 +45,6 @@ export const NestedList = ({ id, name, type, children }: any) => {
 
     const Icon: any = LucideIcons[icons_map[type] as keyof typeof LucideIcons];
     const Chevron = open ? LucideIcons.ChevronDown : LucideIcons.ChevronRight;
-
-    console.log(elementId, pathnameLenght - 1, pathname, "elementId");
 
     return (
         <div className={`nested-element-wrapper _${type}`}>

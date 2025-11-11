@@ -20,8 +20,6 @@ export const GroupsPage = () => {
         return <div>groups loading...</div>;
     }
 
-    console.log(groupData, "groupData");
-
     return (
         <>
             <div className="page">

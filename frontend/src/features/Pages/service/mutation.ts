@@ -10,7 +10,6 @@ export const useCreateNewPage = (referenceId: string | undefined | null) => {
 
     return useMutation({
         mutationFn: (obj: NewPageType) => {
-            console.log(obj, "obj NewPageType");
             return createNewPage(obj);
         },
         onSuccess: () => {

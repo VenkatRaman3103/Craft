@@ -33,7 +33,8 @@
 
         .sidebar-toggle-btn {
             width: var(--gutter-padding);
-            height: var(--gutter-padding);
+            /* height: var(--gutter-padding); */
+            height: 45px;
 
             border-bottom: 1px solid var(--idle-border-border);
 

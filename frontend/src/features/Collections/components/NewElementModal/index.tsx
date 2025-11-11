@@ -22,8 +22,6 @@ export const NewElementModal = () => {
         setFormData({ ...formData, [e.target.name]: e.target.value });
     }
 
-    console.log(formData, "formData");
-
     function handleClose() {
         dispatch(toggleModal(false));
     }

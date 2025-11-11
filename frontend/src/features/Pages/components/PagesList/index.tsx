@@ -17,8 +17,6 @@ export const PagesList = () => {
         queryKey: [activeElementId, "pages"],
     });
 
-    console.log(pagesData, activeElementId, "pages data");
-
     return (
         <div className="pages-list-container">
             <div className="action-buttons">

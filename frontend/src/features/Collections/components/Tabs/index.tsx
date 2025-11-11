@@ -44,8 +44,6 @@ export const Tabs = ({
         dispatch(updateActiveElementId(tabId));
     }
 
-    console.log(data, "data elements");
-
     return (
         <div className="tabs-container">
             {data.map((e: any) => (

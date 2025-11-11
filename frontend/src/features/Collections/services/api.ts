@@ -57,7 +57,6 @@ export async function createNewElement({
     referenceId: parent_col_id,
     type,
 }: NewElementType) {
-    console.log(name, parent_col_id, type, "createNewElement");
     try {
         const response = await axios.post(`${backendUrl}/elements`, {
             name,

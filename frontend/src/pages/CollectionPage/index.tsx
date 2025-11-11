@@ -25,8 +25,6 @@ export const CollectionPage = () => {
         return <div>collection data loading...</div>;
     }
 
-    console.log(collection_id, collectionData, "collectionData");
-
     return (
         <>
             <div className="page">
