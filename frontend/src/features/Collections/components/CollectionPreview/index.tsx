@@ -1,11 +1,15 @@
 import { useNavigate } from "react-router";
 import "./index.scss";
 import { Slug } from "@/components/ui/common/Slug";
+import { useQueryClient } from "@tanstack/react-query";
 
 export const CollectionPreview = ({ name, slug, id }: any) => {
     const navigate = useNavigate();
 
+    const queryClient = useQueryClient();
+
     function handleNavigate() {
+        queryClient.removeQueries({ queryKey: ["collection"] });
         navigate(`/collections/${id}`);
     }
 

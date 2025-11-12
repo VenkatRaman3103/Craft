@@ -2,26 +2,29 @@ export function makeTreeWithLinks(arr) {
     function walk(node) {
         let type;
 
-        if (node.collections) type = "group";
-        else if (node.elements) type = "collection";
-        else if (node.pages) type = "element";
-        else type = "page";
+        if (node.elements) {
+            type = "collection";
+        } else if (node.pages || (node.collections && node.parent_col_id)) {
+            type = "element";
+        } else if (node.collections) {
+            type = "group";
+        } else {
+            type = "page";
+        }
 
         const result = {
             id: node.id,
             name: node.title || node.name,
             type,
-            ...(node.slug && {
-                link: `/${node.slug}/${node.id}`,
-            }),
+            ...(node.slug && { link: `/${node.slug}/${node.id}` }),
         };
 
-        if (node.collections) {
-            result.children = node.collections.map(walk);
-        } else if (node.elements) {
+        if (node.elements) {
             result.children = node.elements.map(walk);
-        } else if (node.pages) {
+        } else if (node.pages && node.pages.length > 0) {
             result.children = node.pages.map(walk);
+        } else if (node.collections && node.collections.length > 0) {
+            result.children = node.collections.map(walk);
         } else {
             result.children = [];
         }

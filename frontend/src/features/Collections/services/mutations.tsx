@@ -9,7 +9,7 @@ import {
 } from "./api";
 import { NewElementType } from "@/type/NewElementType";
 
-export function useCreateCollection(parentType: string) {
+export function useCreateCollection(parentType: string | undefined | null) {
     const queryClient = useQueryClient();
     const dispatch = useDispatch();
 
@@ -20,6 +20,7 @@ export function useCreateCollection(parentType: string) {
                 : createNewCollectionUnderElement(obj),
         onSuccess: () => {
             queryClient.invalidateQueries({ queryKey: ["groups"] });
+            queryClient.invalidateQueries({ queryKey: ["collections"] });
             dispatch(toggleModal(false));
         },
     });

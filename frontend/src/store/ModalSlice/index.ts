@@ -4,7 +4,7 @@ interface SliceState {
     active: boolean;
     type: string | null;
     referenceId: string | null | undefined; // id of the element that opened the modal
-    parentType?: string | undefined | null;
+    parentType: string | undefined | null;
 }
 
 const initialState: SliceState = {

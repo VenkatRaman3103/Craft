@@ -22,6 +22,8 @@ export const SideBarContent = () => {
         return <></>;
     }
 
+    console.log(structuredContent, "structuredContent");
+
     return (
         <div className="sidebar-content-container">
             <div className="sidebar-content-header">{activeLayer}</div>

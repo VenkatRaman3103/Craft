@@ -38,13 +38,6 @@ export async function createNewCollectionUnderElement({
     description,
     slug,
 }: NewCollectionType) {
-    console.log(
-        element_id,
-        name,
-        description,
-        slug,
-        "new collection under element",
-    );
     try {
         const response = await axios.post(
             `${backendUrl}/collections/${element_id}/elements`,
@@ -101,6 +94,23 @@ export async function createNewElement({
         });
 
         console.log("elements data", response.data);
+
+        return response.data;
+    } catch (error) {
+        const errorMessage = {
+            origin: "createNewElement",
+            error: error,
+        };
+
+        return errorMessage;
+    }
+}
+
+export async function getCollectionByElementId(element_id: string | null) {
+    try {
+        const response = await axios.get(
+            `${backendUrl}/collection/${element_id}/elements`,
+        );
 
         return response.data;
     } catch (error) {

@@ -1,6 +1,6 @@
 .tabs-container {
     min-width: calc(100% - calc(var(--gutter-padding) * 2));
-    height: 40px;
+    height: 45px;
     border-top: 1px solid var(--idle-border-border);
     border-bottom: 1px solid var(--idle-border-border);
     margin-top: 30px;
@@ -8,7 +8,7 @@
 
     display: flex;
     align-items: center;
-    overflow: scroll;
+    overflow-x: scroll;
     scrollbar-width: none;
 
     .tab {
@@ -26,6 +26,7 @@
 
         white-space: nowrap;
 
+
         &:hover {
             color: white;
         }
@@ -36,21 +37,26 @@
 
         &.active {
             color: white;
-            border-bottom: 2px solid var(--base-color);
+            /* border-bottom: 2px solid var(--base-color); */
 
-            &::before,
+            &::before {
+                content: '';
+                position: absolute;
+                top: 0px;
+                width: 100%;
+                height: 2px;
+                background-color: white;
+            }
+
             &::after {
                 content: '';
                 position: absolute;
-                left: 0;
+                bottom: -1px;
                 width: 100%;
                 height: 2px;
+                z-index: 10;
             }
 
-            &::before {
-                top: 0;
-                background-color: white;
-            }
         }
     }
 

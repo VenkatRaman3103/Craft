@@ -4,12 +4,10 @@ import { useSelector } from "react-redux";
 import { getPagesByElementId } from "../../service/api";
 import "./index.scss";
 import { PagePreview } from "../PagePreview";
-import { SearchBar } from "@/components/SearchBar";
-import { NewPage } from "@/components/ActionButtons/NewPage";
-import { NewCollection } from "@/components/ActionButtons/NewCollection";
+import { ContentHeader } from "@/components/ContentHeader";
 
 export const PagesList = () => {
-    const { activeElementId, activeElementType } = useSelector(
+    const { activeElementId } = useSelector(
         (state: RootState) => state.elementSlice,
     );
 
@@ -18,16 +16,11 @@ export const PagesList = () => {
         queryKey: [activeElementId, "pages"],
     });
 
-    console.log(activeElementType, "activeElementType");
+    console.log(pagesData, "pagesData");
 
     return (
         <div className="pages-list-container">
-            <div className="action-buttons">
-                <SearchBar />
-                {/* <div className="filter-button">filter button</div> */}
-                {/* <div className="columns-button">columns button</div> */}
-                <NewContent />
-            </div>
+            <ContentHeader />
             <div className="pages-list">
                 {/* TODO: add loading UI*/}
                 {!pagesData && <div>loading...</div>}
@@ -39,27 +32,4 @@ export const PagesList = () => {
             </div>
         </div>
     );
-};
-
-export const NewContent = () => {
-    const { activeElementId, activeElementType } = useSelector(
-        (state: RootState) => state.elementSlice,
-    );
-
-    function renderNewContentButton(type: any) {
-        switch (type) {
-            case "page":
-                return <NewPage />;
-            case "collection":
-                return (
-                    <NewCollection
-                        referenceId={activeElementId}
-                        parentType={"element"}
-                    />
-                );
-        }
-    }
-
-    // NewCollection
-    return <>{renderNewContentButton(activeElementType)}</>;
 };

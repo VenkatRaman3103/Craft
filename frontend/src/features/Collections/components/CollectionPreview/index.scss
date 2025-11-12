@@ -1,9 +1,8 @@
 .collection-preview-container {
-    /* width: calc(20% - 40px); */
     width: calc(20% - 15px);
     height: 120px;
 
-    background-color: var(--primary-color);
+    background-color: var(--secondary-color);
     padding: 20px;
 
     border: 1.5px solid var(--idle-border-border);
@@ -30,6 +29,7 @@
         .collection-name {
             font-size: 18px;
             font-weight: 600;
+            margin-bottom: 10px;
         }
 
         .collection-slug {

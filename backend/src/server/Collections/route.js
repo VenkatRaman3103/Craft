@@ -118,6 +118,29 @@ collectionsRouter.get(
     },
 );
 
+// under elements
+collectionsRouter.get("/collection/:element_id/elements", async (req, res) => {
+    const { element_id } = req.params;
+
+    try {
+        const response = await db
+            .select()
+            .from(collections)
+            .where(eq(collections.parent_ele_id, element_id));
+
+        res.json(response);
+    } catch (error) {
+        const errorMessage = {
+            origin: "collections/GET -> /collection/:element_id/elements",
+            error: error,
+        };
+
+        console.log(errorMessage);
+
+        res.json(errorMessage);
+    }
+});
+
 // read one
 collectionsRouter.get("/collections/:id", async (req, res) => {
     const { id } = req.params;

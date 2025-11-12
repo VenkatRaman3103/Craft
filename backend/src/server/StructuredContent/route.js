@@ -37,7 +37,16 @@ StructuredContentRouter.get("/structured-content", async (req, res) => {
                         .from(pages)
                         .where(eq(pages.parent_element_id, ele.id));
 
-                    elementList.push({ ...ele, pages: pageList });
+                    const collectionList = await db
+                        .select()
+                        .from(collections)
+                        .where(eq(collections.parent_ele_id, ele.id));
+
+                    elementList.push({
+                        ...ele,
+                        pages: pageList,
+                        collections: collectionList,
+                    });
                 }
 
                 colResult.push({ ...col, elements: elementList });

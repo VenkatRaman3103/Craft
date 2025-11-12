@@ -1,0 +1,10 @@
+.collections-list-container {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: start;
+
+    .collection-list {
+        margin-top: 20px;
+    }
+}

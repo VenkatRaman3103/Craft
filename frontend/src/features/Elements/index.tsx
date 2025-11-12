@@ -1,5 +1,4 @@
 import { useEffect, useState } from "react";
-import { ElementsType } from "../../type/ElementsType";
 import { useDispatch, useSelector } from "react-redux";
 import {
     toggleModal,
@@ -13,14 +12,20 @@ import {
     updateActiveElementId,
     updateActiveElementType,
 } from "@/store/ElementSlice";
+import { useQuery } from "@tanstack/react-query";
+import { getElementsByCollectionId } from "./services/api";
 
-export const Elements = ({
-    data,
-    referenceId,
-}: {
-    data: ElementsType[];
-    referenceId: string | undefined;
-}) => {
+export const Elements = () => {
+    const { activeCollectionId } = useSelector(
+        (state: RootState) => state.collectionSlice,
+    );
+
+    const { data: elementsData } = useQuery({
+        queryFn: () => getElementsByCollectionId(activeCollectionId),
+        queryKey: ["elements", activeCollectionId],
+        enabled: !!activeCollectionId,
+    });
+
     const [activeTabId, setActiveTabId] = useState<string | null>(null);
 
     const dispatch = useDispatch();
@@ -30,16 +35,18 @@ export const Elements = ({
     );
 
     useEffect(() => {
-        if (data.length > 0) {
-            setActiveTabId(data[0].id);
-            dispatch(updateActiveElementId(data[0].id));
+        if (elementsData && elementsData.length > 0) {
+            const first = elementsData[0];
+            setActiveTabId(first?.id);
+            dispatch(updateActiveElementId(first?.id));
+            dispatch(updateActiveElementType(first?.type));
         }
-    }, []);
+    }, [elementsData]);
 
     function handleModal() {
         dispatch(toggleModal(!isModalActive));
         dispatch(updateModalType("element"));
-        dispatch(updateReferenceId(referenceId));
+        dispatch(updateReferenceId(activeCollectionId));
     }
 
     function handleTabClick({
@@ -56,14 +63,15 @@ export const Elements = ({
 
     return (
         <div className="tabs-container">
-            {data.map((e: any) => (
+            {elementsData?.map((e: any) => (
                 <div
+                    key={e.id}
                     className={`tab ${activeTabId === e.id ? "active" : ""}`}
                     onClick={() =>
                         handleTabClick({ tabId: e.id, elementType: e.type })
                     }
                 >
-                    {e.name} - {e.type}
+                    {e.name} ({e.type})
                 </div>
             ))}
 

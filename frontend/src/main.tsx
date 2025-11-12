@@ -4,11 +4,11 @@ import { BrowserRouter, Route, Routes } from "react-router";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { Provider } from "react-redux";
 import { store } from "./store";
-
 import "@/styles/global.scss";
 import { GroupsPage } from "./pages/GroupsPage";
 import { CollectionPage } from "./pages/CollectionPage";
 import { PageWrapper } from "./components/PageWrapper";
+import { IndividualPages } from "./pages/IndividualPages";
 
 const rootElement = document.getElementById("root");
 
@@ -30,6 +30,10 @@ createRoot(rootElement).render(
                         <Route
                             path="/collections/:collection_id"
                             element={<CollectionPage />}
+                        />
+                        <Route
+                            path="/pages/:page_id"
+                            element={<IndividualPages />}
                         />
                     </Routes>
                 </PageWrapper>
