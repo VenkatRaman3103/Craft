@@ -23,7 +23,6 @@ export const Elements = () => {
     const { data: elementsData } = useQuery({
         queryFn: () => getElementsByCollectionId(activeCollectionId),
         queryKey: ["elements", activeCollectionId],
-        enabled: !!activeCollectionId,
     });
 
     const [activeTabId, setActiveTabId] = useState<string | null>(null);

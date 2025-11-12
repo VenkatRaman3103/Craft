@@ -2,6 +2,7 @@ export type PagesType = {
     name: string;
     slug: string;
     description: string;
+    id: string;
 };
 
 export type NewPageType = {

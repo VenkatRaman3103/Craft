@@ -36,12 +36,6 @@ export const CollectionPage = () => {
         }
     }, [collection_id]);
 
-    if (!collectionData) {
-        return <div>collection data loading...</div>;
-    }
-
-    console.log(collectionData, "collectionData");
-
     function renderContent(type: string | null) {
         switch (type) {
             case "page":
@@ -49,6 +43,10 @@ export const CollectionPage = () => {
             case "collection":
                 return <CollectionList />;
         }
+    }
+
+    if (!collectionData) {
+        return <div>collection data loading...</div>;
     }
 
     return (

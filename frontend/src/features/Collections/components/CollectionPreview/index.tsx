@@ -2,14 +2,22 @@ import { useNavigate } from "react-router";
 import "./index.scss";
 import { Slug } from "@/components/ui/common/Slug";
 import { useQueryClient } from "@tanstack/react-query";
+import { useSelector } from "react-redux";
+import { RootState } from "@/store";
 
 export const CollectionPreview = ({ name, slug, id }: any) => {
+    const { activeCollectionId } = useSelector(
+        (state: RootState) => state.collectionSlice,
+    );
+
     const navigate = useNavigate();
 
     const queryClient = useQueryClient();
 
     function handleNavigate() {
-        queryClient.removeQueries({ queryKey: ["collection"] });
+        queryClient.removeQueries({
+            queryKey: ["elements", activeCollectionId],
+        });
         navigate(`/collections/${id}`);
     }
 
