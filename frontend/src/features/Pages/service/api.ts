@@ -1,5 +1,4 @@
 import { backendUrl } from "@/config";
-import { NewElementType } from "@/type/NewElementType";
 import axios from "axios";
 import { NewPageType } from "../types/PagesType";
 
@@ -40,6 +39,21 @@ export async function createNewPage({
     } catch (error) {
         const errorMessage = {
             origin: "createNewPage",
+            error: error,
+        };
+
+        return errorMessage;
+    }
+}
+
+export async function getPageByPageId(page_id: string | undefined) {
+    try {
+        const response = await axios.get(`${backendUrl}/pages/${page_id}`);
+
+        return response.data[0];
+    } catch (error) {
+        const errorMessage = {
+            origin: "getPagesByElementId",
             error: error,
         };
 

@@ -59,3 +59,24 @@ PagesRouter.get("/pages/:parent_element_id/element", async (req, res) => {
         res.json(errorMessage);
     }
 });
+
+PagesRouter.get("/pages/:page_id", async (req, res) => {
+    const { page_id } = req.params;
+
+    try {
+        const reponse = await db
+            .select()
+            .from(pages)
+            .where(eq(pages.id, page_id));
+        res.json(reponse);
+    } catch (error) {
+        const errorMessage = {
+            origin: "pages/GET -> /pages/:page_id",
+            error: error,
+        };
+
+        console.log(errorMessage);
+
+        res.json(errorMessage);
+    }
+});
