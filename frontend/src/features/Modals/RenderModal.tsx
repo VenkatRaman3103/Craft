@@ -1,5 +1,6 @@
 import { NewCollectionModal } from "../Collections/components/NewCollectionModal";
 import { NewElementModal } from "../Collections/components/NewElementModal";
+import { NewPageItemsModals } from "../Pages/components/NewPageItemsModals";
 import { NewPageModal } from "../Pages/components/NewPageModal";
 
 export const RenderModal = ({ type }: { type: string | null }) => {
@@ -11,6 +12,8 @@ export const RenderModal = ({ type }: { type: string | null }) => {
                 return <NewElementModal />;
             case "page":
                 return <NewPageModal />;
+            case "page-items":
+                return <NewPageItemsModals />;
         }
     }
 
