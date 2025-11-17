@@ -7,7 +7,7 @@ import { RootState } from "@/store";
 import { toggleModal } from "@/store/ModalSlice";
 import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { sections_data } from "../../data/sections_data";
+import { sections_data, sections_pos_data } from "../../data/sections_data";
 import { useCreateSection } from "../../service/mutation";
 import { RadioFields } from "@/components/Forms/Fields/RadioFields";
 
@@ -54,7 +54,7 @@ export const NewPageItemsModals = () => {
             <RadioFields
                 label="Section type"
                 name="type"
-                options={sections_data}
+                options={sections_pos_data}
                 updateFormData={handleFormDataChange}
             />
 
