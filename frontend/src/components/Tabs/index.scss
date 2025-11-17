@@ -1,0 +1,54 @@
+.modal-tabs-container {
+    height: 45px;
+    width: 100%;
+    border-top: 1px solid var(--idle-border-border);
+    border-bottom: 1px solid var(--idle-border-border);
+
+    .modal-tabs-wrapper {
+        height: 100%;
+        width: 100%;
+
+        display: flex;
+
+        .spacer {
+            padding: 0 10px !important;
+        }
+
+        .tab {
+            height: 100%;
+            width: fit-content;
+
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            padding: 0 30px;
+            border-right: 1px solid var(--idle-border-border);
+
+            position: relative;
+
+
+            &.active {
+                &::after {
+                    content: "";
+                    height: 2px;
+                    width: 100%;
+                    position: absolute;
+                    top: 0px;
+
+                    background-color: white;
+                }
+
+                &::before {
+                    content: "";
+                    height: 2px;
+                    width: 100%;
+                    position: absolute;
+                    bottom: -2px;
+
+                    background-color: #090909;
+                }
+            }
+        }
+    }
+}

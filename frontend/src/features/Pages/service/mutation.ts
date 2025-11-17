@@ -1,7 +1,7 @@
 import { toggleModal } from "@/store/ModalSlice";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useDispatch } from "react-redux";
-import { createNewPage } from "./api";
+import { createNewPage, createNewSection } from "./api";
 import { NewPageType } from "../types/PagesType";
 
 export const useCreateNewPage = (referenceId: string | undefined | null) => {
@@ -19,6 +19,22 @@ export const useCreateNewPage = (referenceId: string | undefined | null) => {
 
             queryClient.invalidateQueries({
                 queryKey: ["structured-content"],
+            });
+            dispatch(toggleModal(false));
+        },
+    });
+};
+
+// sections
+export const useCreateSection = () => {
+    const queryClient = useQueryClient();
+    const dispatch = useDispatch();
+
+    return useMutation({
+        mutationFn: (obj) => createNewSection(obj),
+        onSuccess: () => {
+            queryClient.invalidateQueries({
+                queryKey: ["pages"],
             });
             dispatch(toggleModal(false));
         },

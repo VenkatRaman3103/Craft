@@ -60,3 +60,24 @@ export async function getPageByPageId(page_id: string | undefined) {
         return errorMessage;
     }
 }
+
+export async function createNewSection({ referenceId, name, type }: any) {
+    try {
+        const response = await axios.post(
+            `${backendUrl}/sections/${referenceId}/page`,
+            {
+                name,
+                type,
+            },
+        );
+
+        return response.data;
+    } catch (error) {
+        const errorMessage = {
+            origin: "createNewSection",
+            error: error,
+        };
+
+        return errorMessage;
+    }
+}

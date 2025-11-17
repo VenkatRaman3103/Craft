@@ -1,18 +1,21 @@
-import { TextareaField } from "@/components/Forms/Fields/TextareaField";
+import { SelectField } from "@/components/Forms/Fields/SelectField";
 import { TextField } from "@/components/Forms/Fields/TextField";
+import { Tabs } from "@/components/Tabs";
 import { ModalHeader } from "@/features/Modals/Header";
 import { ModalWrapper } from "@/features/Modals/Wrapper";
 import { RootState } from "@/store";
 import { toggleModal } from "@/store/ModalSlice";
 import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
+import { sections_data } from "../../data/sections_data";
+import { useCreateSection } from "../../service/mutation";
 
 export const NewPageItemsModals = () => {
     const [formData, setFormData] = useState<any>({});
 
-    const { activeElementId: referenceId } = useSelector(
-        (state: RootState) => state.elementSlice,
-    );
+    const { referenceId } = useSelector((state: RootState) => state.modalSlice);
+
+    const createNewSection = useCreateSection();
 
     const dispatch = useDispatch();
 
@@ -25,12 +28,13 @@ export const NewPageItemsModals = () => {
     }
 
     function handleSave() {
-        //
+        createNewSection.mutate({ referenceId, ...formData });
     }
 
     return (
         <ModalWrapper>
             <ModalHeader label="New Page Items" />
+            <Tabs />
             <TextField
                 label="Name"
                 name="name"
@@ -38,6 +42,12 @@ export const NewPageItemsModals = () => {
                 description={
                     "Lorem ipsum dolor sit amet consectetur adipisicing elit."
                 }
+                updateFormData={handleFormDataChange}
+            />
+            <SelectField
+                label="Section type"
+                name="type"
+                options={sections_data}
                 updateFormData={handleFormDataChange}
             />
 

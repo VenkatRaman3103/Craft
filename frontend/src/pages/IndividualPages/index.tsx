@@ -8,10 +8,14 @@ import { AddBtn } from "@/components/ui/Buttons/AddBtn";
 import { RenderModal } from "@/features/Modals/RenderModal";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "@/store";
-import { updateModalType } from "@/store/ModalSlice";
+import {
+    toggleModal,
+    updateModalType,
+    updateReferenceId,
+} from "@/store/ModalSlice";
 
 export const IndividualPages = () => {
-    const { type: modalType } = useSelector(
+    const { type: modalType, active: isModalActive } = useSelector(
         (state: RootState) => state.modalSlice,
     );
 
@@ -24,17 +28,16 @@ export const IndividualPages = () => {
         queryKey: ["page", page_id],
     });
 
-    console.log(pageData, "pageData");
-
     if (!pageData) {
         return <div>Loading page data</div>;
     }
 
     function handleToggleModal(type: string) {
+        dispatch(toggleModal(true));
         dispatch(updateModalType(type));
+        dispatch(updateReferenceId(pageData.id));
+        console.log(pageData.id, "pageData--");
     }
-
-    console.log(modalType);
 
     return (
         <>
@@ -46,7 +49,7 @@ export const IndividualPages = () => {
             <div className="page page-content">
                 <AddBtn onClickFn={() => handleToggleModal("page-items")} />
             </div>
-            <RenderModal type={modalType} />
+            {isModalActive && <RenderModal type={modalType} />}
         </>
     );
 };
