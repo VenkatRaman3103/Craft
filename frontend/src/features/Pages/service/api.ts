@@ -50,6 +50,8 @@ export async function getPageByPageId(page_id: string | undefined) {
     try {
         const response = await axios.get(`${backendUrl}/pages/${page_id}`);
 
+        console.log(response, "pageData");
+
         return response.data[0];
     } catch (error) {
         const errorMessage = {

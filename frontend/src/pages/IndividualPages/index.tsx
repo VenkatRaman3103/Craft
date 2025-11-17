@@ -36,7 +36,6 @@ export const IndividualPages = () => {
         dispatch(toggleModal(true));
         dispatch(updateModalType(type));
         dispatch(updateReferenceId(pageData.id));
-        console.log(pageData.id, "pageData--");
     }
 
     return (

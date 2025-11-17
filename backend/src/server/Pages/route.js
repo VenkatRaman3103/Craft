@@ -2,6 +2,7 @@ import express from "express";
 import { pages } from "../../db/schema/Pages/schema.js";
 import { db } from "../server.js";
 import { eq } from "drizzle-orm";
+import { sections } from "../../db/schema/index.js";
 
 export const PagesRouter = express.Router();
 
@@ -68,7 +69,13 @@ PagesRouter.get("/pages/:page_id", async (req, res) => {
             .select()
             .from(pages)
             .where(eq(pages.id, page_id));
-        res.json(reponse);
+
+        const sectionResponse = await db
+            .select()
+            .from(sections)
+            .where(eq(sections.parent_page_id, page_id));
+
+        res.json({ ...reponse, items: [...sectionResponse] });
     } catch (error) {
         const errorMessage = {
             origin: "pages/GET -> /pages/:page_id",
