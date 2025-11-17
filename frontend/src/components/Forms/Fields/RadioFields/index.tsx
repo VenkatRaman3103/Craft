@@ -54,8 +54,6 @@ const RadioButtons = ({ option, isSelected, onSelect, name }: OptionType) => {
                 className="radio-input"
             />
 
-            <span className="custom-radio"></span>
-
             <div className="option-content-section">
                 <div className="option-name">{option.name}</div>
                 <div className="option-description description">
