@@ -9,6 +9,7 @@ import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { sections_data } from "../../data/sections_data";
 import { useCreateSection } from "../../service/mutation";
+import { RadioFields } from "@/components/Forms/Fields/RadioFields";
 
 export const NewPageItemsModals = () => {
     const [formData, setFormData] = useState<any>({});
@@ -45,6 +46,12 @@ export const NewPageItemsModals = () => {
                 updateFormData={handleFormDataChange}
             />
             <SelectField
+                label="Section type"
+                name="type"
+                options={sections_data}
+                updateFormData={handleFormDataChange}
+            />
+            <RadioFields
                 label="Section type"
                 name="type"
                 options={sections_data}
