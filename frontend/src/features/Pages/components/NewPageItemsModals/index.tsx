@@ -16,6 +16,8 @@ export const NewPageItemsModals = () => {
 
     const { referenceId } = useSelector((state: RootState) => state.modalSlice);
 
+    const { tab_items } = useSelector((state: RootState) => state.modalSlice);
+
     const createNewSection = useCreateSection(referenceId);
 
     const dispatch = useDispatch();
@@ -35,7 +37,7 @@ export const NewPageItemsModals = () => {
     return (
         <ModalWrapper>
             <ModalHeader label="New Page Items" />
-            <Tabs />
+            <Tabs tab_items={tab_items} />
             <TextField
                 label="Name"
                 name="name"

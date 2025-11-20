@@ -1,22 +1,40 @@
-import { DualColorLabel } from "@/components/ui/common/DualColorLabel";
+import { createContext, useContext } from "react";
 import { PanelRight } from "lucide-react";
 import "./index.scss";
 
-export const InforStrip = ({
-    updatedAt,
-    createdAt,
-    toggleSideBar,
-    setToggleSideBar,
-}) => {
-    function handleToggleSideBar() {
-        setToggleSideBar(!toggleSideBar);
-    }
+const InfoStripContext = createContext(null);
+
+export const InfoStrip = ({ value, onChange, children }) => {
+    return (
+        <InfoStripContext.Provider value={{ value, onChange }}>
+            <div className="info-container">{children}</div>
+        </InfoStripContext.Provider>
+    );
+};
+
+InfoStrip.Tabs = function Tabs({ children }) {
+    return <div className="tabs-wrapper">{children}</div>;
+};
+
+InfoStrip.Tab = function Tab({ id, children }) {
+    const ctx = useContext(InfoStripContext);
+
+    const isActive = ctx.value === id;
 
     return (
-        <div className="info-container">
-            <div className={`sidebar-toggle-btn ${toggleSideBar && "active"}`}>
-                <PanelRight size={18} onClick={handleToggleSideBar} />
-            </div>
+        <div
+            className={`tab ${isActive ? "active" : ""}`}
+            onClick={() => ctx.onChange(id)}
+        >
+            {children}
+        </div>
+    );
+};
+
+InfoStrip.SidebarToggle = function SidebarToggle({ open, onToggle }) {
+    return (
+        <div className={`sidebar-toggle-btn ${open ? "active" : ""}`}>
+            <PanelRight size={18} onClick={onToggle} />
         </div>
     );
 };

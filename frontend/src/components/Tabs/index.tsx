@@ -1,13 +1,7 @@
 import { useState } from "react";
 import "./index.scss";
-import { useSelector } from "react-redux";
-import { RootState } from "@/store";
 
-// const tabs = ["Sections", "Blocks", "Fields"];
-
-export const Tabs = () => {
-    const { tab_items } = useSelector((state: RootState) => state.modalSlice);
-
+export const Tabs = ({ tab_items }) => {
     const [activeTab, setActiveTab] = useState(tab_items[0]);
 
     return (
