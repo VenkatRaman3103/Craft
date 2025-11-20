@@ -26,18 +26,17 @@ export const useCreateNewPage = (referenceId: string | undefined | null) => {
 };
 
 // sections
-export const useCreateSection = () => {
+export const useCreateSection = (referenceId) => {
     const queryClient = useQueryClient();
     const dispatch = useDispatch();
 
     return useMutation({
         mutationFn: (obj) => {
-            console.log(obj, "<-- obj");
             return createNewSection(obj);
         },
         onSuccess: () => {
             queryClient.invalidateQueries({
-                queryKey: ["pages"],
+                queryKey: ["page", referenceId],
             });
             dispatch(toggleModal(false));
         },

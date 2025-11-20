@@ -16,7 +16,7 @@ export const NewPageItemsModals = () => {
 
     const { referenceId } = useSelector((state: RootState) => state.modalSlice);
 
-    const createNewSection = useCreateSection();
+    const createNewSection = useCreateSection(referenceId);
 
     const dispatch = useDispatch();
 

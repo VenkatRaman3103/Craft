@@ -12,9 +12,13 @@
     position: relative;
 
     display: grid;
-    grid-template-columns: 5fr 2fr;
+    grid-template-columns: 5fr;
 
-    padding: 0px 0px 0px var(--gutter-padding);
+    padding: 0px;
+
+    &:has(.page-sidebar) {
+        grid-template-columns: 5fr 2fr;
+    }
 
     .page-sidebar {
         border-left: 1px solid var(--idle-border-border);

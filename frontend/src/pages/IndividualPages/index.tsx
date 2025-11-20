@@ -14,6 +14,7 @@ import {
     updateReferenceId,
 } from "@/store/ModalSlice";
 import { useState } from "react";
+import { PageItems } from "@/features/Pages/components/PageItems";
 
 export const IndividualPages = () => {
     const { type: modalType, active: isModalActive } = useSelector(
@@ -54,6 +55,7 @@ export const IndividualPages = () => {
             />
             <div className="page ind-page-content">
                 <div className="page-content-area">
+                    <PageItems items={pageData.items} />
                     <AddBtn onClickFn={() => handleToggleModal("page-items")} />
                 </div>
 
