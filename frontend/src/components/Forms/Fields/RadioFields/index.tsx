@@ -12,9 +12,7 @@ export const RadioFields = ({
     options: any;
     updateFormData: any;
 }) => {
-    const [selectedOption, setSelectedOption] = useState<string>(
-        options[0].value,
-    );
+    const [selectedOption, setSelectedOption] = useState<string>();
 
     function handleSelect(value: string) {
         setSelectedOption(value);

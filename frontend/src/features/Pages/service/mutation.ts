@@ -31,7 +31,10 @@ export const useCreateSection = () => {
     const dispatch = useDispatch();
 
     return useMutation({
-        mutationFn: (obj) => createNewSection(obj),
+        mutationFn: (obj) => {
+            console.log(obj, "<-- obj");
+            return createNewSection(obj);
+        },
         onSuccess: () => {
             queryClient.invalidateQueries({
                 queryKey: ["pages"],

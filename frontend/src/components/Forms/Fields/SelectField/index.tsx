@@ -12,9 +12,7 @@ export const SelectField = ({
     options: any;
     updateFormData: any;
 }) => {
-    const [selectedOption, setSelectedOption] = useState<string | null>(
-        options[0].value,
-    );
+    const [selectedOption, setSelectedOption] = useState<string | null>(null);
 
     function handleSelect(value: string) {
         setSelectedOption(value);

@@ -75,9 +75,14 @@ PagesRouter.get("/pages/:page_id", async (req, res) => {
             .from(sections)
             .where(eq(sections.parent_page_id, page_id));
 
-        console.log(response, "page response");
-
-        res.json({ ...response[0], items: [...sectionResponse] });
+        res.json({
+            ...response[0],
+            items: [
+                ...sectionResponse?.map((item) => {
+                    return { ...item, item_type: "section" };
+                }),
+            ],
+        });
     } catch (error) {
         const errorMessage = {
             origin: "pages/GET -> /pages/:page_id",
