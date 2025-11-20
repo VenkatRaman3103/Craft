@@ -4,8 +4,9 @@ import {
     updateModalType,
     updateReferenceId,
 } from "@/store/ModalSlice";
-import { Plus } from "lucide-react";
+import { Ellipsis, Plus } from "lucide-react";
 import { useDispatch } from "react-redux";
+import "./index.scss";
 
 export const Section = ({ name, id }) => {
     const dispatch = useDispatch();
@@ -23,8 +24,13 @@ export const Section = ({ name, id }) => {
         <div className="section-container">
             <div className="section-header">
                 <div>{name}</div>
-                <div onClick={handleClick} className="plus-icon">
-                    <Plus size={18} />
+                <div className="action-btns">
+                    <Plus
+                        size={18}
+                        className="plus-icon"
+                        onClick={handleClick}
+                    />
+                    <Ellipsis size={18} className="horizontal-dots-icon" />
                 </div>
             </div>
         </div>

@@ -22,5 +22,9 @@
 
     .page-sidebar {
         border-left: 1px solid var(--idle-border-border);
+
+        .section-container {
+            padding-left: calc(var(--gutter-padding) / 2);
+        }
     }
 }

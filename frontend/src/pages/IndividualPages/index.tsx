@@ -20,8 +20,6 @@ export const IndividualPages = () => {
 
     const [activeTab, setActiveTab] = useState(tab_items[0]);
 
-    const [toggleSideBar, setToggleSideBar] = useState(false);
-
     const { page_id } = useParams();
 
     const { data: pageData } = useQuery({
@@ -46,11 +44,7 @@ export const IndividualPages = () => {
                     <InfoStrip.Tab id="table">Table</InfoStrip.Tab>
                     <InfoStrip.Tab id="api">API</InfoStrip.Tab>
                 </InfoStrip.Tabs>
-
-                <InfoStrip.SidebarToggle
-                    open={toggleSideBar}
-                    onToggle={() => setToggleSideBar(!toggleSideBar)}
-                />
+                <InfoStrip.ActionButtons />
             </InfoStrip>
             <div className="page ind-page-content">
                 <div className="page-content-area">
@@ -61,13 +55,11 @@ export const IndividualPages = () => {
                     />
                 </div>
 
-                {toggleSideBar && (
-                    <PageSideBar
-                        items={pageData.items.filter(
-                            (item) => item.position == "sidebar",
-                        )}
-                    />
-                )}
+                <PageSideBar
+                    items={pageData.items.filter(
+                        (item) => item.position == "sidebar",
+                    )}
+                />
             </div>
             {isModalActive && <RenderModal type={modalType} />}
         </>

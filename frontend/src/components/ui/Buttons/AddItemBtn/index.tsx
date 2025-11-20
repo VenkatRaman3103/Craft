@@ -4,7 +4,7 @@ import { Plus } from "lucide-react";
 export const AddItemBtn = ({ onClickFn }: { onClickFn: any }) => {
     return (
         <button
-            className="btn btn-primary bg-white btn-lg"
+            className="btn with-icon btn-primary  btn-lg"
             onClick={() => onClickFn()}
         >
             <Plus size={18} />

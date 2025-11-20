@@ -1,6 +1,7 @@
 import { createContext, useContext } from "react";
 import { PanelRight } from "lucide-react";
 import "./index.scss";
+import { PublishBtn } from "@/components/ui/Buttons/PublishBtn";
 
 const InfoStripContext = createContext(null);
 
@@ -37,4 +38,8 @@ InfoStrip.SidebarToggle = function SidebarToggle({ open, onToggle }) {
             <PanelRight size={18} onClick={onToggle} />
         </div>
     );
+};
+
+InfoStrip.ActionButtons = function ActionButtons() {
+    return <PublishBtn onClickFn={() => {}} />;
 };

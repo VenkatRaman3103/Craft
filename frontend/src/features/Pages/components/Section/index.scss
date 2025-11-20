@@ -1,0 +1,36 @@
+.section-container {
+    min-height: 150px;
+
+    border-bottom: 1px solid var(--idle-border-border);
+
+    padding: 15px calc(var(--gutter-padding) / 2) 15px var(--gutter-padding);
+
+    .section-header {
+        width: 100%;
+
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        color: var(--secondary-font-color);
+
+        .action-btns {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+
+            .plus-icon {
+
+                &:hover {
+                    color: white;
+                }
+            }
+
+            .horizontal-dots-icon {
+
+                &:hover {
+                    color: white;
+                }
+            }
+        }
+    }
+}

@@ -6,27 +6,3 @@
 .page-items-container>.section-container:only-child {
     border-bottom: none;
 }
-
-.section-container {
-    min-height: 150px;
-
-    border-bottom: 1px solid var(--idle-border-border);
-
-    padding: 15px calc(var(--gutter-padding) / 2) 15px var(--gutter-padding);
-
-    .section-header {
-        width: 100%;
-
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        color: var(--secondary-font-color);
-
-        .plus-icon {
-
-            &:hover {
-                color: white;
-            }
-        }
-    }
-}

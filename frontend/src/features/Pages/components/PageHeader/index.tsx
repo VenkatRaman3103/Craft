@@ -9,6 +9,7 @@ import {
 } from "@/store/ModalSlice";
 import { AddItemBtn } from "@/components/ui/Buttons/AddItemBtn";
 import { DualColorLabel } from "@/components/ui/common/DualColorLabel";
+import { PublishBtn } from "@/components/ui/Buttons/PublishBtn";
 
 export const PageHeader = ({ data }: { data: any }) => {
     const dispatch = useDispatch();
@@ -29,7 +30,9 @@ export const PageHeader = ({ data }: { data: any }) => {
                 <DualColorLabel title="updated_at" value={data.created_at} />
             </div>
 
-            <AddItemBtn onClickFn={() => handleToggleModal("page-items")} />
+            <div className="page-header-action-btns">
+                <AddItemBtn onClickFn={() => handleToggleModal("page-items")} />
+            </div>
         </div>
     );
 };
