@@ -9,7 +9,6 @@ import {
 } from "@/store/ModalSlice";
 import { AddItemBtn } from "@/components/ui/Buttons/AddItemBtn";
 import { DualColorLabel } from "@/components/ui/common/DualColorLabel";
-import { PublishBtn } from "@/components/ui/Buttons/PublishBtn";
 
 export const PageHeader = ({ data }: { data: any }) => {
     const dispatch = useDispatch();
