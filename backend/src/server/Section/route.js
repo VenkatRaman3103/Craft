@@ -8,8 +8,6 @@ SectionsRouter.post("/sections/:page_id/page", async (req, res) => {
     const { name, type, position } = req.body;
     const { page_id } = req.params;
 
-    console.log(name, type, position, page_id, "<-- sections");
-
     try {
         const response = await db
             .insert(sections)

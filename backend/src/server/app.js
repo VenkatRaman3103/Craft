@@ -1,6 +1,7 @@
 import { collectionsRouter } from "./Collections/route.js";
 import { ElementsRouter } from "./Elements/route.js";
 import { groupsRouter } from "./Groups/route.js";
+import { PagesVersionRouter } from "./Pages/PagesVersion/route.js";
 import { PagesRouter } from "./Pages/route.js";
 import { SectionsRouter } from "./Section/route.js";
 import { app } from "./server.js";
@@ -18,3 +19,4 @@ app.use("/api", ElementsRouter);
 app.use("/api", PagesRouter);
 app.use("/api", StructuredContentRouter);
 app.use("/api", SectionsRouter);
+app.use("/api", PagesVersionRouter);
