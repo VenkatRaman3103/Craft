@@ -16,3 +16,19 @@
     width: 40px;
     height: 40px;
 }
+
+.btn-lg {
+    width: fit-content;
+    height: 30px;
+
+    display: flex;
+    align-items: center;
+    gap: 5px;
+
+    padding: 0px 10px 0px 5px;
+}
+
+.bg-white {
+    background-color: white;
+    color: black;
+}
