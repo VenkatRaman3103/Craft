@@ -50,9 +50,7 @@ export async function getPageByPageId(page_id: string | undefined) {
     try {
         const response = await axios.get(`${backendUrl}/pages/${page_id}`);
 
-        console.log(response, "pageData");
-
-        return response.data[0];
+        return response.data;
     } catch (error) {
         const errorMessage = {
             origin: "getPagesByElementId",
@@ -63,13 +61,19 @@ export async function getPageByPageId(page_id: string | undefined) {
     }
 }
 
-export async function createNewSection({ referenceId, name, type }: any) {
+export async function createNewSection({
+    referenceId,
+    name,
+    type,
+    position,
+}: any) {
     try {
         const response = await axios.post(
             `${backendUrl}/sections/${referenceId}/page`,
             {
                 name,
                 type,
+                position,
             },
         );
 

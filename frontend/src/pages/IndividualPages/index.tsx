@@ -13,11 +13,14 @@ import {
     updateModalType,
     updateReferenceId,
 } from "@/store/ModalSlice";
+import { useState } from "react";
 
 export const IndividualPages = () => {
     const { type: modalType, active: isModalActive } = useSelector(
         (state: RootState) => state.modalSlice,
     );
+
+    const [toggleSideBar, setToggleSideBar] = useState(false);
 
     const dispatch = useDispatch();
 
@@ -38,15 +41,23 @@ export const IndividualPages = () => {
         dispatch(updateReferenceId(pageData.id));
     }
 
+    console.log(pageData, "pageData");
+
     return (
         <>
             <div className="page">{<PageHeader data={pageData} />}</div>
             <InforStrip
                 updatedAt={pageData.updated_at}
                 createdAt={pageData.created_at}
+                toggleSideBar={toggleSideBar}
+                setToggleSideBar={setToggleSideBar}
             />
-            <div className="page page-content">
-                <AddBtn onClickFn={() => handleToggleModal("page-items")} />
+            <div className="page ind-page-content">
+                <div className="page-content-area">
+                    <AddBtn onClickFn={() => handleToggleModal("page-items")} />
+                </div>
+
+                {toggleSideBar && <div className="page-sidebar"></div>}
             </div>
             {isModalActive && <RenderModal type={modalType} />}
         </>

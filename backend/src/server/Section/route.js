@@ -5,7 +5,7 @@ import { db } from "../server.js";
 export const SectionsRouter = express.Router();
 
 SectionsRouter.post("/sections/:page_id/page", async (req, res) => {
-    const { name, type } = req.body;
+    const { name, type, position } = req.body;
     const { page_id } = req.params;
 
     try {
@@ -14,6 +14,7 @@ SectionsRouter.post("/sections/:page_id/page", async (req, res) => {
             .values({
                 name,
                 type,
+                position,
                 parent_page_id: page_id,
             })
             .returning();

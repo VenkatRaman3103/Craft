@@ -65,7 +65,7 @@ PagesRouter.get("/pages/:page_id", async (req, res) => {
     const { page_id } = req.params;
 
     try {
-        const reponse = await db
+        const response = await db
             .select()
             .from(pages)
             .where(eq(pages.id, page_id));
@@ -75,7 +75,9 @@ PagesRouter.get("/pages/:page_id", async (req, res) => {
             .from(sections)
             .where(eq(sections.parent_page_id, page_id));
 
-        res.json({ ...reponse, items: [...sectionResponse] });
+        console.log(response, "page response");
+
+        res.json({ ...response[0], items: [...sectionResponse] });
     } catch (error) {
         const errorMessage = {
             origin: "pages/GET -> /pages/:page_id",

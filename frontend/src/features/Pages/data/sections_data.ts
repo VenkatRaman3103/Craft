@@ -16,13 +16,13 @@ export const sections_data = [
 export const sections_pos_data = [
     {
         name: "Content area",
-        value: "normal",
+        value: "content",
         description:
             "Lorem ipsum dolor sit amet consectetur adipisicing elit. Lorem ipsum dolor sit Lorem ipsum dolor sit amet ",
     },
     {
         name: "Sidebar",
-        value: "dynamic",
+        value: "sidebar",
         description:
             "Lorem ipsum dolor sit amet consectetur adipisicing elit. Lorem ipsum dolor sit Lorem ipsum dolor sit amet ",
     },

@@ -52,8 +52,8 @@ export const NewPageItemsModals = () => {
                 updateFormData={handleFormDataChange}
             />
             <RadioFields
-                label="Section type"
-                name="type"
+                label="Postion"
+                name="position"
                 options={sections_pos_data}
                 updateFormData={handleFormDataChange}
             />
