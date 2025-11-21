@@ -32,6 +32,14 @@ PagesVersionRouter.post("/pages-version/:page_id", async (req, res) => {
     const { page_id } = req.params;
     const { version_number, page_data, published_at, created_by } = req.body;
 
+    console.log(
+        version_number,
+        page_data,
+        published_at,
+        created_by,
+        "<-- body",
+    );
+
     try {
         const reponse = await db
             .insert(pages_versions)

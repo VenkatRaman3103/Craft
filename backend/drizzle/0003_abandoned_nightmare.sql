@@ -1,1 +1,0 @@
-ALTER TABLE "groups_table" RENAME TO "groups";

@@ -6,6 +6,10 @@ import { RootState } from "@/store";
 export const EditorPanel = () => {
     const { pageData } = useSelector((state: RootState) => state.pageSlice);
 
+    if (!pageData) {
+        return <div>Loading</div>;
+    }
+
     return (
         <>
             <div className="page-content-area">

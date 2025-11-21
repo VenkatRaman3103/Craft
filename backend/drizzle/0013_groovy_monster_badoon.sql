@@ -1,1 +1,0 @@
-ALTER TABLE "sections" ADD COLUMN "position" text NOT NULL;

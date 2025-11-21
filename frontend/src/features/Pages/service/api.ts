@@ -87,3 +87,22 @@ export async function createNewSection({
         return errorMessage;
     }
 }
+
+// page versions
+export async function getPageVersions(page_id: string) {
+    try {
+        const response = await axios.get(
+            `${backendUrl}/pages-version/${page_id}`,
+        );
+        console.log(response.data, "page_id getPageVersions");
+
+        return response.data;
+    } catch (error) {
+        const errorMessage = {
+            origin: "getPageVersions",
+            error: error,
+        };
+
+        return errorMessage;
+    }
+}

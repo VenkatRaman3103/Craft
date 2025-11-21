@@ -12,6 +12,7 @@ import { PageItems } from "@/features/Pages/components/PageItems";
 import { PageSideBar, SideBar } from "@/features/Pages/components/PageSideBar";
 import { updatePageData } from "@/store/PageSlice";
 import { EditorPanel } from "@/features/Pages/components/EditorPanel";
+import { VersionsPanel } from "@/features/Pages/components/VersionsPanel";
 
 export const IndividualPages = () => {
     const { type: modalType, active: isModalActive } = useSelector(
@@ -49,11 +50,7 @@ export const IndividualPages = () => {
                 return <EditorPanel />;
 
             case "versions":
-                return (
-                    <>
-                        <div>Version</div>
-                    </>
-                );
+                return <VersionsPanel />;
         }
     }
 
