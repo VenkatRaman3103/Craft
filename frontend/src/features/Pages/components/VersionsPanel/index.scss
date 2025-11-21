@@ -1,0 +1,13 @@
+.versions-list-container {
+    width: auto;
+
+    .versin-container {
+        border: 1px solid var(--idle-border-border);
+
+        padding: 30px;
+
+        display: flex;
+        flex-direction: column;
+        gap: 20px;
+    }
+}

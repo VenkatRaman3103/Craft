@@ -1,7 +1,12 @@
 import { toggleModal } from "@/store/ModalSlice";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useDispatch } from "react-redux";
-import { createNewPage, createNewPageVersion, createNewSection } from "./api";
+import {
+    createNewPage,
+    createNewPageVersion,
+    createNewSection,
+    revertPageData,
+} from "./api";
 import { NewPageType } from "../types/PagesType";
 
 export const useCreateNewPage = (referenceId: string | undefined | null) => {
@@ -53,6 +58,21 @@ export const useCreateNewPageVersion = (referenceId) => {
         onSuccess: () => {
             queryClient.invalidateQueries({
                 queryKey: ["pages-versions", referenceId],
+            });
+        },
+    });
+};
+
+export const useRevert = (referenceId: string) => {
+    const queryClient = useQueryClient();
+
+    return useMutation({
+        mutationFn: (obj): any => {
+            return revertPageData(obj);
+        },
+        onSuccess: () => {
+            queryClient.invalidateQueries({
+                queryKey: ["page", referenceId],
             });
         },
     });

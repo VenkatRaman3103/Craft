@@ -92,7 +92,7 @@ export async function createNewSection({
 export async function getPageVersions(page_id: string) {
     try {
         const response = await axios.get(
-            `${backendUrl}/pages-version/${page_id}`,
+            `${backendUrl}/pages-version/${page_id}/page`,
         );
         console.log(response.data, "page_id getPageVersions");
 
@@ -128,6 +128,24 @@ export async function createNewPageVersion(obj) {
     } catch (error) {
         const errorMessage = {
             origin: "getPageVersions",
+            error: error,
+        };
+
+        return errorMessage;
+    }
+}
+
+// revert
+export async function revertPageData(id) {
+    try {
+        const response = await axios.get(
+            `${backendUrl}/pages-version/${id}/revert`,
+        );
+
+        return response.data;
+    } catch (error) {
+        const errorMessage = {
+            origin: "revertPageData",
             error: error,
         };
 
