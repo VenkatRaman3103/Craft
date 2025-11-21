@@ -1,0 +1,1 @@
+ALTER TABLE "pages_versions" DROP COLUMN "version_number";

@@ -44,13 +44,15 @@ export const IndividualPages = () => {
     }
 
     function handlePublish() {
+        const now = new Date();
+
         const obj = {
             page_id,
-            version_number: "124",
             page_data: pageData,
-            published_at: "now",
+            published_at: now.getTime(),
             created_by: "venkat",
         };
+
         createNewVersion.mutate(obj);
     }
 
