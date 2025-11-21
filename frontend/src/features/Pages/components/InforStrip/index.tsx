@@ -40,6 +40,6 @@ InfoStrip.SidebarToggle = function SidebarToggle({ open, onToggle }) {
     );
 };
 
-InfoStrip.ActionButtons = function ActionButtons() {
-    return <PublishBtn onClickFn={() => {}} />;
+InfoStrip.ActionButtons = function ActionButtons({ onClickfn }) {
+    return <PublishBtn onClickFn={onClickfn} />;
 };

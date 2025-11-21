@@ -8,11 +8,10 @@ import { RenderModal } from "@/features/Modals/RenderModal";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "@/store";
 import { useEffect, useState } from "react";
-import { PageItems } from "@/features/Pages/components/PageItems";
-import { PageSideBar, SideBar } from "@/features/Pages/components/PageSideBar";
 import { updatePageData } from "@/store/PageSlice";
 import { EditorPanel } from "@/features/Pages/components/EditorPanel";
 import { VersionsPanel } from "@/features/Pages/components/VersionsPanel";
+import { useCreateNewPageVersion } from "@/features/Pages/service/mutation";
 
 export const IndividualPages = () => {
     const { type: modalType, active: isModalActive } = useSelector(
@@ -26,6 +25,8 @@ export const IndividualPages = () => {
     const [activeTab, setActiveTab] = useState(tab_items[0]);
 
     const { page_id } = useParams();
+
+    const createNewVersion = useCreateNewPageVersion(page_id);
 
     const { data: pageData } = useQuery({
         queryFn: () => getPageByPageId(page_id),
@@ -42,7 +43,16 @@ export const IndividualPages = () => {
         return <div>Loading page data</div>;
     }
 
-    console.log(activeTab, "activeTab");
+    function handlePublish() {
+        const obj = {
+            page_id,
+            version_number: "124",
+            page_data: pageData,
+            published_at: "now",
+            created_by: "venkat",
+        };
+        createNewVersion.mutate(obj);
+    }
 
     function renderTabsContent(tab) {
         switch (tab) {
@@ -66,7 +76,7 @@ export const IndividualPages = () => {
                     <InfoStrip.Tab id="api">API</InfoStrip.Tab>
                     <InfoStrip.Tab id="versions">Versions</InfoStrip.Tab>
                 </InfoStrip.Tabs>
-                <InfoStrip.ActionButtons />
+                <InfoStrip.ActionButtons onClickfn={handlePublish} />
             </InfoStrip>
             <div className="page ind-page-content">
                 {renderTabsContent(activeTab)}

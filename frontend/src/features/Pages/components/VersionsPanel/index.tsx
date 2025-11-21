@@ -8,7 +8,7 @@ export const VersionsPanel = () => {
 
     const { data: pageVersionData } = useQuery({
         queryFn: () => getPageVersions(pageData?.id),
-        queryKey: ["pages-versions"],
+        queryKey: ["pages-versions", pageData.id],
     });
 
     console.log(pageVersionData, "pageVersionData");
@@ -16,11 +16,11 @@ export const VersionsPanel = () => {
     return (
         <div>
             {pageVersionData?.map((version) => (
-                <>
+                <div>
                     <div>{version.created_by}</div>
                     <div>{version.version_number}</div>
                     <div>{version.published_at}</div>
-                </>
+                </div>
             ))}
         </div>
     );

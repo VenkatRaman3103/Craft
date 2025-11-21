@@ -106,3 +106,31 @@ export async function getPageVersions(page_id: string) {
         return errorMessage;
     }
 }
+
+// create new version for the page
+export async function createNewPageVersion(obj) {
+    const { page_id, version_number, page_data, published_at, created_by } =
+        obj;
+
+    try {
+        const response = await axios.post(
+            `${backendUrl}/pages-version/${page_id}`,
+            {
+                page_id,
+                version_number,
+                page_data,
+                published_at,
+                created_by,
+            },
+        );
+
+        return response.data;
+    } catch (error) {
+        const errorMessage = {
+            origin: "getPageVersions",
+            error: error,
+        };
+
+        return errorMessage;
+    }
+}
