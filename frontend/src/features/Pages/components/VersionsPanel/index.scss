@@ -1,13 +1,81 @@
-.versions-list-container {
+.versions-panel-container {
     width: auto;
+    display: flex;
+    flex-direction: row;
+    gap: 30px;
 
-    .versin-container {
-        border: 1px solid var(--idle-border-border);
+    padding-top: 0px;
+}
 
-        padding: 30px;
+.versions-list-container {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 30px;
 
+    border-left: 1px solid var(--idle-border-border);
+    padding-top: 30px;
+}
+
+.version-wrapper {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+
+    .time-label {
+        height: 40px;
         display: flex;
-        flex-direction: column;
-        gap: 20px;
+        justify-content: start;
+        align-items: center;
     }
+}
+
+.versin-content {
+    width: 100%;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    border: 1px solid var(--idle-border-border);
+    border-radius: var(--border-radius);
+
+    background-color: var(--secondary-color);
+
+    &:hover {
+        background-color: var(--primary-color);
+        border: 1px solid var(--hover-border-border);
+    }
+
+}
+
+.version-container {
+    width: calc(100% - 30px);
+    display: flex;
+    gap: 30px;
+    margin-left: -16px;
+}
+
+.circle {
+    height: 40px;
+    border-radius: 100px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.user-infor-version {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+
+    .user-profile {
+        height: 25px;
+        width: 25px;
+
+        background-color: var(--idle-border-border);
+        border-radius: 100px;
+    }
+
 }

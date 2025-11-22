@@ -6,6 +6,7 @@ import "./index.scss";
 import { RevertBtn } from "@/components/ui/Buttons/RevertBtn";
 import { getDate } from "../../utils/getDate";
 import { useRevert } from "../../service/mutation";
+import { GitCommitHorizontal } from "lucide-react";
 
 export const VersionsPanel = () => {
     const { pageData } = useSelector((state: RootState) => state.pageSlice);
@@ -22,10 +23,12 @@ export const VersionsPanel = () => {
     console.log(pageVersionData, "pageVersionData");
 
     return (
-        <div className="page versions-list-container">
-            {pageVersionData?.map((version) => (
-                <VersionInfo version={version} />
-            ))}
+        <div className="page versions-panel-container">
+            <div className="versions-list-container">
+                {pageVersionData?.map((version) => (
+                    <VersionInfo version={version} />
+                ))}
+            </div>
         </div>
     );
 };
@@ -38,12 +41,28 @@ export const VersionInfo = ({ version }) => {
     }
 
     return (
-        <div className="versin-container">
-            <div className="versin-content">
-                <div>{version.created_by}</div>
-                <div>{getDate(version.published_at)}</div>
+        <div className="version-container">
+            <TimeStamp time={version.published_at} />
+            <div className="version-wrapper">
+                <div className="time-label">
+                    {getDate(version.published_at)}
+                </div>
+                <div className="versin-content">
+                    <div className="user-infor-version">
+                        <div className="user-profile"></div>
+                        <div>{version.created_by}</div>
+                    </div>
+                    <RevertBtn onClickFn={handleRevert} />
+                </div>
             </div>
-            <RevertBtn onClickFn={handleRevert} />
+        </div>
+    );
+};
+
+export const TimeStamp = ({ time }: any) => {
+    return (
+        <div className="circle">
+            <GitCommitHorizontal size={32} strokeWidth={1.5} />
         </div>
     );
 };
