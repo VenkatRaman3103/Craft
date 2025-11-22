@@ -17,31 +17,23 @@ export const IndividualPages = () => {
     const { type: modalType, active: isModalActive } = useSelector(
         (state: RootState) => state.modalSlice,
     );
-
     const dispatch = useDispatch();
-
-    const tab_items = ["edit", "table", "api", "versions"];
-
-    const [activeTab, setActiveTab] = useState(tab_items[0]);
-
     const { page_id } = useParams();
 
-    const createNewVersion = useCreateNewPageVersion(page_id);
+    const tab_items = ["edit", "table", "api", "versions"];
+    const [activeTab, setActiveTab] = useState(tab_items[0]);
 
     const { data: pageData } = useQuery({
         queryFn: () => getPageByPageId(page_id),
         queryKey: ["page", page_id],
     });
+    const createNewVersion = useCreateNewPageVersion(page_id);
 
     useEffect(() => {
         if (pageData) {
             dispatch(updatePageData(pageData));
         }
     }, [pageData]);
-
-    if (!pageData) {
-        return <div>Loading page data</div>;
-    }
 
     function handlePublish() {
         const now = new Date();
@@ -56,7 +48,7 @@ export const IndividualPages = () => {
         createNewVersion.mutate(obj);
     }
 
-    function renderTabsContent(tab) {
+    function renderTabsContent(tab: "edit" | "versions" | "table" | "api") {
         switch (tab) {
             case "edit":
                 return <EditorPanel />;
@@ -64,6 +56,10 @@ export const IndividualPages = () => {
             case "versions":
                 return <VersionsPanel />;
         }
+    }
+
+    if (!pageData) {
+        return <div>Loading page data</div>;
     }
 
     return (

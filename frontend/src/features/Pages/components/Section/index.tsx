@@ -18,8 +18,6 @@ export const Section = ({ name, id }) => {
         dispatch(updateReferenceId(id));
     }
 
-    console.log(name, id, "section data");
-
     return (
         <div className="section-container">
             <div className="section-header">
