@@ -1,0 +1,1 @@
+ALTER TABLE "text_field" RENAME TO "text_fields";

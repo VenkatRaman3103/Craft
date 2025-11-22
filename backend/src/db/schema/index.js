@@ -5,3 +5,4 @@ export * from "./Pages/schema.js";
 export * from "./Pages/PageItems/schems.js";
 export * from "./Sections/schema.js";
 export * from "./Pages/PagesVersion/schema.js";
+export * from "./Fields/TextFields.js";
