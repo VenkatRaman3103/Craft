@@ -109,8 +109,15 @@ export async function getPageVersions(page_id: string) {
 
 // create new version for the page
 export async function createNewPageVersion(obj) {
-    const { page_id, version_number, page_data, published_at, created_by } =
-        obj;
+    const {
+        page_id,
+        version_number,
+        page_data,
+        published_at,
+        created_by,
+        message,
+    } = obj;
+    console.log(message, "<-- message");
 
     try {
         const response = await axios.post(
@@ -121,6 +128,7 @@ export async function createNewPageVersion(obj) {
                 page_data,
                 published_at,
                 created_by,
+                message,
             },
         );
 

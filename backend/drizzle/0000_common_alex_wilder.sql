@@ -1,2 +1,0 @@
--- Introspected migration
--- No operations required because tables already exist.

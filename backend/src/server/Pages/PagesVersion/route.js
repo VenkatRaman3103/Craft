@@ -54,7 +54,7 @@ PagesVersionRouter.get("/pages-version/:page_id/page", async (req, res) => {
 // create a version with the page data: page data -> content_json
 PagesVersionRouter.post("/pages-version/:page_id", async (req, res) => {
     const { page_id } = req.params;
-    const { page_data, published_at, created_by } = req.body;
+    const { page_data, published_at, created_by, message } = req.body;
 
     try {
         const reponse = await db
@@ -64,6 +64,7 @@ PagesVersionRouter.post("/pages-version/:page_id", async (req, res) => {
                 content_json: page_data,
                 published_at,
                 created_by,
+                message,
             })
             .returning();
         res.json(reponse);

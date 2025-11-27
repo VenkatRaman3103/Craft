@@ -6,4 +6,5 @@ export const pages_versions = pgTable("pages_versions", {
     content_json: jsonb("content_json").notNull(),
     published_at: text("published_at").notNull(),
     created_by: text("created_by").notNull(),
+    message: text("message").notNull(),
 });

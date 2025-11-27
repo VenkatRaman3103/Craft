@@ -1,5 +1,6 @@
 import { NewCollectionModal } from "../Collections/components/NewCollectionModal";
 import { NewElementModal } from "../Collections/components/NewElementModal";
+import { CommitMessageModal } from "../Pages/components/CommitMessageModal";
 import { NewPageItemsModals } from "../Pages/components/NewPageItemsModals";
 import { NewPageModal } from "../Pages/components/NewPageModal";
 
@@ -14,6 +15,8 @@ export const RenderModal = ({ type }: { type: string | null }) => {
                 return <NewPageModal />;
             case "page-items":
                 return <NewPageItemsModals />;
+            case "commit-message":
+                return <CommitMessageModal />;
         }
     }
 

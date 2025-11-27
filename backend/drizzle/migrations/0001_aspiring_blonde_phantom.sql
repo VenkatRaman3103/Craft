@@ -1,0 +1,1 @@
+ALTER TABLE "pages_versions" ADD COLUMN "message" text NOT NULL;

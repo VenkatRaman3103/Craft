@@ -1,1 +1,0 @@
-ALTER TABLE "text_fields" RENAME COLUMN "parent_col_id" TO "section_id";

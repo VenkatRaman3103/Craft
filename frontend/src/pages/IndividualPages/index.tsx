@@ -11,7 +11,6 @@ import { useEffect, useState } from "react";
 import { updatePageData } from "@/store/PageSlice";
 import { EditorPanel } from "@/features/Pages/components/EditorPanel";
 import { VersionsPanel } from "@/features/Pages/components/VersionsPanel";
-import { useCreateNewPageVersion } from "@/features/Pages/service/mutation";
 
 export const IndividualPages = () => {
     const { type: modalType, active: isModalActive } = useSelector(
@@ -27,26 +26,12 @@ export const IndividualPages = () => {
         queryFn: () => getPageByPageId(page_id),
         queryKey: ["page", page_id],
     });
-    const createNewVersion = useCreateNewPageVersion(page_id);
 
     useEffect(() => {
         if (pageData) {
             dispatch(updatePageData(pageData));
         }
     }, [pageData]);
-
-    function handlePublish() {
-        const now = new Date();
-
-        const obj = {
-            page_id,
-            page_data: pageData,
-            published_at: now.getTime(),
-            created_by: "venkat",
-        };
-
-        createNewVersion.mutate(obj);
-    }
 
     function renderTabsContent(tab: "edit" | "versions" | "table" | "api") {
         switch (tab) {
@@ -74,7 +59,7 @@ export const IndividualPages = () => {
                     <InfoStrip.Tab id="api">API</InfoStrip.Tab>
                     <InfoStrip.Tab id="versions">Versions</InfoStrip.Tab>
                 </InfoStrip.Tabs>
-                <InfoStrip.ActionButtons onClickfn={handlePublish} />
+                <InfoStrip.ActionButtons onClickfn={() => {}} />
             </InfoStrip>
             <div className="page ind-page-content">
                 {renderTabsContent(activeTab)}
