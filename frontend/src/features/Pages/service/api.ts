@@ -160,3 +160,19 @@ export async function revertPageData(id) {
         return errorMessage;
     }
 }
+
+// delete section
+export async function deleteSectionByid(id) {
+    try {
+        const response = await axios.delete(`${backendUrl}/sections/${id}`);
+
+        return response.data;
+    } catch (error) {
+        const errorMessage = {
+            origin: "revertPageData",
+            error: error,
+        };
+
+        return errorMessage;
+    }
+}

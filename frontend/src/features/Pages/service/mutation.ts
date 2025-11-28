@@ -5,6 +5,7 @@ import {
     createNewPage,
     createNewPageVersion,
     createNewSection,
+    deleteSectionByid,
     revertPageData,
 } from "./api";
 import { NewPageType } from "../types/PagesType";
@@ -44,6 +45,21 @@ export const useCreateSection = (referenceId) => {
                 queryKey: ["page", referenceId],
             });
             dispatch(toggleModal(false));
+        },
+    });
+};
+
+export const useDeleteSection = (section_id, referenceId) => {
+    const queryClient = useQueryClient();
+
+    return useMutation({
+        mutationFn: (obj): any => {
+            return deleteSectionByid(section_id);
+        },
+        onSuccess: () => {
+            queryClient.invalidateQueries({
+                queryKey: ["page", referenceId],
+            });
         },
     });
 };
