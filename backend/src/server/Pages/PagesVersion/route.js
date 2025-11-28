@@ -1,7 +1,7 @@
 import express from "express";
 import { pages_versions } from "../../../db/schema/Pages/PagesVersion/schema.js";
 import { db } from "../../server.js";
-import { eq } from "drizzle-orm";
+import { desc, eq } from "drizzle-orm";
 import { sections } from "../../../db/schema/index.js";
 
 export const PagesVersionRouter = express.Router();
@@ -36,7 +36,8 @@ PagesVersionRouter.get("/pages-version/:page_id/page", async (req, res) => {
         const reponse = await db
             .select()
             .from(pages_versions)
-            .where(eq(pages_versions.page_id, page_id));
+            .where(eq(pages_versions.page_id, page_id))
+            .orderBy(desc(pages_versions.published_at));
 
         res.json(reponse);
     } catch (error) {

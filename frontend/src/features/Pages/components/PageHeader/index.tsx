@@ -10,12 +10,9 @@ import {
 import { AddItemBtn } from "@/components/ui/Buttons/AddItemBtn";
 import { DualColorLabel } from "@/components/ui/common/DualColorLabel";
 import { CommitBtn } from "@/components/ui/Buttons/CommitBtn";
-import { useHandlePublish } from "../../handlers/handlePublish";
 
 export const PageHeader = ({ data }: { data: any }) => {
     const dispatch = useDispatch();
-
-    const handlePublish = useHandlePublish();
 
     function handleToggleModal(type: string) {
         dispatch(toggleModal(true));

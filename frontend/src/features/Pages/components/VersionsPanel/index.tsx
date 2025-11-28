@@ -48,11 +48,14 @@ export const VersionInfo = ({ version }) => {
                     {getDate(version.published_at)}
                 </div>
                 <div className="versin-content">
-                    <div className="user-infor-version">
-                        <div className="user-profile"></div>
-                        <div>{version.created_by}</div>
+                    <div className="version-header">
+                        <div className="user-infor-version">
+                            <div className="user-profile"></div>
+                            <div>{version.created_by}</div>
+                        </div>
+                        <RevertBtn onClickFn={handleRevert} />
                     </div>
-                    <RevertBtn onClickFn={handleRevert} />
+                    <div className="version-message">{version.message}</div>
                 </div>
             </div>
         </div>
