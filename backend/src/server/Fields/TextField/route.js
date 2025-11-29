@@ -93,7 +93,7 @@ TextFieldRouter.patch("/text-field/:id", async (req, res) => {
         res.json(response);
     } catch (error) {
         const errorMessage = {
-            origin: "TextFieldRouter/DELETE -> /text-field/:id",
+            origin: "TextFieldRouter/PATCH -> /text-field/:id",
             error: error,
         };
 
