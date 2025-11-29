@@ -18,7 +18,7 @@ TextFieldRouter.post("/text-field/:section_id", async (req, res) => {
         res.json(response);
     } catch (error) {
         const errorMessage = {
-            origin: "TextFieldRouter/GET -> /text-field",
+            origin: "TextFieldRouter/POST -> /text-field",
             error: error,
         };
 
