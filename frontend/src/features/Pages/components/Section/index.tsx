@@ -7,25 +7,17 @@ import {
 import { Ellipsis, Plus } from "lucide-react";
 import { useDispatch } from "react-redux";
 import "./index.scss";
-import { useEffect, useRef, useState } from "react";
-import { useDeleteSection } from "../../service/mutation";
+import { useRef, useState } from "react";
 import { useParams } from "react-router";
 import { useHandleClickOutside } from "@/utils/useHandleClickOutside";
+import { DropDownMenu } from "@/components/FloatingMenu/DropDownMenu";
+import { useDropDownMenuOptions } from "../../hooks/useDropDownMenuOptions";
 
 export const Section = ({ name, id }) => {
     const { page_id } = useParams();
 
     const dispatch = useDispatch();
     const [showMenu, setShowMenu] = useState(false);
-
-    const deleteSection = useDeleteSection(id, page_id);
-
-    const dropDownMenuOptions: { label: string; name: string; func: any }[] = [
-        { label: "copy fields", name: "copy", func: () => {} },
-        { label: "paste fields", name: "copy", func: () => {} },
-        { label: "edit", name: "copy", func: () => {} },
-        { label: "delete", name: "delete", func: () => deleteSection.mutate() },
-    ];
 
     function handleClick() {
         dispatch(clickFromSection());
@@ -34,6 +26,7 @@ export const Section = ({ name, id }) => {
         dispatch(updateReferenceId(id));
     }
 
+    const dropDownMenuOptions = useDropDownMenuOptions(id, page_id);
     const menuRef = useRef(null);
 
     useHandleClickOutside(menuRef, () => {
@@ -65,21 +58,6 @@ export const Section = ({ name, id }) => {
                     </div>
                 </div>
             </div>
-        </div>
-    );
-};
-
-export const DropDownMenu = ({ options, menuRef }) => {
-    return (
-        <div className="drop-down-menu-container" ref={menuRef}>
-            {options.map((opt) => (
-                <div
-                    className={`drop-down-menu-option ${opt.name}`}
-                    onClick={() => opt.func()}
-                >
-                    {opt.label}
-                </div>
-            ))}
         </div>
     );
 };

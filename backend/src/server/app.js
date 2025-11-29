@@ -1,5 +1,6 @@
 import { collectionsRouter } from "./Collections/route.js";
 import { ElementsRouter } from "./Elements/route.js";
+import { TextFieldRouter } from "./Fields/TextField/route.js";
 import { groupsRouter } from "./Groups/route.js";
 import { PagesVersionRouter } from "./Pages/PagesVersion/route.js";
 import { PagesRouter } from "./Pages/route.js";
@@ -20,3 +21,6 @@ app.use("/api", PagesRouter);
 app.use("/api", StructuredContentRouter);
 app.use("/api", SectionsRouter);
 app.use("/api", PagesVersionRouter);
+
+// fields route
+app.use("/api", TextFieldRouter);
