@@ -42,22 +42,6 @@ export const Section = ({ name, type, id }: SectionType) => {
         setShowMenu(false);
     });
 
-    const tabs = [
-        {
-            id: "123",
-            name: "name",
-            label: "label",
-            component: <h1>Hello wolrd</h1>,
-        },
-
-        {
-            id: "1234",
-            name: "name 1",
-            label: "label 1",
-            component: <h1>Hello wolrd 1</h1>,
-        },
-    ];
-
     return (
         <div className="section-container">
             <div className="section-header">
@@ -82,9 +66,6 @@ export const Section = ({ name, type, id }: SectionType) => {
                         )}
                     </div>
                 </div>
-            </div>
-            <div className="sections-content">
-                <SimpleTabs tabs={tabs} />
             </div>
         </div>
     );
