@@ -12,9 +12,18 @@ import { useParams } from "react-router";
 import { useHandleClickOutside } from "@/utils/useHandleClickOutside";
 import { DropDownMenu } from "@/components/FloatingMenu/DropDownMenu";
 import { useDropDownMenuOptions } from "../../hooks/useDropDownMenuOptions";
+import { SimpleTabs } from "@/components/SimpleTabs";
 
-export const Section = ({ name, id }) => {
+type SectionType = {
+    name: string;
+    type: "normal" | "tab";
+    id: string;
+};
+
+export const Section = ({ name, type, id }: SectionType) => {
     const { page_id } = useParams();
+
+    const [isTabbedSection, setIsTabbedSection] = useState(type == "tab");
 
     const dispatch = useDispatch();
     const [showMenu, setShowMenu] = useState(false);
@@ -32,6 +41,22 @@ export const Section = ({ name, id }) => {
     useHandleClickOutside(menuRef, () => {
         setShowMenu(false);
     });
+
+    const tabs = [
+        {
+            id: "123",
+            name: "name",
+            label: "label",
+            component: <h1>Hello wolrd</h1>,
+        },
+
+        {
+            id: "1234",
+            name: "name 1",
+            label: "label 1",
+            component: <h1>Hello wolrd 1</h1>,
+        },
+    ];
 
     return (
         <div className="section-container">
@@ -57,6 +82,9 @@ export const Section = ({ name, id }) => {
                         )}
                     </div>
                 </div>
+            </div>
+            <div className="sections-content">
+                <SimpleTabs tabs={tabs} />
             </div>
         </div>
     );

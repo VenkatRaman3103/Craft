@@ -7,7 +7,7 @@ export const sections_data = [
     },
     {
         name: "Tabed section",
-        value: "dynamic",
+        value: "tab",
         description:
             "Lorem ipsum dolor sit amet consectetur adipisicing elit. Lorem ipsum dolor sit Lorem ipsum dolor sit amet ",
     },
