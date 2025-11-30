@@ -4,6 +4,7 @@ import { ModalSlice } from "./ModalSlice";
 import { ElementSlice } from "./ElementSlice";
 import { CollectionSlice } from "./CollectionSlice";
 import { PageSlice } from "./PageSlice";
+import { ItemsBucketSlice } from "./ItemsBucketSlice";
 
 export const store = configureStore({
     reducer: {
@@ -12,6 +13,7 @@ export const store = configureStore({
         elementSlice: ElementSlice.reducer,
         collectionSlice: CollectionSlice.reducer,
         pageSlice: PageSlice.reducer,
+        itemsBucket: ItemsBucketSlice.reducer,
     },
 });
 

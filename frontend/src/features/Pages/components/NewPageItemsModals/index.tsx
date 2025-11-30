@@ -7,71 +7,115 @@ import { RootState } from "@/store";
 import { toggleModal } from "@/store/ModalSlice";
 import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
+import { fieldTypeOptions } from "../../data/fieldTypeOptions";
+import { updateBucket } from "@/store/ItemsBucketSlice";
+import { RadioFields } from "@/components/Forms/Fields/RadioFields";
 import { sections_data, sections_pos_data } from "../../data/sections_data";
 import { useCreateSection } from "../../service/mutation";
-import { RadioFields } from "@/components/Forms/Fields/RadioFields";
-import { fieldTypeOptions } from "../../data/fieldTypeOptions";
 
 export const NewPageItemsModals = () => {
-    const [formData, setFormData] = useState<any>({});
+    const dispatch = useDispatch();
 
-    const { referenceId } = useSelector((state: RootState) => state.modalSlice);
+    const { bucket } = useSelector((state: RootState) => state.itemsBucket);
 
-    const { tab_items } = useSelector((state: RootState) => state.modalSlice);
+    const { referenceId, tab_items } = useSelector(
+        (state: RootState) => state.modalSlice,
+    );
+
     const [activeTab, setActiveTab] = useState(tab_items[0]);
+    const [formData, setFormData] = useState<any>({});
 
     const createNewSection = useCreateSection(referenceId);
 
-    const dispatch = useDispatch();
+    const handleFormDataChange = (e: any) => {
+        setFormData((prev) => ({ ...prev, [e.target.name]: e.target.value }));
+    };
 
-    function handleFormDataChange(e: any) {
-        setFormData({ ...formData, [e.target.name]: e.target.value });
-    }
-
-    function handleClose() {
+    const handleClose = () => {
         dispatch(toggleModal(false));
-    }
+    };
 
-    function handleSave() {
-        createNewSection.mutate({ referenceId, ...formData });
-    }
+    const handleSave = () => {
+        if (activeTab === "Fields") {
+            dispatch(updateBucket({ key: referenceId, obj: formData }));
+            console.log(bucket, "itemsBucketData");
+            return;
+        }
 
-    function renderItems(itemType) {
-        switch (itemType) {
+        if (activeTab === "Sections") {
+            createNewSection.mutate({ referenceId, ...formData });
+            return;
+        }
+    };
+
+    const renderFields = () => {
+        switch (activeTab) {
             case "Blocks":
-                return <div>comming soon...</div>;
+                return <div>coming soon...</div>;
+
             case "Fields":
                 return (
                     <>
                         <TextField
                             label="Name"
                             name="name"
-                            placeholder={"Element Name"}
-                            description={
-                                "Lorem ipsum dolor sit amet consectetur adipisicing elit."
-                            }
+                            placeholder="Element Name"
+                            description="Lorem ipsum dolor sit amet consectetur adipisicing elit."
                             updateFormData={handleFormDataChange}
                         />
+
                         <SelectField
-                            label={"field type"}
-                            name={"field_type"}
+                            label="Field type"
+                            name="field_type"
                             options={fieldTypeOptions}
                             updateFormData={handleFormDataChange}
                         />
                     </>
                 );
+
+            case "Sections":
+                return (
+                    <>
+                        <TextField
+                            label="Name"
+                            name="name"
+                            placeholder="Element Name"
+                            description="Lorem ipsum dolor sit amet consectetur adipisicing elit."
+                            updateFormData={handleFormDataChange}
+                        />
+
+                        <SelectField
+                            label="Section type"
+                            name="type"
+                            options={sections_data}
+                            updateFormData={handleFormDataChange}
+                        />
+
+                        <RadioFields
+                            label="Position"
+                            name="position"
+                            options={sections_pos_data}
+                            updateFormData={handleFormDataChange}
+                        />
+                    </>
+                );
+
+            default:
+                return null;
         }
-    }
+    };
 
     return (
         <ModalWrapper>
             <ModalHeader label="New Page Items" />
+
             <Tabs
                 tab_items={tab_items}
                 activeTab={activeTab}
                 setActiveTab={setActiveTab}
             />
-            {renderItems(activeTab)}
+
+            {renderFields()}
 
             <div className="modal-action-button-wrapper">
                 <div className="action-button" onClick={handleClose}>
