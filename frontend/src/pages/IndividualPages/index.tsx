@@ -59,7 +59,7 @@ export const IndividualPages = () => {
                     <InfoStrip.Tab id="api">API</InfoStrip.Tab>
                     <InfoStrip.Tab id="versions">Versions</InfoStrip.Tab>
                 </InfoStrip.Tabs>
-                <InfoStrip.ActionButtons onClickfn={() => {}} />
+                <InfoStrip.ActionButtons />
             </InfoStrip>
             <div className="page ind-page-content">
                 {renderTabsContent(activeTab)}

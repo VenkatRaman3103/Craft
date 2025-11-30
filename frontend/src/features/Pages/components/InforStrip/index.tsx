@@ -2,6 +2,7 @@ import { createContext, useContext } from "react";
 import { PanelRight } from "lucide-react";
 import "./index.scss";
 import { PublishBtn } from "@/components/ui/Buttons/PublishBtn";
+import { SaveBtn } from "@/components/ui/Buttons/SaveBtn";
 
 const InfoStripContext = createContext(null);
 
@@ -40,6 +41,10 @@ InfoStrip.SidebarToggle = function SidebarToggle({ open, onToggle }) {
     );
 };
 
-InfoStrip.ActionButtons = function ActionButtons({ onClickfn }) {
-    return <PublishBtn onClickFn={onClickfn} />;
+InfoStrip.ActionButtons = function ActionButtons() {
+    return (
+        <div className="action-btns">
+            <SaveBtn onClickFn={() => {}} />
+        </div>
+    );
 };
