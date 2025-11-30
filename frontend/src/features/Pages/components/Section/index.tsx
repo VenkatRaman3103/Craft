@@ -31,8 +31,6 @@ export const Section = ({ name, type, id }: SectionType) => {
         (state: RootState) => state.itemsBucket,
     );
 
-    const [isTabbedSection, setIsTabbedSection] = useState(type == "tab");
-
     const dispatch = useDispatch();
     const [showMenu, setShowMenu] = useState(false);
 

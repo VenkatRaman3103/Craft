@@ -1,9 +1,5 @@
 import { TextField } from "@/features/Fields/components/TextField";
 
-const TestComp = () => {
-    return <div>Hello world</div>;
-};
-
 const itemsMap = {
     text: TextField,
 };
