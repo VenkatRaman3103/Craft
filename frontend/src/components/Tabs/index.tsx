@@ -1,9 +1,6 @@
-import { useState } from "react";
 import "./index.scss";
 
-export const Tabs = ({ tab_items }) => {
-    const [activeTab, setActiveTab] = useState(tab_items[0]);
-
+export const Tabs = ({ tab_items, activeTab, setActiveTab }) => {
     return (
         <div className="modal-tabs-container">
             <div className="modal-tabs-wrapper">

@@ -12,7 +12,7 @@ export const TextField = ({
     label,
     name,
     placeholder,
-    updateFormData, // bulk update the form data
+    updateFormData,
     description,
 }: TextFieldType) => {
     return (

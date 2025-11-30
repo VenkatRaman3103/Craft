@@ -22,14 +22,16 @@ export const SelectField = ({
     return (
         <div className="field-section">
             <label>{label}</label>
-            {options.map((option: any) => (
-                <Option
-                    key={option.value}
-                    option={option}
-                    isSelected={selectedOption === option.value}
-                    onSelect={() => handleSelect(option.value)}
-                />
-            ))}
+            <div className="options-wrapper">
+                {options.map((option: any) => (
+                    <Option
+                        key={option.value}
+                        option={option}
+                        isSelected={selectedOption === option.value}
+                        onSelect={() => handleSelect(option.value)}
+                    />
+                ))}
+            </div>
         </div>
     );
 };

@@ -10,6 +10,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { sections_data, sections_pos_data } from "../../data/sections_data";
 import { useCreateSection } from "../../service/mutation";
 import { RadioFields } from "@/components/Forms/Fields/RadioFields";
+import { fieldTypeOptions } from "../../data/fieldTypeOptions";
 
 export const NewPageItemsModals = () => {
     const [formData, setFormData] = useState<any>({});
@@ -17,6 +18,7 @@ export const NewPageItemsModals = () => {
     const { referenceId } = useSelector((state: RootState) => state.modalSlice);
 
     const { tab_items } = useSelector((state: RootState) => state.modalSlice);
+    const [activeTab, setActiveTab] = useState(tab_items[0]);
 
     const createNewSection = useCreateSection(referenceId);
 
@@ -34,31 +36,42 @@ export const NewPageItemsModals = () => {
         createNewSection.mutate({ referenceId, ...formData });
     }
 
+    function renderItems(itemType) {
+        switch (itemType) {
+            case "Blocks":
+                return <div>comming soon...</div>;
+            case "Fields":
+                return (
+                    <>
+                        <TextField
+                            label="Name"
+                            name="name"
+                            placeholder={"Element Name"}
+                            description={
+                                "Lorem ipsum dolor sit amet consectetur adipisicing elit."
+                            }
+                            updateFormData={handleFormDataChange}
+                        />
+                        <SelectField
+                            label={"field type"}
+                            name={"field_type"}
+                            options={fieldTypeOptions}
+                            updateFormData={handleFormDataChange}
+                        />
+                    </>
+                );
+        }
+    }
+
     return (
         <ModalWrapper>
             <ModalHeader label="New Page Items" />
-            <Tabs tab_items={tab_items} />
-            <TextField
-                label="Name"
-                name="name"
-                placeholder={"Element Name"}
-                description={
-                    "Lorem ipsum dolor sit amet consectetur adipisicing elit."
-                }
-                updateFormData={handleFormDataChange}
+            <Tabs
+                tab_items={tab_items}
+                activeTab={activeTab}
+                setActiveTab={setActiveTab}
             />
-            <SelectField
-                label="Section type"
-                name="type"
-                options={sections_data}
-                updateFormData={handleFormDataChange}
-            />
-            <RadioFields
-                label="Postion"
-                name="position"
-                options={sections_pos_data}
-                updateFormData={handleFormDataChange}
-            />
+            {renderItems(activeTab)}
 
             <div className="modal-action-button-wrapper">
                 <div className="action-button" onClick={handleClose}>
