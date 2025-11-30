@@ -1,18 +1,21 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
+import { stat } from "fs";
 
 interface SliceState {
-    bucket: any;
+    promptBucket: any;
+    dataBucket: any;
 }
 
 const initialState: SliceState = {
-    bucket: {},
+    promptBucket: {},
+    dataBucket: {},
 };
 
 export const ItemsBucketSlice = createSlice({
     name: "slice",
     initialState,
     reducers: {
-        updateBucket: (
+        updatePromptBucket: (
             state,
             action: PayloadAction<{ key: string | null; obj: any }>,
         ) => {
@@ -20,14 +23,25 @@ export const ItemsBucketSlice = createSlice({
 
             if (!key) return;
 
-            if (!state.bucket[key]) {
-                state.bucket[key] = [];
+            if (!state.promptBucket[key]) {
+                state.promptBucket[key] = [];
             }
 
-            state.bucket[key].push(action.payload.obj);
+            state.promptBucket[key].push(action.payload.obj);
+        },
+
+        updateDataBucket: (
+            state,
+            action: PayloadAction<{ key: string | null; obj: any }>,
+        ) => {
+            const key = action.payload.key;
+            const obj = action.payload.obj;
+
+            state.dataBucket[key] = obj;
         },
     },
 });
 
-export const { updateBucket } = ItemsBucketSlice.actions;
+export const { updatePromptBucket, updateDataBucket } =
+    ItemsBucketSlice.actions;
 export default ItemsBucketSlice.reducer;

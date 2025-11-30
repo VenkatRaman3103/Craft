@@ -5,14 +5,16 @@ import {
     updateReferenceId,
 } from "@/store/ModalSlice";
 import { Ellipsis, Plus } from "lucide-react";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import "./index.scss";
 import { useRef, useState } from "react";
 import { useParams } from "react-router";
 import { useHandleClickOutside } from "@/utils/useHandleClickOutside";
 import { DropDownMenu } from "@/components/FloatingMenu/DropDownMenu";
 import { useDropDownMenuOptions } from "../../hooks/useDropDownMenuOptions";
-import { SimpleTabs } from "@/components/SimpleTabs";
+import { RootState } from "@/store";
+import { renderItems } from "../../utils/renderItems";
+import { updateDataBucket } from "@/store/ItemsBucketSlice";
 
 type SectionType = {
     name: string;
@@ -21,7 +23,13 @@ type SectionType = {
 };
 
 export const Section = ({ name, type, id }: SectionType) => {
+    const [formData, setFormData] = useState({});
+
     const { page_id } = useParams();
+
+    const { promptBucket, dataBucket } = useSelector(
+        (state: RootState) => state.itemsBucket,
+    );
 
     const [isTabbedSection, setIsTabbedSection] = useState(type == "tab");
 
@@ -41,6 +49,27 @@ export const Section = ({ name, type, id }: SectionType) => {
     useHandleClickOutside(menuRef, () => {
         setShowMenu(false);
     });
+
+    console.log(promptBucket[id], "section items");
+
+    function handleFormDataChange(e) {
+        let obj = {
+            value: e.target.value,
+            type: e.target.type,
+            name: e.target.name,
+        };
+
+        setFormData({
+            ...formData,
+            [e.target.name]: {
+                ...obj,
+            },
+        });
+
+        dispatch(updateDataBucket({ key: id, obj: formData }));
+    }
+
+    console.log(formData, dataBucket, "formData sender");
 
     return (
         <div className="section-container">
@@ -67,6 +96,9 @@ export const Section = ({ name, type, id }: SectionType) => {
                     </div>
                 </div>
             </div>
+            {promptBucket[id]?.map((item) =>
+                renderItems({ ...item, updateFormData: handleFormDataChange }),
+            )}
         </div>
     );
 };

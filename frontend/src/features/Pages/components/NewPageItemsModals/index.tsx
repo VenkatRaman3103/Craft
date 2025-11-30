@@ -8,7 +8,7 @@ import { toggleModal } from "@/store/ModalSlice";
 import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { fieldTypeOptions } from "../../data/fieldTypeOptions";
-import { updateBucket } from "@/store/ItemsBucketSlice";
+import { updatePromptBucket } from "@/store/ItemsBucketSlice";
 import { RadioFields } from "@/components/Forms/Fields/RadioFields";
 import { sections_data, sections_pos_data } from "../../data/sections_data";
 import { useCreateSection } from "../../service/mutation";
@@ -16,7 +16,9 @@ import { useCreateSection } from "../../service/mutation";
 export const NewPageItemsModals = () => {
     const dispatch = useDispatch();
 
-    const { bucket } = useSelector((state: RootState) => state.itemsBucket);
+    const { promptBucket: bucket } = useSelector(
+        (state: RootState) => state.itemsBucket,
+    );
 
     const { referenceId, tab_items } = useSelector(
         (state: RootState) => state.modalSlice,
@@ -37,8 +39,7 @@ export const NewPageItemsModals = () => {
 
     const handleSave = () => {
         if (activeTab === "Fields") {
-            dispatch(updateBucket({ key: referenceId, obj: formData }));
-            console.log(bucket, "itemsBucketData");
+            dispatch(updatePromptBucket({ key: referenceId, obj: formData }));
             return;
         }
 
