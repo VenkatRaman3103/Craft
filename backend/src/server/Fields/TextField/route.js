@@ -102,3 +102,25 @@ TextFieldRouter.patch("/text-field/:id", async (req, res) => {
         res.json(errorMessage);
     }
 });
+
+TextFieldRouter.get("/text-field/:section_id/section", async (req, res) => {
+    const { section_id } = req.params;
+
+    try {
+        const response = await db
+            .select()
+            .from(textFields)
+            .where(eq(textFields.section_id, section_id));
+
+        res.json(response);
+    } catch (error) {
+        const errorMessage = {
+            origin: "TextFieldRouter/GET -> /text-field/:id",
+            error: error,
+        };
+
+        console.log(errorMessage);
+
+        res.json(errorMessage);
+    }
+});
