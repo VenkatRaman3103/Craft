@@ -1,11 +1,19 @@
 import { TextField } from "@/features/Fields/components/TextField";
 
-const itemsMap = {
-    text: TextField,
-};
+export function renderItems({ type, ...rest }) {
+    const itemsMap = {
+        text: TextField,
+        // add others...
+    };
 
-export function renderItems(props) {
-    console.log(props, "props");
-    const Component = itemsMap[props.field_type];
-    return <Component {...props} />;
+    console.log(type, rest, "rest");
+
+    const Component = itemsMap[type];
+
+    if (!Component) {
+        console.warn("Component for type", type, "not found!");
+        return <TextField {...rest} />; // prevents crash
+    }
+
+    return <Component {...rest} />;
 }

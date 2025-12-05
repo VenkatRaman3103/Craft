@@ -176,3 +176,21 @@ export async function deleteSectionByid(id) {
         return errorMessage;
     }
 }
+
+// get page items by sections id
+export async function getPageItemsBySectinId(section_id: string) {
+    try {
+        const response = await axios.get(
+            `${backendUrl}/text-field/${section_id}/section`,
+        );
+
+        return response.data;
+    } catch (error) {
+        const errorMessage = {
+            origin: "revertPageData",
+            error: error,
+        };
+
+        return errorMessage;
+    }
+}

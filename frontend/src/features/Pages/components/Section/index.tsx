@@ -7,14 +7,16 @@ import {
 import { Ellipsis, Plus } from "lucide-react";
 import { useDispatch, useSelector } from "react-redux";
 import "./index.scss";
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useParams } from "react-router";
 import { useHandleClickOutside } from "@/utils/useHandleClickOutside";
 import { DropDownMenu } from "@/components/FloatingMenu/DropDownMenu";
 import { useDropDownMenuOptions } from "../../hooks/useDropDownMenuOptions";
 import { RootState } from "@/store";
 import { renderItems } from "../../utils/renderItems";
-import { updateDataBucket } from "@/store/ItemsBucketSlice";
+import { updateDataBucket, setPromptBucket } from "@/store/ItemsBucketSlice";
+import { useQuery } from "@tanstack/react-query";
+import { getPageItemsBySectinId } from "../../service/api";
 
 type SectionType = {
     name: string;
@@ -31,8 +33,43 @@ export const Section = ({ name, type, id }: SectionType) => {
         (state: RootState) => state.itemsBucket,
     );
 
+    const { data } = useQuery({
+        queryFn: () => getPageItemsBySectinId(id),
+        queryKey: [id, "sections"],
+    });
+
     const dispatch = useDispatch();
     const [showMenu, setShowMenu] = useState(false);
+
+    useEffect(() => {
+        if (data?.length) {
+            const newFormData: Record<
+                string,
+                { value: any; type: string; name: string; id?: string }
+            > = {};
+            const items: {
+                value: any;
+                type: string;
+                name: string;
+                id?: string;
+            }[] = [];
+
+            for (const d of data) {
+                const obj = {
+                    id: d.id,
+                    value: d.value,
+                    type: d.type,
+                    name: d.name,
+                };
+
+                newFormData[d.name] = obj;
+                items.push(obj);
+            }
+
+            dispatch(setPromptBucket({ key: id, items }));
+            setFormData(newFormData);
+        }
+    }, [data, dispatch, id]);
 
     function handleClick() {
         dispatch(clickFromSection());
@@ -48,24 +85,33 @@ export const Section = ({ name, type, id }: SectionType) => {
         setShowMenu(false);
     });
 
-    console.log(promptBucket[id], "section items");
-
     function handleFormDataChange(e) {
-        let obj = {
-            value: e.target.value,
-            type: e.target.type,
-            name: e.target.name,
+        const { value, type, name } = e.target;
+
+        const existingField = formData[name];
+
+        const obj = {
+            id: existingField?.id,
+            value,
+            type,
+            name,
         };
 
-        setFormData({
+        const newFormData = {
             ...formData,
-            [e.target.name]: {
-                ...obj,
-            },
-        });
+            [name]: obj,
+        };
 
-        dispatch(updateDataBucket({ key: id, obj: formData }));
+        setFormData(newFormData);
+        dispatch(updateDataBucket({ key: id, obj: newFormData }));
     }
+
+    const getDisplayValue = (item) => {
+        if (formData[item.name]) {
+            return formData[item.name].value;
+        }
+        return item.value;
+    };
 
     console.log(formData, dataBucket, "formData sender");
 
@@ -94,9 +140,15 @@ export const Section = ({ name, type, id }: SectionType) => {
                     </div>
                 </div>
             </div>
-            {promptBucket[id]?.map((item) =>
-                renderItems({ ...item, updateFormData: handleFormDataChange }),
-            )}
+            {promptBucket[id]?.map((item, index) => (
+                <>
+                    {renderItems({
+                        ...item,
+                        value: getDisplayValue(item),
+                        updateFormData: handleFormDataChange,
+                    })}
+                </>
+            ))}
         </div>
     );
 };
