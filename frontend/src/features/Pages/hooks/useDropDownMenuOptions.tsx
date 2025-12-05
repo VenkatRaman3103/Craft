@@ -11,8 +11,6 @@ type optionType = {
 
 export const useDropDownMenuOptions = (id, page_id): optionType[] => {
     const deleteSection = useDeleteSection(id, page_id);
-    // <Copy />
-    //<Clipboard />
 
     return [
         {
