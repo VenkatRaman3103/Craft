@@ -18,12 +18,12 @@
 }
 
 input {
-    background-color: var(--field-color);
+    background-color: var(--secondary-color);
+    border: 1px solid var(--idle-border-border);
     outline: none;
-    border: var(--border-color);
 }
 
 input:focus-visible {
     outline: none;
-    border: none;
+    border: 1px solid var(--hover-border-border);
 }

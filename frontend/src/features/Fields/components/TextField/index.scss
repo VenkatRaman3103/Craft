@@ -16,14 +16,3 @@
         font-size: 14px;
     }
 }
-
-input {
-    background-color: var(--field-color);
-    outline: none;
-    border: var(--border-color);
-}
-
-input:focus-visible {
-    outline: none;
-    border: none;
-}
