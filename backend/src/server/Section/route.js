@@ -2,6 +2,7 @@ import express from "express";
 import { sections } from "../../db/schema/Sections/schema.js";
 import { db } from "../server.js";
 import { eq } from "drizzle-orm";
+import { textFields } from "../../db/schema/Fields/TextFields.js";
 
 export const SectionsRouter = express.Router();
 
@@ -43,7 +44,15 @@ SectionsRouter.delete("/sections/:id", async (req, res) => {
             .where(eq(sections.id, id))
             .returning();
 
-        res.json(response);
+        // delete all the fields associated with the section
+        const response_textFields = await db
+            .delete(textFields)
+            .where(eq(textFields.section_id, id))
+            .returning();
+
+        const resMessage = { section: response, fields: response_textFields };
+
+        res.json(resMessage);
     } catch (error) {
         const errorMessage = {
             origin: "SectionsRouter/DELETE --> /section/id",
