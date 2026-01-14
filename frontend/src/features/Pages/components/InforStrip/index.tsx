@@ -1,7 +1,6 @@
 import { createContext, useContext } from "react";
 import { PanelRight } from "lucide-react";
 import "./index.scss";
-import { PublishBtn } from "@/components/ui/Buttons/PublishBtn";
 import { SaveBtn } from "@/components/ui/Buttons/SaveBtn";
 
 const InfoStripContext = createContext(null);
@@ -9,7 +8,10 @@ const InfoStripContext = createContext(null);
 export const InfoStrip = ({ value, onChange, children }) => {
     return (
         <InfoStripContext.Provider value={{ value, onChange }}>
-            <div className="info-container">{children}</div>
+            <div className="info-container">
+                {children}
+                <div className="divider"></div>
+            </div>
         </InfoStripContext.Provider>
     );
 };

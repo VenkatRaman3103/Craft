@@ -2,7 +2,7 @@
     min-width: calc(100% - calc(var(--gutter-padding) * 2));
     height: 45px;
     border-top: 1px solid var(--idle-border-border);
-    border-bottom: 1px solid var(--idle-border-border);
+    /* border-bottom: 1px solid var(--idle-border-border); */
     margin-top: 30px;
     padding: 0px calc(var(--gutter-padding) / 2) 0px var(--gutter-padding);
 
@@ -11,6 +11,8 @@
     justify-content: space-between;
     overflow-x: scroll;
     scrollbar-width: none;
+
+    position: relative;
 
     .info-wrapper {
         display: flex;
@@ -69,7 +71,8 @@
                 height: 2px;
                 width: 100%;
                 position: absolute;
-                bottom: -2px;
+                bottom: 0px;
+                z-index: 20;
 
                 background-color: #090909;
             }
@@ -80,4 +83,14 @@
 .action-btns {
     display: flex;
     gap: 10px;
+}
+
+.divider{
+    height: 1px;
+    width: 100%;
+    background-color: var(--idle-border-border);
+
+    position: absolute;
+    bottom: 0px;
+    left: 0px;
 }
