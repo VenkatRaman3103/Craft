@@ -42,7 +42,7 @@ export const Section = ({ name, type, id }: SectionType) => {
     const [showMenu, setShowMenu] = useState(false);
 
     useEffect(() => {
-        if (data?.length) {
+        if (data) {
             const newFormData: Record<
                 string,
                 { value: any; type: string; name: string; id?: string }
@@ -140,14 +140,15 @@ export const Section = ({ name, type, id }: SectionType) => {
                     </div>
                 </div>
             </div>
-            {promptBucket[id]?.map((item, index) => (
-                <>
+            {promptBucket[id]?.map((item) => (
+                <div key={item.id} className="fields-list">
                     {renderItems({
                         ...item,
                         value: getDisplayValue(item),
                         updateFormData: handleFormDataChange,
+                        reference_id: id,
                     })}
-                </>
+                </div>
             ))}
         </div>
     );

@@ -194,3 +194,29 @@ export async function getPageItemsBySectinId(section_id: string) {
         return errorMessage;
     }
 }
+
+// delete field
+export async function deleteField(field_type: string, field_id: string) {
+    async function deleteTextField() {
+        const response = await axios.delete(
+            `${backendUrl}/text-field/${field_id}`,
+        );
+
+        return response;
+    }
+
+    switch (field_type) {
+        case "text":
+            try {
+                const response = await deleteTextField();
+                return response;
+            } catch (error) {
+                const errorMessage = {
+                    origin: "error in deleting text field",
+                    error: error,
+                };
+
+                return errorMessage;
+            }
+    }
+}

@@ -5,6 +5,7 @@ import {
     createNewPage,
     createNewPageVersion,
     createNewSection,
+    deleteField,
     deleteSectionByid,
     revertPageData,
 } from "./api";
@@ -60,6 +61,31 @@ export const useDeleteSection = (section_id, referenceId) => {
             queryClient.invalidateQueries({
                 queryKey: ["page", referenceId],
             });
+        },
+    });
+};
+
+export const useDeleteField = (
+    field_type: string,
+    field_id: string,
+    reference_id: string,
+) => {
+    const queryClient = useQueryClient();
+
+    return useMutation({
+        mutationFn: (): any => {
+            return deleteField(field_type, field_id);
+        },
+        onSuccess: () => {
+            queryClient.invalidateQueries({
+                queryKey: [reference_id, "sections"],
+            });
+            // queryClient.setQueryData(
+            //     [reference_id, "sections"],
+            //     (oldData: any[]) => {
+            //         return oldData?.filter((item) => item.id !== field_id);
+            //     },
+            // );
         },
     });
 };

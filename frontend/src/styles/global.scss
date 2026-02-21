@@ -89,6 +89,20 @@ textarea {
     gap: 20px;
 }
 
+.field-header {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+
+    .drop-down-menu-anchor {
+        color: var(--secondary-font-color);
+
+        &:hover {
+            color: var(--gray-10);
+        }
+    }
+}
+
 /* input { */
 /*     background-color: var(--secondary-color); */
 /*     outline: none; */
