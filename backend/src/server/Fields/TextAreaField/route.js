@@ -1,34 +1,35 @@
 import express from "express";
-import { textFields } from "../../../db/schema/Fields/TextFields.js";
+// import { textFields } from "../../../db/schema/Fields/TextFields.js";
+import { textareaFields } from "../../../db/schema/index.js";
 import { db } from "../../server.js";
 import { eq } from "drizzle-orm";
 
-export const TextFieldRouter = express.Router();
+export const TextAreaFieldRouter = express.Router();
 
-// Create a new text field in a specific section
-TextFieldRouter.post("/text-field/:section_id", async (req, res) => {
+// Create a new textarea field in a specific section
+TextAreaFieldRouter.post("/textarea-field/:section_id", async (req, res) => {
     const { section_id } = req.params;
     const { name, value } = req.body;
 
     try {
         const response = await db
-            .insert(textFields)
+            .insert(textareaFields)
             .values({ name, value, section_id })
             .returning();
 
         res.json(response);
     } catch (error) {
         const errorMessage = {
-            origin: "TextFieldRouter/POST -> /text-field",
-            error: error,
+            origin: "TextAreaFieldRouter/POST -> /textarea-field",
+            error,
         };
         console.log(errorMessage);
         res.json(errorMessage);
     }
 });
 
-// Get a text field by its ID
-TextFieldRouter.get("/text-field/:id", async (req, res) => {
+// Get a textarea field by its ID
+TextAreaFieldRouter.get("/textarea-field/:id", async (req, res) => {
     const { id } = req.params;
 
     try {
@@ -40,16 +41,16 @@ TextFieldRouter.get("/text-field/:id", async (req, res) => {
         res.json(response);
     } catch (error) {
         const errorMessage = {
-            origin: "TextFieldRouter/GET -> /text-field/:id",
-            error: error,
+            origin: "TextAreaFieldRouter/GET -> /textarea-field/:id",
+            error,
         };
         console.log(errorMessage);
         res.json(errorMessage);
     }
 });
 
-// Delete a text field by its ID
-TextFieldRouter.delete("/text-field/:id", async (req, res) => {
+// Delete a textarea field by its ID
+TextAreaFieldRouter.delete("/textarea-field/:id", async (req, res) => {
     const { id } = req.params;
 
     try {
@@ -61,16 +62,16 @@ TextFieldRouter.delete("/text-field/:id", async (req, res) => {
         res.json(response);
     } catch (error) {
         const errorMessage = {
-            origin: "TextFieldRouter/DELETE -> /text-field/:id",
-            error: error,
+            origin: "TextAreaFieldRouter/DELETE -> /textarea-field/:id",
+            error,
         };
         console.log(errorMessage);
         res.json(errorMessage);
     }
 });
 
-// Update a text field by its ID
-TextFieldRouter.patch("/text-field/:id", async (req, res) => {
+// Update a textarea field by its ID
+TextAreaFieldRouter.patch("/textarea-field/:id", async (req, res) => {
     const { id } = req.params;
     const { name, value } = req.body;
 
@@ -90,31 +91,34 @@ TextFieldRouter.patch("/text-field/:id", async (req, res) => {
         res.json(response);
     } catch (error) {
         const errorMessage = {
-            origin: "TextFieldRouter/PATCH -> /text-field/:id",
-            error: error,
+            origin: "TextAreaFieldRouter/PATCH -> /textarea-field/:id",
+            error,
         };
         console.log(errorMessage);
         res.json(errorMessage);
     }
 });
 
-// Get all text fields in a specific section
-TextFieldRouter.get("/text-field/:section_id/section", async (req, res) => {
-    const { section_id } = req.params;
+// Get all textarea fields in a specific section
+TextAreaFieldRouter.get(
+    "/textarea-field/:section_id/section",
+    async (req, res) => {
+        const { section_id } = req.params;
 
-    try {
-        const response = await db
-            .select()
-            .from(textFields)
-            .where(eq(textFields.section_id, section_id));
+        try {
+            const response = await db
+                .select()
+                .from(textFields)
+                .where(eq(textFields.section_id, section_id));
 
-        res.json(response);
-    } catch (error) {
-        const errorMessage = {
-            origin: "TextFieldRouter/GET -> /text-field/:section_id/section",
-            error: error,
-        };
-        console.log(errorMessage);
-        res.json(errorMessage);
-    }
-});
+            res.json(response);
+        } catch (error) {
+            const errorMessage = {
+                origin: "TextAreaFieldRouter/GET -> /textarea-field/:section_id/section",
+                error,
+            };
+            console.log(errorMessage);
+            res.json(errorMessage);
+        }
+    },
+);
